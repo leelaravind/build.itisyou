@@ -1,0 +1,268 @@
+/*
+ * Design tokens - single source of truth.
+ *
+ * Extracted from the 50 Stitch exports and technical_precision_command/DESIGN.md.
+ * See docs/DESIGN_HANDOFF_SPEC.md for the extraction method, the proof that all 47 colour tokens are
+ * identical across every export, and the resolution of defects D1-D6.
+ *
+ * Tailwind v4 is CSS-first, so the exports' inline `tailwind.config` blocks are reference material,
+ * not something to copy. Tokens live here as CSS custom properties.
+ *
+ * Do not add a colour to a component file. If a value is not in this block, it does not exist.
+ */
+
+@import 'tailwindcss';
+
+@theme {
+  /* ---------------------------------------------------------------------
+   * Colour - Material 3 dark scheme, extracted verbatim.
+   * 47 tokens, identical in all 50 exports, zero value conflicts.
+   * ------------------------------------------------------------------- */
+
+  /* Surfaces */
+  --color-background: #0b1326;
+  --color-surface: #0b1326;
+  --color-surface-dim: #0b1326;
+  --color-surface-bright: #31394d;
+  --color-surface-container-lowest: #060e20;
+  --color-surface-container-low: #131b2e;
+  --color-surface-container: #171f33;
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-highest: #2d3449;
+  --color-surface-variant: #2d3449;
+  --color-surface-tint: #89ceff;
+
+  /* Text */
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #bec8d2;
+  --color-on-background: #dae2fd;
+  --color-inverse-surface: #dae2fd;
+  --color-inverse-on-surface: #283044;
+
+  /* Borders */
+  --color-outline: #88929b;
+  --color-outline-variant: #3e4850;
+
+  /*
+   * D1: `border-subtle` is used 67 times across the exports and defined in none of them.
+   * DESIGN.md prose describes exactly the role `outline-variant` fills, so it is aliased here
+   * rather than left to resolve to nothing.
+   */
+  --color-subtle: #3e4850;
+
+  /* Primary */
+  --color-primary: #89ceff;
+  --color-on-primary: #00344d;
+  --color-primary-container: #0ea5e9;
+  --color-on-primary-container: #003751;
+  --color-inverse-primary: #006591;
+  --color-primary-fixed: #c9e6ff;
+  --color-primary-fixed-dim: #89ceff;
+  --color-on-primary-fixed: #001e2f;
+  --color-on-primary-fixed-variant: #004c6e;
+
+  /* Secondary */
+  --color-secondary: #b7c8e1;
+  --color-on-secondary: #213145;
+  --color-secondary-container: #3a4a5f;
+  --color-on-secondary-container: #a9bad3;
+  --color-secondary-fixed: #d3e4fe;
+  --color-secondary-fixed-dim: #b7c8e1;
+  --color-on-secondary-fixed: #0b1c30;
+  --color-on-secondary-fixed-variant: #38485d;
+
+  /* Tertiary (success / emerald) */
+  --color-tertiary: #4edea3;
+  --color-on-tertiary: #003824;
+  --color-tertiary-container: #00b17b;
+  --color-on-tertiary-container: #003b26;
+  --color-tertiary-fixed: #6ffbbe;
+  --color-tertiary-fixed-dim: #4edea3;
+  --color-on-tertiary-fixed: #002113;
+  --color-on-tertiary-fixed-variant: #005236;
+
+  /* Error (danger / rose) */
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+
+  /* ---------------------------------------------------------------------
+   * Status colours.
+   *
+   * DESIGN.md prose mandates "Warning ... Amber" and gate states
+   * "Blocked: Amber icon" / "Exception: Purple icon", but no amber or purple token exists in any
+   * export. Two of the six Quality Gate states therefore had no defined colour anywhere in the
+   * handoff. Derived at the luminance of the existing light-on-dark accents so they sit in the same
+   * optical register. Contrast is asserted by an automated test, not assumed.
+   * ------------------------------------------------------------------- */
+  --color-success: #4edea3; /* = tertiary */
+  --color-danger: #ffb4ab; /* = error */
+  --color-warning: #ffc16a; /* derived */
+  --color-blocked: #ffc16a; /* DESIGN.md maps Blocked to the same amber as Warning */
+  --color-exception: #d0bcff; /* derived */
+  --color-info: #89ceff; /* = primary */
+  --color-unknown: #88929b; /* = outline; a neutral, because unknown is absent signal */
+
+  /* ---------------------------------------------------------------------
+   * Typography.
+   * `headline-sm` (D4) is used across 8 screens and defined nowhere; added at the only gap in the
+   * scale. Fallback stacks (D3) are present here for every family - 46 of 50 exports omitted them.
+   * ------------------------------------------------------------------- */
+  --font-sans: Geist, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg--letter-spacing: -0.02em;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--font-weight: 600;
+  --text-headline-lg--letter-spacing: -0.01em;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+
+  --text-data-mono: 14px;
+  --text-data-mono--line-height: 20px;
+  --text-data-mono--font-weight: 500;
+
+  --text-data-mono-sm: 12px;
+  --text-data-mono-sm--line-height: 16px;
+  --text-data-mono-sm--font-weight: 500;
+
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--font-weight: 600;
+  --text-label-caps--letter-spacing: 0.05em;
+
+  /* ---------------------------------------------------------------------
+   * Spacing - 4px base unit. All spacing must be a multiple of it.
+   * ------------------------------------------------------------------- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1440px;
+
+  /* ---------------------------------------------------------------------
+   * Radius - the DESIGN.md contract scale (D2).
+   *
+   * The exports emit every name shifted one step down, with `full` at 0.75rem rather than 9999px.
+   * The rendered PNGs confirm 0.75rem is what was approved (avatars are rounded squares), so the
+   * usages are remapped one step at the component layer while these names keep their conventional
+   * meaning. See docs/DESIGN_HANDOFF_SPEC.md D2 for the remap table.
+   * ------------------------------------------------------------------- */
+  --radius-xs: 0.0625rem;
+  --radius-sm: 0.125rem;
+  --radius-DEFAULT: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* ---------------------------------------------------------------------
+   * Elevation.
+   * DESIGN.md mandates depth by tonal layering, not shadows - the surface ladder above IS the
+   * elevation system. Shadows are reserved for genuine overlays. (D5: absent from all exports.)
+   * ------------------------------------------------------------------- */
+  --shadow-overlay: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+  --shadow-popover: 0 8px 16px -4px rgb(0 0 0 / 0.4);
+
+  /* ---------------------------------------------------------------------
+   * Motion (D5). Quick and non-decorative, matching the command-centre intent.
+   * ------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0, 1);
+  --ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+}
+
+/* -----------------------------------------------------------------------
+ * Z-index scale (D5). Kept outside @theme because these are referenced by
+ * name in component styles rather than generated as utilities.
+ * --------------------------------------------------------------------- */
+:root {
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-appbar: 20;
+  --z-drawer: 30;
+  --z-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-palette: 70;
+  --z-toast: 80;
+
+  /* Density modes - the token-level expression of Beginner/Professional/Enterprise
+   * complexity scaling (plan section 2.4). Switched at the app shell so no component
+   * hardcodes a density. Professional is the default. */
+  --density-padding: var(--spacing-md);
+  --density-row-gap: var(--spacing-sm);
+}
+
+[data-density='beginner'] {
+  --density-padding: var(--spacing-lg);
+  --density-row-gap: var(--spacing-md);
+}
+
+[data-density='enterprise'] {
+  --density-padding: var(--spacing-sm);
+  --density-row-gap: var(--spacing-xs);
+}
+
+/* -----------------------------------------------------------------------
+ * Base
+ * --------------------------------------------------------------------- */
+* {
+  border-color: var(--color-outline-variant);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus is a WCAG 2.2 AA requirement (plan section 25), not a style preference. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -57,11 +57,11 @@ export default tseslint.config(
   // rules cannot run against them. This must be its own entry: merging it into an object that also
   // defines `rules` would overwrite the rule-disabling map it carries.
   {
-    files: ['*.config.js', '*.config.ts', 'scripts/**/*.{mjs,js}'],
+    files: ['**/*.config.{js,mjs,cjs}', '*.config.ts', 'scripts/**/*.{mjs,js}'],
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
-    files: ['*.config.js', '*.config.ts', 'scripts/**/*.{mjs,js}'],
+    files: ['**/*.config.{js,mjs,cjs}', '*.config.ts', 'scripts/**/*.{mjs,js}'],
     rules: { 'no-console': 'off' },
   },
 

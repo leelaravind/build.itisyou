@@ -321,4 +321,128 @@ ADR-0001. No blockers.
 
 ---
 
+## Entry 004 — Foundation, and the CSP fight that took four attempts
+
+- **Date:** 2026-08-31
+- **Phase:** 1 — Foundation
+- **Objective:** Stand up the workspace, strict TypeScript, lint, test stack, error taxonomy, logging
+  and CI — and close the six gate criteria ADR-0001 deferred from Phase 0.
+
+### The foundation itself
+
+pnpm workspace with `apps/web` and `packages/shared`, TypeScript at maximum strictness
+(`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `verbatimModuleSyntax`), ESLint on
+`strictTypeChecked` + `stylisticTypeChecked`, Vitest, Playwright, and a CI pipeline of four jobs.
+
+**203 unit tests, all green.** The security-relevant pieces got the most coverage, deliberately:
+
+- **56 redaction tests.** The logger redacts centrally, not at call sites, because a convention every
+  caller has to remember is one that eventually gets forgotten — and that failure is silent,
+  permanent (logs ship and get retained), and usually discovered during a breach review. The tests
+  assert on the *serialised* record, not the redactor's return value, so a leak anywhere in the object
+  graph is caught. They cover secrets under 32 different key names, eight credential shapes under
+  innocuous keys, secrets inside error messages and cause chains, and secrets interpolated into the
+  log message itself.
+- **`TENANT_ISOLATION` maps to 404, not 403.** A 403 confirms the resource exists and belongs to
+  someone else, and existence is data. Gap-spec §7.5 requires cross-tenant probing to disclose
+  nothing at all.
+- **Provenance overwrite rules are antisymmetric, and equal trust never wins.** Two USER_CONFIRMED
+  values that disagree is a genuine conflict for the user to settle, not something to resolve by
+  arrival order. This is what stops an AI inference silently replacing a user-confirmed budget.
+
+### Settling TypeScript 7 with evidence instead of deferring it
+
+ADR-0002 left TS 7 as a Phase-1 spike. It resolved itself the moment I checked peer ranges:
+**`typescript-eslint@8.68.0` requires `typescript >=4.8.4 <6.1.0`.** TypeScript 7.0.2 sits outside
+that, so adopting it would mean no type-aware linting at all — losing `no-floating-promises`,
+`no-misused-promises`, `switch-exhaustiveness-check` and `no-unnecessary-condition` on a codebase whose
+correctness argument rests on the type system. Decision closed: 5.9.3.
+
+### Two failures worth recording
+
+**`.ts` import extensions.** The packages are consumed as source — each `exports` map points at
+`./src/*.ts` — but `tsc --build` rejected the extensions until `allowImportingTsExtensions` was paired
+with `emitDeclarationOnly`. Correct outcome anyway: no JavaScript needs emitting.
+
+**My own ESLint config was broken in a way that looked like a plugin bug.** I spread
+`tseslint.configs.disableTypeChecked` into an object that *also* defined `rules`, and the later `rules`
+key silently overwrote the entire rule-disabling map the spread carried. The symptom was a type-aware
+rule crashing on the config file itself. Split into two entries.
+
+### The CSP fight
+
+This is the one worth writing down properly, because I got the diagnosis wrong twice before the real
+cause surfaced.
+
+**The finding.** My E2E suite asserts no console errors on the landing page. It failed: Next 16 injects
+inline bootstrap scripts, which `script-src 'self'` blocks. 13 tests passed, that one caught it.
+
+The cheap fix is `'unsafe-inline'`. I rejected it. This platform hosts user-authored rich-text
+documents (plan §17), which gap-spec §34 names explicitly as a stored-XSS surface —
+`'unsafe-inline'` disables precisely the protection that surface depends on. Weakening the assertion
+would also have violated plan §30's rule against weakening a valid failing test.
+
+**Attempt one: nonces.** Moved CSP into middleware with a per-request nonce. Still failed — because the
+page was statically prerendered, and a nonce generated per response cannot exist in HTML rendered at
+build time. Static prerendering and nonce-based CSP are mutually exclusive. Recorded as KI-014 and
+accepted: the product is overwhelmingly authenticated and tenant-scoped, so little is cacheable across
+users anyway. `export const dynamic = 'force-dynamic'`.
+
+**Attempt two: `strict-dynamic`.** Dropped it. It disables host-based allowlisting, which was blocking
+Next's own same-origin chunks. `'self'` plus a nonce is the stronger practical policy here.
+
+Nonces then appeared on every script tag, and Chromium and Firefox went green. **WebKit and
+mobile-safari did not** — "SSL connect error", eight times. Cause: `upgrade-insecure-requests`. WebKit
+honours it strictly and upgrades `http://127.0.0.1` to HTTPS, where no TLS listener exists. Chromium
+and Firefox exempt loopback; WebKit doesn't.
+
+**Attempt three failed for a reason that had nothing to do with the code.** I fixed it, rebuilt,
+re-tested — still failing. Fixed it differently, rebuilt, still failing. I was about to conclude the
+approach was wrong when I added a debug header and saw it wasn't present in the response at all.
+
+The server had never restarted. My kill loop used `netstat -ano | grep "LISTENING.*:3000"` — but
+`netstat` prints the port *before* the `LISTENING` state, so the pattern never matched, the port stayed
+occupied, `next start` exited 1, and a stale process from three builds earlier kept answering. Every
+"still failing" result was measuring code I had already replaced.
+
+Two lessons. First, when a fix doesn't take effect, verify the change actually reached the running
+system before doubting the fix — I burned three cycles on a correct fix I believed was wrong. Second,
+the debug header was what broke the loop: one observation beat three rounds of reasoning.
+
+With a genuinely fresh server, both of my candidate fixes turned out to work. I kept the host-based
+one — loopback never gets `upgrade-insecure-requests`, every real host does — because it also forces
+plain-HTTP requests up to HTTPS in deployed environments, which the protocol-based check would not.
+
+**Result: 70 E2E tests passing across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari.**
+
+### KI-007 is now closed by construction
+
+The P1 from Phase 0 — exports depending on `cdn.tailwindcss.com` and Google Fonts at runtime — cannot
+regress into the shipped app. Three tests assert the CSP names no CDN host, and one asserts the landing
+page fetches nothing off-origin. The failure mode is caught by a test, not by remembering.
+
+### Verifying the verifier
+
+I planted five credential types (AWS key ID, GitHub PAT, Postgres DSN, Anthropic key, Google API key)
+and confirmed the secret scanner caught all five and reported locations without echoing values into
+logs. A scanner that reports clean but cannot detect anything is worse than none — plan §38 forbids
+claiming a security control without verifying it, and that applies to the tooling too.
+
+It then caught a real hit on my own CI file: the ephemeral Postgres service credential. Working as
+intended; resolved with the inline `secret-scan-ignore` marker the scanner provides for exactly that.
+
+### Disk
+
+C: has 8.69 GB free on this machine. This project puts nothing there — `node_modules`, `.next`,
+`test-results` and the pnpm store all live on E:, and this session's scratch on C: is 90 KB. Added
+`cache-dir` and `state-dir` on E: to `.npmrc` so nothing leaks there later.
+
+### Artefacts
+
+`package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `eslint.config.js`, `vitest.config.ts`,
+`playwright.config.ts`, `.github/workflows/ci.yml`, `packages/shared/**`, `apps/web/**`,
+`scripts/{scan-secrets,count-tests,clean}.mjs`, `docs/KNOWN_ISSUES.md`.
+
+---
+
 <!-- Entries are appended below as work proceeds. Newest last. -->

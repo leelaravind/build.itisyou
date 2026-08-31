@@ -12,7 +12,7 @@
   "scripts": {
     "build": "pnpm --filter=@govintel/web build",
     "dev": "pnpm --filter=@govintel/web dev",
-    "typecheck": "tsc --build",
+    "typecheck": "tsc --build && pnpm --filter=@govintel/web typecheck",
     "typecheck:clean": "tsc --build --force",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -29,7 +29,9 @@
     "clean": "node scripts/clean.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
     "@types/node": "22.20.1",
     "@vitest/coverage-v8": "4.1.11",
     "eslint": "10.9.1",
