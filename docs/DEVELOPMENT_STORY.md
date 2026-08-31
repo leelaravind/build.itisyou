@@ -445,4 +445,101 @@ C: has 8.69 GB free on this machine. This project puts nothing there — `node_m
 
 ---
 
+## Entry 005 — The design system, and proving the derived colours were right
+
+- **Date:** 2026-08-31
+- **Phase:** 2 — Design system + app shell
+- **Objective:** Build the token layer and core primitives, and close the three Phase-0 gate blockers
+  that were still open on the design side.
+
+### Verifying the colours I invented
+
+Phase 0 found that two of the six Quality Gate states — BLOCKED and EXCEPTION — had **no colour
+defined anywhere in the handoff**. `DESIGN.md` prose mandates amber and purple; no export contains
+either. I derived `#ffc16a` and `#d0bcff` by matching the luminance of the three accents that *were*
+extracted, and wrote at the time that the values were "unverified and must be adjusted if they fail".
+
+They didn't fail. Measured against the shipped stylesheet:
+
+| Token | on `surface-container-low` |
+|---|---:|
+| `primary` (extracted) | 10.08 |
+| `success` (extracted) | 10.05 |
+| `danger` (extracted) | 10.11 |
+| **`warning` (derived)** | **10.69** |
+| **`exception` (derived)** | **10.07** |
+
+A spread of under 0.7 across all five. The luminance-parity method didn't just clear the 4.5:1
+threshold — it put the derived colours in the same optical register as the palette they had to live
+beside, which is what "same optical register" was supposed to mean.
+
+The test parses `globals.css` rather than reading a TypeScript mirror of the tokens. A mirror is free
+to drift from what actually renders; parsing the real stylesheet means the test can only pass for
+values the browser is genuinely given.
+
+### Making the accessibility rule structural
+
+Plan §25 requires that status never be conveyed by colour alone. The tempting implementation is a
+badge component that *accepts* an optional icon. That fails eventually: some call site out of forty
+omits it, and the omission is invisible to everyone except the users who need it.
+
+So `StatusChip` has no `color` or `icon` prop at all. A caller names a *status*; the icon, label and
+tone come from a descriptor table. Rendering a status without its accessible channel is not
+expressible through the API. Tests assert every gate, health, severity and validation state has a
+unique icon *and* a unique label — PASS and FAIL differing only by colour would be invisible to the
+most common form of colour blindness.
+
+### The test that caught me immediately
+
+`DESIGN_HANDOFF_SPEC.md` §6.4 promised a test asserting no component references a token outside the
+frozen set — "what would have caught D1 and D4 at authoring time". D1 was `border-subtle`, used 67
+times across the exports and defined in none of them; D4 was `headline-sm`, used on 8 screens and
+defined nowhere. Tailwind emits no error for an unknown utility, so nothing else in the toolchain
+catches this.
+
+I wrote that test, ran it, and it immediately failed on **my own code**: `gap-3xs` in `StatTile` and
+`AppShell` — a plausible-looking token I had invented while writing the component. Exactly the D1
+defect, committed by me, four days after documenting why it must never happen again.
+
+I then planted three deliberate offenders (`gap-nonexistent`, `rounded-massive`, `border-not-a-color`)
+and confirmed the test catches undefined colour, spacing and radius, and passes clean on restore. Same
+discipline as the secret scanner: a checker that has never caught anything is not known to work.
+
+### Reconciling three sidebars into two
+
+KI-011: the exports carry three different sidebar shells. Read closely, they are not three designs.
+
+Shells A (22 screens) and B (15 screens) differ *only* in that B appends Export and Archive — and the
+`team_resources` render shows both sets present simultaneously. That settles it: one shell that lost
+items in some exports, not two designs. Shell C is organisation-level, a genuinely different context,
+and stays separate — merging it would put project navigation in front of a user who has not chosen a
+project.
+
+So the shell takes its sections as data. That is what lets one component serve both contexts.
+
+### Two real accessibility defects, found by tests I wrote to find them
+
+The axe suite runs against the rendered application rather than isolated components, because a
+component can be perfectly accessible alone and still produce duplicate landmarks or an unreachable
+control once composed. Both routes came back with **zero axe violations**, but two of my own
+hand-written checks failed:
+
+**Reflow at 320px.** Real defect: four icon buttons in the header overflowed by 12px. I improved the
+test to name the offending elements rather than just asserting "something overflows", which is how I
+found it in one run instead of guessing. Settings and Help now hide below `sm`; they remain reachable
+from the sidebar, and the full set returns with mobile navigation in Phase 16.
+
+**prefers-reduced-motion.** This one was my test being wrong, not the code. The `0.01ms` override
+computes to `1e-05s`, so a string comparison against `"0.01ms"` failed while the rule worked
+perfectly. Fixed by comparing numerically. Worth recording because the instinct on a red test is to
+change the code — here the code was right.
+
+### Artefacts
+
+`apps/web/src/app/globals.css` (the frozen token layer), `components/ui/*` (StatusChip, Button,
+EmptyState, DataTable, StatTile, Modal, MaterialIcon), `components/shell/*` (AppShell, navigation),
+`app/p/[projectId]/page.tsx`, `e2e/accessibility.spec.ts`, `test/design/*`.
+
+---
+
 <!-- Entries are appended below as work proceeds. Newest last. -->

@@ -68,7 +68,7 @@ export default tseslint.config(
   // Tests may assert on shapes the type system cannot express, and deliberately construct invalid
   // input to prove validation rejects it.
   {
-    files: ['**/test/**/*.ts', '**/*.test.ts', 'e2e/**/*.ts'],
+    files: ['**/test/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', 'e2e/**/*.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
