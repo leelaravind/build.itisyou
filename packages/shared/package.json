@@ -1,0 +1,20 @@
+{
+  "name": "@govintel/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./errors": "./src/errors.ts",
+    "./correlation": "./src/correlation.ts",
+    "./logging": "./src/logging.ts",
+    "./provenance": "./src/provenance.ts",
+    "./result": "./src/result.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "zod": "4.5.4"
+  }
+}

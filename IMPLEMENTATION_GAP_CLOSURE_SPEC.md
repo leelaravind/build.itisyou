@@ -36,6 +36,7 @@ This document defines:
 When this document says **MUST**, treat it as mandatory unless a repository-level constraint makes it technically impossible.
 
 If any conflict exists between:
+
 - exported Stitch design
 - repository implementation
 - Master Implementation Plan
@@ -851,6 +852,7 @@ Recommended rule fields:
 ## 13.1 Rule determinism
 
 Given:
+
 - same project version
 - same ruleset version
 - same inputs
@@ -884,23 +886,23 @@ Create categories and target counts.
 
 Suggested:
 
-| Category | Minimum rules |
-|---|---:|
-| Intake/discovery | 20 |
-| Requirements | 20 |
-| Architecture | 25 |
-| Project planning | 20 |
-| Resource/capacity | 15 |
-| Budget/estimation | 20 |
-| Testing/QA | 35 |
-| Security | 35 |
-| Accessibility | 10 |
-| Deployment/release | 20 |
-| Production verification | 15 |
-| Operations/maintenance | 10 |
-| Documentation/handover | 10 |
-| Change control/governance | 15 |
-| **Total** | **270** |
+| Category                  | Minimum rules |
+| ------------------------- | ------------: |
+| Intake/discovery          |            20 |
+| Requirements              |            20 |
+| Architecture              |            25 |
+| Project planning          |            20 |
+| Resource/capacity         |            15 |
+| Budget/estimation         |            20 |
+| Testing/QA                |            35 |
+| Security                  |            35 |
+| Accessibility             |            10 |
+| Deployment/release        |            20 |
+| Production verification   |            15 |
+| Operations/maintenance    |            10 |
+| Documentation/handover    |            10 |
+| Change control/governance |            15 |
+| **Total**                 |       **270** |
 
 The rules must be meaningful.
 
@@ -1106,6 +1108,7 @@ An AI tool may influence:
 - effort assumptions
 
 But:
+
 - it has no employment cost unless subscription/API costs exist
 - it does not own approvals
 - it cannot be responsible for legally required human accountability
@@ -1142,6 +1145,7 @@ Define:
 
 Available Capacity =
 Working Hours
+
 - Leave
 - Non-project allocation
 - Meetings/overhead allowance
@@ -1468,6 +1472,7 @@ Before material change is applied:
 10. enqueue non-transactional follow-up jobs
 
 If transaction fails:
+
 - no partial project mutation
 
 ---
@@ -1518,9 +1523,10 @@ V1 document model:
 - entity links
 
 Do not build:
+
 - Google Docs-scale real-time collaboration
 - complex comments/mentions presence system
-unless existing repository already provides it.
+  unless existing repository already provides it.
 
 ---
 
@@ -1536,6 +1542,7 @@ Important distinction:
 Canonical data wins.
 
 If user manually edits generated prose:
+
 - preserve edits
 - do not silently overwrite
 - identify affected sections during regeneration
@@ -1591,6 +1598,7 @@ Approval object:
 - subject version
 
 If subject changes after approval:
+
 - approval becomes stale/invalid as policy dictates
 
 ---
@@ -1682,12 +1690,14 @@ Classes:
 Examples:
 
 RESTRICTED:
+
 - secrets
 - credentials
 - private keys
 - authentication tokens
 
 CONFIDENTIAL:
+
 - proprietary architecture
 - source code snippets
 - customer business requirements
@@ -1744,11 +1754,13 @@ Sensitive evidence may require separate permissions.
 Audit records cannot be editable via normal CRUD.
 
 Allow:
+
 - append
 - query
 - retention policy
 
 Do not allow:
+
 - update event
 - delete individual event through product UI
 
@@ -1929,6 +1941,7 @@ Repeated request must not duplicate side effects.
 Use version field / ETag on mutable critical entities.
 
 If stale client writes:
+
 - reject with conflict
 - return current version
 - do not silently last-write-wins critical project data
@@ -1980,6 +1993,7 @@ Plan for dependency failures.
 If non-critical subsystem fails:
 
 Examples:
+
 - search unavailable
 - queue unavailable
 - integration unavailable
@@ -1987,6 +2001,7 @@ Examples:
 Core project read access should remain available where safe.
 
 If DB is unavailable:
+
 - fail safely
 - do not show stale mutation success
 
@@ -2132,6 +2147,7 @@ Storybook stories should include:
 - accessibility examples
 
 For graphs:
+
 - small
 - medium
 - large/clustered
@@ -2180,12 +2196,14 @@ Test realistic and large fixtures.
 At minimum:
 
 ### Small
+
 - 1 user
 - 30 tasks
 - 20 requirements
 - 10 tests
 
 ### Medium
+
 - 12 people
 - 500 tasks
 - 150 requirements
@@ -2193,6 +2211,7 @@ At minimum:
 - 100 risks/doc links
 
 ### Large
+
 - 100 people
 - 5,000 tasks
 - 1,000 requirements
@@ -2257,6 +2276,7 @@ Never attack third-party systems outside authorized scope.
 Mandatory automated pre-live gate:
 
 ## Application
+
 - build green
 - all required tests green
 - no P0/P1 defects
@@ -2264,6 +2284,7 @@ Mandatory automated pre-live gate:
 - staging verified
 
 ## Security
+
 - secret scan
 - dependency scan
 - SAST
@@ -2274,12 +2295,14 @@ Mandatory automated pre-live gate:
 - rate limits
 
 ## Data
+
 - backup available
 - restore tested
 - retention configuration
 - migration reconciliation
 
 ## Operations
+
 - monitoring
 - alerts
 - logs
@@ -2288,6 +2311,7 @@ Mandatory automated pre-live gate:
 - deployment identity
 
 ## Product
+
 - privacy/terms/support routes where required
 - no fake integrations
 - no broken navigation
@@ -2574,6 +2598,7 @@ Include:
 By project completion, repository should contain at least:
 
 ## Architecture
+
 - architecture
 - domain model
 - Digital Twin schema
@@ -2587,6 +2612,7 @@ By project completion, repository should contain at least:
 - threat model
 
 ## Delivery
+
 - implementation plan
 - development story
 - screen map
@@ -2599,6 +2625,7 @@ By project completion, repository should contain at least:
 - final verification
 
 ## Machine-readable contracts
+
 - OpenAPI
 - JSON Schema
 - rule schemas

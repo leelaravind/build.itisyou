@@ -1,0 +1,43 @@
+{
+  "name": "govintel-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Software Project Intelligence, Planning, Execution and Governance Platform",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter=@govintel/web build",
+    "dev": "pnpm --filter=@govintel/web dev",
+    "typecheck": "tsc --build",
+    "typecheck:clean": "tsc --build --force",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:count": "node scripts/count-tests.mjs",
+    "audit:deps": "pnpm audit --audit-level=moderate",
+    "scan:secrets": "node scripts/scan-secrets.mjs",
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "clean": "node scripts/clean.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.1",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "10.9.1",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.11.0",
+    "prettier": "3.9.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.68.0",
+    "vitest": "4.1.11"
+  }
+}

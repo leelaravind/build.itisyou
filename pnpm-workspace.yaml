@@ -1,0 +1,6 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# Keep the store off the constrained C: drive (10.9 GB free at Phase 0).
+# See docs/REPOSITORY_REALITY.md section 2.3.

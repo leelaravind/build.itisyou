@@ -84,22 +84,22 @@ These must not be filler assertions.
 
 Target distribution:
 
-| Test area | Minimum |
-|---|---:|
-| Domain model + invariants | 70 |
-| Deterministic rules engine | 100 |
-| Lifecycle + quality gates | 45 |
-| AI interchange/schema/semantic validation | 55 |
-| Budget/estimation/resource calculations | 50 |
-| Dependency/impact propagation | 50 |
-| API + contract tests | 55 |
-| Authentication/RBAC/tenant isolation | 50 |
-| Frontend components + states | 45 |
-| Playwright critical journeys | 40 |
-| Accessibility | 20 |
-| Security regression | 20 |
-| Migrations/recovery/jobs/idempotency | 20 |
-| **Minimum total** | **620** |
+| Test area                                 | Minimum |
+| ----------------------------------------- | ------: |
+| Domain model + invariants                 |      70 |
+| Deterministic rules engine                |     100 |
+| Lifecycle + quality gates                 |      45 |
+| AI interchange/schema/semantic validation |      55 |
+| Budget/estimation/resource calculations   |      50 |
+| Dependency/impact propagation             |      50 |
+| API + contract tests                      |      55 |
+| Authentication/RBAC/tenant isolation      |      50 |
+| Frontend components + states              |      45 |
+| Playwright critical journeys              |      40 |
+| Accessibility                             |      20 |
+| Security regression                       |      20 |
+| Migrations/recovery/jobs/idempotency      |      20 |
+| **Minimum total**                         | **620** |
 
 The final count may be larger.
 
@@ -306,6 +306,7 @@ Reason:
 ## 3.2 Recommended stack
 
 ### Frontend
+
 - Next.js App Router
 - React
 - TypeScript
@@ -317,6 +318,7 @@ Reason:
 - accessible drag/drop library for board/tree interaction
 
 ### Backend
+
 - TypeScript
 - Node.js
 - modular domain/application/infrastructure layers
@@ -324,6 +326,7 @@ Reason:
 - OpenAPI-first contracts
 
 ### Database
+
 - PostgreSQL
 - patched supported production version
 - migrations under version control
@@ -331,36 +334,45 @@ Reason:
 - tenant filtering also enforced in the application layer
 
 ### Jobs
+
 - Redis
 - BullMQ
 
 ### Object/evidence storage
+
 - S3-compatible object storage
 - encryption at rest
 - signed access
 - hashes recorded for evidence integrity
 
 ### Search
+
 V1:
+
 - PostgreSQL full-text/search initially if adequate
 - introduce dedicated search service only if validated by scale/UX needs
 
 Do not add infrastructure simply because it appeared in research.
 
 ### Authentication
+
 - standards-based OIDC-capable authentication
 - provider must remain replaceable
 - organization + project RBAC
 
 ### Eventing
+
 V1:
+
 - transactional outbox
 - internal domain events
 
 Later:
+
 - Kafka only when multiple independently deployed consumers justify it
 
 ### ML
+
 Do not build ML models in core V1.
 
 Create clean interfaces for later:
@@ -618,10 +630,12 @@ Example:
 `SEC-WEB-AUTH-001`
 
 IF:
+
 - project.type = public_web_app
 - authentication = true
 
 THEN:
+
 - security authentication test pack required
 - authorization test pack required
 - session-management verification required
@@ -660,11 +674,13 @@ At minimum:
 Do not try to author thousands manually on day one.
 
 V1 target:
+
 - at least 250 curated deterministic rules
 - strong coverage of software/web project classes
 - extensible versioned rule-pack structure
 
 Later rule packs:
+
 - mobile
 - API
 - data platform
@@ -861,6 +877,7 @@ Every material calculation must record:
 ## 12.3 No fake precision
 
 If evidence is weak:
+
 - use range
 - use confidence
 - label assumption
@@ -1552,6 +1569,7 @@ When any test fails:
 10. record fix in development story
 
 If no validated fix is achieved:
+
 - revert the attempted change
 - keep evidence
 - create known-issue entry
@@ -1587,6 +1605,7 @@ Create deterministic fixtures:
 Golden project fixture:
 
 **GST Compliance Platform**
+
 - enterprise web application
 - 12-person team
 - £180,000 budget
@@ -1799,7 +1818,9 @@ Record actual validated limits rather than claiming targets were achieved withou
 # 34. IMPLEMENTATION PHASES
 
 ## Phase 0 — Handoff, audit, baseline
+
 Tasks:
+
 - repo audit
 - design inventory
 - token extraction
@@ -1809,10 +1830,13 @@ Tasks:
 - docs bootstrap
 
 Gate:
+
 - repository understood and reproducible
 
 ## Phase 1 — Foundation
+
 Tasks:
+
 - monorepo/app structure if needed
 - TypeScript strict config
 - formatting/linting
@@ -1824,10 +1848,13 @@ Tasks:
 - CI
 
 Gate:
+
 - green foundation pipeline
 
 ## Phase 2 — Design system + shell
+
 Tasks:
+
 - tokens
 - core primitives
 - application shell
@@ -1838,10 +1865,13 @@ Tasks:
 - hard states
 
 Gate:
+
 - Storybook/component accessibility green
 
 ## Phase 3 — Database + tenancy + auth
+
 Tasks:
+
 - schema
 - migrations
 - tenancy
@@ -1852,10 +1882,13 @@ Tasks:
 - authorization middleware
 
 Gate:
+
 - tenant-isolation suite green
 
 ## Phase 4 — Intake + guest flow
+
 Tasks:
+
 - landing
 - project start
 - intake
@@ -1865,10 +1898,13 @@ Tasks:
 - preview state
 
 Gate:
+
 - anonymous E2E flow green through prompt creation
 
 ## Phase 5 — External AI interchange
+
 Tasks:
+
 - schema
 - prompt template engine
 - data-leaving summary/redaction
@@ -1878,10 +1914,13 @@ Tasks:
 - correction loop
 
 Gate:
+
 - golden valid/invalid payload suite green
 
 ## Phase 6 — Project Digital Twin
+
 Tasks:
+
 - canonical entities
 - versions
 - trace links
@@ -1889,10 +1928,13 @@ Tasks:
 - project generation transaction
 
 Gate:
+
 - deterministic generation from golden fixture
 
 ## Phase 7 — Rules + lifecycle + quality gates
+
 Tasks:
+
 - rule DSL/data model
 - initial rule packs
 - evaluator
@@ -1901,10 +1943,13 @@ Tasks:
 - quality gates
 
 Gate:
+
 - rules/lifecycle golden suites green
 
 ## Phase 8 — Work decomposition + execution
+
 Tasks:
+
 - phases
 - workstreams
 - milestones
@@ -1916,10 +1961,13 @@ Tasks:
 - dependencies
 
 Gate:
+
 - solo + 12-person fixtures produce valid execution plans
 
 ## Phase 9 — Budget/resource/forecast core
+
 Tasks:
+
 - capacity
 - resource assignment
 - budget categories
@@ -1930,10 +1978,13 @@ Tasks:
 - scenarios
 
 Gate:
+
 - calculation golden suite green
 
 ## Phase 10 — Requirements/architecture/traceability
+
 Tasks:
+
 - requirement management
 - architecture components
 - graph
@@ -1941,10 +1992,13 @@ Tasks:
 - missing-link detection
 
 Gate:
+
 - complete Requirement→Release chain verified
 
 ## Phase 11 — Testing/security/release/operations domain
+
 Tasks:
+
 - tests
 - test evidence
 - security requirements/findings
@@ -1955,10 +2009,13 @@ Tasks:
 - technical debt
 
 Gate:
+
 - release-readiness flow works end-to-end
 
 ## Phase 12 — Change intelligence
+
 Tasks:
+
 - change requests
 - impact traversal
 - preview
@@ -1968,10 +2025,13 @@ Tasks:
 - version creation
 
 Gate:
+
 - major architecture-change golden scenario verified
 
 ## Phase 13 — Baselines/documents/evidence/approvals
+
 Tasks:
+
 - baseline freeze
 - variance
 - Tiptap document system
@@ -1982,10 +2042,13 @@ Tasks:
 - change history
 
 Gate:
+
 - immutable baseline + evidence audit verified
 
 ## Phase 14 — Completion/retrospective/handover
+
 Tasks:
+
 - retrospective
 - lessons
 - completion gate
@@ -1993,10 +2056,13 @@ Tasks:
 - archive
 
 Gate:
+
 - project can formally close only when criteria pass/accepted exceptions exist
 
 ## Phase 15 — Organization features
+
 Tasks:
+
 - organizations
 - members
 - roles
@@ -2006,10 +2072,13 @@ Tasks:
 - portfolio overview
 
 Gate:
+
 - multi-project/role behavior verified
 
 ## Phase 16 — Mobile/responsive completion
+
 Tasks:
+
 - mobile Project Home
 - Today
 - task
@@ -2019,9 +2088,11 @@ Tasks:
 - graph/table graceful fallback
 
 Gate:
+
 - defined mobile E2Es/accessibility pass
 
 ## Phase 17 — Search/integrations
+
 V1 priority only.
 
 Implement only integrations actually approved for V1.
@@ -2029,7 +2100,9 @@ Implement only integrations actually approved for V1.
 Do not let integration scope delay the deterministic core.
 
 ## Phase 18 — Hardening
+
 Tasks:
+
 - complete 600+ tests
 - security regression
 - performance
@@ -2041,10 +2114,13 @@ Tasks:
 - failure injection where practical
 
 Gate:
+
 - release candidate
 
 ## Phase 19 — Staging
+
 Tasks:
+
 - deploy
 - migrate
 - seed safe staging fixture
@@ -2055,10 +2131,13 @@ Tasks:
 - rollback readiness
 
 Gate:
+
 - staging green
 
 ## Phase 20 — Production
+
 Tasks:
+
 - production deployment
 - automated production verification
 - version identity
@@ -2068,10 +2147,13 @@ Tasks:
 - rollback target recorded
 
 Gate:
+
 - production verified
 
 ## Phase 21 — Final verification
+
 Tasks:
+
 - full evidence collection
 - docs finalization
 - development story
@@ -2233,6 +2315,7 @@ Do not begin broad feature implementation until Phase 0 passes.
 Then execute phases sequentially, while allowing safe parallelization only where contracts are already frozen.
 
 For every change:
+
 - identify impact
 - implement
 - test
