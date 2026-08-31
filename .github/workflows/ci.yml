@@ -44,6 +44,12 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # A hand-maintained authorisation matrix drifts from the code, and a drifted security
+      # document is worse than none - it tells a reviewer the system behaves one way while it
+      # behaves another.
+      - name: Permissions matrix is current
+        run: pnpm docs:check
+
       - name: Unit and integration tests
         run: pnpm test
 

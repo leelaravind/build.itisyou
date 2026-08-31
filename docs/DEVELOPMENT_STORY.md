@@ -542,4 +542,96 @@ EmptyState, DataTable, StatTile, Modal, MaterialIcon), `components/shell/*` (App
 
 ---
 
+## Entry 006 — Tenancy, and the security control that was doing nothing
+
+- **Date:** 2026-08-31
+- **Phase:** 3 — Database, tenancy, RBAC, auth
+- **Objective:** Build the tenant boundary, the permission matrix and the guest-to-account
+  conversion — the security-critical core.
+
+### The RLS suite nearly passed for the wrong reason
+
+I wrote row-level security policies on all five tenant-owned tables, ran the isolation suite, and
+every test failed with all three tenants' rows returned. The policies were defined. They were doing
+nothing.
+
+**PostgreSQL exempts superusers from row-level security unconditionally**, and `FORCE ROW LEVEL
+SECURITY` — which I had set — only covers the table *owner*, not a superuser. PGlite connects as
+`postgres`. Every policy was being silently ignored.
+
+The uncomfortable part is how close this came to passing. My first instinct on seeing three rows
+where I expected two was that the test fixture was wrong. Had I "fixed" the assertion instead of the
+setup, the suite would have gone green, the document would have said "row-level security enforced",
+and the control would have been decorative. Plan §38 says never claim a security control without
+verifying it, and this is exactly the shape that failure takes: not a missing control, a present one
+that does nothing.
+
+The fix is a `NOSUPERUSER` role that queries actually run as, which is also what production must do.
+I added a test pinning that constraint so a deployment cannot quietly connect as the owner and
+undo it.
+
+The audit triggers had the mirror-image problem: they were working all along, but Drizzle wraps
+driver errors as `Failed query: …`, so the trigger's own message sits on the cause chain. A bare
+`rejects.toThrow()` would have passed — and would also have passed if the statement failed for a
+completely unrelated reason. Walking the cause chain keeps the assertion about the thing it claims
+to test.
+
+### Fifteen minutes of CI I would not have noticed until much later
+
+A fresh PGlite instance per test is the most obviously-isolated arrangement, and it is what I wrote.
+It measured ~1.5 seconds per instance: 33 tests in 50 seconds. Extrapolated to the 600-test target
+that is roughly **fifteen minutes of CI spent on process construction**.
+
+One instance per file with `TRUNCATE` between tests gives an identical isolation guarantee — every
+table emptied, nothing survives into the next test — in milliseconds. **50s → 3.7s.** Worth doing at
+33 tests; painful to retrofit at 600.
+
+### Design decisions that are security decisions
+
+**Cross-tenant access answers 404, not 403.** A 403 confirms the resource exists and belongs to
+someone else, and existence is itself tenant data. Tests assert the cross-tenant response is
+byte-identical to a genuine miss, so an attacker cannot enumerate ids by comparing replies.
+
+**Permissions combine as a union, not a maximum.** An organisation ADMIN who happens to be only a
+VIEWER on a project still has admin authority over it — organisation admin *is* a grant over the
+tenant's projects. Evaluating the two scopes independently and taking the lower answer would break
+legitimate administration while looking more secure.
+
+**Separation of duties is data, not a special case in a handler.** An ENGINEER cannot approve a gate;
+an APPROVER cannot edit what they approve. Combining edit and approve in one grant is how approval
+becomes theatre. Gate override belongs to no project role at all.
+
+**Guests get no evidence upload.** Accepting file uploads before signup opens a malware surface with
+no accountable owner behind it.
+
+### Double-submit, which the spec names by name
+
+Gap-spec §5.4 requires that repeated save requests create no duplicate project, and calls out
+concurrent double-submit explicitly. It is the most likely race in this product: the user finishes a
+long unsaved flow, presses Save, sees nothing for a second, presses again.
+
+Two mechanisms, because they cover different failures. `SELECT … FOR UPDATE` on the session row
+serialises concurrent conversions, so the second waits rather than racing — without it both would
+read `convertedAt = null` and both would proceed. `convertedAt` then acts as the idempotency marker
+so a replay after commit returns the existing result. A replay reports `converted: false` rather
+than throwing: the user double-clicked, they did nothing wrong.
+
+The test runs both conversions through `Promise.all` and asserts exactly one project exists and
+exactly one caller reports having done the work.
+
+### A document that cannot go stale
+
+`docs/PERMISSIONS_MATRIX.md` is generated from `rbac.ts`, not written by hand, and CI fails if the
+committed file has drifted. A hand-maintained authorisation matrix drifts, and a drifted security
+document is worse than none — it tells a reviewer the system behaves one way while it behaves
+another. I verified the check by planting drift and confirming it fails.
+
+### Artefacts
+
+`packages/db/src/{schema,rbac,tenancy,client,guest}.ts`, four test suites (RBAC, tenancy guard,
+database isolation, guest conversion), `docs/PERMISSIONS_MATRIX.md`, `scripts/generate-permissions-matrix.mjs`.
+554 tests passing.
+
+---
+
 <!-- Entries are appended below as work proceeds. Newest last. -->
