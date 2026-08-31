@@ -2,5 +2,9 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
-# Keep the store off the constrained C: drive (10.9 GB free at Phase 0).
-# See docs/REPOSITORY_REALITY.md section 2.3.
+# pnpm 11 blocks dependency postinstall scripts by default, which is a good supply-chain default.
+# esbuild is allowed explicitly because Vite (via Vitest) and drizzle-kit both need its platform
+# binary. Nothing else in the tree is granted script execution - each addition here is a deliberate
+# decision to run third-party code at install time.
+allowBuilds:
+  esbuild: true

@@ -1,0 +1,23 @@
+{
+  "name": "@govintel/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schema": "./src/schema.ts",
+    "./client": "./src/client.ts",
+    "./tenancy": "./src/tenancy.ts",
+    "./rbac": "./src/rbac.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "drizzle-orm": "0.45.2"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "drizzle-kit": "0.31.10"
+  }
+}
