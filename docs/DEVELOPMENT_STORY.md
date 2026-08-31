@@ -634,4 +634,80 @@ database isolation, guest conversion), `docs/PERMISSIONS_MATRIX.md`, `scripts/ge
 
 ---
 
+## Entry 007 — Identity, and the vulnerability that passes every permission test
+
+- **Date:** 2026-08-31
+- **Phase:** 3 — closing the gate
+- **Objective:** OIDC identity resolution and the authorisation middleware, then the full Phase-3
+  security regression.
+
+### Keeping the provider replaceable
+
+Gap-spec §6.1 requires provider-neutral OIDC and forbids coupling domain entities to one identity
+provider. The identity module therefore names no provider at all: it takes a claims object and
+resolves it to a local user. Whoever verified the token — a hosted SDK, a JWKS verifier, an
+enterprise SAML bridge — is the caller's concern, and swapping them changes nothing here.
+
+Two decisions worth stating because they are the ones people get wrong:
+
+**The module never verifies a token; it takes claims already verified.** Mixing verification into
+resolution is how "we trusted the `sub` claim from an unverified JWT" happens. The parameter type is
+named `VerifiedIdentityClaims` specifically so a caller passing unverified input has to lie about it
+in writing.
+
+**Identity is keyed on `(issuer, subject)`, never email.** Email is mutable, can be reassigned to a
+different person after someone leaves an organisation, and two providers can assert the same address
+for two different people. Keying on it is a well-trodden account-takeover route. There are tests
+proving the same `sub` from two issuers is two people, and that a shared email across issuers is
+likewise two people.
+
+The lockout path is deliberately vague to the caller: confirming an account exists *and* is locked is
+an enumeration oracle, and telling an attacker their lockout worked is free information.
+
+### The vulnerability that passes every permission test
+
+The authorisation middleware exists mostly to enforce an ordering, and the ordering is the whole
+point:
+
+1. authenticate (401)
+2. establish tenant membership (404)
+3. check the object belongs to that tenant (404)
+4. check the permission (403)
+
+Steps 3 and 4 are separate and ordered on purpose. A handler that checks "does this role hold
+`requirements:edit`?" without checking "does this requirement belong to the caller's tenant?" is
+OWASP Broken Object Level Authorisation — and it **passes every permission test you can write**. The
+caller genuinely holds the permission. The RBAC matrix is correct. The bug is that nobody asked
+which object.
+
+That is why `authorizeObject` binds both checks into one call rather than leaving them as two calls
+a handler might get in the wrong order. There are tests for the canonical case (an ENGINEER holding
+`requirements:edit` reaching another tenant's requirement), for privilege escalation (an
+organisation OWNER's authority conferring nothing in another tenant), and for the ordering itself —
+cross-tenant and not-found must be indistinguishable, because if permission were checked first, a
+caller *holding* the permission would see 404 vs 403 and learn which ids exist.
+
+### Membership is read per request, not trusted from a claim
+
+A role baked into a token stays valid until the token expires, which means a revoked admin keeps
+admin rights for the remainder of their session — precisely the window in which revocation matters.
+`buildUserPrincipal` reads membership from the database every time. There is a test that changes a
+role mid-flight and asserts the next principal reflects it.
+
+The cost is a query per request. That is the right trade for an authorisation decision, and it is
+cheap: a single indexed lookup on `(organization_id, user_id)`.
+
+### Non-membership answers 404
+
+Consistent with the rest: a 403 on an organisation the caller does not belong to would confirm the
+organisation exists.
+
+### Artefacts
+
+`packages/db/src/{identity,authorize}.ts`, `packages/db/test/authorize.test.ts` (45 tests),
+`docs/SECURITY.md` — which records SEC-001 (the inert RLS finding) in full, including the deployment
+requirement it produced and the nine regression guards now protecting it.
+
+---
+
 <!-- Entries are appended below as work proceeds. Newest last. -->

@@ -7,7 +7,10 @@
     "./schema": "./src/schema.ts",
     "./client": "./src/client.ts",
     "./tenancy": "./src/tenancy.ts",
-    "./rbac": "./src/rbac.ts"
+    "./rbac": "./src/rbac.ts",
+    "./identity": "./src/identity.ts",
+    "./authorize": "./src/authorize.ts",
+    "./guest": "./src/guest.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
@@ -17,7 +20,6 @@
     "drizzle-orm": "0.45.2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.5.8",
-    "drizzle-kit": "0.31.10"
+    "@electric-sql/pglite": "0.5.8"
   }
 }
