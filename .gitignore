@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Test / tooling output
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+storybook-static/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local scratch
+.scratch/
+
+# Large design source archive (designs are committed extracted)
+stitch_project_blueprint_system.zip

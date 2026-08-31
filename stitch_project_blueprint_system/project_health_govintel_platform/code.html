@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Project Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-fixed-dim": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "inverse-primary": "#006591",
+                        "on-primary-fixed": "#001e2f",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#213145",
+                        "tertiary-container": "#00b17b",
+                        "outline": "#88929b",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-container": "#003751",
+                        "primary": "#89ceff",
+                        "on-tertiary-container": "#003b26",
+                        "surface-container-high": "#222a3d",
+                        "inverse-surface": "#dae2fd",
+                        "on-surface-variant": "#bec8d2",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#283044",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-fixed": "#c9e6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#003824",
+                        "surface-tint": "#89ceff",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "background": "#0b1326",
+                        "tertiary": "#4edea3",
+                        "primary-container": "#0ea5e9",
+                        "secondary-container": "#3a4a5f",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "on-primary": "#00344d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .border-subtle { border-color: theme('colors.outline-variant'); border-width: 1px; border-style: solid; }
+        .border-strong { border-color: theme('colors.outline'); border-width: 1px; border-style: solid; }
+        .glass-panel { background: rgba(19, 27, 46, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid theme('colors.outline-variant'); }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Hidden on Mobile, Visible on md+) -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant p-md z-40 transition-all duration-200 ease-in-out">
+<!-- Header -->
+<div class="mb-xl flex items-center space-x-sm">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A small, high-fidelity corporate logo icon for 'Project Alpha'. Minimalist geometric design using glowing blue tones on a dark background. Engineering and intelligence theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUtxu6Vy7XqUgEQvX8oG91OFQXPqNtsoWh1XKFg6ZJIbOCGY6xKSdiMM2rIBOdlThp9S4cHSf3_iKJ72g8KJbMZ1oSLQ9Wg-bHjmI3nVgU_a16-6YDXd8saB-cYFv-P5bnoFKS8yviJBCpwgrM40-oZQB4jr8sMBBJHtNPt2NOYOn2AzqPA1OP5fpP5zltgcvK0ChueCMtQpod6Pjyqqw8HEK_yehYlzE4j3gDR_IdE2fuqSZNWA3R"/>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">Project Alpha</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant">Engineering Command</div>
+</div>
+</div>
+<!-- CTA -->
+<button class="mb-lg w-full bg-primary text-on-primary-fixed py-sm px-md rounded font-label-caps text-label-caps hover:bg-primary-fixed transition-colors flex items-center justify-center space-x-xs">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+<span>New Task</span>
+</button>
+<!-- Navigation Tabs -->
+<div class="flex-grow space-y-xs overflow-y-auto">
+<!-- Active Tab: Insights (Semantic match for Project Health dashboard) -->
+<a class="flex items-center space-x-sm px-sm py-xs bg-secondary-container text-on-secondary-container rounded-lg scale-95 active:scale-90 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-label-caps text-label-caps">Phases</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps">Resources</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-label-caps">Risk</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label-caps text-label-caps">Quality</span>
+</a>
+</div>
+<!-- Footer Tabs -->
+<div class="mt-auto pt-md border-t border-outline-variant space-y-xs">
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">download</span>
+<span class="font-label-caps text-label-caps">Export</span>
+</a>
+<a class="flex items-center space-x-sm px-sm py-xs text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">archive</span>
+<span class="font-label-caps text-label-caps">Archive</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (Responsive adaptation for mobile, full on desktop if side nav wasn't there, but per spec side nav implies top nav might be different. Let's provide the specified TopNavBar for mobile primarily, but keep it sticky top) -->
+<header class="flex items-center justify-between px-lg w-full h-16 sticky top-0 z-50 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-outline-variant">
+<!-- Mobile Brand (Hidden on md+) -->
+<div class="md:hidden font-headline-md text-headline-md font-bold text-primary">GovIntel Platform</div>
+<!-- Desktop Nav Links (Hidden on mobile) - Only showing if applicable, but design spec says SideNav for main structure. We'll include TopNav links as requested by JSON -->
+<div class="hidden md:flex space-x-lg h-full items-end pb-0">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 pb-sm" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 pb-sm" href="#">Plan</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 pb-sm" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 pb-sm" href="#">Control</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 pb-sm" href="#">Documents</a>
+<!-- Active State -->
+<a class="text-primary font-bold border-b-2 border-primary pb-sm cursor-pointer active:opacity-80" href="#">Insights</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center space-x-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">help</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover ml-sm" data-alt="User profile picture of a corporate executive in dark attire. High contrast lighting, professional studio shot. Neutral grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcuk2s1wtiRUSXb-eL-zPr6Brie7HD5mk_-1-qTGPCgmHaYXD3EgSytWltDSoLUEe3jVwn1JhlxVfaApVSiOruFPTxWcnGg_wAcEgeW0YlVqpsvdwQyeJHFT7j3M1Qc52Uz_Tk_yehWZK3jtXlHYigav4lViZEv8saKCyqL89vKXdBItyrEvZhYByGEbWN-BhJeI1OA5wMPBO8PJVJ6vzp2gQ6Yp0jGl1ucAcBbqkCrp1LuRuN1t85"/>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-md lg:p-lg xl:p-xl overflow-y-auto">
+<!-- Page Header -->
+<div class="mb-xl">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-xs">Project Health</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Explainable health dashboard for the GST Compliance Platform. Real-time telemetry across 8 critical operational dimensions.</p>
+</div>
+<!-- Health Grid (Bento Grid Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md auto-rows-min">
+<!-- Security Card (Enterprise Density) -->
+<div class="glass-panel rounded-lg p-md flex flex-col lg:col-span-2 xl:col-span-2">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-primary">security</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Security</h2>
+</div>
+<div class="flex items-center space-x-xs bg-tertiary-container/10 px-xs py-unit rounded border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">NOMINAL</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-center py-md">
+<p class="font-body-md text-body-md text-on-surface-variant">All critical infrastructure segments pass vulnerability scans. IAM roles audited with zero untracked escalations in the past 72 hours.</p>
+<div class="mt-md flex gap-sm">
+<div class="bg-surface-container-high px-sm py-xs rounded border border-outline-variant flex-1 text-center">
+<span class="block font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-unit">VULNERABILITIES</span>
+<span class="font-data-mono text-data-mono text-on-surface">0 CRITICAL</span>
+</div>
+<div class="bg-surface-container-high px-sm py-xs rounded border border-outline-variant flex-1 text-center">
+<span class="block font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-unit">COMPLIANCE</span>
+<span class="font-data-mono text-data-mono text-on-surface">99.9%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Budget Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col border-error/30 bg-error/5 relative overflow-hidden lg:col-span-2 xl:col-span-1">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex justify-between items-start mb-sm pl-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-error">account_balance_wallet</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Budget</h2>
+</div>
+<div class="flex items-center space-x-xs bg-error-container/20 px-xs py-unit rounded border border-error/30">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">error</span>
+<span class="font-data-mono-sm text-data-mono-sm text-error">AT RISK</span>
+</div>
+</div>
+<div class="flex-grow pl-sm">
+<p class="font-body-md text-body-md text-on-surface-variant mb-sm">5.2% variance detected in provisional cloud infrastructure costs due to unexpected high-load testing on non-optimized data tiers.</p>
+<div class="font-data-mono text-data-mono text-error mt-auto">+$12,450 / mo projection</div>
+</div>
+</div>
+<!-- Schedule Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col xl:col-span-1 border-primary/20 bg-primary/5 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-sm pl-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Schedule</h2>
+</div>
+<div class="flex items-center space-x-xs bg-primary-container/20 px-xs py-unit rounded border border-primary/30">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">info</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary">MONITOR</span>
+</div>
+</div>
+<div class="flex-grow pl-sm">
+<p class="font-body-md text-body-md text-on-surface-variant mb-sm">Phase 2 integration delayed by 2 days. Critical path remains unaffected, but buffer is reduced to 4 days.</p>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mt-auto">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Scope Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col md:col-span-1 lg:col-span-1">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-on-surface">fact_check</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Scope</h2>
+</div>
+<div class="flex items-center space-x-xs bg-tertiary-container/10 px-xs py-unit rounded border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">STABLE</span>
+</div>
+</div>
+<div class="flex-grow">
+<p class="font-body-sm text-body-sm text-on-surface-variant">No unapproved scope creep. Change Request #42 integrated successfully without altering core deliverables.</p>
+</div>
+</div>
+<!-- Quality Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col md:col-span-1 lg:col-span-1">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-on-surface">high_quality</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Quality</h2>
+</div>
+<div class="flex items-center space-x-xs bg-tertiary-container/10 px-xs py-unit rounded border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">STABLE</span>
+</div>
+</div>
+<div class="flex-grow">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Code coverage at 87%. UAT defect density is 0.4/KLOC, well below the 1.0 threshold.</p>
+</div>
+</div>
+<!-- Resources Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col md:col-span-1 lg:col-span-1 border-[#f59e0b]/30 bg-[#f59e0b]/5 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-[#f59e0b]"></div>
+<div class="flex justify-between items-start mb-sm pl-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-[#f59e0b]">group_work</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Resources</h2>
+</div>
+<div class="flex items-center space-x-xs bg-[#f59e0b]/10 px-xs py-unit rounded border border-[#f59e0b]/20">
+<span class="material-symbols-outlined text-[#f59e0b] text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-data-mono-sm text-data-mono-sm text-[#f59e0b]">STRAINED</span>
+</div>
+</div>
+<div class="flex-grow pl-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Backend engineering velocity dropping due to concurrent onboarding of 3 junior developers. Capacity at 95% utilization.</p>
+</div>
+</div>
+<!-- Dependencies Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col md:col-span-1 lg:col-span-1">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-on-surface">account_tree</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Dependencies</h2>
+</div>
+<div class="flex items-center space-x-xs bg-tertiary-container/10 px-xs py-unit rounded border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">CLEAR</span>
+</div>
+</div>
+<div class="flex-grow">
+<p class="font-body-sm text-body-sm text-on-surface-variant">External API provider (TaxCore) SLA confirmed at 99.99%. No downstream blockers identified.</p>
+</div>
+</div>
+<!-- Risk Card -->
+<div class="glass-panel rounded-lg p-md flex flex-col lg:col-span-3 xl:col-span-4 bg-surface-container-high/50">
+<div class="flex items-center space-x-sm mb-md">
+<span class="material-symbols-outlined text-on-surface">warning</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Risk Register (Active)</h2>
+</div>
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="py-sm px-md font-label-caps text-label-caps text-on-surface-variant">ID</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-on-surface-variant">Description</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-on-surface-variant">Severity</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-on-surface-variant">Mitigation</th>
+</tr>
+</thead>
+<tbody class="font-data-mono-sm text-data-mono-sm">
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md text-primary">RSK-042</td>
+<td class="py-sm px-md text-on-surface">Database migration latency exceeds threshold.</td>
+<td class="py-sm px-md"><span class="text-error border border-error/30 px-xs py-unit rounded bg-error/10">HIGH</span></td>
+<td class="py-sm px-md text-on-surface-variant">Provisioned read replicas; optimizing indexing strategy.</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md text-primary">RSK-048</td>
+<td class="py-sm px-md text-on-surface">Key resource (Lead Architect) vacation during launch week.</td>
+<td class="py-sm px-md"><span class="text-[#f59e0b] border border-[#f59e0b]/30 px-xs py-unit rounded bg-[#f59e0b]/10">MEDIUM</span></td>
+<td class="py-sm px-md text-on-surface-variant">Knowledge transfer sessions scheduled; fallback resource identified.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

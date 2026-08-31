@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Intake Wizard - GovIntel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#bec8d2",
+                      "surface-container-highest": "#2d3449",
+                      "on-tertiary": "#003824",
+                      "inverse-on-surface": "#283044",
+                      "secondary": "#b7c8e1",
+                      "tertiary-fixed": "#6ffbbe",
+                      "surface-container": "#171f33",
+                      "on-primary-container": "#003751",
+                      "surface-tint": "#89ceff",
+                      "inverse-primary": "#006591",
+                      "tertiary": "#4edea3",
+                      "on-primary-fixed": "#001e2f",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "tertiary-container": "#00b17b",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "primary": "#89ceff",
+                      "surface-dim": "#0b1326",
+                      "outline": "#88929b",
+                      "on-background": "#dae2fd",
+                      "primary-container": "#0ea5e9",
+                      "primary-fixed": "#c9e6ff",
+                      "inverse-surface": "#dae2fd",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "on-tertiary-fixed": "#002113",
+                      "on-secondary-fixed": "#0b1c30",
+                      "surface-bright": "#31394d",
+                      "secondary-fixed": "#d3e4fe",
+                      "outline-variant": "#3e4850",
+                      "error": "#ffb4ab",
+                      "primary-fixed-dim": "#89ceff",
+                      "on-secondary-container": "#a9bad3",
+                      "secondary-container": "#3a4a5f",
+                      "error-container": "#93000a",
+                      "on-tertiary-container": "#003b26",
+                      "on-surface": "#dae2fd",
+                      "surface-container-high": "#222a3d",
+                      "surface": "#0b1326",
+                      "surface-container-lowest": "#060e20",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "on-secondary": "#213145",
+                      "surface-container-low": "#131b2e",
+                      "background": "#0b1326",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "surface-variant": "#2d3449",
+                      "on-error": "#690005",
+                      "on-error-container": "#ffdad6",
+                      "on-primary": "#00344d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "container-max": "1440px",
+                      "3xl": "64px",
+                      "unit": "4px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "2xl": "48px",
+                      "sm": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "label-caps": ["Geist"],
+                      "body-md": ["Geist"],
+                      "headline-lg": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-lg": ["Geist"],
+                      "data-mono-sm": ["JetBrains Mono"],
+                      "data-mono": ["JetBrains Mono"],
+                      "body-sm": ["Geist"],
+                      "headline-lg-mobile": ["Geist"]
+              },
+              "fontSize": {
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #3e4850;
+            border-radius: 4px;
+        }
+        .wizard-step-active:before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #89ceff;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
+<!-- TopNavBar (Transactional/Focused view, simplified) -->
+<header class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16 bg-surface-container border-b border-outline-variant z-50 sticky top-0">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="policy" data-weight="fill" style="font-variation-settings: 'FILL' 1;">policy</span>
+<span class="text-headline-md font-headline-md font-bold text-primary">GovIntel Platform</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-xs text-label-caps font-label-caps">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+                Save &amp; Exit
+             </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center py-2xl px-md md:px-lg w-full max-w-container-max mx-auto relative">
+<!-- Background subtle accent -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-primary opacity-[0.03] blur-3xl rounded-full pointer-events-none -z-10"></div>
+<!-- Wizard Header -->
+<div class="w-full max-w-4xl mb-xl text-center">
+<h1 class="text-display-lg font-display-lg text-on-surface mb-sm">Project Intake</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Define the parameters of your new initiative.</p>
+</div>
+<!-- Progress Stepper -->
+<div class="w-full max-w-4xl mb-2xl">
+<div class="flex justify-between items-center relative before:absolute before:top-1/2 before:-translate-y-1/2 before:left-0 before:right-0 before:h-[1px] before:bg-outline-variant before:-z-10">
+<!-- Step 1 (Active) -->
+<div class="flex flex-col items-center gap-sm bg-background px-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-label-caps font-label-caps ring-4 ring-background">
+                        1
+                    </div>
+<span class="text-label-caps font-label-caps text-primary">Project &amp; Goals</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-sm bg-background px-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant border border-outline-variant flex items-center justify-center text-label-caps font-label-caps">
+                        2
+                    </div>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Requirements</span>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-sm bg-background px-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant border border-outline-variant flex items-center justify-center text-label-caps font-label-caps">
+                        3
+                    </div>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Resources</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-sm bg-background px-sm hidden sm:flex">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant border border-outline-variant flex items-center justify-center text-label-caps font-label-caps">
+                        4
+                    </div>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Technology</span>
+</div>
+<!-- Step 5 -->
+<div class="flex flex-col items-center gap-sm bg-background px-sm hidden md:flex">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant border border-outline-variant flex items-center justify-center text-label-caps font-label-caps">
+                        5
+                    </div>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Deployment</span>
+</div>
+</div>
+</div>
+<!-- Form Container -->
+<div class="w-full max-w-4xl bg-surface-container-low border border-outline-variant rounded-xl p-lg md:p-xl shadow-lg relative overflow-hidden">
+<!-- Contextual Recommendation Banner -->
+<div class="mb-xl bg-surface-container-high border border-outline-variant rounded-lg p-md flex items-start gap-md">
+<div class="mt-1 text-tertiary">
+<span class="material-symbols-outlined" data-icon="lightbulb" data-weight="fill" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface mb-xs">Intelligent Default Suggested</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Based on typical initializations, we recommend a <strong>Cloud-Native Web Architecture</strong> for high scalability. You can refine this later.</p>
+</div>
+</div>
+<!-- Form Content -->
+<div class="space-y-xl">
+<!-- Section: Core Identity -->
+<section>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-md pb-xs border-b border-outline-variant inline-block">Core Identity</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg mt-md">
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Project Name</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors placeholder:text-outline" placeholder="e.g., Nexus Operations" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Primary Domain</label>
+<div class="relative">
+<select class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors appearance-none pr-xl">
+<option>Select Domain...</option>
+<option>Defense &amp; Intelligence</option>
+<option>Public Infrastructure</option>
+<option>Data Analytics</option>
+<option>Internal Operations</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Project Type (Tri-state) -->
+<section>
+<div class="flex justify-between items-end mb-md">
+<h2 class="text-headline-md font-headline-md text-on-surface">Project Architecture Type</h2>
+<span class="text-label-caps font-label-caps text-primary bg-primary/10 px-sm py-xs rounded">Required</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Option 1 -->
+<label class="cursor-pointer group">
+<input checked="" class="peer sr-only" name="project_type" type="radio"/>
+<div class="h-full bg-surface-container border border-outline-variant rounded-lg p-md peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-outline relative">
+<div class="absolute top-md right-md opacity-0 peer-checked:opacity-100 text-primary">
+<span class="material-symbols-outlined" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="material-symbols-outlined text-3xl text-on-surface-variant mb-sm group-hover:text-primary transition-colors" data-icon="web">web</span>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface mb-xs">Web Application</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Browser-based interface for distributed access.</p>
+</div>
+</label>
+<!-- Option 2 -->
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="project_type" type="radio"/>
+<div class="h-full bg-surface-container border border-outline-variant rounded-lg p-md peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-outline relative">
+<div class="absolute top-md right-md opacity-0 peer-checked:opacity-100 text-primary">
+<span class="material-symbols-outlined" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="material-symbols-outlined text-3xl text-on-surface-variant mb-sm group-hover:text-primary transition-colors" data-icon="api">api</span>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface mb-xs">API / Microservice</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Backend processing and data integration layers.</p>
+</div>
+</label>
+<!-- Option 3 -->
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="project_type" type="radio"/>
+<div class="h-full bg-surface-container border border-outline-variant rounded-lg p-md peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-outline relative">
+<div class="absolute top-md right-md opacity-0 peer-checked:opacity-100 text-primary">
+<span class="material-symbols-outlined" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="material-symbols-outlined text-3xl text-on-surface-variant mb-sm group-hover:text-primary transition-colors" data-icon="smartphone">smartphone</span>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface mb-xs">Mobile Native</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">iOS/Android optimized field applications.</p>
+</div>
+</label>
+</div>
+<!-- Tri-state confidence indicator -->
+<div class="mt-md flex items-center gap-md bg-surface-container p-sm rounded-lg border border-outline-variant w-fit">
+<span class="text-label-caps font-label-caps text-on-surface-variant ml-sm">Certainty:</span>
+<div class="flex gap-xs">
+<button class="px-md py-xs rounded bg-secondary-container text-on-secondary-container text-body-sm font-body-sm border border-transparent">I know</button>
+<button class="px-md py-xs rounded bg-surface text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-sm font-body-sm border border-outline-variant">Not sure</button>
+<button class="px-md py-xs rounded bg-surface text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-sm font-body-sm border border-outline-variant">Don't know</button>
+</div>
+</div>
+</section>
+<!-- Section: Key Objectives -->
+<section>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-md">Key Objectives</h2>
+<div class="space-y-sm">
+<textarea class="w-full bg-surface-container border border-outline-variant rounded-lg p-md text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors placeholder:text-outline resize-y" placeholder="Describe the primary goals and expected outcomes of this initiative..." rows="3"></textarea>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<div class="mt-2xl pt-lg border-t border-outline-variant flex justify-between items-center">
+<button class="text-on-surface-variant hover:text-on-surface px-lg py-sm rounded-lg font-label-caps text-label-caps transition-colors">
+                    Cancel
+                </button>
+<div class="flex gap-md">
+<button class="px-lg py-sm rounded-lg font-label-caps text-label-caps border border-outline-variant text-on-surface hover:bg-surface-container-highest transition-colors disabled:opacity-50" disabled="">
+                        Previous
+                    </button>
+<button class="px-lg py-sm rounded-lg font-label-caps text-label-caps bg-primary text-on-primary hover:bg-primary-fixed transition-colors flex items-center gap-sm">
+                        Continue to Requirements
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

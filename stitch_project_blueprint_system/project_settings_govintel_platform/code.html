@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel - Project Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary": "#003824",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-tint": "#89ceff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-container-highest": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "background": "#0b1326",
+                        "outline": "#88929b",
+                        "tertiary": "#4edea3",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-background": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-primary": "#00344d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary-container": "#3a4a5f",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary-container": "#003751",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#89ceff",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a",
+                        "outline-variant": "#3e4850",
+                        "primary-fixed": "#c9e6ff",
+                        "surface-variant": "#2d3449",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-container": "#171f33",
+                        "on-primary-fixed": "#001e2f",
+                        "on-surface-variant": "#bec8d2",
+                        "on-secondary-container": "#a9bad3",
+                        "primary-container": "#0ea5e9",
+                        "tertiary-container": "#00b17b",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "3xl": "64px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "display-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-low');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.DEFAULT');
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row antialiased">
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col w-64 bg-surface-container-low border-r border-outline-variant fixed left-0 top-0 h-screen pt-20 pb-lg z-10">
+<div class="px-lg mb-xl">
+<h2 class="text-headline-sm font-headline-md text-primary font-bold">Project Alpha</h2>
+<p class="text-body-sm text-on-surface-variant mt-xs">Phase: Execution</p>
+</div>
+<div class="flex-1 overflow-y-auto px-md space-y-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="text-label-caps font-label-caps">Resource Map</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="text-label-caps font-label-caps">Risk Matrix</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-label-caps font-label-caps">Budget</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="text-label-caps font-label-caps">Schedule</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="text-label-caps font-label-caps">Governance</span>
+</a>
+</div>
+<div class="px-md pt-lg border-t border-outline-variant mt-auto space-y-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="text-label-caps font-label-caps">Help</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-label-caps font-label-caps">Status</span>
+</a>
+<button class="w-full mt-md bg-primary-container text-on-primary-container font-label-caps text-label-caps py-sm px-md rounded-DEFAULT hover:opacity-90 transition-opacity">
+                Add Milestone
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (Settings Context - Mobile only or specific contextual header) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant w-full px-lg h-16 flex items-center justify-between sticky top-0 z-20">
+<div class="flex items-center gap-md">
+<!-- Mobile Menu Toggle (Placeholder) -->
+<button class="md:hidden text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold tracking-tight text-primary">GovIntel</h1>
+</div>
+<div class="hidden md:flex items-center gap-lg h-full">
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Home</a>
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Plan</a>
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Execute</a>
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Control</a>
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Documents</a>
+<!-- No explicit settings tab, but insights is there -->
+<a class="text-on-surface-variant pb-1 h-full flex items-center hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Insights</a>
+</div>
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-primary font-bold border-b-2 border-primary pb-1 p-sm rounded-full bg-surface-container-highest/50">
+<span class="material-symbols-outlined fill">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden ml-sm border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A stylized geometric avatar representing a user profile, utilizing deep blue and muted cyan tones in a highly structured, digital command center aesthetic. Minimalist and technical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0H0wmQy4K8rsXFQN1FM81ajNt-x8ul63JtNkSqIRxaLNyk8h-yKdrf1moUnU366AdXxeLxCd9IeGUs8pubYTHJDvAsf8XNRmhhdLqD8aI827H662e-v95iNkPd9uJU-BJ2GDYZSsbuwYmltFNEBaH7udvoj8j0-XADk4qEK1CJhKgL2Rn7bSMzUFtTjM88D2aWBtNLEnvAqRGD9-9zeANRuxqUlhR3aOECwy1PNlNykHIl_rii0Wq"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-md md:p-xl max-w-5xl mx-auto w-full">
+<div class="mb-xl">
+<h1 class="text-display-lg font-display-lg text-on-surface mb-xs">Project Settings</h1>
+<p class="text-body-lg text-on-surface-variant">Manage configuration, access, and lifecycle for GST Compliance Platform.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Metadata & General (Spans 8 cols on desktop) -->
+<div class="md:col-span-8 bg-surface-container-low border border-outline-variant rounded-lg p-lg">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-primary">edit_document</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Metadata Configuration</h2>
+</div>
+<form class="space-y-xl">
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant block">Project Name</label>
+<input class="w-full bg-surface text-on-surface border border-outline-variant rounded-DEFAULT p-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md" type="text" value="GST Compliance Platform"/>
+</div>
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant block">Project Description</label>
+<textarea class="w-full bg-surface text-on-surface border border-outline-variant rounded-DEFAULT p-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md resize-none" rows="3">Automated intelligence gathering and compliance reporting framework for inter-departmental taxation governance.</textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant block">Primary Department</label>
+<select class="w-full bg-surface text-on-surface border border-outline-variant rounded-DEFAULT p-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md appearance-none cursor-pointer">
+<option>Revenue &amp; Taxation</option>
+<option>Auditing</option>
+<option>Legal Compliance</option>
+</select>
+</div>
+<div class="space-y-sm">
+<label class="text-label-caps font-label-caps text-on-surface-variant block">Project Identifier (UUID)</label>
+<div class="flex items-center">
+<input class="w-full bg-surface-dim text-on-surface-variant border border-outline-variant rounded-l-DEFAULT p-sm font-data-mono text-data-mono" disabled="" type="text" value="gst-cmp-2024-v2.1"/>
+<button class="bg-surface-container-highest border border-l-0 border-outline-variant rounded-r-DEFAULT p-sm hover:bg-surface-bright transition-colors text-on-surface-variant" type="button">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-sm flex justify-end">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps py-sm px-lg rounded-DEFAULT hover:bg-primary-fixed transition-colors" type="button">
+                                Save Changes
+                            </button>
+</div>
+</form>
+</div>
+<!-- Access & Privacy (Spans 4 cols on desktop) -->
+<div class="md:col-span-4 flex flex-col gap-lg">
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-lg flex-1">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-tertiary">shield_lock</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Access Control</h2>
+</div>
+<div class="space-y-md">
+<label class="flex items-start gap-md cursor-pointer p-sm rounded-DEFAULT hover:bg-surface-container-highest transition-colors border border-transparent hover:border-outline-variant">
+<div class="relative flex items-center justify-center mt-1">
+<input class="peer appearance-none w-4 h-4 rounded-full border-2 border-outline-variant checked:border-primary checked:bg-surface-container-low transition-all" name="privacy" type="radio"/>
+<div class="absolute w-2 h-2 rounded-full bg-primary opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+<div>
+<span class="text-body-md text-on-surface font-medium block">Private</span>
+<span class="text-body-sm text-on-surface-variant">Only specific invited members.</span>
+</div>
+</label>
+<label class="flex items-start gap-md cursor-pointer p-sm rounded-DEFAULT bg-surface-container-highest border border-primary transition-colors">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="peer appearance-none w-4 h-4 rounded-full border-2 border-primary bg-surface-container-highest transition-all" name="privacy" type="radio"/>
+<div class="absolute w-2 h-2 rounded-full bg-primary opacity-100 transition-opacity"></div>
+</div>
+<div>
+<span class="text-body-md text-primary font-medium block">Internal (Gov)</span>
+<span class="text-body-sm text-on-surface-variant">Anyone with a verified .gov domain.</span>
+</div>
+</label>
+<label class="flex items-start gap-md cursor-pointer p-sm rounded-DEFAULT hover:bg-surface-container-highest transition-colors border border-transparent hover:border-outline-variant">
+<div class="relative flex items-center justify-center mt-1">
+<input class="peer appearance-none w-4 h-4 rounded-full border-2 border-outline-variant checked:border-primary checked:bg-surface-container-low transition-all" name="privacy" type="radio"/>
+<div class="absolute w-2 h-2 rounded-full bg-primary opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+<div>
+<span class="text-body-md text-on-surface font-medium block">Public</span>
+<span class="text-body-sm text-on-surface-variant">Visible to external stakeholders.</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Export Options (Full width) -->
+<div class="md:col-span-12 bg-surface-container-low border border-outline-variant rounded-lg p-lg">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-secondary">download</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Data Export</h2>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md">Extract project configuration, historical logs, and compliance matrices.</p>
+<div class="flex flex-wrap gap-md">
+<button class="flex items-center gap-sm bg-surface border border-outline-variant hover:border-primary hover:bg-surface-container-highest text-on-surface py-sm px-md rounded-DEFAULT transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">picture_as_pdf</span>
+<span class="font-data-mono text-data-mono">Export PDF</span>
+</button>
+<button class="flex items-center gap-sm bg-surface border border-outline-variant hover:border-primary hover:bg-surface-container-highest text-on-surface py-sm px-md rounded-DEFAULT transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">data_object</span>
+<span class="font-data-mono text-data-mono">Export JSON</span>
+</button>
+<button class="flex items-center gap-sm bg-surface border border-outline-variant hover:border-primary hover:bg-surface-container-highest text-on-surface py-sm px-md rounded-DEFAULT transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">table_view</span>
+<span class="font-data-mono text-data-mono">Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Danger Zone (Full width) -->
+<div class="md:col-span-12 bg-surface-container-low border border-error/30 rounded-lg p-lg mt-md">
+<div class="flex items-center gap-sm mb-lg border-b border-error/30 pb-sm">
+<span class="material-symbols-outlined text-error">warning</span>
+<h2 class="text-headline-md font-headline-md text-error">Lifecycle Controls</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-md border border-outline-variant rounded-DEFAULT bg-surface">
+<div class="mb-sm sm:mb-0 pr-md">
+<h3 class="text-body-md font-medium text-on-surface mb-xs">Archive Project</h3>
+<p class="text-body-sm text-on-surface-variant">Mark as inactive. Preserves data for auditing but disables edits.</p>
+</div>
+<button class="shrink-0 border border-outline-variant text-on-surface font-label-caps text-label-caps py-sm px-md rounded-DEFAULT hover:bg-surface-container-highest transition-colors">
+                                Archive
+                            </button>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-md border border-error/50 rounded-DEFAULT bg-error-container/10">
+<div class="mb-sm sm:mb-0 pr-md">
+<h3 class="text-body-md font-medium text-error mb-xs">Delete Project</h3>
+<p class="text-body-sm text-error/80">Permanent removal of all metadata, access logs, and linked compliance matrices.</p>
+</div>
+<button class="shrink-0 bg-error text-on-error font-label-caps text-label-caps py-sm px-md rounded-DEFAULT hover:bg-error/90 transition-colors">
+                                Delete
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

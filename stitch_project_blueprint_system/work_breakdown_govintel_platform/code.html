@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Work Breakdown - GST Compliance Platform</title>
+<!-- Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with custom config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#0ea5e9",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-tertiary-container": "#003b26",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-container": "#a9bad3",
+                        "tertiary-container": "#00b17b",
+                        "on-surface-variant": "#bec8d2",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#89ceff",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#dae2fd",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-container": "#3a4a5f",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-container": "#003751",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#003824",
+                        "surface-container-low": "#131b2e",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed": "#6ffbbe",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-secondary": "#213145",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "primary-fixed": "#c9e6ff",
+                        "on-primary": "#00344d",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "outline": "#88929b",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-variant": "#2d3449",
+                        "surface-container-lowest": "#060e20",
+                        "background": "#0b1326"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "data-mono-sm": ["JetBrains Mono", "monospace"],
+                        "label-caps": ["Geist", "sans-serif"],
+                        "headline-lg": ["Geist", "sans-serif"],
+                        "headline-md": ["Geist", "sans-serif"],
+                        "body-sm": ["Geist", "sans-serif"],
+                        "display-lg": ["Geist", "sans-serif"],
+                        "data-mono": ["JetBrains Mono", "monospace"],
+                        "body-md": ["Geist", "sans-serif"],
+                        "headline-lg-mobile": ["Geist", "sans-serif"],
+                        "body-lg": ["Geist", "sans-serif"]
+                    },
+                    fontSize: {
+                        "data-mono-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom styles for tree hierarchy lines */
+        .tree-line-v {
+            position: absolute;
+            left: 23px; /* Center of the 48px padding (24px) minus half border */
+            top: 40px; /* Start below the parent icon */
+            bottom: 0;
+            width: 1px;
+            background-color: theme('colors.outline-variant');
+            z-index: 0;
+        }
+        .tree-line-h {
+            position: absolute;
+            left: -24px;
+            top: 20px; /* Half of height */
+            width: 24px;
+            height: 1px;
+            background-color: theme('colors.outline-variant');
+            z-index: 0;
+        }
+        .tree-line-v-last-child {
+            bottom: auto;
+            height: 20px;
+        }
+        
+        /* Status dot animation */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+        }
+        .status-pulse {
+            animation: pulse-ring 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex flex-col md:flex-row">
+<!-- Top Navigation Bar (Mobile / Top Shell) -->
+<header class="md:hidden flex w-full h-16 bg-surface-container border-b border-outline-variant items-center px-4 justify-between z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">menu</span>
+<span class="font-headline-md font-bold text-primary">GovIntel Platform</span>
+</div>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJqdRzw3EnZAzHoGvJtmm5MBCx8sYXu8fxmfHpbYJviOzNnShGys2JoQpuDfBGDzou199zzYkCmpXTJERQpdsqWpXjbqcNfdrwTXkfLa7U792EY_FaJTkxKepaGHWn__iF8_vvA5zu1b47MLMssEuhrgjXR1BJe_gU8fm_ufZ0kcVUPO39xoj1j5smwS0T-Xm20XvD1FSCKCxMXGlHdaHWQdyCbyd08S5aozUpJ1t1rcZEJZppv8E4"/>
+</header>
+<!-- Side Navigation Bar (Web Shell) -->
+<nav class="hidden md:flex flex-col z-40 bg-surface-container-low border-r border-outline-variant h-screen w-64 flex-shrink-0">
+<!-- Header -->
+<div class="p-6 border-b border-outline-variant/50">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<div>
+<h2 class="font-headline-md font-bold text-on-surface text-body-lg">Project Alpha</h2>
+<p class="font-body-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-caps py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Request
+            </button>
+</div>
+<!-- Main Nav Links -->
+<div class="flex-1 overflow-y-auto py-4">
+<!-- Overview -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-label-caps">Overview</span>
+</a>
+<!-- Phases (ACTIVE) -->
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 opacity-80 duration-100 scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="font-label-caps">Phases</span>
+</a>
+<!-- Resources -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="font-label-caps">Resources</span>
+</a>
+<!-- Risk -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">warning</span>
+<span class="font-label-caps">Risk</span>
+</a>
+<!-- Quality -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">verified</span>
+<span class="font-label-caps">Quality</span>
+</a>
+<!-- Analytics -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">insights</span>
+<span class="font-label-caps">Analytics</span>
+</a>
+</div>
+<!-- Footer Nav Links -->
+<div class="p-4 border-t border-outline-variant/50">
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">settings</span>
+<span class="font-label-caps">Settings</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px] group-hover:text-primary transition-colors">tune</span>
+<span class="font-label-caps">Complexity</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden bg-background relative">
+<!-- Top App Bar (Web) -->
+<header class="hidden md:flex flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16 border-b border-outline-variant bg-surface-container z-30 shrink-0">
+<div class="flex items-center gap-6">
+<span class="font-headline-md font-bold text-primary tracking-tight">GovIntel Platform</span>
+<nav class="flex items-center gap-1">
+<a class="px-3 py-4 text-on-surface-variant font-label-caps font-medium hover:text-primary transition-colors duration-200" href="#">Home</a>
+<!-- Plan (ACTIVE) -->
+<a class="px-3 py-4 text-primary font-label-caps border-b-2 border-primary pb-1 opacity-80 duration-100" href="#">Plan</a>
+<a class="px-3 py-4 text-on-surface-variant font-label-caps font-medium hover:text-primary transition-colors duration-200" href="#">Execute</a>
+<a class="px-3 py-4 text-on-surface-variant font-label-caps font-medium hover:text-primary transition-colors duration-200" href="#">Control</a>
+<a class="px-3 py-4 text-on-surface-variant font-label-caps font-medium hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="px-3 py-4 text-on-surface-variant font-label-caps font-medium hover:text-primary transition-colors duration-200" href="#">Insights</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container-high border border-outline-variant text-body-sm text-on-surface rounded-full pl-10 pr-4 py-1.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all w-64 placeholder-on-surface-variant/50 font-data-mono-sm" placeholder="Search architecture, nodes..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">terminal</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border border-surface-container"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">help</span></button>
+<div class="w-px h-6 bg-outline-variant mx-2"></div>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQsM6LT2s9qEjxi7LZQahygqrdDtpzi9y676GmRKVP6MCwXz4-I571VXDRNLkGMjHZNVi_lWTs0WqrV5LecUvzXw9-AkUcgazwD5tQHKjcPQlh1hUqONIYLuaO5_YYB35gd4HPV-NFW-adiXtKMRBd2x_-hNIWMLpqMGQ8AuWvS7nV7ObRHAWxGz-BXPTk0oQcf38MAewoeYyP7kRz-uKHZDbg57ihCB4y7MPtRNhYdmVdaMTVxKtY"/>
+</div>
+</header>
+<!-- Canvas / Content Scroll Area -->
+<div class="flex-1 overflow-y-auto p-md lg:p-lg xl:p-2xl custom-scrollbar relative">
+<!-- Atmospheric Background Element -->
+<div class="absolute top-0 right-0 w-full h-96 bg-gradient-to-br from-primary-container/5 to-transparent pointer-events-none -z-10"></div>
+<div class="max-w-5xl mx-auto w-full">
+<!-- Page Header -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-on-surface-variant font-data-mono-sm mb-2">
+<span>WBS</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary-container">GST-2024-Q3</span>
+</div>
+<h1 class="font-headline-lg font-bold text-on-surface tracking-tight flex items-center gap-3">
+                            Work Breakdown Structure
+                        </h1>
+</div>
+<!-- Global Actions / View Toggles -->
+<div class="flex items-center gap-3 bg-surface-container p-1 rounded-lg border border-outline-variant">
+<button class="px-3 py-1.5 rounded bg-surface-container-high text-on-surface font-label-caps flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">account_tree</span> Tree
+                        </button>
+<button class="px-3 py-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest font-label-caps transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">view_list</span> List
+                        </button>
+<div class="w-px h-4 bg-outline-variant mx-1"></div>
+<button class="px-3 py-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all flex items-center gap-2" title="Filter">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Container for Hierarchy (Technical Precision focus) -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden shadow-2xl shadow-black/20 flex flex-col">
+<!-- Table Header Equivalent -->
+<div class="grid grid-cols-12 gap-4 p-4 border-b border-outline-variant bg-surface-container text-on-surface-variant font-label-caps uppercase tracking-wider">
+<div class="col-span-8 pl-10">Structure / Item</div>
+<div class="col-span-2 text-center">Status</div>
+<div class="col-span-2 text-right pr-4">ID Reference</div>
+</div>
+<!-- Tree View Content -->
+<div class="p-4 font-body-sm flex flex-col relative pb-12">
+<!-- LEVEL 0: PROJECT -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10">
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-inverse-primary" style="font-variation-settings: 'FILL' 1;">folder_special</span>
+<span class="font-headline-md text-base text-on-surface tracking-tight">GST Compliance Platform</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> IN_PROG
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                PRJ-9012
+                            </div>
+</div>
+<!-- TREE LINE L0 -> L1 -->
+<div class="tree-line-v" style="left: 27px; top: 32px;"></div>
+<!-- LEVEL 1: PHASE -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1" style="margin-left: 24px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">schema</span>
+<span class="font-medium text-on-surface">Phase: Development</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> ACTIVE
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                PHS-DEV
+                            </div>
+</div>
+<!-- TREE LINE L1 -> L2 -->
+<div class="tree-line-v" style="left: 51px; top: 72px;"></div>
+<!-- LEVEL 2: WORKSTREAM -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1" style="margin-left: 48px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-tertiary">engineering</span>
+<span class="text-on-surface">Workstream: Backend Engineering</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> IN_PROG
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                WS-BE-01
+                            </div>
+</div>
+<!-- TREE LINE L2 -> L3 -->
+<div class="tree-line-v" style="left: 75px; top: 112px;"></div>
+<!-- LEVEL 3: MILESTONE -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1" style="margin-left: 72px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-error-container" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span class="text-on-surface">Milestone: Core Tax Engine Alpha</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> IN_PROG
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                MS-CTE-A
+                            </div>
+</div>
+<!-- TREE LINE L3 -> L4 -->
+<div class="tree-line-v" style="left: 99px; top: 152px;"></div>
+<!-- LEVEL 4: EPIC -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1" style="margin-left: 96px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-inverse-surface">view_kanban</span>
+<span class="text-on-surface font-medium">Epic: Tax Calculation Logic</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> IN_PROG
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                EPC-1104
+                            </div>
+</div>
+<!-- TREE LINE L4 -> L5 -->
+<div class="tree-line-v" style="left: 123px; top: 192px;"></div>
+<!-- SIBLING LEVEL 5: COMPLETED TASK (Context) -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1" style="margin-left: 120px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative pl-9">
+<span class="material-symbols-outlined text-tertiary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface-variant line-through opacity-70">Task: Implement CGST Base Rate</span>
+</div>
+<div class="col-span-2 flex items-center justify-center opacity-70">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-tertiary/10 text-tertiary border border-tertiary/20">
+                                    DONE
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm opacity-70">
+                                TSK-8821
+                            </div>
+</div>
+<!-- LEVEL 5: TASK (Target) -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1 bg-surface-container/30 border border-outline-variant/30" style="margin-left: 120px;">
+<div class="tree-line-h"></div>
+<div class="col-span-8 flex items-center gap-3 relative">
+<button class="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant z-10">
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<span class="material-symbols-outlined text-primary text-[20px]">assignment</span>
+<span class="text-on-surface font-medium text-primary">Task: Implement IGST Calculation</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-primary-container/20 text-primary border border-primary/30 shadow-[0_0_10px_rgba(14,165,233,0.1)]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-pulse"></span> IN_PROG
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-primary font-data-mono-sm">
+                                TSK-8822
+                            </div>
+</div>
+<!-- TREE LINE L5 -> L6 -->
+<div class="tree-line-v tree-line-v-last-child" style="left: 147px; top: 272px; height: 32px;"></div>
+<!-- LEVEL 6: SUBTASK (Target Detailed) -->
+<div class="group relative flex items-center grid grid-cols-12 gap-4 py-2 hover:bg-surface-container/50 transition-colors rounded-lg z-10 mt-1 bg-surface-container-high border-l-2 border-primary" style="margin-left: 144px;">
+<div class="tree-line-h" style="width: 12px; left: -12px;"></div>
+<div class="col-span-8 flex items-center gap-3 relative pl-7">
+<span class="material-symbols-outlined text-outline-variant text-[18px]">radio_button_unchecked</span>
+<span class="text-on-surface font-medium">Subtask: Unit test for inter-state transfers</span>
+</div>
+<div class="col-span-2 flex items-center justify-center">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-data-mono-sm bg-surface-container text-on-surface-variant border border-outline-variant">
+                                    TODO
+                                </span>
+</div>
+<div class="col-span-2 flex items-center justify-end pr-4 text-on-surface-variant font-data-mono-sm">
+                                SUB-4011
+                            </div>
+<!-- Action overlay on hover for the deepest node -->
+<div class="absolute right-32 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="w-7 h-7 rounded bg-surface-container flex items-center justify-center border border-outline-variant hover:border-primary hover:text-primary text-on-surface-variant transition-colors" title="Edit details">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+</button>
+<button class="w-7 h-7 rounded bg-surface-container flex items-center justify-center border border-outline-variant hover:border-tertiary hover:text-tertiary text-on-surface-variant transition-colors" title="Mark Complete">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom detail pane for selected item -->
+<div class="mt-4 bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col gap-4">
+<div class="flex items-start justify-between border-b border-outline-variant pb-4">
+<div>
+<div class="font-data-mono-sm text-on-surface-variant mb-1">SUB-4011</div>
+<h3 class="font-headline-md text-on-surface">Unit test for inter-state transfers</h3>
+</div>
+<div class="flex gap-2">
+<img alt="Developer Avatar" class="w-8 h-8 rounded-full border-2 border-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8i-Xa1uUM7sa8N5cstPEbBHx7XWPBAgIeAqeOGikRwWScQaf4YE7UbDmyaOyQ2uMCa3FqYfG316uSwD36FxPfXthu96v-5zH2AImeGulavciNtjxtnJj_Ov93cZ_c-bwUEr-3PSJZRjtoXbz0Gn8_pYhWo6lJL981XlL3tOlONoBivBguh2IwYU9UWQu8A8slk1y8PcglR9qeQRhjgHk7ZrthnZOLeaQ5vr1fYVypNZdO_hmtCkY1" title="Assigned to: Jane Doe"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-body-sm text-on-surface-variant">
+<div>
+<span class="block font-label-caps mb-1 text-on-surface">Description</span>
+<p class="leading-relaxed">Implement comprehensive Jest suites covering edge cases for IGST calculation when source and destination states differ, including UTGST overrides.</p>
+</div>
+<div>
+<span class="block font-label-caps mb-1 text-on-surface">Acceptance Criteria</span>
+<ul class="list-disc pl-4 space-y-1">
+<li>Coverage &gt; 95%</li>
+<li>All mock integrations pass</li>
+<li>Linting warnings resolved</li>
+</ul>
+</div>
+<div>
+<span class="block font-label-caps mb-1 text-on-surface">Dependencies</span>
+<div class="flex gap-2 mt-2">
+<span class="px-2 py-1 bg-surface-container border border-outline-variant rounded text-xs font-data-mono-sm">TSK-8821</span>
+<span class="px-2 py-1 bg-surface-container border border-outline-variant rounded text-xs font-data-mono-sm">API-V2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

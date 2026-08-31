@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Team &amp; Resources</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed": "#002113",
+                        "primary": "#89ceff",
+                        "surface": "#0b1326",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "tertiary": "#4edea3",
+                        "surface-dim": "#0b1326",
+                        "inverse-primary": "#006591",
+                        "on-surface": "#dae2fd",
+                        "on-primary": "#00344d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-secondary-fixed": "#0b1c30",
+                        "background": "#0b1326",
+                        "primary-fixed-dim": "#89ceff",
+                        "inverse-on-surface": "#283044",
+                        "on-tertiary-container": "#003b26",
+                        "error-container": "#93000a",
+                        "surface-container": "#171f33",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#88929b",
+                        "surface-container-high": "#222a3d",
+                        "on-surface-variant": "#bec8d2",
+                        "secondary": "#b7c8e1",
+                        "on-tertiary": "#003824",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-surface": "#dae2fd",
+                        "outline-variant": "#3e4850",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary-container": "#a9bad3",
+                        "secondary-container": "#3a4a5f",
+                        "surface-tint": "#89ceff",
+                        "on-background": "#dae2fd",
+                        "surface-container-highest": "#2d3449",
+                        "primary-fixed": "#c9e6ff",
+                        "surface-variant": "#2d3449",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "on-secondary": "#213145",
+                        "primary-container": "#0ea5e9",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-primary-fixed": "#001e2f",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "tertiary-container": "#00b17b",
+                        "on-primary-container": "#003751"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "3xl": "64px",
+                        "container-max": "1440px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-md": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest flex items-center justify-between px-lg w-full sticky top-0 z-50 h-16 border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary">GovIntel Platform</span>
+<div class="hidden md:flex items-center ml-xl gap-md h-full">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Plan</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Control</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Documents</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center h-full px-sm" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="search">search</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="help">help</span></button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden ml-sm">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A small, stylized profile portrait of a generic user in a dark, neon-lit cyberpunk environment, rendered in a high-contrast cinematic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRn3OCzhLppRVDy9iTWvgp3xMNUL8w41hdj872epBzIuP8dsNjvk4-MH7EEsGXJEFVg5qB-ZRuV6WCI7sgL-lOW5Xi8bZVnhKnXIhbKiizTb9kefo8_DrQiM8m0jWf3W6i9v9RiJ5LmIHJW_4taiuJCQ1faSsP7M7sbDjkgGBWZGuAthlhrTxYOXmDBZqH5mBwYyTn2rOZIq8CcpKOIwz2IIHaDRxqNvH3SrmGD1ZaAqZui5mLHxFF"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 relative w-full h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full w-64 border-r border-outline-variant bg-surface-container-low p-md flex-shrink-0 relative z-40 overflow-y-auto">
+<div class="mb-xl px-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">Project Alpha</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Engineering Command</p>
+<button class="mt-md w-full bg-primary text-on-primary py-sm rounded font-label-caps text-label-caps hover:opacity-90 transition-opacity">New Task</button>
+</div>
+<div class="flex flex-col gap-xs flex-1">
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-caps text-label-caps">Phases</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm bg-secondary-container text-on-secondary-container rounded-lg transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-caps text-label-caps">Resources</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label-caps text-label-caps">Risk</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label-caps text-label-caps">Quality</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+</div>
+<div class="mt-auto pt-lg border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+<span class="font-label-caps text-label-caps">Export</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out cursor-pointer scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+<span class="font-label-caps text-label-caps">Archive</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-md lg:p-lg bg-background w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-xl gap-md">
+<div>
+<div class="flex items-center gap-sm text-on-surface-variant mb-xs">
+<span class="font-label-caps text-label-caps">GST Compliance Platform</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+<span class="font-label-caps text-label-caps text-primary">Team &amp; Resources</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Resource Allocation</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs max-w-2xl">Manage active human engineering personnel and integrated AI coding agents deployed on compliance mandates.</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-high p-xs rounded-lg border border-outline-variant w-fit">
+<button class="px-md py-sm bg-surface-container-lowest text-primary rounded border border-outline-variant font-label-caps text-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="grid_view">grid_view</span>
+                        Grid
+                    </button>
+<button class="px-md py-sm text-on-surface-variant hover:text-on-surface rounded font-label-caps text-label-caps flex items-center gap-xs transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="list">list</span>
+                        List
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-lg">
+<!-- Human Resource Card 1 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:border-primary transition-colors cursor-pointer group" onclick="toggleDrawer()">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border border-outline overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-contrast headshot of a female software architect in her 30s, lit by cool blue and warm amber tactical lighting, serious expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeauG2d9X2UPLd3pOWlOpJGOTgNLx_C7zM-0dKZdeOQ8AjOGu9uNhJTqaCHvvfXkkHaieOVH2Fzmw8RRFHzGMWAJTv-X3fYbdb-EwxhBxUvoPa_Yd8shE1aOJTTEV4VIUCnsmF0bqpoOQZ4yxQOeF5vnTbHkbQnYJ3KE3Afz7zcHEElYyW5K0iiij6Qc4wPravB_guCIYjJ5c4r9xLKX-idfZuchvq-XtlnfD9A75L-sIV80XsADHP"/>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface group-hover:text-primary transition-colors">Dr. Elena Rostova</h3>
+<p class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Lead Architect</p>
+</div>
+</div>
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs rounded font-label-caps text-label-caps border border-outline-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="person">person</span> HUM
+                        </span>
+</div>
+<div class="mb-md">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Capacity</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">95%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[95%]"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-xs mt-auto">
+<span class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-sm py-xs rounded font-data-mono-sm text-data-mono-sm">System Design</span>
+<span class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-sm py-xs rounded font-data-mono-sm text-data-mono-sm">PostgreSQL</span>
+</div>
+</div>
+<!-- AI Agent Card 1 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:border-primary transition-colors cursor-pointer group relative overflow-hidden" onclick="toggleDrawer()">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded bg-primary-container border border-primary overflow-hidden flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="smart_toy" data-weight="fill">smart_toy</span>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface group-hover:text-primary transition-colors">Claude-3-Opus</h3>
+<p class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Senior Agent</p>
+</div>
+</div>
+<span class="bg-primary-container/20 text-primary px-sm py-xs rounded font-label-caps text-label-caps border border-primary/30 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="memory">memory</span> AI
+                        </span>
+</div>
+<div class="mb-md relative z-10">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Compute Allocation</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary">High</span>
+</div>
+<div class="flex gap-1 h-2">
+<div class="h-full flex-1 bg-primary rounded-full opacity-100"></div>
+<div class="h-full flex-1 bg-primary rounded-full opacity-100"></div>
+<div class="h-full flex-1 bg-primary rounded-full opacity-100"></div>
+<div class="h-full flex-1 bg-surface-container-highest rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-xs mt-auto relative z-10">
+<span class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-sm py-xs rounded font-data-mono-sm text-data-mono-sm">React</span>
+<span class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-sm py-xs rounded font-data-mono-sm text-data-mono-sm">Python</span>
+</div>
+</div>
+<!-- Add more cards as needed following the exact same structure to reach 12... omitting for brevity but implying full grid -->
+</div>
+</main>
+</div>
+<!-- Side Drawer (Hidden by default, activated via JS) -->
+<div class="fixed inset-y-0 right-0 w-full max-w-md bg-surface-container-low border-l border-outline-variant shadow-[-20px_0_25px_-5px_rgba(0,0,0,0.5)] transform translate-x-full transition-transform duration-300 ease-in-out z-[60] flex flex-col" id="resourceDrawer">
+<div class="flex items-center justify-between p-md border-b border-outline-variant">
+<h2 class="font-headline-md text-headline-md text-on-surface">Resource Details</h2>
+<button class="text-on-surface-variant hover:text-on-surface" onclick="toggleDrawer()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="p-md flex-1 overflow-y-auto">
+<!-- Content populated dynamically or statically based on selection -->
+<div class="flex items-center gap-md mb-lg">
+<div class="w-16 h-16 rounded bg-primary-container border border-primary overflow-hidden flex items-center justify-center text-on-primary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[32px]" data-icon="smart_toy" data-weight="fill">smart_toy</span>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-lg font-bold text-on-surface">Claude-3-Opus</h3>
+<p class="font-data-mono text-data-mono text-on-surface-variant mt-xs">AI Senior Coding Agent</p>
+</div>
+</div>
+<!-- Details sections -->
+<div class="space-y-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-sm">Current Mandate</h4>
+<p class="font-body-sm text-body-sm text-on-surface">GST Compliance Logic Refactoring (Phase 2)</p>
+</div>
+</div>
+</div>
+<div class="p-md border-t border-outline-variant flex gap-sm">
+<button class="flex-1 py-sm border border-outline-variant rounded text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">Reassign</button>
+<button class="flex-1 py-sm bg-primary text-on-primary rounded font-label-caps text-label-caps hover:opacity-90 transition-opacity">View Logs</button>
+</div>
+</div>
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/50 z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('resourceDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                // slight delay for transition
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.classList.add('opacity-100');
+                }, 10);
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+    </script>
+</body></html>

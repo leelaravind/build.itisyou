@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel - Retrospective</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#005236",
+                      "on-tertiary": "#003824",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "surface-tint": "#89ceff",
+                      "surface-dim": "#0b1326",
+                      "on-error-container": "#ffdad6",
+                      "primary": "#89ceff",
+                      "secondary": "#b7c8e1",
+                      "surface-container-highest": "#2d3449",
+                      "inverse-surface": "#dae2fd",
+                      "background": "#0b1326",
+                      "outline": "#88929b",
+                      "tertiary": "#4edea3",
+                      "secondary-fixed": "#d3e4fe",
+                      "on-background": "#dae2fd",
+                      "surface-bright": "#31394d",
+                      "error": "#ffb4ab",
+                      "on-error": "#690005",
+                      "on-primary": "#00344d",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "secondary-container": "#3a4a5f",
+                      "surface-container-high": "#222a3d",
+                      "on-tertiary-container": "#003b26",
+                      "on-primary-container": "#003751",
+                      "tertiary-fixed": "#6ffbbe",
+                      "surface-container-low": "#131b2e",
+                      "primary-fixed-dim": "#89ceff",
+                      "inverse-on-surface": "#283044",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "on-secondary-fixed": "#0b1c30",
+                      "surface-container-lowest": "#060e20",
+                      "on-surface": "#dae2fd",
+                      "error-container": "#93000a",
+                      "outline-variant": "#3e4850",
+                      "primary-fixed": "#c9e6ff",
+                      "surface-variant": "#2d3449",
+                      "inverse-primary": "#006591",
+                      "on-tertiary-fixed": "#002113",
+                      "surface-container": "#171f33",
+                      "on-primary-fixed": "#001e2f",
+                      "on-surface-variant": "#bec8d2",
+                      "on-secondary-container": "#a9bad3",
+                      "primary-container": "#0ea5e9",
+                      "tertiary-container": "#00b17b",
+                      "on-secondary": "#213145",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "surface": "#0b1326"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "2xl": "48px",
+                      "lg": "24px",
+                      "3xl": "64px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "xl": "32px",
+                      "xs": "4px",
+                      "container-max": "1440px",
+                      "gutter": "24px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Geist"],
+                      "data-mono": ["JetBrains Mono"],
+                      "headline-lg": ["Geist"],
+                      "data-mono-sm": ["JetBrains Mono"],
+                      "display-lg": ["Geist"],
+                      "headline-lg-mobile": ["Geist"],
+                      "label-caps": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-md": ["Geist"],
+                      "body-lg": ["Geist"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden flex h-screen">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col bg-surface-container-low border-r border-outline-variant fixed left-0 top-0 h-screen w-64 pt-20 pb-lg z-20">
+<div class="px-md mb-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md">
+                    PA
+                </div>
+<div>
+<h2 class="text-headline-sm font-headline-md text-primary">Project Alpha</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+<button class="mt-md w-full bg-primary text-on-primary font-body-md py-sm rounded hover:bg-primary-fixed-dim transition-colors">
+                Add Milestone
+            </button>
+</div>
+<ul class="flex flex-col flex-1 px-sm gap-xs">
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:text-primary transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:text-primary transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">hub</span>
+<span class="text-label-caps font-label-caps">Resource Map</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:text-primary transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">security</span>
+<span class="text-label-caps font-label-caps">Risk Matrix</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:text-primary transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">payments</span>
+<span class="text-label-caps font-label-caps">Budget</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:text-primary transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">event</span>
+<span class="text-label-caps font-label-caps">Schedule</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-sm px-md py-sm opacity-80 transition-opacity group" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="text-label-caps font-label-caps">Governance</span>
+</a>
+</li>
+</ul>
+<div class="px-sm mt-auto border-t border-outline-variant pt-sm">
+<ul class="flex flex-col gap-xs">
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-outline">help_outline</span>
+<span class="text-label-caps font-label-caps">Help</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-outline">analytics</span>
+<span class="text-label-caps font-label-caps">Status</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-64 flex flex-col h-screen overflow-y-auto bg-background">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-30 flex justify-between items-center w-full px-lg h-16 max-w-container-max mx-auto">
+<div class="flex items-center gap-lg">
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary md:hidden">GovIntel</span>
+<nav class="hidden md:flex gap-lg h-full items-end pb-0">
+<a class="text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary transition-colors duration-200" href="#">Plan</a>
+<a class="text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary transition-colors duration-200" href="#">Execute</a>
+<a class="text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary transition-colors duration-200" href="#">Control</a>
+<a class="text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 text-label-caps font-label-caps opacity-80 transition-opacity" href="#">Insights</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate executive in a modern office environment, with soft cinematic lighting and a dark background. The executive is wearing a sharp, tailored navy suit. The image has a crisp, high-resolution finish typical of an enterprise software avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsUzmtKUrBNowD8-ckI4VgOjFTIw_vixLsTLP8ENb8-Yeu1LFeCuTvqPj_v55Mnpcd5tbfL4PtdWeL7Cq2qJ7pdwume1QojykIIX5V5BVjYB3Ps9zsVxwomvKdgjre8hQX0XwPFfi6332yrrrUxyHDOyIhl6GacRpXIUwn2ayW82bWW9MmJwXPskgFbn2vcBoQnfPJZdv3R60CTFLGINnhS5Irsva4V-R0DeX-0Pwzjroh75YRygPy"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-lg md:p-xl max-w-container-max mx-auto w-full flex-1">
+<!-- Header Section -->
+<div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md border-b border-outline-variant pb-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="text-data-mono-sm font-data-mono-sm text-outline uppercase tracking-wider">Project Phase / Closure</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface text-label-caps font-label-caps border border-outline-variant">CONFIDENTIAL</span>
+</div>
+<h1 class="text-display-lg font-display-lg text-on-surface">Retrospective &amp; Lessons Learned</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-sm max-w-3xl">Deep-dive analysis of the GST Compliance Platform. Evaluating variances, identifying systemic assumptions, and formalizing operational intelligence for subsequent governance lifecycles.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-4 py-2 border border-outline-variant text-on-surface text-label-caps font-label-caps rounded hover:bg-surface-container-high transition-colors">Export Report</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg auto-rows-min">
+<!-- Financial Variance (Span 8) -->
+<div class="md:col-span-8 bg-surface-container-low border border-outline-variant rounded-lg p-lg relative overflow-hidden flex flex-col group hover:border-outline transition-colors">
+<div class="flex justify-between items-start mb-lg">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+                                Budget vs Actual Variance
+                            </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Analysis of financial drift across project execution lifecycle.</p>
+</div>
+<div class="px-3 py-1 rounded-sm bg-error-container/20 border border-error-container text-error text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +6.6% OVERRUN
+                        </div>
+</div>
+<div class="flex-1 flex items-center gap-xl mb-md">
+<div class="flex flex-col">
+<span class="text-label-caps font-label-caps text-outline mb-xs">Planned</span>
+<span class="text-headline-lg font-headline-lg text-on-surface">£180,000</span>
+</div>
+<div class="h-12 w-px bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="text-label-caps font-label-caps text-outline mb-xs">Actual</span>
+<span class="text-headline-lg font-headline-lg text-error">£192,000</span>
+</div>
+<div class="h-12 w-px bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="text-label-caps font-label-caps text-outline mb-xs">Variance</span>
+<span class="text-headline-lg font-headline-lg text-on-surface-variant">+£12,000</span>
+</div>
+</div>
+<!-- Abstract Chart Representation -->
+<div class="w-full h-32 mt-auto border-b border-l border-outline-variant relative">
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+</div>
+<!-- Planned Line -->
+<div class="absolute bottom-0 left-0 w-full h-1/2 border-t-2 border-dashed border-on-surface-variant opacity-50 flex items-end">
+<span class="absolute right-0 -top-6 text-data-mono-sm font-data-mono-sm text-on-surface-variant">Baseline</span>
+</div>
+<!-- Actual Area -->
+<div class="absolute bottom-0 left-0 w-full h-3/4 bg-error/10 border-t-2 border-error rounded-tr-sm flex items-end" style="clip-path: polygon(0 100%, 0 80%, 20% 75%, 40% 60%, 60% 65%, 80% 40%, 100% 20%, 100% 100%);">
+</div>
+</div>
+</div>
+<!-- Schedule (Span 4) -->
+<div class="md:col-span-4 bg-surface-container-low border border-outline-variant rounded-lg p-lg flex flex-col">
+<h3 class="text-headline-md font-headline-md text-on-surface mb-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">schedule</span>
+                        Schedule Delta
+                    </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-lg">Delivery timeline compression vs extensions.</p>
+<div class="space-y-md flex-1">
+<div>
+<div class="flex justify-between text-data-mono-sm font-data-mono-sm mb-xs">
+<span class="text-outline">Target Date</span>
+<span class="text-on-surface">15 Oct 2023</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-on-surface-variant w-4/5"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-data-mono-sm font-data-mono-sm mb-xs">
+<span class="text-outline">Actual Delivery</span>
+<span class="text-error">28 Oct 2023</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-full"></div>
+</div>
+</div>
+</div>
+<div class="mt-lg p-sm bg-surface-container rounded border border-outline-variant flex items-start gap-sm">
+<span class="material-symbols-outlined text-error mt-0.5">warning</span>
+<p class="text-body-sm font-body-sm text-on-surface">Critical path delayed by external vendor integration phase.</p>
+</div>
+</div>
+<!-- Successful Decisions (Span 6) -->
+<div class="md:col-span-6 bg-surface-container-low border border-outline-variant rounded-lg p-lg">
+<h3 class="text-headline-md font-headline-md text-tertiary mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+                        Successful Decisions
+                    </h3>
+<ul class="space-y-md">
+<li class="flex gap-md p-md bg-surface-container border border-outline-variant rounded-sm hover:border-tertiary/50 transition-colors">
+<div class="min-w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-semibold text-on-surface">AI Coding Agents for Unit Tests</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Achieved 94% test coverage (vs 70% target) within 2 sprints, saving approx. 120 dev hours.</p>
+</div>
+</li>
+<li class="flex gap-md p-md bg-surface-container border border-outline-variant rounded-sm hover:border-tertiary/50 transition-colors">
+<div class="min-w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">dataset</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-semibold text-on-surface">Schema-First API Design</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Parallelized frontend and backend development, completely eliminating integration bottlenecks on internal microservices.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Failed Assumptions (Span 6) -->
+<div class="md:col-span-6 bg-surface-container-low border border-outline-variant rounded-lg p-lg">
+<h3 class="text-headline-md font-headline-md text-error mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-error">cancel</span>
+                        Failed Assumptions
+                    </h3>
+<ul class="space-y-md">
+<li class="flex gap-md p-md bg-surface-container border border-outline-variant rounded-sm hover:border-error/50 transition-colors">
+<div class="min-w-10 h-10 rounded bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">api</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-semibold text-on-surface">Vendor API Stability</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Assumed external compliance API was v1 stable; encountered 3 undocumented breaking changes resulting in a 13-day delay.</p>
+</div>
+</li>
+<li class="flex gap-md p-md bg-surface-container border border-outline-variant rounded-sm hover:border-error/50 transition-colors">
+<div class="min-w-10 h-10 rounded bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-semibold text-on-surface">Stakeholder Availability</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">UAT phase planned for 5 days; actual took 14 due to concurrent end-of-quarter conflicting priorities for key users.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Lessons Learned (Span 12) -->
+<div class="md:col-span-12 bg-surface-container-low border border-outline-variant rounded-lg p-lg mt-md">
+<h3 class="text-headline-md font-headline-md text-primary mb-md flex items-center gap-sm border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+                        Lessons Learned &amp; Action Items
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md mt-lg">
+<div class="p-md bg-surface-container rounded border border-outline-variant">
+<div class="flex items-center gap-xs text-data-mono-sm font-data-mono-sm text-outline mb-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                GOV-LL-01
+                            </div>
+<h4 class="text-body-md font-body-md text-on-surface font-semibold mb-xs">Mandate Interface Agreements</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Future integrations with external vendors require a signed Interface Control Document (ICD) prior to development commencement.</p>
+<button class="text-primary text-label-caps font-label-caps hover:underline flex items-center gap-xs">
+                                Assign Owner <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="p-md bg-surface-container rounded border border-outline-variant">
+<div class="flex items-center gap-xs text-data-mono-sm font-data-mono-sm text-outline mb-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                GOV-LL-02
+                            </div>
+<h4 class="text-body-md font-body-md text-on-surface font-semibold mb-xs">Standardize AI Test Gen</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Incorporate AI-assisted unit test generation into the standard CI/CD pipeline definitions for all new Tier 1 microservices.</p>
+<button class="text-primary text-label-caps font-label-caps hover:underline flex items-center gap-xs">
+                                Create Ticket <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="p-md bg-surface-container rounded border border-outline-variant">
+<div class="flex items-center gap-xs text-data-mono-sm font-data-mono-sm text-outline mb-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                                GOV-LL-03
+                            </div>
+<h4 class="text-body-md font-body-md text-on-surface font-semibold mb-xs">Decouple UAT Schedules</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Implement staggered, asynchronous UAT windows with automated data seeding to reduce dependency on synchronous stakeholder availability.</p>
+<button class="text-primary text-label-caps font-label-caps hover:underline flex items-center gap-xs">
+                                Update Runbook <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="h-24"></div> <!-- Bottom padding -->
+</div>
+</main>
+</body></html>

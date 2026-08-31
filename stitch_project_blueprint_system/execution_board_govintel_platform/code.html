@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Execution Board - GovIntel Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#0ea5e9",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-tertiary-container": "#003b26",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-container": "#a9bad3",
+                        "tertiary-container": "#00b17b",
+                        "on-surface-variant": "#bec8d2",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#89ceff",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#dae2fd",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-container": "#3a4a5f",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-container": "#003751",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#003824",
+                        "surface-container-low": "#131b2e",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed": "#6ffbbe",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-secondary": "#213145",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "primary-fixed": "#c9e6ff",
+                        "on-primary": "#00344d",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "outline": "#88929b",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-variant": "#2d3449",
+                        "surface-container-lowest": "#060e20",
+                        "background": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "data-mono-sm": ["JetBrains Mono", "monospace"],
+                        "label-caps": ["Geist", "sans-serif"],
+                        "headline-lg": ["Geist", "sans-serif"],
+                        "headline-md": ["Geist", "sans-serif"],
+                        "body-sm": ["Geist", "sans-serif"],
+                        "display-lg": ["Geist", "sans-serif"],
+                        "data-mono": ["JetBrains Mono", "monospace"],
+                        "body-md": ["Geist", "sans-serif"],
+                        "headline-lg-mobile": ["Geist", "sans-serif"],
+                        "body-lg": ["Geist", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined[data-weight="fill"] { font-variation-settings: 'FILL' 1; }
+        /* Custom scrollbar for kanban board */
+        .kanban-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+        .kanban-scroll::-webkit-scrollbar-track { background: transparent; }
+        .kanban-scroll::-webkit-scrollbar-thumb { background: #3e4850; border-radius: 4px; }
+        .kanban-scroll::-webkit-scrollbar-thumb:hover { background: #88929b; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant fixed left-0 top-0 h-full flex flex-col z-40 w-64">
+<div class="p-4 border-b border-outline-variant flex items-center gap-3">
+<img alt="Project Alpha Logo" class="w-10 h-10 rounded bg-surface-container-high object-cover" data-alt="A minimalist, geometric logo for 'Project Alpha', featuring sharp technical lines and a deep indigo and silver color palette. The aesthetic is modern corporate, precise, and authoritative, suitable for a high-stakes intelligence platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgLcpw4NmcmN7C2mST2yG1z1PQvJq5c0X6s3gUQeui2K7hWjrFTbBA8bJ_ro0KPSus3OR1lsAnlozIh6wLfiw4R27c7pjq3aa7p6Pv5UnAsRuJX2Xl0JAJnpT8YlRme58bTTUmm96_l0C9MjkHUPicjB8dZMT9PYwDhgcjYuGkc5m-_Iy-abtBrb24j_ZQF3tiS4BzO4OuX1Rwdsebq6dYEonqyA_4AiKltD3eQw9PCW90uRKapKY_"/>
+<div>
+<h1 class="text-body-lg font-headline-md font-bold text-on-surface">Project Alpha</h1>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+<div class="px-4 py-4">
+<button class="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-label-caps text-label-caps py-2 px-4 rounded-DEFAULT transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Request
+            </button>
+</div>
+<ul class="flex-1 overflow-y-auto py-2">
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>Overview
+                </a>
+</li>
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">account_tree</span>Phases
+                </a>
+</li>
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">group</span>Resources
+                </a>
+</li>
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">warning</span>Risk
+                </a>
+</li>
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">verified</span>Quality
+                </a>
+</li>
+<li>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">insights</span>Analytics
+                </a>
+</li>
+</ul>
+<div class="mt-auto border-t border-outline-variant py-2">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">settings</span>Settings
+            </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">tune</span>Complexity
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-container dark:bg-surface-container border-b border-outline-variant dark:border-outline-variant w-full h-16 flex justify-between items-center px-gutter max-w-container-max mx-auto shrink-0">
+<div class="flex items-center gap-6">
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-primary">GovIntel Platform</span>
+<nav class="hidden lg:flex items-center gap-6 h-full">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps h-full flex items-center" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps h-full flex items-center" href="#">Plan</a>
+<a class="text-primary dark:text-primary border-b-2 border-primary dark:border-primary opacity-80 duration-100 text-label-caps font-label-caps h-full flex items-center" href="#">Execute</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps h-full flex items-center" href="#">Control</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps h-full flex items-center" href="#">Documents</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps h-full flex items-center" href="#">Insights</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container-highest border border-outline-variant rounded text-body-sm font-body-sm text-on-surface pl-10 pr-4 py-1.5 focus:outline-none focus:border-primary transition-colors w-64 placeholder-on-surface-variant" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover ml-2" data-alt="A professional headshot of an administrator in a dark, high-tech environment. The lighting is cool and moody, emphasizing a serious, technical corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDffh4ep6dv8Sauai74-qfw0WE-Ld2bZvBWs75KstZ_1Mwa1Nm5r6jHCxawgcfeffwBgsNkeXRtCXYBQ07zZLJ86S7XyLd85PriupC3h91M90vWK4UMKvkmUD5HKIm7fIEPtdgSXH_kBTiaj6W8_X14MF9LIWVF8F6yi0JEqd1WmvoWlEXq9QFeM1k-sercOKNHCgGv-dLjpqbtK7Mo5VRxVLjz9ZO55mhvsnhlMkc7sqQSJqbHmyTq"/>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-x-auto overflow-y-hidden bg-background p-6 kanban-scroll">
+<div class="flex items-center justify-between mb-6 shrink-0">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface">Execution Board</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Active Sprints &amp; Workflows</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high border border-outline-variant px-3 py-1.5 rounded text-label-caps font-label-caps text-on-surface hover:border-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">filter_list</span> Filter
+                    </button>
+<button class="bg-surface-container-high border border-outline-variant px-3 py-1.5 rounded text-label-caps font-label-caps text-on-surface hover:border-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">view_kanban</span> View
+                    </button>
+</div>
+</div>
+<!-- Kanban Board -->
+<div class="flex gap-6 h-[calc(100%-80px)] pb-4">
+<!-- Backlog Column -->
+<div class="flex flex-col w-80 shrink-0 bg-surface-container-lowest rounded-lg border border-outline-variant">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low rounded-t-lg">
+<div class="flex items-center gap-2">
+<h3 class="text-label-caps font-label-caps text-on-surface">Backlog</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-data-mono-sm font-data-mono-sm px-2 py-0.5 rounded">3</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<div class="flex-1 p-3 overflow-y-auto kanban-scroll space-y-3">
+<!-- Task Card -->
+<div class="bg-surface-container p-4 rounded border border-outline-variant hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant px-1.5 py-0.5 rounded text-[10px] font-data-mono uppercase tracking-wider">GST-104</span>
+<span class="material-symbols-outlined text-outline-variant text-[16px] group-hover:text-on-surface-variant">more_horiz</span>
+</div>
+<h4 class="text-body-sm font-body-sm text-on-surface mb-3">Update tax rate tables for Q3 compliance</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex gap-1">
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-label-caps">Low</span>
+</div>
+<img alt="Assignee" class="w-6 h-6 rounded-full border border-surface" data-alt="Avatar of an engineer, small circular icon, dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn195Gs6_99Ar5sCdr-Kq4FYV15WrEmNCID96mUf1X1Gpq8qOKgZchArGiTMDRquA6AJxuc_Aqog6E1pRw6y9sYNNfBg4Jv6Ai630zrQ63rC4bdb_xY9nGfD-V6jxiQGsjsL3dd8uJ9ekfmob-GMEuDH5zeL7TGRWCNHtqofOhyVar38YKJoCVANqiSLGTYn5J0JmjV12jiTIYN8QtSUubP9Ex8ZlkeBcQd3bX_23Ndhm3jkXOjnwz"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Ready Column -->
+<div class="flex flex-col w-80 shrink-0 bg-surface-container-lowest rounded-lg border border-outline-variant">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low rounded-t-lg">
+<div class="flex items-center gap-2">
+<h3 class="text-label-caps font-label-caps text-on-surface">Ready</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-data-mono-sm font-data-mono-sm px-2 py-0.5 rounded">2</span>
+</div>
+</div>
+<div class="flex-1 p-3 overflow-y-auto kanban-scroll space-y-3">
+<!-- Task Card -->
+<div class="bg-surface-container p-4 rounded border border-outline-variant hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant px-1.5 py-0.5 rounded text-[10px] font-data-mono uppercase tracking-wider">GST-109</span>
+<span class="material-symbols-outlined text-outline-variant text-[16px] group-hover:text-on-surface-variant">more_horiz</span>
+</div>
+<h4 class="text-body-sm font-body-sm text-on-surface mb-3">Audit logs generation for specific transaction types</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex gap-1">
+<span class="bg-tertiary-container/20 text-tertiary px-2 py-0.5 rounded text-[10px] font-label-caps">Med</span>
+</div>
+<img alt="Assignee" class="w-6 h-6 rounded-full border border-surface" data-alt="Avatar of an analyst, small circular icon, dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAWzcslYgROu06VazojP5O_Ta7Yw436IS3QF-TBiG1d850xw1wVlhha6VTvvIxy0QYyN9Rk_O2GuResK91BzysN9ZSxifjXUZahvtTJ0rqMu0ZnjR0lkF9-Twae9zywfw_HePJHuIZ1Ea4PKlL26gnlrVK4FdlxYGCapQV7pX3YbUCl9R04mXxTN7bA7HwB236AveOgbaUUWjh8elbI7WTpN0WJ9WzmnYplH8n0m9u_K7SuVi3itPa"/>
+</div>
+</div>
+</div>
+</div>
+<!-- In Progress Column -->
+<div class="flex flex-col w-80 shrink-0 bg-surface-container-lowest rounded-lg border border-primary/30">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low rounded-t-lg relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/10"></div>
+<div class="flex items-center gap-2 relative z-10">
+<h3 class="text-label-caps font-label-caps text-on-surface">In Progress</h3>
+<span class="bg-primary-container/20 text-primary text-data-mono-sm font-data-mono-sm px-2 py-0.5 rounded">2</span>
+</div>
+</div>
+<div class="flex-1 p-3 overflow-y-auto kanban-scroll space-y-3">
+<!-- Task Card (Blocked) -->
+<div class="bg-surface-container p-4 rounded border border-error/50 hover:border-error transition-colors cursor-pointer group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex justify-between items-start mb-2 pl-2">
+<span class="bg-surface-container-high text-on-surface-variant px-1.5 py-0.5 rounded text-[10px] font-data-mono uppercase tracking-wider">GST-088</span>
+<span class="material-symbols-outlined text-outline-variant text-[16px] group-hover:text-on-surface-variant">more_horiz</span>
+</div>
+<h4 class="text-body-sm font-body-sm text-on-surface mb-2 pl-2">Implement API endpoint for cross-border reconciliation</h4>
+<div class="mb-3 pl-2 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-[14px]">warning</span>
+<span class="text-error text-data-mono-sm font-data-mono-sm uppercase">Blocked</span>
+</div>
+<div class="flex justify-between items-center mt-auto pl-2">
+<div class="flex gap-1">
+<span class="bg-error-container/20 text-error px-2 py-0.5 rounded text-[10px] font-label-caps">High</span>
+</div>
+<img alt="Assignee" class="w-6 h-6 rounded-full border border-surface" data-alt="Avatar of senior developer, small circular icon, dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQvo84_iQD-9gKnbbBrDzwtUDev4WhhlN1pXbTDBrNV5AbVJ80VncNy98oZNK0o6Rc1CWTfXRdRS3DSch7qDKOTPXL2K2ghpcN1FObfkGSfx64eJvhRQ5SmGz2ScpgzQZIs11pTcTEjrH3FDxcn7evCxVRVbQ8QGhNcCMUC_1Du-XO2j4QxJrsmUjf8BsCC9tvnbiaYV6UW353QFbz6voMqWuqa2Gvv7fj1eNOhcZbgL3LOL9rJphg"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Column -->
+<div class="flex flex-col w-80 shrink-0 bg-surface-container-lowest rounded-lg border border-outline-variant">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low rounded-t-lg">
+<div class="flex items-center gap-2">
+<h3 class="text-label-caps font-label-caps text-on-surface">Review</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-data-mono-sm font-data-mono-sm px-2 py-0.5 rounded">1</span>
+</div>
+</div>
+<div class="flex-1 p-3 overflow-y-auto kanban-scroll space-y-3">
+<!-- Empty State visually implied by space -->
+</div>
+</div>
+<!-- Done Column -->
+<div class="flex flex-col w-80 shrink-0 bg-surface-container-lowest rounded-lg border border-outline-variant opacity-80">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low rounded-t-lg">
+<div class="flex items-center gap-2">
+<h3 class="text-label-caps font-label-caps text-on-surface">Done</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-data-mono-sm font-data-mono-sm px-2 py-0.5 rounded">12</span>
+</div>
+</div>
+<div class="flex-1 p-3 overflow-y-auto kanban-scroll space-y-3">
+<!-- Completed items... -->
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

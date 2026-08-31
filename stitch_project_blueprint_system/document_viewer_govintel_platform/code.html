@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Document Viewer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#0b1c30",
+                      "primary-fixed-dim": "#89ceff",
+                      "secondary": "#b7c8e1",
+                      "inverse-primary": "#006591",
+                      "on-primary-fixed": "#001e2f",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "surface-container-low": "#131b2e",
+                      "on-secondary-container": "#a9bad3",
+                      "surface-container-lowest": "#060e20",
+                      "on-secondary": "#213145",
+                      "tertiary-container": "#00b17b",
+                      "outline": "#88929b",
+                      "surface-container-highest": "#2d3449",
+                      "on-primary-container": "#003751",
+                      "primary": "#89ceff",
+                      "on-tertiary-container": "#003b26",
+                      "surface-container-high": "#222a3d",
+                      "inverse-surface": "#dae2fd",
+                      "on-surface-variant": "#bec8d2",
+                      "tertiary-fixed": "#6ffbbe",
+                      "inverse-on-surface": "#283044",
+                      "error-container": "#93000a",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "primary-fixed": "#c9e6ff",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#dae2fd",
+                      "on-tertiary": "#003824",
+                      "surface-tint": "#89ceff",
+                      "error": "#ffb4ab",
+                      "surface-container": "#171f33",
+                      "secondary-fixed": "#d3e4fe",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "outline-variant": "#3e4850",
+                      "on-surface": "#dae2fd",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "surface": "#0b1326",
+                      "surface-variant": "#2d3449",
+                      "background": "#0b1326",
+                      "tertiary": "#4edea3",
+                      "primary-container": "#0ea5e9",
+                      "secondary-container": "#3a4a5f",
+                      "surface-bright": "#31394d",
+                      "on-tertiary-fixed": "#002113",
+                      "surface-dim": "#0b1326",
+                      "on-primary": "#00344d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "md": "16px",
+                      "3xl": "64px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "2xl": "48px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "data-mono-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "data-mono": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-mono-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        [data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md h-screen flex flex-col overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full h-16 border-b border-outline-variant flex items-center justify-between px-lg sticky top-0 z-50 shrink-0">
+<div class="flex items-center gap-xl h-full">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">GovIntel Platform</h1>
+<nav class="hidden md:flex h-full items-end gap-md">
+<div class="h-full flex items-center border-b-2 border-transparent pb-1 cursor-pointer hover:text-primary transition-colors text-on-surface-variant font-medium">Home</div>
+<div class="h-full flex items-center border-b-2 border-transparent pb-1 cursor-pointer hover:text-primary transition-colors text-on-surface-variant font-medium">Plan</div>
+<div class="h-full flex items-center border-b-2 border-transparent pb-1 cursor-pointer hover:text-primary transition-colors text-on-surface-variant font-medium">Execute</div>
+<div class="h-full flex items-center border-b-2 border-transparent pb-1 cursor-pointer hover:text-primary transition-colors text-on-surface-variant font-medium">Control</div>
+<div class="h-full flex items-center border-b-2 border-primary pb-1 text-primary font-bold cursor-pointer hover:text-primary transition-colors">Documents</div>
+<div class="h-full flex items-center border-b-2 border-transparent pb-1 cursor-pointer hover:text-primary transition-colors text-on-surface-variant font-medium">Insights</div>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full ml-sm object-cover border border-outline-variant" data-alt="A small, circular avatar portrait of a professional individual in a corporate setting. High quality, clear, modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg-Q4mMuKyLHAKOQozVWXzFnfAuoLbDAwXpnoL86tiG1LozVcip980eNovIjrwq99KYwzto0e4x-fwjv-0K28KDdTUjTdo-XG5klMBlsLtLJlIuWNdASnsp7e5LVYSB85ieOKyeQRI4xHvAYj8HptEEK6sC1bq0fLVJzXGI9FbvkXtC728tqWOZ5V8fSbuIV2qhoxed_dz9gXSQw6q_8pX11UCXIzhIDfV7eDHfMCm2_7Iq0oGBYzM"/>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col bg-surface-container-low dark:bg-surface-container-low h-full w-64 border-r border-outline-variant p-md shrink-0">
+<div class="flex items-center gap-sm mb-lg">
+<img alt="Project Alpha" class="w-10 h-10 rounded-DEFAULT object-cover" data-alt="A highly detailed, futuristic abstract icon representing 'Project Alpha'. Glowing metallic textures, dark tech background, modern vector art style translated to 3d." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQC0La5lD7NRJrSR5WxHi_qnmHHyvavYdEEDqud2_s30kIzSF23kJ6L2TIrtIFszuaBTSJV7JPw-4VwPod28EbGmCIdBHHNee02WFqJS0DLR8V4tQufbUydT_8N_N2yg-uh9XbP38ERoqUjdAIluMcN1Hynn3MRQshAUsIgS8n4wXg_eTgSVPpcFtkSIOfM1X28yK5ShNOTjasc6c7SOHrVyPYB14uV6MphzudRrIYNIAU2cUBaEm7"/>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Project Alpha</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Engineering Command</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-sm px-md rounded-DEFAULT mb-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">add</span> New Task
+            </button>
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">layers</span> Phases
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">group</span> Resources
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">warning</span> Risk
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">verified</span> Quality
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">analytics</span> Analytics
+                </a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">download</span> Export
+                </a>
+<a class="flex items-center gap-sm p-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">archive</span> Archive
+                </a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- Document Header Actions -->
+<div class="h-14 border-b border-outline-variant bg-surface-container-lowest flex items-center justify-between px-md shrink-0">
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-xs font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Directory
+                    </button>
+<div class="h-4 w-px bg-outline-variant"></div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">DOC-2023-A-094</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-xs rounded-DEFAULT border border-outline-variant text-on-surface font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">
+                        Discard Draft
+                    </button>
+<button class="px-md py-xs rounded-DEFAULT bg-primary text-on-primary font-label-caps text-label-caps hover:opacity-90 transition-opacity">
+                        Save Changes
+                    </button>
+</div>
+</div>
+<!-- Content Area (Editor + Metadata Sidebar) -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Editor Pane -->
+<div class="flex-1 overflow-y-auto p-xl lg:p-2xl bg-surface-container-low flex justify-center">
+<div class="w-full max-w-4xl bg-surface-container-lowest border border-outline-variant rounded-lg p-xl min-h-full flex flex-col shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)]">
+<!-- Editor Toolbar (Simulated) -->
+<div class="border-b border-outline-variant pb-sm mb-lg flex items-center gap-md text-on-surface-variant sticky top-0 bg-surface-container-lowest z-10">
+<select class="bg-transparent border-none font-body-sm text-body-sm focus:ring-0 p-0 text-on-surface-variant cursor-pointer">
+<option>Heading 1</option>
+<option>Heading 2</option>
+<option selected="">Normal Text</option>
+</select>
+<div class="h-4 w-px bg-outline-variant"></div>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">format_bold</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">format_italic</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">format_underlined</span></button>
+<div class="h-4 w-px bg-outline-variant"></div>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">format_list_bulleted</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">format_list_numbered</span></button>
+</div>
+<!-- Editor Content -->
+<div class="flex-1 outline-none font-body-lg text-body-lg text-on-surface" contenteditable="true">
+<h1 class="font-headline-lg text-headline-lg font-bold mb-md">System Architecture Overview</h1>
+<p class="mb-md text-on-surface-variant">Last edited just now by you.</p>
+<h2 class="font-headline-md text-headline-md font-semibold mt-xl mb-sm">1. Introduction</h2>
+<p class="mb-md">This document outlines the proposed system architecture for Project Alpha. The primary objective is to establish a robust, scalable, and secure framework capable of handling high-volume data streams while maintaining sub-second latency.</p>
+<h2 class="font-headline-md text-headline-md font-semibold mt-xl mb-sm">2. Core Components</h2>
+<ul class="list-disc pl-md mb-md space-y-sm">
+<li><strong>Data Ingestion Layer:</strong> Responsible for receiving and validating incoming telemetry.</li>
+<li><strong>Processing Engine:</strong> Real-time analysis using distributed computing clusters.</li>
+<li><strong>Storage Fabric:</strong> Tiered storage model prioritizing fast retrieval for recent data.</li>
+</ul>
+<div class="my-lg p-md bg-surface-container border-l-4 border-primary text-on-surface-variant font-data-mono text-data-mono">
+                                // NOTE: Storage fabric details are pending review from the security council.
+                            </div>
+</div>
+</div>
+</div>
+<!-- Document Metadata Sidebar -->
+<aside class="w-80 bg-surface-container-lowest border-l border-outline-variant overflow-y-auto shrink-0 flex flex-col">
+<div class="p-md border-b border-outline-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Document Status</h3>
+<div class="flex items-center gap-sm">
+<span class="flex items-center gap-xs px-2 py-1 rounded bg-tertiary-container/20 text-tertiary-fixed font-data-mono text-data-mono-sm">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> APPROVED
+                            </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">v2.4</span>
+</div>
+</div>
+<div class="p-md border-b border-outline-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-md">Ownership</h3>
+<div class="flex items-center gap-md">
+<img alt="Owner Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a technical lead or senior engineer. Corporate lighting, dark background, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9KWZLrJx5wgWUQLjEQwZxY9hcw5EIuoS2y-XsI0_JU-F0fh-haN7G7wNB9AmSxYfwixd1GzLPDOlE58ajvXc_4EfbivJMb-h_n9ajhwWo6aw7m5WDE7omIJOioEiiAGJgqzxSGA3lzjsn_VTN6Qz-02U_7u58VTJutTRYOwwq6FL6fXW_04jIDs1fwVOmBh9fufZmM7Uw8EKhLCRlzNTFrDwYT4xaQXDpzHskBlYOK0CzlWvoQ84K"/>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Dr. Sarah Jenkins</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lead Architect</p>
+</div>
+</div>
+</div>
+<div class="p-md border-b border-outline-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-md">Related Objects</h3>
+<ul class="space-y-xs">
+<li>
+<a class="flex items-center gap-sm p-sm rounded hover:bg-surface-container-high transition-colors text-primary font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">task</span> TSK-892: Implementation Plan
+                                </a>
+</li>
+<li>
+<a class="flex items-center gap-sm p-sm rounded hover:bg-surface-container-high transition-colors text-primary font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">bug_report</span> BUG-104: Latency Issues
+                                </a>
+</li>
+<li>
+<a class="flex items-center gap-sm p-sm rounded hover:bg-surface-container-high transition-colors text-primary font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">folder</span> DIR-Core Assets
+                                </a>
+</li>
+</ul>
+</div>
+<div class="p-md flex-1">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-md">Version History</h3>
+<div class="relative border-l border-outline-variant ml-sm space-y-md">
+<div class="relative pl-md">
+<div class="absolute w-2 h-2 bg-primary rounded-full -left-[5px] top-1.5"></div>
+<p class="font-body-sm text-body-sm font-semibold text-on-surface">v2.4 - Current</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Today, 10:42 AM by You</p>
+</div>
+<div class="relative pl-md">
+<div class="absolute w-2 h-2 bg-outline-variant rounded-full -left-[5px] top-1.5"></div>
+<p class="font-body-sm text-body-sm text-on-surface">v2.3</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Yesterday, 4:15 PM by S. Jenkins</p>
+</div>
+<div class="relative pl-md">
+<div class="absolute w-2 h-2 bg-outline-variant rounded-full -left-[5px] top-1.5"></div>
+<p class="font-body-sm text-body-sm text-on-surface">v2.2</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Oct 12, 09:00 AM by System</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

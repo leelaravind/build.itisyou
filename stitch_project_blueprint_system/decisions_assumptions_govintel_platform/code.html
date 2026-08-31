@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Decisions &amp; Assumptions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#002113",
+                        "on-primary-fixed": "#001e2f",
+                        "surface": "#0b1326",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "error": "#ffb4ab",
+                        "on-tertiary": "#003824",
+                        "surface-dim": "#0b1326",
+                        "surface-container-low": "#131b2e",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "tertiary-container": "#00b17b",
+                        "background": "#0b1326",
+                        "secondary-container": "#3a4a5f",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-tint": "#89ceff",
+                        "primary-fixed": "#c9e6ff",
+                        "tertiary": "#4edea3",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary": "#00344d",
+                        "surface-variant": "#2d3449",
+                        "on-primary-container": "#003751",
+                        "surface-container-lowest": "#060e20",
+                        "primary-container": "#0ea5e9",
+                        "surface-bright": "#31394d",
+                        "inverse-on-surface": "#283044",
+                        "inverse-primary": "#006591",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-container": "#171f33",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#6ffbbe",
+                        "secondary": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-container-highest": "#2d3449",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#bec8d2",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-background": "#dae2fd",
+                        "inverse-surface": "#dae2fd",
+                        "primary": "#89ceff",
+                        "outline-variant": "#3e4850",
+                        "outline": "#88929b",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "2xl": "48px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Geist', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container docked full-width top-0 border-b border-outline-variant dark:border-outline-variant bg-surface-container flat no shadows z-50">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-primary tracking-tight">GovIntel Platform</div>
+<div class="hidden md:flex gap-lg items-center h-full pt-1">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Plan</a>
+<a class="text-primary dark:text-primary border-b-2 border-primary dark:border-primary pb-1 text-label-caps font-label-caps opacity-80 duration-100" href="#">Execute</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Control</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Documents</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 text-label-caps font-label-caps" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded text-body-sm font-body-sm text-on-surface pl-10 pr-4 py-1.5 focus:outline-none focus:border-primary transition-colors w-64" placeholder="Search..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="terminal">terminal</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="help">help</span></button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden ml-2 border border-outline-variant">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A small, professional profile avatar of a government administrator in a dark mode UI context. The avatar features a minimal, stylized geometric portrait with subtle blue and gray tones, conveying authority and technical competence. Clean lines, flat design, suitable for an enterprise dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgIMfIPVys6OpUnov-4iUsekbnIFNPbWvHHoIzpb_KFviXF4Fd5clSiYxx5KA_kL0V3SDTZaK6Oqpiu15o7s9FWEIf_cKLCryIaCKzjOKqehEIJ3NV4V9LnqHC1wtIhWfyzKH0EF7Cn8oKENj8vgv0JbyI8cGtJmeIUdmLgPfssMSMEqT48qEaL4kq8yRhgSdT5SdQclKNLvxFSDRwFgFTaRKFq5l0Sffh7uV-e2jwxHWZFKCUAb7d"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-container-low docked left-0 h-screen w-64 border-r border-outline-variant dark:border-outline-variant bg-surface-container-low flat no shadows fixed left-0 top-0 h-full flex flex-col z-40 pt-16">
+<div class="p-lg border-b border-outline-variant flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-surface-container-highest flex items-center justify-center border border-outline-variant shrink-0">
+<img alt="Project Alpha Logo" class="w-8 h-8 object-contain" data-alt="A stylized, modern project logo for 'Project Alpha'. It features an abstract 'A' composed of sharp, interlocking geometric shapes in a dark mode palette with glowing blue accents. The design implies structure, engineering, and advanced analytics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRalwIUEdKWGqo1ofUBAZhlD8eEQ__s0yIHiQPlGOD78eeR4Va0wD3D8bMuSSpWVIx0vyqpfVAcRhKUWH-F_ZIFwyfDFs6whm8VwRZiG4ah7ZWzc7NjJAJQo6JST5gOGlT2TpRNwy4Mr52P6LUipOeXLBySdH8A2NlL9IWEPbQlMNu-vBPAoi3xg6J0QxrJrBoXaTT-biVYyXtATLGpLOAjEqmMfS5jgmDb-XobVv8ye4aKnabLUlR"/>
+</div>
+<div class="overflow-hidden">
+<div class="text-body-lg font-headline-md font-bold text-on-surface truncate">Project Alpha</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant truncate">Phase: Execution</div>
+</div>
+</div>
+<div class="p-md">
+<button class="w-full bg-primary text-on-primary-fixed font-body-sm text-body-sm font-medium py-2 px-4 rounded hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">add</span> New Request
+                </button>
+</div>
+<nav class="flex-1 overflow-y-auto py-sm">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="dashboard">dashboard</span> Overview
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="account_tree">account_tree</span> Phases
+                </a>
+<a class="bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all scale-[0.98] transition-transform duration-150 text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="group">group</span> Resources
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="warning">warning</span> Risk
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="verified">verified</span> Quality
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="insights">insights</span> Analytics
+                </a>
+</nav>
+<div class="mt-auto border-t border-outline-variant p-sm">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="settings">settings</span> Settings
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="tune">tune</span> Complexity
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 p-lg md:p-xl max-w-[1600px] overflow-y-auto">
+<header class="mb-xl flex justify-between items-end">
+<div>
+<h1 class="text-display-lg font-display-lg text-on-surface mb-xs">Decisions &amp; Assumptions Log</h1>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+                        A centralized record of architectural decisions, unverified assumptions, and known unknowns for Phase Execution.
+                    </p>
+</div>
+<div class="flex gap-md">
+<button class="bg-surface-container-high text-on-surface border border-outline-variant px-4 py-2 rounded text-body-sm font-body-sm hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                    </button>
+<button class="bg-surface-container-high text-on-surface border border-outline-variant px-4 py-2 rounded text-body-sm font-body-sm hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span> Export
+                    </button>
+</div>
+</header>
+<!-- Dashboard Modules (Bento Grid Style) -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-lg mb-xl">
+<!-- Summary Card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-lg xl:col-span-1 flex flex-col justify-between">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-md">Log Summary</h2>
+<div class="grid grid-cols-2 gap-sm">
+<div class="bg-surface-container p-sm rounded border border-outline-variant">
+<div class="text-display-lg font-display-lg text-primary">14</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant">Decisions</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant">
+<div class="text-display-lg font-display-lg text-tertiary">08</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant">Assumptions</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant">
+<div class="text-display-lg font-display-lg text-error">03</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant">Unknowns</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant flex items-center justify-center cursor-pointer hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface text-[32px]">add_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Verified Decisions List -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg xl:col-span-2 overflow-hidden flex flex-col">
+<div class="p-md border-b border-outline-variant bg-surface-container-highest flex justify-between items-center">
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">verified</span> Verified Decisions
+                        </h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-low text-label-caps font-label-caps text-on-surface-variant">
+<th class="p-md font-normal whitespace-nowrap">ID</th>
+<th class="p-md font-normal">Decision</th>
+<th class="p-md font-normal">Rationale</th>
+<th class="p-md font-normal">Owner</th>
+<th class="p-md font-normal text-right">Date</th>
+</tr>
+</thead>
+<tbody class="text-body-sm font-body-sm">
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-md text-data-mono font-data-mono text-primary">DEC-042</td>
+<td class="p-md font-medium text-on-surface max-w-[200px] truncate">Migrate to PostGIS</td>
+<td class="p-md text-on-surface-variant max-w-[300px] truncate">Required for advanced spatial queries not supported by current DB.</td>
+<td class="p-md flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] text-on-secondary-fixed font-bold">JD</div>
+<span>J. Doe</span>
+</td>
+<td class="p-md text-right text-data-mono-sm font-data-mono-sm text-on-surface-variant">2023-10-12</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-md text-data-mono font-data-mono text-primary">DEC-043</td>
+<td class="p-md font-medium text-on-surface max-w-[200px] truncate">Adopt GraphQL API</td>
+<td class="p-md text-on-surface-variant max-w-[300px] truncate">Reduces over-fetching on mobile client payloads by 40%.</td>
+<td class="p-md flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container flex items-center justify-center text-[10px] text-on-tertiary-container font-bold">AS</div>
+<span>A. Smith</span>
+</td>
+<td class="p-md text-right text-data-mono-sm font-data-mono-sm text-on-surface-variant">2023-10-15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Assumptions & Unknowns -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden">
+<div class="p-md border-b border-outline-variant bg-surface-container-highest flex justify-between items-center">
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">psychology</span> Assumptions &amp; Unknowns
+                    </h3>
+</div>
+<div class="p-md grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Assumption Card -->
+<div class="bg-surface-container border border-outline-variant rounded p-md relative overflow-hidden group hover:border-tertiary transition-colors">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div class="flex justify-between items-start mb-sm pl-2">
+<span class="text-label-caps font-label-caps bg-tertiary/10 text-tertiary px-2 py-1 rounded">ASSUMPTION</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">ASM-018</span>
+</div>
+<h4 class="text-body-md font-body-md font-medium text-on-surface mb-xs pl-2">API Rate Limits</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md pl-2">Assuming partner API will support 500 req/sec during peak load based on verbal agreement.</p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-sm mt-auto pl-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Infrastructure
+                            </div>
+<button class="text-tertiary text-body-sm font-body-sm hover:underline">Verify</button>
+</div>
+</div>
+<!-- Unknown Card -->
+<div class="bg-surface-container border border-outline-variant rounded p-md relative overflow-hidden group hover:border-error transition-colors">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex justify-between items-start mb-sm pl-2">
+<span class="text-label-caps font-label-caps bg-error/10 text-error px-2 py-1 rounded">UNKNOWN</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">UNK-005</span>
+</div>
+<h4 class="text-body-md font-body-md font-medium text-on-surface mb-xs pl-2">Legacy Data Migration</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md pl-2">Format of archived records from 2018-2020 is currently undocumented. Migration strategy pending discovery.</p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-sm mt-auto pl-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">database</span> Data Eng
+                            </div>
+<button class="text-error text-body-sm font-body-sm hover:underline">Investigate</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Approvals &amp; Sign-offs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-fixed-dim": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "inverse-primary": "#006591",
+                        "on-primary-fixed": "#001e2f",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#213145",
+                        "tertiary-container": "#00b17b",
+                        "outline": "#88929b",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-container": "#003751",
+                        "primary": "#89ceff",
+                        "on-tertiary-container": "#003b26",
+                        "surface-container-high": "#222a3d",
+                        "inverse-surface": "#dae2fd",
+                        "on-surface-variant": "#bec8d2",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#283044",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-fixed": "#c9e6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#003824",
+                        "surface-tint": "#89ceff",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "background": "#0b1326",
+                        "tertiary": "#4edea3",
+                        "primary-container": "#0ea5e9",
+                        "secondary-container": "#3a4a5f",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "on-primary": "#00344d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Geist', sans-serif; background-color: theme('colors.background'); color: theme('colors.on-surface'); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest flex items-center justify-between px-lg w-full sticky top-0 z-50 h-16 border-b border-outline-variant">
+<div class="flex items-center gap-lg">
+<span class="font-headline-md text-headline-md font-bold text-primary">GovIntel Platform</span>
+<div class="hidden md:flex gap-md relative bg-surface-container-low px-md py-sm rounded-full border border-outline-variant items-center">
+<span class="material-symbols-outlined text-outline text-[20px]">search</span>
+<input class="bg-transparent border-none outline-none text-body-sm font-body-sm text-on-surface-variant w-48 focus:ring-0 p-0" placeholder="Search approvals..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Home</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Plan</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Control</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Documents</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Insights</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 p-sm">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 p-sm">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 p-sm">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-sm border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional corporate headshot of a person in a dark futuristic command center setting, illuminated by subtle blue screens. The aesthetic is modern, serious, and highly technical. High contrast lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8u6YgwATJRj5z_TaQMIXZ_lfkcdIJtq6G88XRzT7yjP2xCMNxy0Oq5JzeCg6r-sN809gD1DXleqO1ZC5FPf-NeaI9IOl9m87IKgaCdtvEIp_gAS1tPnTr4OhjLgMcoU3zD2Ko-ukK4ciplNNmM4cpjDIwXURylsM5joiNYa1tVXx322rBOs78sVqcOEmYtMMWOoy3IOj9jTnNzttXzaelZJbsUQTz7Sjcpc1VPhHmSSqjcWnrKSlf"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-container-low h-screen w-64 fixed left-0 top-16 border-r border-outline-variant flex-col h-full p-md z-40">
+<div class="mb-lg pb-lg border-b border-outline-variant">
+<div class="flex items-center gap-sm mb-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest overflow-hidden flex items-center justify-center">
+<img alt="Project Alpha" class="w-full h-full object-cover" data-alt="Abstract geometric logo for Project Alpha, featuring intersecting neon blue and deep slate lines, modern corporate aesthetic, dark mode background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByIQZR-B7VcCxSRnqPnaQiMw5LNY0BKTg8AJt34rQXL5FJNqlldZJ5gBgWuiBmYfLH7VeADenn_pj841IgSqg4OSZTw8iJLicR8l6L7QaYIuGh6WCEMxaEfrvrlOG_J6Zp0vgzL_kzQM1vjwKc8VmC5O3MwBmI4qOzNIK4FUn3nn1wcJPezxvfE28dPuMD_rmFwYZFUl-nCAMhwZ6NnPKySPBHHPkX9zyIUlFRMJZpxjeJWS-w1rwD"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface text-[16px] leading-tight">Project Alpha</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Engineering Command</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-sm rounded-lg hover:bg-primary-fixed transition-colors flex items-center justify-center gap-xs mt-md">
+<span class="material-symbols-outlined text-[16px]">add</span> New Task
+                </button>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">layers</span> Phases
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span> Resources
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm bg-secondary-container text-on-secondary-container rounded-lg font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span> Risk
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">verified</span> Quality
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span> Analytics
+                </a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">download</span> Export
+                </a>
+<a class="flex items-center gap-sm px-sm py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps transition-all duration-200 ease-in-out scale-95 active:scale-90 rounded-lg" href="#">
+<span class="material-symbols-outlined">archive</span> Archive
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-lg lg:p-2xl max-w-container-max mx-auto w-full">
+<div class="flex justify-between items-end mb-xl border-b border-outline-variant pb-md">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface md:hidden font-headline-lg-mobile text-headline-lg-mobile">Approvals &amp; Sign-offs</h1>
+<h1 class="font-display-lg text-display-lg text-on-surface hidden md:block">Approvals &amp; Sign-offs</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-sm">Management view of pending and completed requests.</p>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-xs border border-outline-variant">
+<button class="px-md py-sm font-label-caps text-label-caps text-on-surface bg-surface-container-highest rounded-md shadow-sm">Pending</button>
+<button class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface">Completed</button>
+<button class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface">All</button>
+</div>
+</div>
+<!-- Bento Grid Layout for Approvals -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Pending Requirements -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">description</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Requirements</span>
+</div>
+<span class="bg-surface-container/50 text-tertiary-fixed-dim font-data-mono-sm text-data-mono-sm px-sm py-xs rounded flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">pending</span> PENDING
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Phase 2 Core Specifications</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-1">Initial review of subsystem integration requirements.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of an executive approver in a sleek, dimly lit server room. Professional, serious demeanor, modern technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQWSAx6_SP1ujrHx0VG07uxYhcDirrOu7vpTApdI501SCKKSWktgFu7jdJXtBrE2B0HekBPNlE7A8nwWYSJkv7DudibEVveTc2mH44QyahiBgfd1lNiyvPG6eYuB4pE8F-LE-pBnbSci066_9O6nlpy4yYRvkqgT3-qhmXLXmgTI8G0A09TQJonxOo-CgCsojLznRGLA0WP2OHQin-oJvUjxE2RRNJRR7lUnnyaIQO5PUKJ5H7QzRB"/>
+</div>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface">Dr. A. Vance</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Lead Architect</div>
+</div>
+</div>
+<button class="bg-primary/10 text-primary border border-primary/30 hover:bg-primary hover:text-on-primary px-md py-sm rounded-lg font-label-caps text-label-caps transition-colors">Review</button>
+</div>
+</div>
+<!-- Approved Architecture -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">architecture</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Architecture</span>
+</div>
+<span class="bg-tertiary-container/10 text-tertiary font-data-mono-sm text-data-mono-sm px-sm py-xs rounded flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> APPROVED
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Data Pipeline Topography</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-1">High-level architecture for real-time telemetry ingestion.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of a technical manager in front of a blurred out dark-mode dashboard. High contrast, professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-dxyMF_Pjb0d5NY5-fw1ZGV-gAd7-xt7X-2I14ao3jsWr0HyaO_BelmF7LFq8bcUDehfN45zlRMd3QMGcLrEIt2XffttWH7VcIU6AjZ_VgoanmNmPMfwTh-61NHAmWJyNzCt6HdUPbVpiczvvyp3ESUtM6M90qGPuMRnuVsv80wf2_yhrHdb_0oSDncHSK2aEjnTvhNRPTIvW4qKtI8HLX71NZL_qIbUR5SJcMS214FergsyllOmF"/>
+</div>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface">E. Thorne</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Systems Dir.</div>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface px-md py-sm rounded-lg font-label-caps text-label-caps transition-colors border border-outline-variant">View</button>
+</div>
+</div>
+<!-- Rejected Budget -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-error">payments</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Budget</span>
+</div>
+<span class="bg-error-container/20 text-error font-data-mono-sm text-data-mono-sm px-sm py-xs rounded flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">cancel</span> REJECTED
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Q3 Hardware Procurement</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-1">Request for additional server nodes exceeds allocated budget limit.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of a financial officer in a modern glass office, dark mode aesthetic, serious expression, high tech environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApf1VSOxHPWJ3AMa-OtokvM7FXv2Qi07y94O6RaT2KeR1uFzwu_VmA0K_Ezrov8OPWocXf31ZUetviyqgopY1tkiavCJVTR5Tg25589ZFlYQAmj73vurgadjtgz-yqhxBO8SPBgKOX9VyTy8SvP_5nCVJS-qLslAb7NmrtZtgiNZFmY2vwqKStdXmMyA06dTBLpWhhT8zV3jssTnETyVKz8BUm9FNw3SjLAZt1aVT8xKavjD5hwQHF"/>
+</div>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface">M. Sterling</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">CFO Office</div>
+</div>
+</div>
+<button class="bg-primary/10 text-primary border border-primary/30 hover:bg-primary hover:text-on-primary px-md py-sm rounded-lg font-label-caps text-label-caps transition-colors">Revise</button>
+</div>
+</div>
+<!-- Pending Security -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:bg-surface-container-high transition-colors md:col-span-2 lg:col-span-2">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">security</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Security Audit</span>
+</div>
+<span class="bg-surface-container/50 text-tertiary-fixed-dim font-data-mono-sm text-data-mono-sm px-sm py-xs rounded flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">pending</span> PENDING
+                        </span>
+</div>
+<div class="flex flex-col md:flex-row gap-lg">
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">External API Gateway Access</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Review required for new vendor integration points. Must comply with zero-trust network policies and data masking requirements.</p>
+</div>
+<div class="bg-surface-container-highest rounded-lg p-sm border border-outline-variant flex flex-col justify-center min-w-[200px]">
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-xs">Risk Level</div>
+<div class="font-data-mono text-data-mono text-error flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">warning</span> HIGH</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mt-sm mb-xs">Deadline</div>
+<div class="font-data-mono text-data-mono text-on-surface">T-48 Hrs</div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-md pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border-2 border-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of a security analyst in a SOC, dark room with glowing screens, intense technical atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQO2Jwz3XmnKqTpvHPysMMxbA5UuCFH4HucqITS3A5WeRu9-TBB3DtUvUnJNcLGIoTeVUJUFQbWEut3kP_iNYCPAep5aI00D6_WJaK30g_X9dPS9wM7NNd3ZPfWPYiRuPV5A9iyb_h-B-D07S9xkRffme5JcgmeIiNU4Exgxw3FyZZB1UmK4pN3dLgeni2v71YZ0FVUm1dpKmjQ9Mk7f3KlfBXtAdn-vxQRxNZ_9PpCeNJgyBmnjoy"/>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border-2 border-surface-container-low flex items-center justify-center bg-secondary-container text-on-secondary-container font-label-caps text-[10px]">
+                                    +2
+                                </div>
+</div>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface">SecOps Team</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Committee</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary hover:bg-primary-fixed hover:text-on-primary-fixed px-lg py-sm rounded-lg font-label-caps text-label-caps transition-colors shadow-[0_4px_14px_0_rgba(14,165,233,0.39)]">Priority Review</button>
+</div>
+</div>
+<!-- Blocked Release -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface">rocket_launch</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Release Candidate</span>
+</div>
+<span class="bg-surface-container/50 text-[#ffb4ab] font-data-mono-sm text-data-mono-sm px-sm py-xs rounded flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">block</span> BLOCKED
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">v4.1.0 Deployment</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-1">Blocked pending resolution of critical integration test failures in Module B.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of a release manager looking stressed in a high-tech control room, dark mode, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_GSJSGaWj3DHyBcX5VuqqZVZ7BaRQVrOj8djzGUhDnTkGr1Ymh4o757IQqzqBTlxPqM5QKAu0ZsVpocPzd7RyJ-GBfbmbnYlsTydGK5-XogXwlP9hKR2XZ-Xbui5pnG9nteXGLDImlKRVSP1EDbLOnaAwa6hqP9vn5fdWDrC2BtktQRU6_5TWxQSbFkEhsmtHnkMMgBfl4qOwibHBWalOnyW5bz8vbUJeldnymw3_CbGLCpim7Mzu"/>
+</div>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface">K. Chen</div>
+<div class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Release Mgr.</div>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface px-md py-sm rounded-lg font-label-caps text-label-caps transition-colors border border-outline-variant">Details</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

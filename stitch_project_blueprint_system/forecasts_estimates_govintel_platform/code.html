@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forecasts &amp; Estimates - GovIntel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-fixed-dim": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "inverse-primary": "#006591",
+                        "on-primary-fixed": "#001e2f",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#213145",
+                        "tertiary-container": "#00b17b",
+                        "outline": "#88929b",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-container": "#003751",
+                        "primary": "#89ceff",
+                        "on-tertiary-container": "#003b26",
+                        "surface-container-high": "#222a3d",
+                        "inverse-surface": "#dae2fd",
+                        "on-surface-variant": "#bec8d2",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#283044",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-fixed": "#c9e6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#003824",
+                        "surface-tint": "#89ceff",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "background": "#0b1326",
+                        "tertiary": "#4edea3",
+                        "primary-container": "#0ea5e9",
+                        "secondary-container": "#3a4a5f",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "on-primary": "#00344d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .border-subtle { border-color: theme('colors.outline-variant'); border-width: 1px; border-style: solid; }
+        .glass-panel { background: rgba(19, 27, 46, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid theme('colors.outline-variant'); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-background">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full h-16 border-b border-outline-variant flex items-center justify-between px-lg sticky top-0 z-50">
+<div class="flex items-center gap-lg">
+<span class="font-headline-md text-headline-md font-bold text-primary">GovIntel Platform</span>
+<div class="hidden md:flex bg-surface-container-high rounded-full px-sm py-xs border-subtle items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant px-2 text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-body-sm font-body-sm text-on-surface focus:ring-0 w-48 placeholder-on-surface-variant" placeholder="Search platforms..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex gap-lg h-full">
+<a class="h-full flex items-center text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Home</a>
+<a class="h-full flex items-center text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Plan</a>
+<a class="h-full flex items-center text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Execute</a>
+<a class="h-full flex items-center text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md cursor-pointer active:opacity-80" href="#">Control</a>
+<a class="h-full flex items-center text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Documents</a>
+<a class="h-full flex items-center text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Insights</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border-subtle">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A macro photography shot of an intricately detailed microchip processor. The lighting is dramatic and moody, utilizing deep neon blues and crisp whites. The aesthetic is highly technical, clean, and futuristic, perfectly matching a dark-mode modern corporate dashboard style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOtfcFlEYjeCohRRZEEvOcbnxHl_X2oxXMha0DldGMynYkq3GnFKOImX4dHVFdnA0bH8l2oomxfqQ4XHP2hL9_9WcHi_g9Ff3fn3VB8EHTO6JrjFhgUHc1yTxAl5vDQVeBLs89TajZGVnVELlAE3B7icEa6qP-aPD3gfZbWZgEHF0iupfniO1l_c640CMeOFCQs60MgFDEygQD_nc0lhD8u0T0L-FC2hIVfXxeWHzheC5WMeFXHZyI"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-container-low h-[calc(100vh-64px)] w-64 fixed left-0 top-16 border-r border-outline-variant flex flex-col p-md z-40 hidden md:flex">
+<div class="mb-xl flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest overflow-hidden border-subtle">
+<img alt="Project Alpha" class="w-full h-full object-cover" data-alt="Abstract geometric dark blue and cyan shapes representing a project logo. High resolution, 3D rendered, pristine quality, fitting for a sophisticated engineering command center visual language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAGc1DoIjRjDKeDcUlftgPpxAhedooIJX_RZkWffQE5k8gm3vyOIp9l_xJQRSanX4jIZxORJWTlaK9l_D6R9PQXpc0y6nxw0iVG6ih1AXqgF9ENozYfsmq06K-GUTSe-4FmFDpMHkvhEqiIErP0Tv7wVavnIF1TI1bID3Th4XkmWAeCd3mIFmApk5-bW9ljXVSOKDVxLJ9nNIVv7JjOKaMhB_KqLILBLmquQs6_i_W3G2rL6p1X_i_"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface text-sm">Project Alpha</h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant text-xs mt-1">Engineering Command</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-sm rounded-lg mb-lg hover:bg-primary-fixed transition-colors">New Task</button>
+<nav class="flex-1 space-y-unit">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="layers">layers</span> Phases
+                </a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="group">group</span> Resources
+                </a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="warning">warning</span> Risk
+                </a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="verified">verified</span> Quality
+                </a>
+<a class="flex items-center gap-md px-md py-sm bg-secondary-container text-on-secondary-container font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="analytics">analytics</span> Analytics
+                </a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-md space-y-unit">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span> Export
+                </a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-caps text-label-caps rounded-lg transition-all duration-200 ease-in-out scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="archive">archive</span> Archive
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-0 md:ml-64 p-md md:p-lg lg:p-xl overflow-y-auto w-full max-w-container-max mx-auto">
+<header class="mb-lg flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Forecasts &amp; Estimates</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-sm">GST Compliance Platform Predictive Analysis</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-low border-subtle rounded-lg p-xs">
+<button class="px-md py-xs rounded text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">DETERMINISTIC</button>
+<button class="px-md py-xs rounded bg-surface-container-highest text-primary font-label-caps text-label-caps border border-primary/30">LEARNED PREDICTIONS</button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-md lg:gap-lg">
+<!-- Timeline & Confidence -->
+<div class="lg:col-span-8 flex flex-col gap-md lg:gap-lg">
+<section class="glass-panel rounded-xl p-lg flex flex-col gap-md">
+<div class="flex justify-between items-center border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="timeline">timeline</span>
+                                Completion Trajectory
+                            </h3>
+<div class="flex items-center gap-sm">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">ML Forecast</span>
+<span class="w-3 h-3 rounded-full bg-outline-variant ml-md"></span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Baseline</span>
+</div>
+</div>
+<div class="relative h-64 w-full mt-md">
+<!-- Placeholder for chart visualization -->
+<div class="absolute inset-0 border-l border-b border-outline-variant flex items-end">
+<div class="w-full h-full relative">
+<!-- Simulated Graph Lines -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none">
+<path class="opacity-80" d="M0,200 Q100,180 200,150 T400,100 T600,80 T800,20" fill="none" stroke="theme('colors.primary')" stroke-width="2"></path>
+<path class="opacity-50" d="M0,200 L200,180 L400,160 L600,140 L800,120" fill="none" stroke="theme('colors.outline')" stroke-dasharray="4 4" stroke-width="1"></path>
+<!-- Confidence Band -->
+<path class="opacity-10" d="M0,200 Q100,190 200,160 T400,110 T600,90 T800,40 L800,0 Q600,60 400,80 T200,140 T0,180 Z" fill="theme('colors.primary')"></path>
+</svg>
+<!-- Expected Completion Marker -->
+<div class="absolute right-[10%] top-[10%] flex flex-col items-center">
+<div class="bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm px-sm py-xs rounded border border-primary">OCT 15</div>
+<div class="w-px h-24 bg-primary border-l border-dashed border-primary mt-1"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md mt-sm border-t border-outline-variant pt-md">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">TARGET</p>
+<p class="font-data-mono text-data-mono text-on-surface mt-xs">2024-09-30</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ML PREDICTION</p>
+<p class="font-data-mono text-data-mono text-primary mt-xs">2024-10-15</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">CONFIDENCE</p>
+<p class="font-data-mono text-data-mono text-tertiary mt-xs">85.4%</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">VARIANCE</p>
+<p class="font-data-mono text-data-mono text-error mt-xs">+15 DAYS</p>
+</div>
+</div>
+</section>
+<section class="glass-panel rounded-xl p-lg flex flex-col gap-md">
+<div class="flex justify-between items-center border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="account_balance">account_balance</span>
+                                Budget Forecast
+                            </h3>
+</div>
+<div class="flex flex-col md:flex-row gap-lg mt-md">
+<div class="flex-1">
+<div class="flex justify-between items-end mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">BURN RATE</span>
+<span class="font-data-mono text-data-mono text-on-surface">$142k/mo</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-2 mb-md">
+<div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
+</div>
+<div class="flex justify-between items-end mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">PROJECTED TOTAL</span>
+<span class="font-data-mono text-data-mono text-error">$1.85M</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-2">
+<div class="bg-error h-2 rounded-full" style="width: 110%"></div>
+</div>
+<p class="font-body-sm text-body-sm text-error mt-sm text-right">10% Overrun Projected</p>
+</div>
+<div class="w-full md:w-48 p-md bg-surface-container-low border-subtle rounded-lg flex flex-col justify-center items-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-center mb-sm">ESTIMATED SHORTFALL</p>
+<p class="font-display-lg text-display-lg text-error">-$150k</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Risk Trends Sidebar -->
+<div class="lg:col-span-4 flex flex-col gap-md lg:gap-lg">
+<section class="glass-panel rounded-xl p-lg flex flex-col h-full">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm border-b border-outline-variant pb-sm mb-md">
+<span class="material-symbols-outlined text-tertiary" data-icon="radar">radar</span>
+                            Risk Trends
+                        </h3>
+<div class="space-y-md flex-1">
+<!-- Risk Item 1 -->
+<div class="p-md bg-surface-container-low border-subtle rounded-lg hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<h4 class="font-body-md text-body-md text-on-surface font-semibold">Vendor Integration</h4>
+<span class="px-2 py-1 rounded bg-error-container text-on-error-container font-data-mono-sm text-data-mono-sm">HIGH</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">API latency issues increasing delivery timeline risk.</p>
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">IMPACT PROBABILITY</span>
+<span class="font-data-mono text-data-mono text-error">72%</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1 mt-1">
+<div class="bg-error h-1 rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<!-- Risk Item 2 -->
+<div class="p-md bg-surface-container-low border-subtle rounded-lg hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<h4 class="font-body-md text-body-md text-on-surface font-semibold">Compliance Audit</h4>
+<span class="px-2 py-1 rounded bg-tertiary-container/20 text-tertiary font-data-mono-sm text-data-mono-sm">MODERATE</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Pending sign-off from InfoSec team.</p>
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">IMPACT PROBABILITY</span>
+<span class="font-data-mono text-data-mono text-tertiary">45%</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1 mt-1">
+<div class="bg-tertiary h-1 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-md py-sm border border-outline-variant text-on-surface font-label-caps text-label-caps rounded hover:bg-surface-container-highest transition-colors">VIEW FULL RISK REGISTER</button>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

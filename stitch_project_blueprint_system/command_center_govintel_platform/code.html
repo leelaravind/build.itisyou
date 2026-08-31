@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GST Compliance Platform - Project Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#0ea5e9",
+                    "tertiary": "#4edea3",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-tertiary-container": "#003b26",
+                    "surface-bright": "#31394d",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-secondary-container": "#a9bad3",
+                    "tertiary-container": "#00b17b",
+                    "on-surface-variant": "#bec8d2",
+                    "surface-dim": "#0b1326",
+                    "inverse-on-surface": "#283044",
+                    "surface-tint": "#89ceff",
+                    "inverse-primary": "#006591",
+                    "on-tertiary-fixed": "#002113",
+                    "inverse-surface": "#dae2fd",
+                    "on-secondary-fixed": "#0b1c30",
+                    "secondary-container": "#3a4a5f",
+                    "on-primary-fixed": "#001e2f",
+                    "on-primary-container": "#003751",
+                    "error": "#ffb4ab",
+                    "surface": "#0b1326",
+                    "on-tertiary": "#003824",
+                    "surface-container-low": "#131b2e",
+                    "surface-container": "#171f33",
+                    "surface-container-high": "#222a3d",
+                    "surface-container-highest": "#2d3449",
+                    "tertiary-fixed": "#6ffbbe",
+                    "outline-variant": "#3e4850",
+                    "on-surface": "#dae2fd",
+                    "secondary-fixed": "#d3e4fe",
+                    "error-container": "#93000a",
+                    "primary-fixed-dim": "#89ceff",
+                    "on-secondary": "#213145",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#dae2fd",
+                    "on-error": "#690005",
+                    "primary-fixed": "#c9e6ff",
+                    "on-primary": "#00344d",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "outline": "#88929b",
+                    "primary": "#89ceff",
+                    "secondary": "#b7c8e1",
+                    "surface-variant": "#2d3449",
+                    "surface-container-lowest": "#060e20",
+                    "background": "#0b1326"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "container-max": "1440px",
+                    "3xl": "64px",
+                    "lg": "24px",
+                    "2xl": "48px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "data-mono-sm": ["JetBrains Mono"],
+                    "label-caps": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "body-sm": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-md": ["Geist"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex font-body-md overflow-x-hidden">
+<!-- SideNavBar (from JSON) -->
+<nav class="hidden md:flex bg-surface-container-low border-r border-outline-variant fixed left-0 top-0 h-full flex-col z-40 w-64">
+<!-- Header -->
+<div class="p-gutter border-b border-outline-variant flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" data-weight="fill">hub</span>
+</div>
+<div>
+<h2 class="text-body-lg font-headline-md font-bold text-on-surface">Project Alpha</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 overflow-y-auto py-md">
+<div class="px-md mb-md">
+<button class="w-full bg-primary-container text-on-primary-container hover:opacity-90 transition-opacity rounded-xl py-2 px-4 flex items-center justify-center gap-sm font-label-caps text-label-caps">
+<span class="material-symbols-outlined">add</span>
+                    New Request
+                </button>
+</div>
+<ul class="space-y-1">
+<li>
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">account_tree</span>
+<span class="text-label-caps font-label-caps">Phases</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">group</span>
+<span class="text-label-caps font-label-caps">Resources</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">warning</span>
+<span class="text-label-caps font-label-caps">Risk</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">verified</span>
+<span class="text-label-caps font-label-caps">Quality</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">insights</span>
+<span class="text-label-caps font-label-caps">Analytics</span>
+</a>
+</li>
+</ul>
+</div>
+<!-- Footer Navigation -->
+<div class="border-t border-outline-variant py-sm">
+<ul class="space-y-1">
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-label-caps font-label-caps">Settings</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl mx-2 my-1 flex items-center px-4 py-2" href="#">
+<span class="material-symbols-outlined mr-3">tune</span>
+<span class="text-label-caps font-label-caps">Complexity</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (from JSON) -->
+<header class="bg-surface-container border-b border-outline-variant w-full sticky top-0 z-30">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<!-- Brand / Desktop Top Nav Links -->
+<div class="flex items-center gap-xl h-full">
+<span class="text-headline-md font-headline-md font-bold text-primary md:hidden">GovIntel Platform</span>
+<nav class="hidden md:flex h-full items-center gap-lg">
+<a class="text-primary border-b-2 border-primary pb-1 font-label-caps text-label-caps h-full flex items-center opacity-80 duration-100 hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps h-full flex items-center hover:text-primary transition-colors duration-200" href="#">Plan</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps h-full flex items-center hover:text-primary transition-colors duration-200" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps h-full flex items-center hover:text-primary transition-colors duration-200" href="#">Control</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps h-full flex items-center hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps h-full flex items-center hover:text-primary transition-colors duration-200" href="#">Insights</a>
+</nav>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-high relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden ml-sm cursor-pointer">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A macro shot of a sophisticated geometric pattern in deep slate gray with subtle metallic cyan highlights. High-end, pristine corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMlHvNpuj59a-4BRHdIZbUS6nHGv9qkUwa5sfE2BeDocTbFIDNKshDFUvb1NamCkm1weGY-Da-WyZYb-FVrisZS_qIj_57oxRw-bmXWcbjIjjCnvp8wXaFG3DIJ8yC5NL2ji6mPYeIcfIAS9lJ5xtRywQgVhKh6sg_2UgpYIMyWn2NyrSlK9OXrwQcIDDNAI_0YKcxDzYXK2tdLWJMqOGIL909h2Cs0IymCT8enMOGRyOjKUKrLrgz"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Command Center Canvas -->
+<main class="flex-1 p-gutter md:p-2xl max-w-container-max mx-auto w-full flex flex-col gap-xl">
+<!-- Context Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="text-label-caps font-label-caps text-primary tracking-widest uppercase">Command Center</span>
+<span class="w-1 h-1 rounded-full bg-outline"></span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">HEALTHY</span>
+</div>
+<h1 class="text-headline-lg-mobile md:text-display-lg font-display-lg text-on-surface">GST Compliance Platform</h1>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm rounded border border-outline-variant text-body-sm font-label-caps text-on-surface hover:bg-surface-container-high transition-colors">
+                        GENERATE REPORT
+                    </button>
+</div>
+</div>
+<!-- Asymmetric Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Primary Focus: What should happen next? (Spans 8 columns on desktop) -->
+<div class="md:col-span-8 bg-surface-container-low border border-outline-variant rounded-xl p-lg relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+<!-- Subtle background decoration -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+<div>
+<div class="flex items-center gap-sm mb-xl">
+<span class="material-symbols-outlined text-primary">priority</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase">Recommended Action</span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-sm">Approve Architecture Gate</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-xl max-w-2xl">
+                            The 'Data Encryption Layer' architecture document has passed all automated quality checks. Manual sign-off is required to proceed to the implementation phase.
+                        </p>
+</div>
+<div class="flex items-center gap-md mt-auto">
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-label-caps text-label-caps hover:bg-primary-container transition-colors shadow-[0_0_15px_rgba(137,206,255,0.2)]">
+                            REVIEW &amp; APPROVE
+                        </button>
+<button class="px-xl py-md rounded-lg font-label-caps text-label-caps text-on-surface hover:bg-surface-container border border-transparent hover:border-outline-variant transition-all">
+                            DEFER
+                        </button>
+</div>
+</div>
+<!-- Secondary Focus: Status & Progress (Spans 4 columns) -->
+<div class="md:col-span-4 bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-lg">
+<div>
+<div class="flex justify-between items-center mb-xs">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Lifecycle Phase</span>
+<span class="text-data-mono-sm font-data-mono-sm bg-primary/10 text-primary px-2 py-1 rounded">34%</span>
+</div>
+<div class="text-headline-md font-headline-md text-on-surface">IN PROGRESS</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">Development Phase</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[34%]"></div>
+</div>
+<!-- Current Milestone -->
+<div class="mt-auto pt-md border-t border-outline-variant/50">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider block mb-sm">Current Milestone</span>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">flag</span>
+<span class="text-body-md font-body-md text-on-surface">Milestone 3: Core Tax Engine Alpha</span>
+</div>
+</div>
+</div>
+<!-- Snapshot: Budget -->
+<div class="md:col-span-4 bg-surface-container-low border border-outline-variant rounded-xl p-lg">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">account_balance_wallet</span>
+                        Budget Snapshot
+                    </span>
+<div class="flex items-end gap-sm mb-xs">
+<span class="text-headline-lg font-headline-lg text-on-surface">£62k</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant mb-1">/ £180k</span>
+</div>
+<div class="text-data-mono-sm font-data-mono-sm text-tertiary">34.4% UTILIZED</div>
+</div>
+<!-- Snapshot: Schedule -->
+<div class="md:col-span-4 bg-surface-container-low border border-outline-variant rounded-xl p-lg relative overflow-hidden">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_month</span>
+                        Schedule
+                    </span>
+<div class="flex items-end gap-sm mb-xs">
+<span class="text-headline-lg font-headline-lg text-on-surface">Month 3</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant mb-1">of 8</span>
+</div>
+<div class="flex items-center gap-xs text-data-mono-sm font-data-mono-sm text-[#facc15]"> <!-- Amber for slight warning -->
+<span class="material-symbols-outlined text-[16px]">warning</span>
+                        SLIGHT DELAY
+                    </div>
+</div>
+<!-- Snapshot: Risks & Quality -->
+<div class="md:col-span-4 bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col justify-between">
+<div>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">radar</span>
+                            Radar
+                        </span>
+<!-- Major Blockers -->
+<div class="mb-md">
+<div class="text-body-sm font-body-sm text-on-surface-variant mb-xs">Major Blockers</div>
+<div class="text-body-md font-body-md text-on-surface">None</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-1">1 Active Risk: External API Latency</div>
+</div>
+</div>
+<!-- Quality Gates -->
+<div class="pt-sm border-t border-outline-variant/50">
+<div class="text-body-sm font-body-sm text-on-surface-variant mb-sm">Quality Gates</div>
+<div class="flex gap-xs">
+<div class="flex items-center gap-1 bg-tertiary/10 text-tertiary px-2 py-1 rounded text-data-mono-sm font-data-mono-sm">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                2 PASS
+                            </div>
+<div class="flex items-center gap-1 bg-outline-variant/30 text-on-surface-variant px-2 py-1 rounded text-data-mono-sm font-data-mono-sm">
+<span class="material-symbols-outlined text-[14px]">pending</span>
+                                1 PEND
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GST Compliance Platform - Task Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#0ea5e9",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-tertiary-container": "#003b26",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-container": "#a9bad3",
+                        "tertiary-container": "#00b17b",
+                        "on-surface-variant": "#bec8d2",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#89ceff",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#dae2fd",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-container": "#3a4a5f",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-container": "#003751",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#003824",
+                        "surface-container-low": "#131b2e",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed": "#6ffbbe",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-secondary": "#213145",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "primary-fixed": "#c9e6ff",
+                        "on-primary": "#00344d",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "outline": "#88929b",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-variant": "#2d3449",
+                        "surface-container-lowest": "#060e20",
+                        "background": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "label-caps": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen w-screen overflow-hidden flex selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Shell: SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col z-40 docked left-0 h-screen w-64 border-r border-outline-variant dark:border-outline-variant bg-surface-container-low dark:bg-surface-container-low">
+<!-- Header -->
+<div class="p-lg flex flex-col gap-sm">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container text-body-lg">hexagon</span>
+</div>
+<div class="flex flex-col">
+<span class="text-body-lg font-headline-md font-bold text-on-surface">Project Alpha</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Phase: Execution</span>
+</div>
+</div>
+<button class="mt-md w-full bg-primary hover:bg-primary-fixed text-on-primary font-label-caps text-label-caps py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined icon-fill" style="font-size: 16px;">add</span>
+                New Request
+            </button>
+</div>
+<!-- Main Nav -->
+<div class="flex-1 overflow-y-auto py-md flex flex-col gap-xs">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Overview</span>
+</a>
+<!-- Active Tab -->
+<a class="bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md icon-fill">account_tree</span>
+<span class="font-label-caps text-label-caps uppercase">Phases</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span class="font-label-caps text-label-caps uppercase">Resources</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">warning</span>
+<span class="font-label-caps text-label-caps uppercase">Risk</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">verified</span>
+<span class="font-label-caps text-label-caps uppercase">Quality</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">insights</span>
+<span class="font-label-caps text-label-caps uppercase">Analytics</span>
+</a>
+</div>
+<!-- Footer Nav -->
+<div class="p-md border-t border-outline-variant flex flex-col gap-xs">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all flex justify-between items-center w-full" href="#">
+<div class="flex items-center">
+<span class="material-symbols-outlined mr-md">tune</span>
+<span class="font-label-caps text-label-caps uppercase">Complexity</span>
+</div>
+</a>
+</div>
+</nav>
+<!-- Main Canvas (Background context - Work Breakdown) -->
+<main class="ml-64 flex-1 h-full relative overflow-hidden bg-surface flex flex-col">
+<!-- Dummy header for context -->
+<header class="h-16 border-b border-outline-variant bg-surface flex items-center px-lg shrink-0">
+<h1 class="text-headline-md font-headline-md text-on-surface">Work Breakdown Structure</h1>
+</header>
+<!-- Dummy list content -->
+<div class="flex-1 p-lg overflow-y-auto space-y-unit opacity-30 select-none pointer-events-none">
+<!-- Simulated list items -->
+<div class="h-12 border border-outline-variant bg-surface-container-low rounded flex items-center px-md"></div>
+<div class="h-12 border border-outline-variant bg-surface-container-low rounded flex items-center px-md"></div>
+<div class="h-12 border border-primary bg-surface-container rounded flex items-center px-md"></div>
+<div class="h-12 border border-outline-variant bg-surface-container-low rounded flex items-center px-md"></div>
+<div class="h-12 border border-outline-variant bg-surface-container-low rounded flex items-center px-md"></div>
+</div>
+<!-- Overlay Backdrop -->
+<div class="absolute inset-0 bg-surface/50 backdrop-blur-[2px] z-40 transition-opacity"></div>
+<!-- Task Detail Drawer (Right Aligned) -->
+<aside class="absolute right-0 top-0 h-full w-[850px] bg-surface-container shadow-[-20px_0_40px_-10px_rgba(0,0,0,0.5)] border-l border-outline-variant z-50 flex flex-col transform transition-transform duration-300 ease-out">
+<!-- Drawer Header -->
+<header class="px-xl py-lg border-b border-outline-variant flex justify-between items-start bg-surface-container-low shrink-0">
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-md">
+<span class="bg-surface-container-highest border border-outline-variant text-on-surface font-data-mono-sm text-data-mono-sm px-2 py-1 rounded">TSK-553</span>
+<span class="text-label-caps font-label-caps text-primary uppercase tracking-widest">Engineering Logic</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface leading-tight tracking-tight">Implement IGST Calculation</h2>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[20px] group-hover:text-on-surface">close</span>
+</button>
+</header>
+<!-- Drawer Content Area (Split Layout) -->
+<div class="flex-1 overflow-hidden flex">
+<!-- Main Details (Left 2/3) -->
+<div class="flex-[2] overflow-y-auto p-xl flex flex-col gap-xl">
+<!-- Description Bento -->
+<section class="flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase border-b border-outline-variant pb-xs">Description</h3>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-md">
+<p class="text-body-md font-body-md text-on-surface leading-relaxed">
+                                Engineering logic for Integrated Goods and Services Tax. This module must handle cross-state transaction routing, apply the correct cumulative tax bands based on the destination HSN codes, and interface with the central compliance ledger API.
+                            </p>
+</div>
+</section>
+<!-- Traceability Bento -->
+<section class="flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase border-b border-outline-variant pb-xs">Traceability Vectors</h3>
+<div class="grid grid-cols-2 gap-md">
+<!-- Requirement -->
+<div class="bg-surface border border-outline-variant rounded-lg p-md flex flex-col gap-sm hover:border-outline transition-colors cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Requirement</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary">arrow_forward</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">description</span>
+<span class="text-body-md font-data-mono text-on-surface">R-101</span>
+</div>
+<span class="text-body-sm font-body-sm text-on-surface-variant truncate">Inter-state Tax Compliance</span>
+</div>
+<!-- Component -->
+<div class="bg-surface border border-outline-variant rounded-lg p-md flex flex-col gap-sm hover:border-outline transition-colors cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Architecture Node</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary">arrow_forward</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">schema</span>
+<span class="text-body-md font-data-mono text-on-surface">C-44</span>
+</div>
+<span class="text-body-sm font-body-sm text-on-surface-variant truncate">Ledger Calculator Engine</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Structured Sidebar (Right 1/3) -->
+<div class="flex-[1] border-l border-outline-variant bg-surface-container-low flex flex-col overflow-y-auto">
+<!-- Status & Estimates -->
+<div class="p-lg border-b border-outline-variant flex flex-col gap-lg">
+<!-- Status Badge -->
+<div class="flex flex-col gap-xs">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Current Status</span>
+<div class="inline-flex items-center gap-sm bg-secondary-container/50 border border-secondary-container text-on-secondary-container px-3 py-1.5 rounded w-fit">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span class="font-data-mono-sm text-data-mono-sm uppercase tracking-wide">In Review</span>
+</div>
+</div>
+<!-- Estimates -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-end">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Estimates</span>
+<div class="text-right">
+<span class="font-data-mono text-data-mono text-on-surface">6d</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">/ 12d</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/2 rounded-full"></div>
+</div>
+<span class="text-body-sm font-body-sm text-on-surface-variant text-right">50% Remaining</span>
+</div>
+</div>
+<!-- Evidence / Quality Gates -->
+<div class="p-lg flex flex-col gap-md">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Gate Evidence</span>
+<!-- Unit Test (Pass) -->
+<div class="bg-surface border border-outline-variant rounded p-sm flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">terminal</span>
+<span class="text-body-sm font-body-sm text-on-surface">Unit Tests</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">PASS</span>
+</div>
+</div>
+<!-- Code Review (Pending) -->
+<div class="bg-surface border border-outline-variant rounded p-sm flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">code</span>
+<span class="text-body-sm font-body-sm text-on-surface">Code Review</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">pending</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PENDING</span>
+</div>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="mt-auto p-lg border-t border-outline-variant">
+<button class="w-full bg-surface-container-highest border border-outline hover:border-primary text-on-surface font-label-caps text-label-caps py-2 px-4 rounded transition-colors duration-200 uppercase tracking-wider">
+                            View Commit Log
+                        </button>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

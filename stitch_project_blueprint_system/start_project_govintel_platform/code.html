@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Start New Project - GovIntel Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#bec8d2",
+                        "surface-container-highest": "#2d3449",
+                        "on-tertiary": "#003824",
+                        "inverse-on-surface": "#283044",
+                        "secondary": "#b7c8e1",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container": "#171f33",
+                        "on-primary-container": "#003751",
+                        "surface-tint": "#89ceff",
+                        "inverse-primary": "#006591",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed": "#001e2f",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-container": "#00b17b",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "primary": "#89ceff",
+                        "surface-dim": "#0b1326",
+                        "outline": "#88929b",
+                        "on-background": "#dae2fd",
+                        "primary-container": "#0ea5e9",
+                        "primary-fixed": "#c9e6ff",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary-fixed": "#002113",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed": "#d3e4fe",
+                        "outline-variant": "#3e4850",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-secondary-container": "#a9bad3",
+                        "secondary-container": "#3a4a5f",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#003b26",
+                        "on-surface": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "surface": "#0b1326",
+                        "surface-container-lowest": "#060e20",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-secondary": "#213145",
+                        "surface-container-low": "#131b2e",
+                        "background": "#0b1326",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "surface-variant": "#2d3449",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#00344d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Geist"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for textarea */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-container-highest');
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar (Shared Component) - Suppressed as per Semantic Shell Mandate for Transactional/Linear intent screens (Start New Project) -->
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center p-gutter w-full max-w-container-max mx-auto relative overflow-hidden">
+<!-- Subtle Ambient Background Element -->
+<div class="absolute inset-0 pointer-events-none flex justify-center items-center opacity-10">
+<div class="w-[800px] h-[800px] bg-primary rounded-full blur-[120px] mix-blend-screen opacity-20"></div>
+</div>
+<!-- Focused Entry Container -->
+<div class="relative w-full max-w-3xl flex flex-col items-center text-center z-10 animate-fade-in-up">
+<header class="mb-xl w-full">
+<h1 class="text-headline-lg-mobile md:text-display-lg font-headline-lg-mobile md:font-display-lg text-on-surface mb-sm">
+                    What are you planning?
+                </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Start with just an idea. We'll help you structure the requirements, architecture, and execution.
+                </p>
+</header>
+<div class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-md md:p-lg shadow-lg relative group transition-colors duration-300 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+<textarea class="w-full bg-transparent text-headline-md font-headline-md text-on-surface placeholder:text-on-surface-variant/50 border-none focus:ring-0 resize-none p-0" id="project-description" placeholder="e.g., I want to build a SaaS for medical inventory management..." rows="4"></textarea>
+<div class="absolute bottom-md right-md flex items-center space-x-sm opacity-50 group-focus-within:opacity-100 transition-opacity">
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Press Enter to analyze</span>
+</div>
+</div>
+<div class="mt-xl flex flex-col sm:flex-row items-center gap-md w-full justify-center">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-xl py-sm rounded-full flex items-center justify-center space-x-sm hover:bg-primary-fixed-dim transition-colors h-12 w-full sm:w-auto min-w-[200px]">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+<span>Analyze Project Idea</span>
+</button>
+<button class="bg-transparent border border-outline text-on-surface font-label-caps text-label-caps px-xl py-sm rounded-full flex items-center justify-center space-x-sm hover:bg-surface-container-highest hover:border-outline-variant transition-colors h-12 w-full sm:w-auto min-w-[200px]">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload_file">upload_file</span>
+<span>Import existing spec</span>
+</button>
+</div>
+<div class="mt-3xl pt-lg border-t border-surface-container-highest w-full max-w-md flex flex-col items-center">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-md uppercase tracking-wider">Recent Drafts</p>
+<div class="w-full flex flex-col gap-sm">
+<a class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low group transition-colors border border-transparent hover:border-outline-variant" href="#">
+<div class="flex items-center gap-sm truncate">
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="draft">draft</span>
+<span class="text-body-sm font-body-sm text-on-surface truncate group-hover:text-primary transition-colors">Project Alpha - Initial Phase</span>
+</div>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant whitespace-nowrap ml-md">2 hrs ago</span>
+</a>
+<a class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low group transition-colors border border-transparent hover:border-outline-variant" href="#">
+<div class="flex items-center gap-sm truncate">
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="draft">draft</span>
+<span class="text-body-sm font-body-sm text-on-surface truncate group-hover:text-primary transition-colors">Urban Mobility Subsystem</span>
+</div>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant whitespace-nowrap ml-md">1 day ago</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+<script>
+        // Simple auto-resize for textarea
+        const textarea = document.getElementById('project-description');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+            if (this.value.length > 0) {
+                this.parentElement.classList.add('border-primary', 'ring-1', 'ring-primary');
+            } else {
+                 this.parentElement.classList.remove('border-primary', 'ring-1', 'ring-primary');
+            }
+        });
+        
+        // Focus textarea on load for immediate interaction
+        window.addEventListener('DOMContentLoaded', () => {
+             textarea.focus();
+        });
+    </script>
+</body></html>

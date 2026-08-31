@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Focus Mode</title>
+<!-- Google Fonts: Geist & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#0ea5e9",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-tertiary-container": "#003b26",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-container": "#a9bad3",
+                        "tertiary-container": "#00b17b",
+                        "on-surface-variant": "#bec8d2",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#89ceff",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#dae2fd",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-container": "#3a4a5f",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-container": "#003751",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#003824",
+                        "surface-container-low": "#131b2e",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed": "#6ffbbe",
+                        "outline-variant": "#3e4850",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-secondary": "#213145",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "primary-fixed": "#c9e6ff",
+                        "on-primary": "#00344d",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "outline": "#88929b",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-variant": "#2d3449",
+                        "surface-container-lowest": "#060e20",
+                        "background": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "label-caps": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface-container border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<!-- Brand -->
+<div class="flex items-center gap-md">
+<span class="text-headline-md font-headline-md font-bold text-primary">GovIntel Platform</span>
+</div>
+<!-- Navigation Links (Center/Left-ish) -->
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-primary border-b-2 border-primary pb-1 font-label-caps text-label-caps uppercase tracking-wider flex flex-col hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps uppercase tracking-wider hover:text-primary transition-colors duration-200" href="#">Plan</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps uppercase tracking-wider hover:text-primary transition-colors duration-200" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps uppercase tracking-wider hover:text-primary transition-colors duration-200" href="#">Control</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps uppercase tracking-wider hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps uppercase tracking-wider hover:text-primary transition-colors duration-200" href="#">Insights</a>
+</nav>
+<!-- Search & Trailing Icons -->
+<div class="flex items-center gap-md">
+<!-- Conceptual Search Bar on Right -->
+<div class="hidden lg:flex items-center bg-surface-container-high rounded-full px-md py-sm border border-outline-variant hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-body-md mr-sm">search</span>
+<input class="bg-transparent border-none text-body-sm font-body-sm text-on-surface focus:outline-none focus:ring-0 placeholder-on-surface-variant w-48" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 relative">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">help</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-sm">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a system administrator in a futuristic control room setting, cool blue lighting, confident expression, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsKXhXR_sfhmf5BSzrVqb8UGqs7V11fxML5cZQWZHCHPhldhJOcFv-PSHfv3riMtReFeza_NM1SY1FqcsGE3z0zxKdC4ZENAt-qTmB8PeQhYuhmWXwFa5gMsDGeb-rvYkWQgRQ2bJ5j17XrC_ux_e-UFO4RrDTAKlUJkAd5cuVo5yTN6nmveApcFE144_XydZNFKuagF9tMxEveaNf0NjrqHA744cBebQVZS6eSM9syKpxnbxN8oTt"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main App Container -->
+<div class="flex flex-1 w-full h-full pt-16">
+<!-- SideNavBar -->
+<aside class="hidden md:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-surface-container-low border-r border-outline-variant flex-col z-40">
+<!-- Header -->
+<div class="p-lg border-b border-outline-variant">
+<div class="flex items-center gap-md mb-md">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline flex items-center justify-center shrink-0">
+<span class="text-primary font-headline-md font-bold text-headline-md">α</span>
+</div>
+<div class="overflow-hidden">
+<h2 class="text-body-lg font-headline-md font-bold text-on-surface truncate">Project Alpha</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">Phase: Execution</p>
+</div>
+</div>
+<button class="w-full bg-surface-container-high border border-outline-variant hover:border-primary text-on-surface font-label-caps text-label-caps py-sm px-md rounded transition-all flex justify-center items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                    New Request
+                </button>
+</div>
+<!-- Scrollable Nav Links -->
+<nav class="flex-1 overflow-y-auto py-md">
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 opacity-80 scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Overview</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">account_tree</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Phases</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Resources</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">warning</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Risk</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">verified</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Quality</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">insights</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Analytics</span>
+</a>
+</nav>
+<!-- Footer Nav Links -->
+<div class="border-t border-outline-variant p-sm">
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Settings</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">tune</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Complexity</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas - FOCUS MODE -->
+<main class="flex-1 md:ml-64 h-full overflow-y-auto bg-background p-lg md:p-2xl flex justify-center">
+<!-- Focused Bento Layout -->
+<div class="w-full max-w-4xl flex flex-col gap-xl">
+<!-- Header -->
+<header class="flex justify-between items-end border-b border-outline-variant pb-md">
+<div>
+<p class="font-data-mono text-data-mono text-primary mb-xs opacity-80 uppercase tracking-widest">Sys.Time: <span id="sys-time"></span></p>
+<h1 class="font-display-lg text-display-lg text-on-surface">Focus Mode</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="flex h-3 w-3 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Active Tracking</span>
+</div>
+</header>
+<!-- Primary Action Area (The "One Thing") -->
+<section class="bg-surface-container rounded-xl border border-outline-variant p-xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.2)] flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="flex-1">
+<div class="flex items-center gap-sm mb-md">
+<span class="bg-primary/10 text-primary border border-primary/20 px-2 py-1 rounded text-data-mono-sm font-data-mono-sm">ACTIVE TASK</span>
+<span class="text-on-surface-variant font-data-mono text-data-mono">PR_442</span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-sm">Review Tax Logic Implementation</h2>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+                            Verify compliance mappings against Sprint 4 requirements. Pending approval from lead architect before merge.
+                        </p>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps uppercase tracking-wider px-xl py-lg rounded transition-all whitespace-nowrap flex items-center gap-sm">
+<span class="material-symbols-outlined">play_arrow</span>
+                        Continue Task
+                    </button>
+</section>
+<!-- Telemetry Row (Bento smaller items) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Due Today -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-lg flex flex-col justify-between hover:border-outline transition-colors">
+<div class="flex justify-between items-start mb-xl">
+<span class="material-symbols-outlined text-on-surface-variant">checklist</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-data-mono-sm font-data-mono-sm">METRIC</span>
+</div>
+<div>
+<span class="text-display-lg font-display-lg text-on-surface block mb-xs">2</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Tasks Due Today</span>
+</div>
+</div>
+<!-- Blocked -->
+<div class="bg-surface-container border border-error-container/50 rounded-lg p-lg flex flex-col justify-between shadow-[0_10px_15px_-3px_rgba(147,0,10,0.1)]">
+<div class="flex justify-between items-start mb-xl">
+<span class="material-symbols-outlined text-error">warning</span>
+<span class="bg-error-container/20 text-error border border-error/30 px-2 py-0.5 rounded text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+                                BLOCKED
+                            </span>
+</div>
+<div>
+<span class="text-headline-md font-headline-md text-on-surface block mb-xs truncate">Security Sign-off</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Pending external review.</span>
+</div>
+</div>
+<!-- Upcoming -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-lg flex flex-col justify-between hover:border-outline transition-colors">
+<div class="flex justify-between items-start mb-xl">
+<span class="material-symbols-outlined text-primary">flag</span>
+<span class="bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded text-data-mono-sm font-data-mono-sm">T-MINUS 1D</span>
+</div>
+<div>
+<span class="text-headline-md font-headline-md text-on-surface block mb-xs truncate">Requirements Gate</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Upcoming Checkpoint</span>
+</div>
+</div>
+</div>
+<!-- Priority Queue (List format as requested) -->
+<section class="mt-md">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-md border-b border-outline-variant pb-xs">Your Priorities Queue</h3>
+<div class="flex flex-col gap-sm">
+<!-- List Item 1 (Same as Active, shown in context) -->
+<div class="group flex items-center justify-between p-md bg-surface-container hover:bg-surface-container-high rounded border border-outline-variant transition-colors cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="text-primary font-data-mono text-data-mono opacity-50 w-6">01</span>
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<div>
+<p class="text-body-md font-body-md text-on-surface group-hover:text-primary transition-colors">Review PR #442 (Tax Logic)</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Assigned to you • In Progress</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<!-- List Item 2 -->
+<div class="group flex items-center justify-between p-md bg-surface-container-low hover:bg-surface-container-high rounded border border-transparent hover:border-outline-variant transition-colors cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="text-on-surface-variant font-data-mono text-data-mono opacity-30 w-6">02</span>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
+<div>
+<p class="text-body-md font-body-md text-on-surface group-hover:text-primary transition-colors">Finalize Compliance Evidence for Sprint 4</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Due EOD • Queued</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Simple script for the clock -->
+<script>
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+            document.getElementById('sys-time').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body></html>

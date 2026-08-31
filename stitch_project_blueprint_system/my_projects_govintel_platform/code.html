@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel - My Projects</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary": "#003824",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-tint": "#89ceff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-container-highest": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "background": "#0b1326",
+                        "outline": "#88929b",
+                        "tertiary": "#4edea3",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-background": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-primary": "#00344d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary-container": "#3a4a5f",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary-container": "#003751",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#89ceff",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a",
+                        "outline-variant": "#3e4850",
+                        "primary-fixed": "#c9e6ff",
+                        "surface-variant": "#2d3449",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-container": "#171f33",
+                        "on-primary-fixed": "#001e2f",
+                        "on-surface-variant": "#bec8d2",
+                        "on-secondary-container": "#a9bad3",
+                        "primary-container": "#0ea5e9",
+                        "tertiary-container": "#00b17b",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "3xl": "64px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "display-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #3e4850;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #88929b;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest border-b border-outline-variant docked full-width top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg h-16 max-w-container-max mx-auto">
+<div class="flex items-center gap-xl h-full">
+<div class="text-headline-md font-headline-md font-bold tracking-tight text-primary-fixed-dim">GovIntel</div>
+<nav class="hidden md:flex h-full items-center gap-lg">
+<!-- Nav Items -->
+<a class="text-on-surface-variant pb-1 flex h-full items-center" href="#">
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="text-on-surface-variant pb-1 flex h-full items-center" href="#">
+<span class="text-label-caps font-label-caps">Plan</span>
+</a>
+<a class="text-primary-fixed-dim font-bold border-b-2 border-primary pb-1 flex h-full items-center opacity-80 transition-opacity" href="#">
+<span class="text-label-caps font-label-caps">Execute</span>
+</a>
+<a class="text-on-surface-variant pb-1 flex h-full items-center" href="#">
+<span class="text-label-caps font-label-caps">Control</span>
+</a>
+<a class="text-on-surface-variant pb-1 flex h-full items-center" href="#">
+<span class="text-label-caps font-label-caps">Documents</span>
+</a>
+<a class="text-on-surface-variant pb-1 flex h-full items-center" href="#">
+<span class="text-label-caps font-label-caps">Insights</span>
+</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="bg-surface-container text-body-sm text-on-surface placeholder:text-on-surface-variant border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary pl-xl pr-sm py-xs w-64 transition-colors" placeholder="Search projects..." type="text"/>
+</div>
+<button class="p-sm text-on-surface-variant hover:text-primary-fixed transition-colors duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-primary-fixed transition-colors duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover ml-sm" data-alt="A small circular avatar showing a professional headshot of an executive in a dark modern setting with subtle blue neon rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmOwmmB_3yUzq8iH8Snj9L5-zTMpD31yV8yqvyi7hVahto473sQd3bv8GR47E151HeyYeUhCCLzBb-FbduV7MjwFEZwsR9XbgK7qVcA-tdx0U3vdMcCDbeLfvXJe6b7bmB9TJlo_Jn9dUw5zdNHUssrpPDrQiBzcRFMoWgIbEiIbtXyZHAba3DlJlYuhjaj551HLtrtnB7oHoyV538wU4148J9docYNpTTzCcKrOPGSUNp5YT95QQH"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden pt-16"> <!-- Padding top accounts for fixed header -->
+<!-- SideNavBar (Hidden on Mobile) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-screen flex-col pt-20 pb-lg border-r border-outline-variant bg-surface-container-low w-64 z-40 overflow-y-auto">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-md mb-md">
+<img alt="Project Alpha" class="w-10 h-10 rounded border border-outline-variant object-cover" data-alt="A stylized geometric logo depicting a 3D metallic sphere with glowing cyan circuits against a deep black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNX8UVevnRZ2lOwNARyNTQlU74BhPmMq6RNtZOQ-LmZanu8TKCYCKWKCvdoBuonnveqF2kWwJtyThDng7ZNsHE3ep4yUfItnuJ_Z2a_lwMC0Kwb8Ri3kJP5AlUCBuMtVWdQuj7MjJKutR4Xm76dXurNrfJExFyATTYfPW29UcwB4s9_h0ch30x7KsNWI1AwvOgQyL7pIzKiydPrjKV2DJJxs5dJ6zyJ_1xpCRuPLc1aAMTvAZS258j"/>
+<div>
+<div class="text-headline-sm font-headline-sm text-primary">Project Alpha</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mt-xs">Phase: Execution</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary-fixed text-on-primary text-body-sm font-body-sm py-sm px-md rounded transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Milestone
+                </button>
+</div>
+<div class="flex-1 flex flex-col gap-xs px-sm">
+<!-- Nav Items -->
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-sm px-md py-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="text-label-caps font-label-caps">Resource Map</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">security</span>
+<span class="text-label-caps font-label-caps">Risk Matrix</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-label-caps font-label-caps">Budget</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">event</span>
+<span class="text-label-caps font-label-caps">Schedule</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<span class="text-label-caps font-label-caps">Governance</span>
+</a>
+</div>
+<div class="mt-auto px-sm flex flex-col gap-xs border-t border-outline-variant pt-sm mx-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+<span class="text-label-caps font-label-caps">Help</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high px-md py-sm rounded-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="text-label-caps font-label-caps">Status</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-lg md:p-2xl overflow-y-auto">
+<!-- Page Header & Controls -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md mb-xl">
+<div>
+<h1 class="text-display-lg font-display-lg text-on-surface mb-xs hidden md:block">My Projects</h1>
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface mb-xs md:hidden">My Projects</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Portfolio Overview &amp; Execution Status</p>
+</div>
+<div class="flex items-center gap-sm w-full md:w-auto">
+<!-- Filters -->
+<div class="relative flex-1 md:flex-none">
+<select class="w-full md:w-40 appearance-none bg-surface-container-low border border-outline-variant text-body-sm text-on-surface py-xs pl-sm pr-lg rounded focus:border-primary focus:ring-1 focus:ring-primary">
+<option>All Phases</option>
+<option>Discovery</option>
+<option>Planning</option>
+<option>Execution</option>
+<option>Operating</option>
+</select>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+<div class="relative flex-1 md:flex-none">
+<select class="w-full md:w-40 appearance-none bg-surface-container-low border border-outline-variant text-body-sm text-on-surface py-xs pl-sm pr-lg rounded focus:border-primary focus:ring-1 focus:ring-primary">
+<option>All Health</option>
+<option>Nominal</option>
+<option>At Risk</option>
+<option>Critical</option>
+</select>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+<button class="bg-surface-container-high border border-outline-variant p-xs rounded text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+<button class="bg-surface-container-lowest border border-outline-variant p-xs rounded text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+</div>
+</div>
+<!-- Project Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-lg">
+<!-- Card 1: GST Compliance Platform -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-xs mb-xs">
+<span class="bg-tertiary/10 text-tertiary px-sm py-xs rounded text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                    NOMINAL
+                                </span>
+<span class="bg-surface-variant text-on-surface-variant px-sm py-xs rounded text-label-caps font-label-caps">
+                                    OPERATING
+                                </span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface group-hover:text-primary transition-colors">GST Compliance Platform</h2>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">ID: PRJ-9942-GST</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="bg-surface-container p-sm rounded border border-outline-variant/50">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Next Milestone</div>
+<div class="text-body-sm font-body-sm text-on-surface truncate">V2.1 Deployment</div>
+<div class="text-data-mono-sm font-data-mono-sm text-primary mt-xs">T-minus 14 Days</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant/50">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Budget Variance</div>
+<div class="text-body-sm font-body-sm text-tertiary">-2.4% (Under)</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">Burn Rate: Stable</div>
+</div>
+</div>
+<div class="mt-auto border-t border-outline-variant/50 pt-md">
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of a software engineer with glasses looking at a screen in a dark blue lit room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJrTxT4uTS0nig1hNUltgkhpubQlWWVKnOlGw16XP2gxsBGwcAF3rrmxE2ZHz6ej_DrfFJGW8-D9_1SPX44mD43KgFh3iydabfEGOCU8hQTqObfOsXNgY_C2Oj-rwV2B-NMNA11VwGmX4SsaNjTO9xT1zrbghbUzbCwQMnY8-8YslKvO-O75rIHrDP2wEReoUgTfN6ACodfEzM8_Vgs1AgLwXPsK5dkIJQEtoh5PvKNFeglrciKmzL"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of a project manager in a sharp suit against a neutral grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Z1fqib_idaPVgzP446TpKsa3rqNpWV9Bs--13k_uXQmLTgUYvFMLbrZb0oB6O1uXCr2wydSVv9Wmh8pCEEKygwC-ggWe5d6-TZ-26h_LmzS4HB-0ouvc5Sce9S_bCAwO-dBeMX0H8rYbhWrEcf7Gor7YpHLfzNC2hxGaAVU_rZYjlk3c6JphUueaJkoDsE9PuIpCfgEBIKBO4TEDlzB8J18FZJazzLjcPsebZQLoxVrLDnUNhx6s"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of a data analyst in a brightly lit modern office." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxBHf9IHEPp-Av_HoipPn5CEhbSZ2XkTbijg16qMTIWRMZZOPaFmvGfZNZtxwytYiz0n7p7Oi7M7B7DJD0OFADgZ83A-qvOnaqZLc8qjFxlk13Mtu8r9qW_uyyj6dSLxycHizzmX8p_nE2ZICzl_GUjF5rPC-lgx_TfNfI4AM92k34N8vAZuh-AqGl89q8wyM5Y1uKHErc7vwQ5mbtutmhZ5-ZM1dQqHv9d_NGtD-MrlRchsCOIAY5"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center text-label-caps font-label-caps text-on-surface-variant">+4</div>
+</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">update</span>
+                                2h ago
+                            </div>
+</div>
+</div>
+</div>
+<!-- Card 2: Urban Mobility Hub -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-xs mb-xs">
+<span class="bg-error/10 text-error px-sm py-xs rounded text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                                    AT RISK
+                                </span>
+<span class="bg-surface-variant text-on-surface-variant px-sm py-xs rounded text-label-caps font-label-caps">
+                                    EXECUTION
+                                </span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface group-hover:text-primary transition-colors">Urban Mobility Hub</h2>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">ID: PRJ-8102-UMH</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="bg-surface-container p-sm rounded border border-error/30">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Next Milestone</div>
+<div class="text-body-sm font-body-sm text-on-surface truncate">Sensor Integration API</div>
+<div class="text-data-mono-sm font-data-mono-sm text-error mt-xs">OVERDUE: 3 Days</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant/50">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Risk Matrix</div>
+<div class="text-body-sm font-body-sm text-error">2 High, 4 Med</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">Vendor Delay</div>
+</div>
+</div>
+<div class="mt-auto border-t border-outline-variant/50 pt-md">
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of an infrastructure engineer in high-vis gear." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAMp9CNSydvrZ0A4xgASkYXkWKzjr68CJmik1U4f8p9PXsVtaVWosFj0Bdt9FIYiKFmoA0uDQvxyg1E6ws1FQwIpTMl7-oHblY-_O5PA51N8Zg96T9ERneGkQEURjNr0H_pvAx3oeldffmMgvzjrBWuVcs1ri9Z57fsVY9nxheNbQDKzSgXbHvbo-mnQUzLvl_k70Xv01TwhUJAkj4NTOJ8WU9OSbkteLEYJFuNyUe_h62vai-BQUZ"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of an urban planner reviewing digital blueprints." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJINdFUSzQyRh9qoWwbb4J_F_S5DcCDM3g49WpYROCqxLdgK_C_c-gVRoVNsUq1kJqCgvkahx1wl3jxeoO-FZ3KRSyUGF8iU77738fAaUyKUnuppKzxWMVz08Y3f7dpqNJ-hVGkzK60O4r---EkAt0PtEbJ_ZeR4PV2ARYRHS1HBhA-ZBYKKFqQEC71uz4Y3UqX1l2IPW7QZOhfnqngM2GeGRCS8Tc8LStmMOUtlwoeBzZ0rPEw3Jk"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center text-label-caps font-label-caps text-on-surface-variant">+12</div>
+</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">update</span>
+                                15m ago
+                            </div>
+</div>
+</div>
+</div>
+<!-- Card 3: Internal API Gateway -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-xs mb-xs">
+<span class="bg-secondary/10 text-secondary px-sm py-xs rounded text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">pending</span>
+                                    NOMINAL
+                                </span>
+<span class="bg-surface-variant text-on-surface-variant px-sm py-xs rounded text-label-caps font-label-caps">
+                                    DISCOVERY
+                                </span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface group-hover:text-primary transition-colors">Internal API Gateway</h2>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">ID: PRJ-7721-API</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="bg-surface-container p-sm rounded border border-outline-variant/50">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Next Milestone</div>
+<div class="text-body-sm font-body-sm text-on-surface truncate">Architecture Review</div>
+<div class="text-data-mono-sm font-data-mono-sm text-primary mt-xs">Scheduled: Nov 12</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant/50">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-xs">Requirements</div>
+<div class="text-body-sm font-body-sm text-secondary">85% Complete</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-xs">Stakeholder Sign-off pending</div>
+</div>
+</div>
+<div class="mt-auto border-t border-outline-variant/50 pt-md">
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Small circular avatar of a systems architect in a dark room with green code reflections on glasses." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALVz8NJIEm2MaLOahyWtaRnrROyh53Ij6LSRmShJIz2Bqu-1D6SHPtXGwkuL27_GX9HrP3kdLkXTFcIFe2UYXPpaQ47NM-dfsPrto1uN7D9JnYC7YBNSXG71VHrMfUwY_EayD-FBLw2r8WbNtHdtloVceVLtJqYD3ZE-edXRFTjZKoKva8PnvSxILglqoMvWsMH9mZW1sBK6qMdH99j0820FYyJu_T-dhm4zsKjXZo4Pf5owbonBXD"/>
+</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">update</span>
+                                1d ago
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

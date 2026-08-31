@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Save Project - GovIntel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary": "#003824",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-tint": "#89ceff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-container-highest": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "background": "#0b1326",
+                        "outline": "#88929b",
+                        "tertiary": "#4edea3",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-background": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-primary": "#00344d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary-container": "#3a4a5f",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary-container": "#003751",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#89ceff",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a",
+                        "outline-variant": "#3e4850",
+                        "primary-fixed": "#c9e6ff",
+                        "surface-variant": "#2d3449",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-container": "#171f33",
+                        "on-primary-fixed": "#001e2f",
+                        "on-surface-variant": "#bec8d2",
+                        "on-secondary-container": "#a9bad3",
+                        "primary-container": "#0ea5e9",
+                        "tertiary-container": "#00b17b",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface": "#0b1326"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.125rem",
+                        lg: "0.25rem",
+                        xl: "0.5rem",
+                        full: "0.75rem"
+                    },
+                    spacing: {
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "3xl": "64px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "body-sm": ["Geist", "sans-serif"],
+                        "data-mono": ["JetBrains Mono", "monospace"],
+                        "headline-lg": ["Geist", "sans-serif"],
+                        "data-mono-sm": ["JetBrains Mono", "monospace"],
+                        "display-lg": ["Geist", "sans-serif"],
+                        "headline-lg-mobile": ["Geist", "sans-serif"],
+                        "label-caps": ["Geist", "sans-serif"],
+                        "headline-md": ["Geist", "sans-serif"],
+                        "body-md": ["Geist", "sans-serif"],
+                        "body-lg": ["Geist", "sans-serif"]
+                    },
+                    fontSize: {
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "data-mono-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-md md:p-xl relative overflow-hidden font-body-md">
+<!-- Simulated background application context (Blurred) -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none" data-alt="A highly detailed interface of a complex data dashboard for a government compliance system. The screen is filled with intricate dark-mode charts, data tables, and structural diagrams, glowing faintly in cool blues and cybernetic greens. The layout is dense, professional, and authoritative, embodying a modern engineering command center aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZMDLy90KL8Mcyj48xCQhFayLf1QDlA2IVs8lURlYGABvMECAPSkLho7LTHRK0ME_8qKDIUaGUlyx0VMVasydzojXpkXWYFGqUggX68OiYyim4kgBSEgcGQlwV_L0BGl09fVM89iM5HIjNc5suWQLiJZ8cCp3As1A9YZbUI-hg8-pz16dEUjN4ZQuknkyFaxSQFEpoAox_OEbThKC60dnMtO91tlOqdUX31D4XEVtbdvZqHMEqrbmr')"></div>
+<div class="absolute inset-0 z-0 bg-surface/60 backdrop-blur-sm pointer-events-none"></div>
+<!-- Main Modal Container -->
+<main class="relative z-10 w-full max-w-[1024px] bg-surface-container-low border border-outline-variant rounded-xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden">
+<!-- Left Panel: Context & Value Proposition -->
+<aside class="w-full md:w-5/12 bg-surface-container relative p-xl flex flex-col justify-between border-b md:border-b-0 md:border-r border-outline-variant overflow-hidden">
+<!-- Decorative gradient orb -->
+<div class="absolute -top-3xl -left-3xl w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-sm mb-2xl">
+<span class="material-symbols-outlined text-primary text-[24px]">account_balance</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary">GovIntel</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface mb-sm">Keep your project.</h1>
+<p class="text-body-md font-body-md text-on-surface-variant mb-xl">
+                    Create an account to persist your current session and unlock collaborative governance tools.
+                </p>
+<!-- Project Badge -->
+<div class="inline-flex flex-col gap-xs p-md bg-surface border border-outline-variant rounded-lg mb-2xl">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest">Active Session</span>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary text-[20px]">folder_managed</span>
+                        GST Compliance Platform
+                    </span>
+</div>
+</div>
+<div class="relative z-10 space-y-md">
+<div class="flex items-start gap-md">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px]">cloud_sync</span>
+</div>
+<div>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface">Data Persistence</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Your current matrix configuration and resource maps will be saved instantly.</p>
+</div>
+</div>
+<div class="flex items-start gap-md">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px]">group_add</span>
+</div>
+<div>
+<h3 class="text-body-md font-body-md font-semibold text-on-surface">Secure Collaboration</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Invite stakeholders with role-based access control to review the schedule.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Panel: Minimal Sign Up Form -->
+<section class="w-full md:w-7/12 bg-surface p-xl md:p-2xl flex flex-col justify-center">
+<div class="max-w-[400px] w-full mx-auto">
+<h2 class="text-headline-md font-headline-md text-on-surface mb-sm">Create an account</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-xl">Use your professional email to secure your workspace.</p>
+<form class="space-y-lg">
+<!-- Email Input -->
+<div class="space-y-xs">
+<label class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider block" for="email">Corporate Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">mail</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/50 pl-2xl pr-md py-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none" id="email" placeholder="name@organization.gov" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-xs">
+<label class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider block flex justify-between" for="password">
+<span>Password</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">lock</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/50 pl-2xl pr-md py-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none" id="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-sm space-y-md">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-sm px-lg rounded flex items-center justify-center gap-sm hover:bg-primary-fixed transition-colors" type="button">
+<span>Save Project &amp; Continue</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<div class="text-center">
+<span class="text-body-sm font-body-sm text-on-surface-variant">
+                                Already have an account? <a class="text-primary hover:text-primary-fixed transition-colors" href="#">Sign in</a>
+</span>
+</div>
+</div>
+</form>
+<div class="mt-2xl pt-lg border-t border-outline-variant text-center">
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant/60">
+                        By continuing, you agree to the <a class="underline hover:text-on-surface" href="#">Terms of Service</a> and <a class="underline hover:text-on-surface" href="#">Privacy Policy</a>.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Close Button (Absolute to Modal) -->
+<button class="absolute top-md right-md w-8 h-8 flex items-center justify-center rounded bg-surface hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors border border-transparent hover:border-outline-variant z-20">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</main>
+</body></html>

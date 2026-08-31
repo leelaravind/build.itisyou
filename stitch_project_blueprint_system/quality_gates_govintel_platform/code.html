@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quality Gates - GST Compliance Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#0ea5e9",
+                      "tertiary": "#4edea3",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "on-tertiary-container": "#003b26",
+                      "surface-bright": "#31394d",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "on-secondary-container": "#a9bad3",
+                      "tertiary-container": "#00b17b",
+                      "on-surface-variant": "#bec8d2",
+                      "surface-dim": "#0b1326",
+                      "inverse-on-surface": "#283044",
+                      "surface-tint": "#89ceff",
+                      "inverse-primary": "#006591",
+                      "on-tertiary-fixed": "#002113",
+                      "inverse-surface": "#dae2fd",
+                      "on-secondary-fixed": "#0b1c30",
+                      "secondary-container": "#3a4a5f",
+                      "on-primary-fixed": "#001e2f",
+                      "on-primary-container": "#003751",
+                      "error": "#ffb4ab",
+                      "surface": "#0b1326",
+                      "on-tertiary": "#003824",
+                      "surface-container-low": "#131b2e",
+                      "surface-container": "#171f33",
+                      "surface-container-high": "#222a3d",
+                      "surface-container-highest": "#2d3449",
+                      "tertiary-fixed": "#6ffbbe",
+                      "outline-variant": "#3e4850",
+                      "on-surface": "#dae2fd",
+                      "secondary-fixed": "#d3e4fe",
+                      "error-container": "#93000a",
+                      "primary-fixed-dim": "#89ceff",
+                      "on-secondary": "#213145",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#dae2fd",
+                      "on-error": "#690005",
+                      "primary-fixed": "#c9e6ff",
+                      "on-primary": "#00344d",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "outline": "#88929b",
+                      "primary": "#89ceff",
+                      "secondary": "#b7c8e1",
+                      "surface-variant": "#2d3449",
+                      "surface-container-lowest": "#060e20",
+                      "background": "#0b1326"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "container-max": "1440px",
+                      "3xl": "64px",
+                      "lg": "24px",
+                      "2xl": "48px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "data-mono-sm": ["JetBrains Mono"],
+                      "label-caps": ["Geist"],
+                      "headline-lg": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-sm": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "data-mono": ["JetBrains Mono"],
+                      "body-md": ["Geist"],
+                      "headline-lg-mobile": ["Geist"],
+                      "body-lg": ["Geist"]
+              },
+              "fontSize": {
+                      "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-hidden flex flex-col h-screen">
+<!-- TopNavBar -->
+<nav class="docked full-width top-0 bg-surface-container border-b border-outline-variant flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16 z-50 shrink-0">
+<div class="flex items-center gap-xl">
+<span class="text-headline-md font-headline-md font-bold text-primary tracking-tight">GovIntel Platform</span>
+<div class="hidden md:flex gap-md h-full items-end">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 py-1" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 py-1" href="#">Plan</a>
+<a class="text-primary border-b-2 border-primary pb-1 font-medium hover:text-primary transition-colors duration-200 opacity-80 duration-100" href="#">Execute</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 py-1" href="#">Control</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 py-1" href="#">Documents</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 py-1" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<!-- Search -->
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-md py-1.5 pl-9 pr-4 text-body-sm font-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-on-surface w-64 placeholder:text-on-surface-variant/50 transition-colors" placeholder="Search gates..." type="text"/>
+</div>
+<div class="flex items-center gap-xs">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">terminal</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">help</span></button>
+<div class="ml-2 w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A small, professional headshot portrait of an administrator in a high-tech control room environment, sharp focus, cool lighting, corporate intelligence aesthetic, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jd79BgL7bCxqYClsCL0VxqzanwBPGyx_2PBIqy1plEp90qL6jM1YpTe8AJsG-p1TQx6vgCtDFBkRlnquDqrZy9Zy-w2y24eyDSjdXDQeS24Yj5fBzCJ275__pChYzNJEdTAQ1vtw9bJH3F2_8A_EkL91apZdChzLuA4LMAUVQhtqlQQa50o0DRSZZxa4mDITOedaSwd-r6-WQ-hwxwPUW-60Vu1nBSA0LhkCbSYwUZyMwwjs8g7s"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col z-40 bg-surface-container-low border-r border-outline-variant w-64 shrink-0 hidden md:flex">
+<div class="p-lg border-b border-outline-variant/30 flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<div>
+<h2 class="text-body-lg font-headline-md font-bold text-on-surface leading-tight">Project Alpha</h2>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant uppercase mt-1 tracking-wider">Phase: Execution</p>
+</div>
+</div>
+<div class="p-md">
+<button class="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 rounded-md py-2 px-4 flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="text-label-caps font-label-caps">New Request</span>
+</button>
+</div>
+<nav class="flex-1 overflow-y-auto py-2">
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">account_tree</span>
+<span class="text-label-caps font-label-caps">Phases</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">group</span>
+<span class="text-label-caps font-label-caps">Resources</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">warning</span>
+<span class="text-label-caps font-label-caps">Risk</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 scale-[0.98] transition-transform duration-150 shadow-sm border border-outline-variant/20" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">verified</span>
+<span class="text-label-caps font-label-caps">Quality</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">insights</span>
+<span class="text-label-caps font-label-caps">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/30 py-2 bg-surface-container-low">
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">settings</span>
+<span class="text-label-caps font-label-caps">Settings</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">tune</span>
+<span class="text-label-caps font-label-caps">Complexity</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 overflow-y-auto bg-background p-lg lg:p-2xl">
+<header class="mb-xl flex flex-col sm:flex-row sm:items-end justify-between gap-md border-b border-outline-variant pb-md">
+<div>
+<h1 class="text-display-lg font-display-lg text-on-surface mb-2">Quality Gates</h1>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">Mandatory project checkpoints and compliance verification for the GST Platform deployment sequence.</p>
+</div>
+<div class="flex items-center gap-sm">
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant uppercase tracking-wider">Overall Status:</span>
+<div class="px-2 py-1 rounded bg-surface-container border border-error/50 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-data-mono-sm font-data-mono-sm text-error">BLOCKED</span>
+</div>
+</div>
+</header>
+<!-- Grid Layout for Gates -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-lg">
+<!-- Requirements Gate: PASS -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg relative overflow-hidden group hover:border-tertiary/50 transition-colors">
+<div class="absolute top-0 right-0 p-lg opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">description</span>
+</div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-1">Requirements Gate</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Phase 1 Sign-off</p>
+</div>
+<div class="bg-tertiary/10 border border-tertiary/30 px-3 py-1.5 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">PASS</span>
+</div>
+</div>
+<div class="space-y-sm mb-lg relative z-10">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Business Requirements Document</span>
+<a class="text-primary hover:underline text-data-mono-sm font-data-mono-sm flex items-center gap-1" href="#"><span class="material-symbols-outlined text-xs">link</span> BRD_v1.4.pdf</a>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Stakeholder Approvals</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface">5/5 Obtained</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Completion Date</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface">2023-10-12</span>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-end relative z-10">
+<button class="text-label-caps font-label-caps text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors">
+                            View Audit Trail <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Architecture Gate: PASS -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg relative overflow-hidden group hover:border-tertiary/50 transition-colors">
+<div class="absolute top-0 right-0 p-lg opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">architecture</span>
+</div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-1">Architecture Gate</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">System Design Review</p>
+</div>
+<div class="bg-tertiary/10 border border-tertiary/30 px-3 py-1.5 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">PASS</span>
+</div>
+</div>
+<div class="space-y-sm mb-lg relative z-10">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Threat Model Review</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface">Approved</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">System Architecture Doc</span>
+<a class="text-primary hover:underline text-data-mono-sm font-data-mono-sm flex items-center gap-1" href="#"><span class="material-symbols-outlined text-xs">link</span> SAD_Final.docx</a>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Compliance Mapping</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface">100% Coverage</span>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-end relative z-10">
+<button class="text-label-caps font-label-caps text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors">
+                            View Audit Trail <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Development Gate: BLOCKED (Highlighted) -->
+<div class="bg-surface-container border-2 border-error/50 rounded-xl p-lg relative overflow-hidden shadow-[0_0_30px_-10px_rgba(255,180,171,0.15)] col-span-1 xl:col-span-2">
+<div class="absolute right-0 bottom-0 p-lg opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px] text-error">warning</span>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg relative z-10">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-error/10 border border-error/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error">code</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface">Development Gate</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Implementation Readiness</p>
+</div>
+</div>
+<div class="bg-error/10 border border-error/50 px-4 py-2 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+<span class="text-data-mono-sm font-data-mono-sm text-error text-base">BLOCKED</span>
+</div>
+</div>
+<div class="bg-background rounded-lg border border-outline-variant p-md mb-lg relative z-10">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-error mt-0.5">report</span>
+<div>
+<h4 class="text-body-md font-body-md text-on-surface font-medium mb-1">Critical Blocker Identified</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-3">Development Gate requires <strong class="text-on-surface font-semibold">Architecture Decision Log 14 (ADL-14)</strong> to be signed off by the lead security architect before code merge can proceed to staging.</p>
+<button class="bg-error text-on-error px-4 py-1.5 rounded text-label-caps font-label-caps hover:bg-error/90 transition-colors inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit_document</span>
+                                    Review ADL-14
+                                </button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-xl gap-y-2 relative z-10">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Code Coverage &gt; 80%</span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">84.2%</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Static Analysis (No Criticals)</span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">0 Critical</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">ADL Sign-offs</span>
+<span class="text-data-mono-sm font-data-mono-sm text-error">Pending ADL-14</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/30">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Peer Reviews Complete</span>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">100%</span>
+</div>
+</div>
+</div>
+<!-- Testing Gate: NOT READY -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-lg relative overflow-hidden opacity-75 grayscale-[30%]">
+<div class="flex justify-between items-start mb-md">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-1">Testing Gate</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">QA &amp; UAT Sign-off</p>
+</div>
+<div class="bg-surface-variant border border-outline-variant px-3 py-1.5 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">schedule</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">NOT READY</span>
+</div>
+</div>
+<div class="space-y-sm mb-lg mt-6">
+<div class="flex items-center gap-3 text-on-surface-variant/70 border-l-2 border-outline-variant pl-3 py-1">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="text-body-sm font-body-sm">Awaiting Development Gate clearance</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20 mt-4">
+<span class="text-body-sm font-body-sm text-on-surface-variant/50">Test Plan Approved</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant/50">--</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

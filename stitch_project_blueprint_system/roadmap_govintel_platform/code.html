@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GovIntel Platform - Project Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#0ea5e9",
+                    "tertiary": "#4edea3",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-tertiary-container": "#003b26",
+                    "surface-bright": "#31394d",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-secondary-container": "#a9bad3",
+                    "tertiary-container": "#00b17b",
+                    "on-surface-variant": "#bec8d2",
+                    "surface-dim": "#0b1326",
+                    "inverse-on-surface": "#283044",
+                    "surface-tint": "#89ceff",
+                    "inverse-primary": "#006591",
+                    "on-tertiary-fixed": "#002113",
+                    "inverse-surface": "#dae2fd",
+                    "on-secondary-fixed": "#0b1c30",
+                    "secondary-container": "#3a4a5f",
+                    "on-primary-fixed": "#001e2f",
+                    "on-primary-container": "#003751",
+                    "error": "#ffb4ab",
+                    "surface": "#0b1326",
+                    "on-tertiary": "#003824",
+                    "surface-container-low": "#131b2e",
+                    "surface-container": "#171f33",
+                    "surface-container-high": "#222a3d",
+                    "surface-container-highest": "#2d3449",
+                    "tertiary-fixed": "#6ffbbe",
+                    "outline-variant": "#3e4850",
+                    "on-surface": "#dae2fd",
+                    "secondary-fixed": "#d3e4fe",
+                    "error-container": "#93000a",
+                    "primary-fixed-dim": "#89ceff",
+                    "on-secondary": "#213145",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#dae2fd",
+                    "on-error": "#690005",
+                    "primary-fixed": "#c9e6ff",
+                    "on-primary": "#00344d",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "outline": "#88929b",
+                    "primary": "#89ceff",
+                    "secondary": "#b7c8e1",
+                    "surface-variant": "#2d3449",
+                    "surface-container-lowest": "#060e20",
+                    "background": "#0b1326"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "container-max": "1440px",
+                    "3xl": "64px",
+                    "lg": "24px",
+                    "2xl": "48px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "data-mono-sm": ["JetBrains Mono"],
+                    "label-caps": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "body-sm": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-md": ["Geist"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant fixed left-0 top-0 h-full flex flex-col z-40 w-64">
+<div class="p-lg border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined icon-fill">rocket_launch</span>
+</div>
+<div>
+<h1 class="text-body-lg font-headline-md font-bold text-on-surface">Project Alpha</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-md space-y-xs">
+<!-- Tab: Overview -->
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<!-- Tab: Phases (ACTIVE) -->
+<a class="bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md icon-fill text-primary">account_tree</span>
+<span class="font-label-caps text-label-caps">Phases</span>
+</a>
+<!-- Tab: Resources -->
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md group-hover:text-primary transition-colors">group</span>
+<span class="font-label-caps text-label-caps">Resources</span>
+</a>
+<!-- Tab: Risk -->
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md group-hover:text-primary transition-colors">warning</span>
+<span class="font-label-caps text-label-caps">Risk</span>
+</a>
+<!-- Tab: Quality -->
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md group-hover:text-primary transition-colors">verified</span>
+<span class="font-label-caps text-label-caps">Quality</span>
+</a>
+<!-- Tab: Analytics -->
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md group-hover:text-primary transition-colors">insights</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+</div>
+<div class="p-md border-t border-outline-variant space-y-md">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-lg font-label-caps text-label-caps hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                New Request
+            </button>
+<div class="space-y-xs">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">tune</span>
+<span class="font-label-caps text-label-caps">Complexity</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface-container dark:bg-surface-container border-b border-outline-variant dark:border-outline-variant sticky top-0 z-30 flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-primary">GovIntel Platform</span>
+<nav class="hidden md:flex items-center gap-md h-full">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 h-full flex items-center px-2" href="#">
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Active Link: Plan -->
+<a class="text-primary dark:text-primary border-b-2 border-primary dark:border-primary pb-1 h-full flex items-center px-2 opacity-80 duration-100" href="#">
+<span class="font-label-caps text-label-caps">Plan</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 h-full flex items-center px-2" href="#">
+<span class="font-label-caps text-label-caps">Execute</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 h-full flex items-center px-2" href="#">
+<span class="font-label-caps text-label-caps">Control</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 h-full flex items-center px-2" href="#">
+<span class="font-label-caps text-label-caps">Documents</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200 h-full flex items-center px-2" href="#">
+<span class="font-label-caps text-label-caps">Insights</span>
+</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-container-highest relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant overflow-hidden ml-sm">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A macro photography style close up of abstract geometric shapes in dark metallic blues and cyan accents. Soft dramatic rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3oHsPIXZQ-loVQZx6KMRIV1iB1muIJwblCEHIj1upGMHwGsrNciZ8-Bjpe9AYe2RHAuZDdPb6xFjfqv1Zm4l415Brz7ncfECY8Z3eNwhLWGoDqX6n6sd9NsdY0iuyF0iOTjghSWztH5kH6wus_NlR_WPiXgSdwP0P8kAGDywKQJp1JkQfBoLMQHA7N7rRkZpmOeaSZ0AdJ_ZGdm2Qbz40Ku5JNBbYJ0YPizPYw-LT9Tdv-fN18HxN"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-2xl w-full max-w-container-max mx-auto flex-1">
+<!-- Page Header -->
+<div class="mb-2xl flex justify-between items-end">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-sm">PROJECT ROADMAP</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">High-level visualization of lifecycle progression, active gates, and systemic compliance state.</p>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Status Summary Cards (Left Column) -->
+<div class="lg:col-span-4 flex flex-col gap-lg">
+<!-- Progress Card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-xl">Lifecycle Status Summary</h3>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface border border-outline-variant p-md rounded-lg flex flex-col">
+<span class="font-display-lg text-display-lg text-tertiary">4</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-xs">Completed Phases</span>
+</div>
+<div class="bg-primary/10 border border-primary/30 p-md rounded-lg flex flex-col relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-primary/10">
+<span class="material-symbols-outlined" style="font-size: 64px;">autorenew</span>
+</div>
+<span class="font-display-lg text-display-lg text-primary relative z-10">1</span>
+<span class="font-label-caps text-label-caps text-primary relative z-10 mt-xs">Current Phase</span>
+</div>
+<div class="bg-surface border border-outline-variant p-md rounded-lg flex flex-col col-span-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">7</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-xs">Upcoming Phases</span>
+</div>
+</div>
+</div>
+<!-- Current Target Focus -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">target</span>
+<h3 class="font-label-caps text-label-caps text-on-surface">Active Operations</h3>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center p-md bg-surface border border-outline-variant rounded-lg">
+<div>
+<p class="font-headline-md text-headline-md text-on-surface">Development</p>
+<p class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mt-xs">PHASE-05-EXE</p>
+</div>
+<div class="h-2 w-2 rounded-full bg-primary animate-pulse ring-4 ring-primary/20"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Linear Timeline View (Right Column) -->
+<div class="lg:col-span-8 bg-surface-container-low border border-outline-variant rounded-xl p-2xl">
+<div class="flex items-center justify-between mb-2xl">
+<h3 class="font-headline-md text-headline-md text-on-surface">Phase Sequence &amp; Gates</h3>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Done</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full border-2 border-primary"></div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Current</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full border-2 border-outline-variant"></div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Upcoming</span>
+</div>
+</div>
+</div>
+<!-- The Spine -->
+<div class="relative pl-8">
+<!-- Continuous Vertical Line -->
+<div class="absolute left-[11px] top-2 bottom-2 w-px bg-outline-variant"></div>
+<!-- Nodes Container -->
+<div class="space-y-xl">
+<!-- Phase: Discovery (Done) -->
+<div class="relative group">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-tertiary flex items-center justify-center z-10 transition-colors">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-on-surface transition-colors">Discovery</h4>
+<span class="font-data-mono text-data-mono text-tertiary">COMPLETE</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm max-w-lg">Initial stakeholder alignment and scope definition established.</p>
+</div>
+</div>
+<!-- Phase: Requirements (Done) -->
+<div class="relative group">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-tertiary flex items-center justify-center z-10">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-on-surface transition-colors">Requirements</h4>
+<span class="font-data-mono text-data-mono text-tertiary">COMPLETE</span>
+</div>
+</div>
+</div>
+<!-- Phase: Architecture (Done) -->
+<div class="relative group">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-tertiary flex items-center justify-center z-10">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-on-surface transition-colors">Architecture</h4>
+<span class="font-data-mono text-data-mono text-tertiary">COMPLETE</span>
+</div>
+</div>
+</div>
+<!-- Quality Gate: Architecture (Passed) -->
+<div class="relative py-sm">
+<div class="absolute -left-[33px] top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-surface border border-outline flex items-center justify-center z-10 rotate-45 group">
+<span class="material-symbols-outlined text-tertiary -rotate-45" style="font-size: 16px;">gavel</span>
+</div>
+<div class="ml-lg bg-surface-container-highest border border-outline-variant rounded-lg p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">account_tree</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Architecture Review Board Gate</span>
+</div>
+<div class="bg-tertiary/10 border border-tertiary/20 px-3 py-1 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary icon-fill" style="font-size: 14px;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary">PASS</span>
+</div>
+</div>
+</div>
+<!-- Phase: Planning (Done) -->
+<div class="relative group">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-tertiary flex items-center justify-center z-10">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-on-surface transition-colors">Planning</h4>
+<span class="font-data-mono text-data-mono text-tertiary">COMPLETE</span>
+</div>
+</div>
+</div>
+<!-- Phase: Development (Current) -->
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-primary flex items-center justify-center z-10 ring-4 ring-primary/20">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+</div>
+<div class="ml-lg bg-surface border border-primary/30 p-lg rounded-xl shadow-[0_0_15px_rgba(137,206,255,0.05)]">
+<div class="flex items-baseline justify-between mb-sm">
+<h4 class="font-headline-lg text-headline-lg text-primary">Development</h4>
+<span class="font-data-mono text-data-mono text-primary flex items-center gap-2">
+<span class="material-symbols-outlined animate-spin" style="font-size: 16px;">sync</span>
+                                            IN PROGRESS
+                                        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">Core platform modules and GST rule engine active implementation.</p>
+<!-- Mini sub-tasks for current phase -->
+<div class="space-y-xs">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 16px;">check_circle</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">Data Ingestion API</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">pending</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">Rules Engine Logic</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Phase: Testing (Upcoming) -->
+<div class="relative group opacity-60 hover:opacity-100 transition-opacity">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-outline-variant flex items-center justify-center z-10">
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface">Testing</h4>
+<span class="font-data-mono text-data-mono text-on-surface-variant">UPCOMING</span>
+</div>
+</div>
+</div>
+<!-- Quality Gate: Testing (Upcoming) -->
+<div class="relative py-sm opacity-50">
+<div class="absolute -left-[33px] top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-surface border border-outline-variant flex items-center justify-center z-10 rotate-45">
+<span class="material-symbols-outlined text-on-surface-variant -rotate-45" style="font-size: 16px;">gavel</span>
+</div>
+<div class="ml-lg border border-dashed border-outline-variant rounded-lg p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">bug_report</span>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">QA Automation Gate</span>
+</div>
+<div class="bg-surface border border-outline-variant px-3 py-1 rounded flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 14px;">hourglass_empty</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PENDING</span>
+</div>
+</div>
+</div>
+<!-- Phase: Security (Upcoming) -->
+<div class="relative group opacity-60 hover:opacity-100 transition-opacity">
+<div class="absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 border-outline-variant flex items-center justify-center z-10">
+</div>
+<div class="ml-lg">
+<div class="flex items-baseline justify-between">
+<h4 class="font-headline-md text-headline-md text-on-surface">Security Audit</h4>
+<span class="font-data-mono text-data-mono text-on-surface-variant">UPCOMING</span>
+</div>
+</div>
+</div>
+<!-- Fade out line to indicate more phases -->
+<div class="relative h-12">
+<div class="absolute -left-[20px] bottom-0 top-0 w-px bg-gradient-to-b from-outline-variant to-transparent"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Operations - GovIntel Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#002113",
+                        "on-primary-fixed": "#001e2f",
+                        "surface": "#0b1326",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "error": "#ffb4ab",
+                        "on-tertiary": "#003824",
+                        "surface-dim": "#0b1326",
+                        "surface-container-low": "#131b2e",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "tertiary-container": "#00b17b",
+                        "background": "#0b1326",
+                        "secondary-container": "#3a4a5f",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-tint": "#89ceff",
+                        "primary-fixed": "#c9e6ff",
+                        "tertiary": "#4edea3",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary": "#00344d",
+                        "surface-variant": "#2d3449",
+                        "on-primary-container": "#003751",
+                        "surface-container-lowest": "#060e20",
+                        "primary-container": "#0ea5e9",
+                        "surface-bright": "#31394d",
+                        "inverse-on-surface": "#283044",
+                        "inverse-primary": "#006591",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-container": "#171f33",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#6ffbbe",
+                        "secondary": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-container-highest": "#2d3449",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#bec8d2",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#89ceff",
+                        "on-background": "#dae2fd",
+                        "inverse-surface": "#dae2fd",
+                        "primary": "#89ceff",
+                        "outline-variant": "#3e4850",
+                        "outline": "#88929b",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "2xl": "48px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Subtle grid background for the "Command Center" feel */
+        .bg-grid {
+            background-image: 
+                linear-gradient(to right, rgba(136, 146, 155, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(136, 146, 155, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Glitch effect for critical errors (optional/sparing use) */
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 1px) }
+            40% { transform: translate(-1px, -1px) }
+            60% { transform: translate(2px, 1px) }
+            80% { transform: translate(1px, -1px) }
+            100% { transform: translate(0) }
+        }
+        .animate-glitch:hover {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col antialiased bg-grid overflow-x-hidden">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface-container dark:bg-surface-container docked full-width top-0 border-b border-outline-variant dark:border-outline-variant z-50 sticky">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<!-- Brand -->
+<div class="flex items-center gap-gutter">
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-primary">GovIntel Platform</span>
+</div>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center gap-md h-full">
+<!-- Intent mapping: Operations isn't exactly 'Execute' or 'Control', but 'Control' seems closest conceptually to monitoring operations, or maybe it's a standalone view. Let's assume 'Control' is active for operational oversight. -->
+<a class="h-full flex items-center px-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200" href="#">
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="h-full flex items-center px-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200" href="#">
+<span class="text-label-caps font-label-caps">Plan</span>
+</a>
+<a class="h-full flex items-center px-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200" href="#">
+<span class="text-label-caps font-label-caps">Execute</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="h-full flex items-center px-sm text-primary dark:text-primary border-b-2 border-primary dark:border-primary pb-1 opacity-80 duration-100" href="#">
+<span class="text-label-caps font-label-caps">Control</span>
+</a>
+<a class="h-full flex items-center px-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200" href="#">
+<span class="text-label-caps font-label-caps">Documents</span>
+</a>
+<a class="h-full flex items-center px-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary dark:hover:text-primary transition-colors duration-200" href="#">
+<span class="text-label-caps font-label-caps">Insights</span>
+</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-md">
+<button aria-label="Terminal" class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button aria-label="Notifications" class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button aria-label="Help" class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A macro photography shot of a sleek, dark metallic server rack illuminated by soft, cool blue LED lights. The focus is incredibly sharp on the intricate circuitry and glowing status indicators, conveying a sense of advanced technology, security, and high-performance computing in a modern, pristine data center environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS1ymLod_HwI11x8MhUi0RfBCqtH2_F1om-h_bkzpO3qcrh5Zvj-FLuktpHSWr9kGWfcaQFJ9MdlpL0zgHgjx_SjUI5ABmW-g6RzTTDmvGPLxz4R-WU5D_OeK36l3QYsEg-V9Kkn1kDwVCk_u8V16s2MSTqmhAjxTXUudubAJV3LrNPfOrJJEldTjsx_Fvg2i1zptESFv2ikpHcyaBAXk5srWUeRTW4R-e9EnnuiZg_byBi7wgGmGj"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 max-w-container-max mx-auto w-full relative">
+<!-- SideNavBar (Shared Component) - Suppressed per rules? Wait, the rules say SideNav is for top-level destinations. If "Operations" is a sub-view of Control, maybe hide it? Or if it's a main view with phases, show it. The prompt doesn't explicitly mention the SideNav items, but let's include it as it's part of the standard layout for a complex platform, assuming we are in "Project Alpha" context based on JSON. Let's render it to be safe, but map active state carefully. Operations -> Analytics? Dashboard? Dashboard seems active. -->
+<aside class="hidden lg:flex fixed left-0 top-16 h-[calc(100vh-4rem)] flex-col z-40 w-64 bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant">
+<!-- Header -->
+<div class="p-lg border-b border-outline-variant">
+<div class="flex items-center gap-sm mb-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant overflow-hidden">
+<img alt="Project Alpha Logo" class="w-full h-full object-cover" data-alt="A highly abstract, futuristic 3D render of a glowing, geometric alpha symbol enclosed in a metallic sphere. The object is suspended in a dark void with subtle, volumetric fog and cool cyan uplighting, giving it a premium, highly technical corporate identity feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoFWQXtT1QVQRqlXxZUJnvw3l9RAcWY7ao_Rto8vYUOXoxgrRweQ1dPQ5DkUS4mAJaBbauwH-x7eyDd7s2Kk21Tgh2Jbh9PvtBErhzObcQYyZBf443x6pzqMcyBoRRbJRJzKTU87qtlz73Da_kPk5T0RBDhLC7uhmbJCJym-pvKJzhzYq4Z-lKv04ynTL7G74AaC9DduaomJYiTiJwPGhi18hlvgdUaqHmUjiv0bGh9ZWuCjFnVh8M"/>
+</div>
+<div>
+<h2 class="text-body-lg font-headline-md font-bold text-on-surface leading-tight">Project Alpha</h2>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Phase: Execution</p>
+</div>
+</div>
+<button class="w-full mt-md bg-primary text-on-primary-fixed font-label-caps text-label-caps py-2 px-4 rounded hover:opacity-90 transition-opacity flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    New Request
+                </button>
+</div>
+<!-- Scrollable Nav -->
+<nav class="flex-1 overflow-y-auto py-md flex flex-col gap-xs">
+<!-- ACTIVE TAB: Overview/Dashboard makes sense for an operations view -->
+<a class="bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl mx-2 my-1 flex items-center px-4 py-2 scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="text-label-caps font-label-caps flex-1">Overview</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">account_tree</span>
+<span class="text-label-caps font-label-caps flex-1">Phases</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span class="text-label-caps font-label-caps flex-1">Resources</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">warning</span>
+<span class="text-label-caps font-label-caps flex-1">Risk</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">verified</span>
+<span class="text-label-caps font-label-caps flex-1">Quality</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">insights</span>
+<span class="text-label-caps font-label-caps flex-1">Analytics</span>
+</a>
+</nav>
+<!-- Footer Nav -->
+<div class="p-sm border-t border-outline-variant mt-auto">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="text-label-caps font-label-caps flex-1">Settings</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-xl mx-2 my-1 flex items-center px-4 py-2 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined mr-md">tune</span>
+<span class="text-label-caps font-label-caps flex-1">Complexity</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 w-full p-lg lg:p-2xl flex flex-col gap-xl">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-md border-b border-outline-variant pb-md">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface mb-xs">Operations Command</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">System health, incidents, and infrastructure metrics.</p>
+</div>
+<div class="flex items-center gap-md">
+<!-- Status Indicator -->
+<div class="flex items-center gap-xs px-sm py-1 bg-tertiary-container/10 border border-tertiary-container rounded">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<span class="text-data-mono-sm font-data-mono-sm text-tertiary">SYSTEM NOMINAL</span>
+</div>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded">UTC: 14:32:05</span>
+</div>
+</header>
+<!-- Bento Grid Layout for Operations Data -->
+<div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-md auto-rows-[minmax(180px,auto)]">
+<!-- Core Metrics (Spans 2 columns) -->
+<section class="md:col-span-2 xl:col-span-2 bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col justify-between hover:bg-surface-container-high transition-colors">
+<header class="flex justify-between items-center mb-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">speed</span> PRODUCTION LOAD
+                        </h3>
+<span class="text-data-mono-sm font-data-mono-sm text-primary">LIVE</span>
+</header>
+<div class="grid grid-cols-2 gap-md flex-1">
+<div>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mb-xs">CLUSTER CPU</p>
+<p class="text-display-lg font-display-lg text-on-surface">42<span class="text-headline-md font-headline-md text-on-surface-variant">%</span></p>
+<div class="w-full bg-surface-container-highest h-1 mt-xs rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[42%]"></div>
+</div>
+</div>
+<div>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mb-xs">MEMORY I/O</p>
+<p class="text-display-lg font-display-lg text-on-surface">78<span class="text-headline-md font-headline-md text-on-surface-variant">%</span></p>
+<div class="w-full bg-surface-container-highest h-1 mt-xs rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[78%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Active Incidents -->
+<section class="md:col-span-1 xl:col-span-1 bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col">
+<header class="flex justify-between items-center mb-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">error</span> ACTIVE INCIDENTS
+                        </h3>
+<span class="bg-error-container text-on-error-container text-data-mono-sm font-data-mono-sm px-1 rounded">2</span>
+</header>
+<div class="flex-1 flex flex-col gap-sm overflow-y-auto pr-sm">
+<!-- Incident Item -->
+<div class="p-sm bg-surface-container-highest border border-error-container/30 rounded border-l-2 border-l-error">
+<div class="flex justify-between items-start mb-xs">
+<span class="text-data-mono-sm font-data-mono-sm text-error">INC-4921</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">12m ago</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface leading-tight">Database replication lag detected in Region US-East.</p>
+</div>
+<!-- Incident Item -->
+<div class="p-sm bg-surface-container-highest border border-outline-variant rounded border-l-2 border-l-secondary-container">
+<div class="flex justify-between items-start mb-xs">
+<span class="text-data-mono-sm font-data-mono-sm text-secondary">INC-4920</span>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">1h ago</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface leading-tight">Minor latency spike on API Gateway.</p>
+</div>
+</div>
+</section>
+<!-- Service Health Matrix -->
+<section class="md:col-span-3 xl:col-span-1 bg-surface-container-low border border-outline-variant rounded-xl p-md">
+<header class="flex justify-between items-center mb-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">dns</span> SERVICE HEALTH
+                        </h3>
+</header>
+<div class="grid grid-cols-2 gap-y-sm gap-x-md">
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Auth API</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Core DB</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Data Lake</span>
+<span class="material-symbols-outlined text-error text-[16px]">error</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Indexer</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Worker Nodes</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/50 pb-1">
+<span class="text-body-sm font-body-sm text-on-surface">Cache</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+</div>
+</div>
+</section>
+<!-- Technical Debt & Security -->
+<section class="md:col-span-2 xl:col-span-2 bg-surface-container-low border border-outline-variant rounded-xl p-md row-span-2 flex flex-col">
+<header class="flex justify-between items-center mb-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">security</span> DEBT &amp; VULNERABILITIES
+                        </h3>
+</header>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex items-end gap-lg mb-xl">
+<div>
+<p class="text-display-lg font-display-lg text-on-surface leading-none">12</p>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-1">CRITICAL DEBT ITEMS</p>
+</div>
+<div class="h-12 w-[1px] bg-outline-variant"></div>
+<div>
+<p class="text-display-lg font-display-lg text-on-surface leading-none">0</p>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mt-1">SEV-1 VULNS</p>
+</div>
+</div>
+<!-- Miniature Data Table for Debt -->
+<div class="w-full border border-outline-variant rounded overflow-hidden">
+<table class="w-full text-left text-body-sm font-body-sm">
+<thead class="bg-surface-container-highest border-b border-outline-variant text-data-mono-sm font-data-mono-sm text-on-surface-variant">
+<tr>
+<th class="p-2 font-medium">ID</th>
+<th class="p-2 font-medium">Component</th>
+<th class="p-2 font-medium">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<tr class="hover:bg-surface-container-highest transition-colors">
+<td class="p-2 font-data-mono text-on-surface">T-882</td>
+<td class="p-2 text-on-surface">Legacy Auth Provider</td>
+<td class="p-2">
+<span class="inline-flex items-center gap-1 text-data-mono-sm text-error bg-error-container/20 px-1 rounded">
+<span class="material-symbols-outlined text-[14px]">warning</span> BLOCKED
+                                            </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest transition-colors">
+<td class="p-2 font-data-mono text-on-surface">T-901</td>
+<td class="p-2 text-on-surface">Node.js Migration</td>
+<td class="p-2">
+<span class="inline-flex items-center gap-1 text-data-mono-sm text-secondary bg-secondary-container/20 px-1 rounded">
+<span class="material-symbols-outlined text-[14px]">pending</span> IN PROGRESS
+                                            </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Maintenance Schedule -->
+<section class="md:col-span-1 xl:col-span-2 bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col row-span-2">
+<header class="flex justify-between items-center mb-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span> MAINTENANCE WINDOWS
+                        </h3>
+</header>
+<div class="flex flex-col gap-sm">
+<!-- Window Item -->
+<div class="flex gap-md p-md bg-surface-container-highest border border-outline-variant rounded items-center">
+<div class="flex-shrink-0 w-12 h-12 bg-secondary-container text-on-secondary-container rounded flex flex-col items-center justify-center">
+<span class="text-data-mono-sm font-data-mono-sm font-bold">OCT</span>
+<span class="text-body-lg font-body-lg font-bold">14</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-medium text-on-surface">Database Index Rebuild</h4>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">02:00 UTC - 04:00 UTC</p>
+</div>
+</div>
+<!-- Window Item -->
+<div class="flex gap-md p-md bg-surface-container-highest border border-outline-variant rounded items-center opacity-70">
+<div class="flex-shrink-0 w-12 h-12 bg-surface-container text-on-surface-variant rounded flex flex-col items-center justify-center border border-outline-variant">
+<span class="text-data-mono-sm font-data-mono-sm font-bold">OCT</span>
+<span class="text-body-lg font-body-lg font-bold">21</span>
+</div>
+<div>
+<h4 class="text-body-md font-body-md font-medium text-on-surface">OS Patching Cycle</h4>
+<p class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">01:00 UTC - 05:00 UTC</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

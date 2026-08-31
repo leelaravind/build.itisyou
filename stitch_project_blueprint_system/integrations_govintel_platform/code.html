@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Integrations - GovIntel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary": "#003824",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "surface-tint": "#89ceff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#89ceff",
+                        "secondary": "#b7c8e1",
+                        "surface-container-highest": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "background": "#0b1326",
+                        "outline": "#88929b",
+                        "tertiary": "#4edea3",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-background": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-primary": "#00344d",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "secondary-container": "#3a4a5f",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-container": "#003b26",
+                        "on-primary-container": "#003751",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#89ceff",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a",
+                        "outline-variant": "#3e4850",
+                        "primary-fixed": "#c9e6ff",
+                        "surface-variant": "#2d3449",
+                        "inverse-primary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-container": "#171f33",
+                        "on-primary-fixed": "#001e2f",
+                        "on-surface-variant": "#bec8d2",
+                        "on-secondary-container": "#a9bad3",
+                        "primary-container": "#0ea5e9",
+                        "tertiary-container": "#00b17b",
+                        "on-secondary": "#213145",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "3xl": "64px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Geist"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Geist"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "display-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col pt-20 pb-lg border-r border-outline-variant bg-surface-container-low dark:bg-surface-container-low docked full-height left-0 w-64 fixed top-0 h-screen">
+<div class="px-lg mb-xl">
+<h1 class="text-headline-sm font-headline-md font-bold text-primary dark:text-primary-fixed-dim">GovIntel</h1>
+</div>
+<div class="px-md mb-lg">
+<div class="flex items-center gap-md p-sm bg-surface-container rounded">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img alt="Project Alpha" class="w-full h-full object-cover" data-alt="A modern corporate avatar representing a high-level project dashboard. Dark aesthetic with neon blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6f3HwcqgZx3aT0r57e_qatIGEkgjx-zxVXtJSd-qp89C2uLBG6fPrlfc8wGWbfOvGyJkU3C850fjdaGWBQm6elumy2jGrg6yV0bgD9YTyuaFTy1tMyGoHlsKr8JKrabNd6XVnJnyTeN3bd4P5O564KsxhOUxQ05r0VcyBzX8H8KTBnx2PJVBN13FFMPChovfJY7S1J6NoR635KpxLIRAz6tP30ZMv975caHFHdASXzU4kpFUvMQHX"/>
+</div>
+<div>
+<div class="text-body-sm font-body-sm font-bold">Project Alpha</div>
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Phase: Execution</div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-sm flex flex-col gap-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-label-caps font-label-caps">Overview</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="text-label-caps font-label-caps">Resource Map</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="text-label-caps font-label-caps">Risk Matrix</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-label-caps font-label-caps">Budget</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-highest transition-all duration-150 px-md py-sm rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="text-label-caps font-label-caps">Schedule</span>
+</a>
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-sm px-md py-sm hover:bg-surface-container-highest transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="gavel" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="text-label-caps font-label-caps">Governance</span>
+</a>
+</div>
+<div class="px-md mt-auto pt-lg border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary text-label-caps font-label-caps py-sm px-md rounded hover:bg-primary-fixed transition-colors duration-200 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Add Milestone
+            </button>
+<div class="mt-lg flex flex-col gap-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:text-primary transition-colors duration-200 px-sm py-xs" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help_outline">help_outline</span>
+<span class="text-label-caps font-label-caps">Help</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-primary transition-colors duration-200 px-sm py-xs" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+<span class="text-label-caps font-label-caps">Status</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar (Mobile & Top Desktop Actions) -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-outline-variant flex justify-between items-center w-full px-lg h-16 max-w-container-max mx-auto sticky top-0 z-10">
+<div class="md:hidden flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">GovIntel</span>
+</div>
+<div class="hidden md:flex items-center gap-lg h-full">
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Plan</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Execute</a>
+<a class="text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Control</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Documents</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 h-full flex items-center" href="#">Insights</a>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full pl-xl pr-md py-xs text-body-sm font-body-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all text-on-surface" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A small, professional user avatar portrait. Dark cinematic lighting, corporate command center feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjTz96zKCxCtXSo6sgSxOh2lbzzdrHjDw0D3F3UatlT3FaQamuNLJibZ8z7lsfaV_IV7X7v8VPzgNWr9PEDvxUOwD0fvdgxuXDex6EVAmAsXtWyNMcVtgfDG1cSVRM-gQW5Lp8QvqrmH9WNITxv6BkUlRUuXoCo08FnAP1DqpFwsZYM2M2CviVj8MmO6qp-a40XwxYy_mqwC5NqYhqv-C-MMIeZflwMWoexR51kOk0wStoly423SHL"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-lg md:p-2xl flex-1 max-w-container-max mx-auto w-full">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h2 class="text-headline-lg font-headline-lg mb-xs">Integrations</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Manage external platform connections and data pipelines.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm border border-outline-variant rounded text-label-caps font-label-caps hover:bg-surface-container-low transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">sync</span> Sync All
+                    </button>
+<button class="px-md py-sm bg-primary text-on-primary rounded text-label-caps font-label-caps hover:bg-primary-fixed transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">add</span> New Connection
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Source Control Category -->
+<div class="col-span-1 lg:col-span-2 flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">code</span> Source Control
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- GitHub - Connected -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-md relative overflow-hidden group hover:border-outline transition-colors">
+<div class="absolute top-0 right-0 w-16 h-16 bg-tertiary/10 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 bg-surface-container rounded-md flex items-center justify-center border border-outline-variant">
+<img alt="GitHub Logo" class="w-8 h-8 opacity-80" data-alt="A minimalist tech icon for a source control platform, white silhouette on dark blue background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB84yFii08TL8ublXgyzLdBPNrJf1WkgmE2yHT7hUnbCSpyHktcRV51XQwHoZkXAcvui5L6dBjs_2C1J6sRztlt28gyhPBcer86UMwToPTKVdNwO6Zj2zMU3x0hkSjRC3rtPHlumh4sNz_4Ff9POqSzAvx_D9tmjyj8R01kI6kh5kMAKN3k13CQEzDT70vx-vICphOvMat1CUaEAPvPcrxQlqyBbI494HHBqZKDS8Z7V-CNtqP6wwl"/>
+</div>
+<div class="px-sm py-xs bg-tertiary/10 border border-tertiary/20 rounded text-tertiary text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div> Connected
+                                </div>
+</div>
+<h4 class="text-headline-md font-headline-md mb-xs">GitHub Enterprise</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md h-10">Primary repository for source code and version control.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Last sync: 2m ago</span>
+<button class="text-label-caps font-label-caps text-primary hover:text-primary-fixed transition-colors">Configure</button>
+</div>
+</div>
+<!-- GitLab - Connected -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-md relative overflow-hidden group hover:border-outline transition-colors">
+<div class="absolute top-0 right-0 w-16 h-16 bg-tertiary/10 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 bg-surface-container rounded-md flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[28px]">merge_type</span>
+</div>
+<div class="px-sm py-xs bg-tertiary/10 border border-tertiary/20 rounded text-tertiary text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div> Connected
+                                </div>
+</div>
+<h4 class="text-headline-md font-headline-md mb-xs">GitLab</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md h-10">Secondary repositories and internal module tracking.</p>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Last sync: 15m ago</span>
+<button class="text-label-caps font-label-caps text-primary hover:text-primary-fixed transition-colors">Configure</button>
+</div>
+</div>
+</div>
+</div>
+<!-- CI/CD Category -->
+<div class="col-span-1 flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">build</span> CI/CD
+                    </h3>
+<!-- Jenkins - Planned -->
+<div class="bg-surface-container-low border border-outline-variant border-dashed rounded-lg p-md h-full flex flex-col opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 bg-surface-container rounded-md flex items-center justify-center border border-outline-variant opacity-60">
+<span class="material-symbols-outlined text-on-surface-variant text-[28px]">account_tree</span>
+</div>
+<div class="px-sm py-xs bg-surface-container-highest border border-outline-variant rounded text-on-surface-variant text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Planned
+                            </div>
+</div>
+<h4 class="text-headline-md font-headline-md mb-xs text-on-surface-variant">Jenkins Pipeline</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Automated build and deployment synchronization.</p>
+<div class="mt-auto pt-md border-t border-outline-variant border-dashed">
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden mb-xs">
+<div class="bg-primary-container h-full w-1/3"></div>
+</div>
+<span class="text-data-mono-sm font-data-mono-sm text-on-surface-variant">Setup 30% complete</span>
+</div>
+</div>
+</div>
+<!-- Cloud Category -->
+<div class="col-span-1 lg:col-span-2 flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">cloud</span> Cloud Infrastructure
+                    </h3>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-0 overflow-hidden flex flex-col sm:flex-row h-full">
+<div class="sm:w-1/3 bg-surface-container-lowest p-md border-b sm:border-b-0 sm:border-r border-outline-variant flex flex-col justify-center relative">
+<!-- Abstract WebGL background hint -->
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<div class="bg-cover bg-center w-full h-full" data-alt="Abstract subtle tech grid pattern, deep dark blue, highly technical and minimalistic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCi97y-WET1qLOlGRhtxiQeP6aVYyny-C-KlSp1jybPRjQlVtHVCUHGNT7EfJ0lcVA56f-ISeEVoXzfJaSpg5TfofF2597GluoqrQzlZOhLPYOiPb2X08bJnO3R4-TCCb5XQX8D65JkSmYBZcypf4QNrZwef_OslhAQ6H_MbVzKXE6q28wSaqpLUYZQ45Pk7vN8h1VuzXnFEOF2MQ9fPRY5ZCgzjbapiTa0hXxMP71uuHHnPm4nKHl')"></div>
+</div>
+<div class="relative z-10">
+<div class="w-12 h-12 bg-surface-container rounded-md flex items-center justify-center border border-outline-variant mb-md">
+<span class="material-symbols-outlined text-primary text-[28px]">cloud_done</span>
+</div>
+<h4 class="text-headline-md font-headline-md mb-xs">AWS GovCloud</h4>
+<div class="px-sm py-xs inline-flex bg-tertiary/10 border border-tertiary/20 rounded text-tertiary text-data-mono-sm font-data-mono-sm items-center gap-xs mb-sm">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div> Live Connection
+                                </div>
+</div>
+</div>
+<div class="sm:w-2/3 p-md flex flex-col justify-between">
+<div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Secure, compliant cloud infrastructure telemetry and resource utilization tracking.</p>
+<div class="grid grid-cols-2 gap-sm mb-md">
+<div class="bg-surface-container p-sm rounded border border-outline-variant">
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mb-xs">Active EC2</div>
+<div class="text-headline-md font-headline-md text-primary">1,402</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant">
+<div class="text-data-mono-sm font-data-mono-sm text-on-surface-variant mb-xs">Data Transfer</div>
+<div class="text-headline-md font-headline-md text-primary">45.2 TB</div>
+</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="px-md py-xs border border-outline-variant rounded text-label-caps font-label-caps hover:bg-surface-container transition-colors">Manage Resources</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Communication Category -->
+<div class="col-span-1 flex flex-col gap-md">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">forum</span> Communication
+                    </h3>
+<!-- Slack - Available -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md h-full flex flex-col group">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 bg-surface-container rounded-md flex items-center justify-center border border-outline-variant group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-[28px]">tag</span>
+</div>
+<div class="px-sm py-xs bg-primary-container/10 border border-primary-container/20 rounded text-primary text-data-mono-sm font-data-mono-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">add_circle</span> Available
+                            </div>
+</div>
+<h4 class="text-headline-md font-headline-md mb-xs">Slack</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-md">Push deployment alerts and governance notifications to team channels.</p>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<button class="w-full bg-surface-container-high border border-outline-variant hover:border-primary text-on-surface text-label-caps font-label-caps py-sm px-md rounded transition-colors duration-200">
+                                Install Integration
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
