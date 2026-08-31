@@ -326,15 +326,43 @@ Implemented as a CSS-variable layer switched at the app shell, so no component h
 
 Derived values are proposals until proven. These are automated tests, not review items:
 
-1. **Contrast.** Every foreground/background pair in §3 must meet WCAG 2.2 AA — 4.5:1 for body text,
-   3:1 for large text and UI boundaries. The derived `warning` `#ffc16a` and `approval/exception`
-   `#d0bcff` are unverified and must be adjusted if they fail on `surface-container-low` `#131b2e`.
+1. **Contrast — VERIFIED.** ✅ See §6.1. 43 automated assertions in
+   `apps/web/test/design/contrast.test.ts`, which parses the shipped `globals.css` rather than a
+   TypeScript mirror, so the test can only pass for values the browser is actually given.
 2. **Non-colour status encoding.** Plan §25 requires status never be conveyed by colour alone. Every gate
    state, RAG indicator and severity chip needs an icon or text label. Asserted per component.
 3. **Radius remap fidelity.** The D2 remap must be verified by visual regression against the source PNGs,
    not by reading the class names.
 4. **Token completeness.** A test asserts no component references a token outside the frozen set — this
    is what would have caught D1 and D4 at authoring time.
+
+### 6.1 Measured contrast ratios
+
+Measured 2026-08-31 against the shipped `globals.css`. WCAG 2.2 AA needs **4.5:1** for body text and
+**3:1** for UI boundaries.
+
+| Token | on `background` | on `surface-container-low` | on `surface-container-high` |
+|---|---:|---:|---:|
+| `on-surface` | 14.34 | 13.30 | 11.10 |
+| `on-surface-variant` | 10.91 | 10.12 | 8.44 |
+| `primary` | 10.87 | 10.08 | 8.41 |
+| `success` (extracted) | 10.83 | 10.05 | 8.39 |
+| `danger` (extracted) | 10.89 | 10.11 | 8.43 |
+| **`warning` (derived)** | **11.53** | **10.69** | **8.92** |
+| **`exception` (derived)** | **10.85** | **10.07** | **8.40** |
+| `unknown` / `outline` | 5.84 | 5.42 | 4.52 |
+
+`on-primary` on `primary` (button label on fill): **7.72**.
+
+**The derivation is empirically confirmed.** `warning` (11.53) and `exception` (10.85) land in the same
+band as the three extracted accents — `primary` 10.87, `success` 10.83, `danger` 10.89 — a spread of
+under 0.7. The luminance-parity method in §3 produced values that sit optically alongside the palette
+rather than merely passing a threshold, which is what "same optical register" was meant to achieve.
+
+**One value to watch:** `unknown` / `outline` measures **4.52** on `surface-container-high` — clearing
+AA by 0.02. It is safe as body text on the two lower surfaces and safe everywhere as a border (3:1),
+but it must not be used for body text on the highest surface without re-measuring. Tracked as a
+constraint on the muted tone rather than a defect.
 
 ---
 
