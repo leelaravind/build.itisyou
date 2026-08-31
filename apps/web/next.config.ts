@@ -28,7 +28,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ['@govintel/shared'],
+  transpilePackages: ['@govintel/shared', '@govintel/db', '@govintel/intake'],
+  // PGlite ships a WASM binary that must not be bundled into the server output.
+  serverExternalPackages: ['@electric-sql/pglite'],
   typedRoutes: true,
   // Next's config type requires a Promise-returning function here. There is nothing to await, so
   // this resolves directly rather than being declared `async` with no await inside it.

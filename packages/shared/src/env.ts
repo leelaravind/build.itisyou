@@ -15,8 +15,18 @@
 
 import { z } from 'zod';
 
-export const NODE_ENVS = ['development', 'test', 'preview', 'staging', 'production'] as const;
-export type NodeEnv = (typeof NODE_ENVS)[number];
+/**
+ * Deployment stage — where this instance is *running*.
+ *
+ * Deliberately separate from `NODE_ENV`, which is a **build-mode** flag. `next build` sets
+ * `NODE_ENV=production` for every optimised build, including one produced on a laptop with no
+ * database in sight. Keying "is a real database required?" off `NODE_ENV` therefore fails the build
+ * itself — which is exactly what happened, and is why the two are now distinct.
+ *
+ * `NODE_ENV` answers "is this optimised?". `APP_ENV` answers "which environment is this serving?".
+ */
+export const APP_ENVS = ['development', 'test', 'preview', 'staging', 'production'] as const;
+export type AppEnv = (typeof APP_ENVS)[number];
 
 /**
  * External-AI policy modes (plan section 19).
@@ -31,7 +41,10 @@ export const EXTERNAL_AI_MODES = [
 ] as const;
 
 const schema = z.object({
-  NODE_ENV: z.enum(NODE_ENVS).default('development'),
+  /** Build mode, set by the toolchain. Not a deployment stage. */
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  /** Deployment stage. Defaults to development so a local build needs no configuration. */
+  APP_ENV: z.enum(APP_ENVS).default('development'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
 
   /**
@@ -55,8 +68,8 @@ const schema = z.object({
 
 export type Env = z.infer<typeof schema>;
 
-/** Environments where a real networked Postgres and a session secret are mandatory. */
-const DEPLOYED: ReadonlySet<NodeEnv> = new Set<NodeEnv>(['preview', 'staging', 'production']);
+/** Stages where a real networked Postgres and a session secret are mandatory. */
+const DEPLOYED: ReadonlySet<AppEnv> = new Set<AppEnv>(['preview', 'staging', 'production']);
 
 export class EnvValidationError extends Error {
   readonly variables: readonly string[];
@@ -83,7 +96,7 @@ export function parseEnv(source: Record<string, string | undefined> = process.en
   const env = result.data;
   const missing: string[] = [];
 
-  if (DEPLOYED.has(env.NODE_ENV)) {
+  if (DEPLOYED.has(env.APP_ENV)) {
     if (env.DATABASE_URL === undefined) missing.push('DATABASE_URL');
     if (env.SESSION_SECRET === undefined) missing.push('SESSION_SECRET');
   }

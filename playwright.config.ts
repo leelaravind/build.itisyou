@@ -24,7 +24,15 @@ export default defineConfig({
   expect: { timeout: 5_000 },
 
   use: {
-    baseURL: process.env.E2E_BASE_URL ?? 'http://127.0.0.1:3000',
+    /*
+     * `localhost`, not `127.0.0.1`.
+     *
+     * WebKit declines to store cookies for a bare IP host, so the guest session cookie was never
+     * sent back and every session-dependent test failed on mobile-safari while passing everywhere
+     * else. The middleware treats both as loopback for the `upgrade-insecure-requests` decision, so
+     * nothing else changes.
+     */
+    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -43,8 +51,19 @@ export default defineConfig({
     ? undefined
     : {
         command: 'pnpm --filter=@govintel/web start',
-        url: 'http://127.0.0.1:3000',
-        reuseExistingServer: !process.env.CI,
+        url: 'http://localhost:3000',
+        /*
+         * Never reuse an existing server, not even locally.
+         *
+         * `reuseExistingServer: !process.env.CI` is the common default and it cost real time twice
+         * in this project: a server left running from an earlier debugging session kept answering,
+         * so the suite tested code that had already been replaced. Both times the symptom was a
+         * confident, reproducible failure against a fix that was actually correct — the worst kind,
+         * because it sends you looking for a bug that no longer exists.
+         *
+         * Starting a fresh server costs a few seconds. Debugging a phantom failure costs far more.
+         */
+        reuseExistingServer: false,
         timeout: 120_000,
       },
 });

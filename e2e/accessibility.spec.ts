@@ -43,7 +43,13 @@ test.describe('axe — no violations', () => {
 
       const results = await new AxeBuilder({ page }).withTags(['best-practice']).analyze();
 
-      expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      // Report the offending selectors, not just the rule. "target-size failed" is not actionable;
+      // "target-size failed on a.nav-link" is.
+      expect(
+        results.violations.flatMap((v) =>
+          v.nodes.map((n) => `${v.id}: ${n.target.join(' ')} — ${v.help}`),
+        ),
+      ).toEqual([]);
     });
   }
 });

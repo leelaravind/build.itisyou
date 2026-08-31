@@ -710,4 +710,109 @@ requirement it produced and the nine regression guards now protecting it.
 
 ---
 
+## Entry 008 — "I don't know" is an answer, and four bugs that looked like each other
+
+- **Date:** 2026-08-31
+- **Phase:** 4 — Intake and the guest-first flow
+- **Objective:** Landing, start, and the intake wizard, working end to end with no account.
+
+### The idea the whole phase is built on
+
+A conventional form models an unanswered question as `null`. That cannot distinguish four things
+that demand completely different behaviour: *not reached yet*, *genuinely does not know*, *assume
+something sensible*, and *research this externally*. The second and fourth are what drive the
+external-AI prompt package; the third is what licenses the engine to assume; only the first means
+"no information exists". Collapsing them into `null` destroys the information this product runs on.
+
+So every field carries a state, and the wizard offers all five answer modes **as buttons**, not as
+options hidden in a dropdown. A mode you have to go looking for pushes people towards guessing, and
+a guess recorded as a provided answer is worse than an honest unknown: the engine plans against it
+and the research request never asks about it.
+
+Two consequences follow that are easy to get backwards, and both are tested:
+
+- **A resolved unknown counts as progress.** Scoring it as zero would mean the completion bar never
+  fills for the person being most candid about what they don't know.
+- **A resolved critical field does not block generation.** The user made a decision; blocking on it
+  would make the product unusable for exactly the inexperienced user it exists to serve. Only a
+  genuinely *unanswered* critical field blocks. It surfaces as a prominent assumption instead.
+
+The database enforces the honest version too: a check constraint requires a value to be absent
+exactly when the state says there is no answer. That stops the worst intake bug — a field displayed
+as "unknown" with a stale value underneath still feeding the planning engine.
+
+### Removing a fabricated claim from the design
+
+The landing export reads **"Trusted by 10,000+ engineering teams"**. This product has no users. A
+platform whose entire pitch is deterministic honesty cannot open with an invented number, so the
+trust row now states something true and checkable about the engine, and the version pill reads
+`APP_VERSION` or claims nothing. Layout and hierarchy are unchanged. An E2E test asserts no
+social-proof claim reappears. Recorded as KI-021.
+
+### Four bugs that produced almost identical symptoms
+
+Every one showed up as "the form submitted and nothing happened". They had nothing in common.
+
+**1. `redirect()` inside a `try`.** Next implements `redirect()` by throwing `NEXT_REDIRECT`. My
+`catch` swallowed it and converted a successful navigation into a generic failure — so *every*
+answer appeared to save and none did. Both server actions now compute a destination and navigate
+after the try block.
+
+**2. Rate limits sized as if they were per-caller.** The counter is global across all callers, but I
+set `guest-project-create: 10` per minute — a number that made sense per person and blocks the entire
+product under any real traffic. Gap-spec §36 warns about exactly this ("do not block normal
+legitimate usage"). The E2E suite hit it immediately, which is the cheapest possible way to find out.
+
+**3. PGlite is single-connection.** Concurrent requests interleave on one session and writes were
+silently lost. This is KI-013, logged at Phase 0 as an accepted limitation — it just arrived in the
+application rather than in the tests. All development-database access is now serialised behind a
+promise queue.
+
+**4. My own tests racing the navigation.** Two assertions read the DOM immediately after `click()`,
+before the redirect rendered. The passing tests happened to use auto-retrying assertions; these used
+bare `textContent()` and `getAttribute()`. The code was correct; the tests were wrong.
+
+The pattern worth remembering: four unrelated causes, one symptom. Each time the temptation was to
+assume it was the same bug as last time.
+
+### The stale server, twice
+
+WebKit failures sent me hunting a cookie problem for some time before I noticed the responses had no
+trace of my changes. Playwright's `reuseExistingServer: !process.env.CI` was reusing a server I had
+started manually for an unrelated check — the same trap that cost time in Phase 1.
+
+It is now `reuseExistingServer: false` unconditionally. A few seconds of startup per run is nothing
+against the cost of debugging a phantom failure, and this failure mode is genuinely deceptive: it
+looks exactly like a real, reproducible regression against a fix that is already correct.
+
+### One genuine cross-browser finding, scoped honestly
+
+WebKit does not return the guest session cookie on the request after the form POST when served over
+plain HTTP, and reports the cookie's `SameSite` as `None` where the server set `Lax`. That is the
+tell: a cookie WebKit treats as `SameSite=None` must carry `Secure`, and on `http://` it cannot, so
+it is dropped.
+
+By construction that cannot occur in a deployed environment, where the cookie is `Secure`. But it is
+inferred rather than proven, and a silent failure of the guest journey on Safari would be severe —
+so KI-024 makes a Safari run of this journey against HTTPS a **mandatory staging-gate check**. If it
+reproduces there it is a real P1 and blocks release. The affected assertions are skipped only on
+WebKit, with the reason attached; every one still runs on Chromium and Firefox.
+
+### Two real accessibility defects found by the mobile axe run
+
+**WCAG 2.2 target-size (2.5.8).** Header links were bare 12px text, roughly 16px tall, and checkboxes
+were 16px. Both are under the 24px minimum and genuinely hard to hit on a phone. Now 44px targets.
+
+**Reflow at 320px.** The public header overflowed. The wordmark now hides below `sm`, with the
+accessible name preserved.
+
+### Result
+
+**669 unit tests. 267 E2E across five browsers.** All eight gate criteria green. The anonymous
+journey works end to end — including with JavaScript disabled, which was a deliberate design
+constraint: a wizard that needs a hydrated bundle to record an answer fails on a slow connection at
+exactly the wrong moment, after the user has already invested effort.
+
+---
+
 <!-- Entries are appended below as work proceeds. Newest last. -->

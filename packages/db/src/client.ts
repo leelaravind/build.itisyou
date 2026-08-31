@@ -50,6 +50,7 @@ export interface TestDatabase {
 const TRUNCATABLE = [
   'outbox_events',
   'audit_events',
+  'intake_answers',
   'project_members',
   'projects',
   'memberships',
@@ -186,7 +187,7 @@ CREATE INDEX guest_sessions_expires_idx ON guest_sessions (expires_at);
 
 CREATE TABLE projects (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
   name text NOT NULL,
   summary text,
   project_type project_type NOT NULL DEFAULT 'UNKNOWN',
@@ -198,7 +199,11 @@ CREATE TABLE projects (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT projects_version_positive CHECK (version >= 1),
-  CONSTRAINT projects_currency_iso CHECK (char_length(base_currency) = 3)
+  CONSTRAINT projects_currency_iso CHECK (char_length(base_currency) = 3),
+  -- Exactly one owner: an organisation (saved) or a guest session (unsaved), never both, never
+  -- neither. Prevents an unreachable orphan and an ambiguous dual-access row.
+  CONSTRAINT projects_single_owner
+    CHECK ((organization_id IS NULL) <> (guest_session_id IS NULL))
 );
 CREATE INDEX projects_org_idx ON projects (organization_id);
 CREATE INDEX projects_org_lifecycle_idx ON projects (organization_id, lifecycle_state);
@@ -215,6 +220,32 @@ CREATE TABLE project_members (
 CREATE UNIQUE INDEX project_members_project_user_idx ON project_members (project_id, user_id);
 CREATE INDEX project_members_org_idx ON project_members (organization_id);
 CREATE INDEX project_members_user_idx ON project_members (user_id);
+
+CREATE TABLE intake_answers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  field_id text NOT NULL,
+  category text NOT NULL,
+  value jsonb,
+  state text NOT NULL,
+  provenance text NOT NULL,
+  confidence text NOT NULL,
+  note text,
+  confirmed_by uuid REFERENCES users(id) ON DELETE SET NULL,
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT intake_answers_state_check CHECK (
+    state IN ('CONFIRMED','PROVIDED','ASSUMED','UNKNOWN','EXTERNAL_RESEARCH_REQUIRED','CONFLICTING','UNANSWERED')
+  ),
+  -- A value must be absent exactly when the state says there is no answer. Stops the worst intake
+  -- bug: a field shown as "unknown" with a stale value underneath still feeding the engine.
+  CONSTRAINT intake_answers_value_matches_state CHECK (
+    (state IN ('UNKNOWN','UNANSWERED','EXTERNAL_RESEARCH_REQUIRED')) = (value IS NULL)
+  )
+);
+CREATE UNIQUE INDEX intake_answers_project_field_idx ON intake_answers (project_id, field_id);
+CREATE INDEX intake_answers_project_idx ON intake_answers (project_id);
+CREATE INDEX intake_answers_org_idx ON intake_answers (organization_id);
 
 CREATE TABLE audit_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

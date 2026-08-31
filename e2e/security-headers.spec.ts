@@ -94,9 +94,15 @@ test.describe('security headers', () => {
 
 test.describe('landing page', () => {
   test('renders for an anonymous visitor with no login', async ({ page }) => {
-    // Guest-first is a locked product principle (plan section 2.3): the landing must work logged out.
+    // Guest-first is a locked product principle (plan §2.3): the landing must work logged out.
+    //
+    // Asserts the headline leads with the value proposition rather than the product name. The
+    // earlier placeholder page put "GovIntel Platform" in the h1; the real landing follows the
+    // Stitch export, which opens with what the product does.
     await page.goto('/');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('GovIntel Platform');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      /executable engineering system/i,
+    );
   });
 
   test('loads no third-party resources', async ({ page }) => {

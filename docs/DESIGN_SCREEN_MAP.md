@@ -63,12 +63,12 @@ except Mobile Notifications which has no desktop counterpart in the export.
 
 | # | Screen | Route | Source design | Implementation component | Desktop | Tablet | Mobile | Empty | Loading | Error | Perm | Notes |
 |---:|---|---|---|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
-| 1 | Public Landing | `/` | `landing_page_govintel_platform` | `app/(public)/page.tsx` | — | — | — | n/a | — | — | n/a | Guest entry. No auth. Must work fully logged-out. |
-| 2 | Start New Project | `/start` | `start_project_govintel_platform` | `app/(public)/start/page.tsx` | — | — | — | n/a | — | — | n/a | Creates guest session (gap-spec §5). |
-| 3 | Project Intake Wizard | `/intake/[step]` | `intake_wizard_govintel_platform` | `features/intake/IntakeWizard` | — | — | — | — | — | — | n/a | Stepper. Every field supports "I don't know" (gap-spec §9.2). |
-| 4 | Resources & Constraints | `/intake/resources` | **DERIVED** ← `intake_wizard` | `features/intake/ResourcesStep` | — | — | — | — | — | — | n/a | Budget, deadline, team, skills, capacity. |
-| 5 | What We Know | `/intake/summary` | **DERIVED** | `features/intake/KnownSummary` | — | — | — | — | — | — | n/a | CONFIRMED/PROVIDED/ASSUMED/UNKNOWN per gap-spec §9.3. |
-| 6 | Missing Information | `/intake/gaps` | **DERIVED** | `features/intake/MissingInfo` | — | — | — | — | — | — | n/a | Critical/Recommended/Optional (gap-spec §10). Rule-driven, not hardcoded. |
+| 1 | Public Landing | `/` | `landing_page_govintel_platform` | `app/page.tsx` | ✓ | ✓ | ✓ | n/a | — | — | n/a | Built Phase 4. Fabricated social-proof and version claims removed (KI-021). Zero axe violations. |
+| 2 | Start New Project | `/start` | `start_project_govintel_platform` | `app/start/page.tsx` | ✓ | ✓ | ✓ | n/a | — | ✓ | n/a | Built Phase 4. One question only; the rest moves to the wizard. Guest session created by the action, not by viewing (gap-spec §19). |
+| 3 | Project Intake Wizard | `/intake/[projectId]` | `intake_wizard_govintel_platform` | `app/intake/[projectId]/page.tsx` | ✓ | ✓ | ✓ | ✓ | — | ✓ | ✓ | Built Phase 4. All five answer modes as buttons. Works with JavaScript disabled. Screens 4–6 folded in as sections — see §1.1 note. |
+| 4 | Resources & Constraints | `/intake/[projectId]` | **DERIVED** ← `intake_wizard` | Questions in the wizard catalogue | ✓ | ✓ | ✓ | ✓ | — | ✓ | ✓ | Built Phase 4 as catalogue entries (budget, deadline, team, skills, capacity) rather than a separate route. |
+| 5 | What We Know | `/intake/[projectId]` | **DERIVED** | "What we know so far" section | ✓ | ✓ | ✓ | ✓ | — | ✓ | ✓ | Built Phase 4. Every value shown with its state, so an assumption can never read as fact. |
+| 6 | Missing Information | `/intake/[projectId]` | **DERIVED** | "Still missing" section | ✓ | ✓ | ✓ | ✓ | — | ✓ | ✓ | Built Phase 4. Critical/Recommended tiers, each item showing *why* it is missing. Driven by the field catalogue, not hardcoded (gap-spec §10.4). |
 | 7 | External AI Prompt | `/ai/prompt` | `ai_research_prompt_govintel_platform` | `features/ai/PromptPackage` | — | — | — | n/a | — | — | — | Must show the copy-safety screen first (gap-spec §11.3). |
 | 8 | Import AI Response | `/ai/import` | **DERIVED** | `features/ai/ImportSurface` | — | — | — | — | — | — | — | Paste or upload. Size/MIME limits enforced server-side. |
 | 9 | Import Validation | `/ai/import/[id]/validation` | **DERIVED** | `features/ai/ValidationReport` | — | — | — | — | — | — | — | 14 validation layers (gap-spec §12.1). Never materialises on validation. |
@@ -148,7 +148,7 @@ except Mobile Notifications which has no desktop counterpart in the export.
 | # | Screen | Route | Source design | Implementation component | Desktop | Tablet | Mobile | Empty | Loading | Error | Perm | Notes |
 |---:|---|---|---|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
 | 50 | Save Project / Sign Up | `/save` | `save_project_govintel_platform` | `features/auth/SaveAndSignUp` | — | — | — | n/a | — | — | n/a | Guest→account conversion must be atomic and idempotent (gap-spec §5.4, §48). |
-| 51 | Login | `/login` | **DERIVED** ← `save_project` | `features/auth/LoginView` | — | — | — | n/a | — | — | n/a | Same chrome as signup. |
+| 51 | Login | `/login` | **DERIVED** ← `save_project` | `app/login/page.tsx` | ✓ | ✓ | ✓ | n/a | n/a | n/a | n/a | Built Phase 4 as an honest placeholder: the OIDC provider is deliberately unchosen (gap-spec §6.1), and a dead login form invites people to type passwords into a field that discards them. |
 | 52 | My Projects | `/projects` | `my_projects_govintel_platform` | `features/projects/MyProjects` | — | — | — | — | — | — | — | Tenant-scoped list. Cross-tenant leak test target. |
 | 53 | Organization Overview | `/org/[orgId]` | `organization_overview_govintel_platform` | `features/org/OrgOverview` | — | — | — | — | — | — | — | Portfolio view. |
 | 54 | Members & Roles | `/org/[orgId]/members` | `members_roles_govintel_platform` | `features/org/MembersRoles` | — | — | — | — | — | — | — | RBAC surface (gap-spec §7.2–7.4). |
@@ -156,6 +156,12 @@ except Mobile Notifications which has no desktop counterpart in the export.
 | 56 | Preferences | `/settings/preferences` | **DERIVED** ← `project_settings` | `features/settings/Preferences` | — | — | — | — | — | — | — | Includes the Beginner/Professional/Enterprise complexity toggle. |
 | 57 | Integrations | `/org/[orgId]/integrations` | `integrations_govintel_platform` | `features/integrations/IntegrationsView` | — | — | — | — | — | — | — | States AVAILABLE/CONNECTED/NOT_CONNECTED/PLANNED. **Do not fake functionality** (gap-spec §44). |
 | 58 | Project Settings | `/p/[id]/settings` | `project_settings_govintel_platform` | `features/settings/ProjectSettings` | — | — | — | — | — | — | — | |
+
+### 10.1 Additional route
+
+| Screen | Route | Source | Implementation | Status | Notes |
+|---|---|---|---|:-:|---|
+| How it works | `/how-it-works` | **DERIVED** (no export) | `app/how-it-works/page.tsx` | ✓ | Not in the locked 64. Added in Phase 4 because the landing page's secondary call to action targets it, and a CTA that 404s is a broken-navigation defect the pre-live checklist rejects. Describes only what is implemented. |
 
 ## 11. Mobile
 

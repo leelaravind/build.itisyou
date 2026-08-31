@@ -35,3 +35,6 @@ Thumbs.db
 
 # Large design source archive (designs are committed extracted)
 stitch_project_blueprint_system.zip
+
+# Local PGlite development data directory
+.pglite/

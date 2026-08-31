@@ -126,7 +126,7 @@ describe('conversion to an account', () => {
   async function seedGuestProject(sessionId: string, name = 'My idea'): Promise<string> {
     const [project] = await database.db
       .insert(projects)
-      .values({ organizationId: ORG, name, guestSessionId: sessionId })
+      .values({ name, guestSessionId: sessionId })
       .returning();
     return project!.id;
   }
@@ -258,7 +258,7 @@ describe('conversion is idempotent', () => {
   async function seedGuestProject(sessionId: string): Promise<string> {
     const [project] = await database.db
       .insert(projects)
-      .values({ organizationId: ORG, name: 'My idea', guestSessionId: sessionId })
+      .values({ name: 'My idea', guestSessionId: sessionId })
       .returning();
     return project!.id;
   }
@@ -361,9 +361,7 @@ describe('expiry sweep', () => {
   it('deletes expired unconverted sessions and their projects', async () => {
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db
-      .insert(projects)
-      .values({ organizationId: ORG, name: 'abandoned', guestSessionId: session.id });
+    await database.db.insert(projects).values({ name: 'abandoned', guestSessionId: session.id });
 
     const result = await purgeExpiredGuestSessions(
       database.db,
@@ -391,9 +389,7 @@ describe('expiry sweep', () => {
     // would sever the provenance of every project created through the guest flow.
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db
-      .insert(projects)
-      .values({ organizationId: ORG, name: 'saved', guestSessionId: session.id });
+    await database.db.insert(projects).values({ name: 'saved', guestSessionId: session.id });
 
     await convertGuestSession(database.db, {
       guestSessionId: session.id,

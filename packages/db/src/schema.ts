@@ -177,10 +177,21 @@ export const projects = pgTable(
   'projects',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    /** The tenant key. Present on every tenant-owned table, without exception. */
-    organizationId: uuid('organization_id')
-      .notNull()
-      .references(() => organizations.id, { onDelete: 'cascade' }),
+    /**
+     * The tenant key.
+     *
+     * Nullable **only** on this table, and only because a guest project genuinely has no tenant
+     * until it is saved. The `projects_single_owner` check constraint below enforces that exactly
+     * one of `organization_id` and `guest_session_id` is set, so "no owner at all" is not
+     * representable. Every other tenant-owned table keeps `organization_id` NOT NULL.
+     *
+     * A null here also means the row is invisible to the RLS policy — `organization_id::text = …`
+     * is never true for NULL — which is the correct behaviour: a guest project must not be reachable
+     * through any organisation's tenant scope.
+     */
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
     name: text('name').notNull(),
     summary: text('summary'),
     projectType: projectTypeEnum('project_type').notNull().default('UNKNOWN'),
@@ -212,6 +223,18 @@ export const projects = pgTable(
     index('projects_guest_session_idx').on(table.guestSessionId),
     check('projects_version_positive', sql`${table.version} >= 1`),
     check('projects_currency_iso', sql`char_length(${table.baseCurrency}) = 3`),
+    /*
+     * Exactly one owner, always.
+     *
+     * Without this, three broken states are representable: a project with no owner (unreachable and
+     * unauditable), one with both (ambiguous — two different access paths to the same row), and a
+     * conversion that half-completed. The database refuses all three rather than trusting the
+     * conversion code to be correct.
+     */
+    check(
+      'projects_single_owner',
+      sql`(${table.organizationId} IS NULL) <> (${table.guestSessionId} IS NULL)`,
+    ),
   ],
 );
 
@@ -240,6 +263,66 @@ export const projectMembers = pgTable(
     uniqueIndex('project_members_project_user_idx').on(table.projectId, table.userId),
     index('project_members_org_idx').on(table.organizationId),
     index('project_members_user_idx').on(table.userId),
+  ],
+);
+
+/**
+ * Intake answers — one row per question, per project.
+ *
+ * A table rather than a JSON blob on `projects`, because gap-spec §9.3 requires every field to carry
+ * its own state, provenance, confidence, timestamp and confirmer. Those are queryable facts — "show
+ * me everything this plan is assuming", "which answers came from an AI import" — and burying them in
+ * a blob would make each of those a full-table scan and a parse.
+ *
+ * `organizationId` is nullable here for the same reason it is on `projects`: an intake belongs to a
+ * guest project until that project is saved.
+ */
+export const intakeAnswers = pgTable(
+  'intake_answers',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+
+    /** Field id from the catalogue in `@govintel/intake/fields`. */
+    fieldId: text('field_id').notNull(),
+    category: text('category').notNull(),
+
+    /** Null whenever the state carries the meaning by itself — UNKNOWN, deferred, unanswered. */
+    value: jsonb('value'),
+
+    state: text('state').notNull(),
+    provenance: text('provenance').notNull(),
+    confidence: text('confidence').notNull(),
+    note: text('note'),
+
+    confirmedBy: uuid('confirmed_by').references(() => users.id, { onDelete: 'set null' }),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    // One answer per field per project. Two rows for the same question would make "what did the
+    // user say?" ambiguous, and ambiguity in the intake propagates into every downstream estimate.
+    uniqueIndex('intake_answers_project_field_idx').on(table.projectId, table.fieldId),
+    index('intake_answers_project_idx').on(table.projectId),
+    index('intake_answers_org_idx').on(table.organizationId),
+    check(
+      'intake_answers_state_check',
+      sql`${table.state} IN ('CONFIRMED','PROVIDED','ASSUMED','UNKNOWN','EXTERNAL_RESEARCH_REQUIRED','CONFLICTING','UNANSWERED')`,
+    ),
+    /*
+     * A value must be absent exactly when the state says there is no answer.
+     *
+     * This is the constraint that stops the worst intake bug: a field displayed as "unknown" while a
+     * stale value sits underneath it, silently feeding the planning engine.
+     */
+    check(
+      'intake_answers_value_matches_state',
+      sql`(${table.state} IN ('UNKNOWN','UNANSWERED','EXTERNAL_RESEARCH_REQUIRED')) = (${table.value} IS NULL)`,
+    ),
   ],
 );
 
@@ -410,6 +493,8 @@ export type ProjectMember = typeof projectMembers.$inferSelect;
 export type GuestSession = typeof guestSessions.$inferSelect;
 export type AuditEvent = typeof auditEvents.$inferSelect;
 export type OutboxEvent = typeof outboxEvents.$inferSelect;
+export type IntakeAnswer = typeof intakeAnswers.$inferSelect;
+export type NewIntakeAnswer = typeof intakeAnswers.$inferInsert;
 
 export type OrganizationRole = (typeof organizationRoleEnum.enumValues)[number];
 export type ProjectRole = (typeof projectRoleEnum.enumValues)[number];

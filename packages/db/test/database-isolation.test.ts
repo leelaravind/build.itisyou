@@ -70,11 +70,79 @@ describe('schema integrity', () => {
     }
   });
 
-  it('rejects a project with no organisation', async () => {
-    // The tenant key is NOT NULL by design: an untenanted row would be invisible to every
-    // tenant-scoped query and therefore unreachable and unauditable.
+  it('rejects a project with no owner at all', async () => {
+    // Neither an organisation nor a guest session: the row would be invisible to every scoped query
+    // and therefore unreachable and unauditable. The single-owner constraint forbids it.
     await expect(
       database.db.execute(sql`INSERT INTO projects (name) VALUES ('orphan')`),
+    ).rejects.toThrow();
+  });
+
+  it('rejects a project owned by both an organisation and a guest session', async () => {
+    // Two owners means two access paths to the same row, and a conversion that half-completed.
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO projects (organization_id, guest_session_id, name)
+        VALUES (${ORG_A}, gen_random_uuid(), 'ambiguous')
+      `),
+    ).rejects.toThrow();
+  });
+
+  it('accepts a guest project with no organisation', async () => {
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO projects (guest_session_id, name)
+        VALUES (gen_random_uuid(), 'guest project')
+      `),
+    ).resolves.toBeDefined();
+  });
+
+  it('refuses an intake answer whose value contradicts its state', async () => {
+    // The worst intake bug: a field shown as "unknown" with a stale value underneath still feeding
+    // the planning engine.
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'p') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${projectId}, 'budget.total', 'BUDGET', '42'::jsonb, 'UNKNOWN', 'USER_PROVIDED', 'LOW')
+      `),
+    ).rejects.toThrow();
+  });
+
+  it('refuses an intake answer that claims a value but supplies none', async () => {
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'p2') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${projectId}, 'budget.total', 'BUDGET', NULL, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+      `),
+    ).rejects.toThrow();
+  });
+
+  it('refuses two answers for the same question on one project', async () => {
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'p3') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await database.db.execute(sql`
+      INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
+      VALUES (${projectId}, 'idea.summary', 'IDEA', '"a"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+    `);
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${projectId}, 'idea.summary', 'IDEA', '"b"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+      `),
     ).rejects.toThrow();
   });
 
