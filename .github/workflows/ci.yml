@@ -165,15 +165,28 @@ jobs:
       # Measured against the pre-fix implementation on a four-connection pool, the interleaving check
       # returned 18 of 40 requests carrying **another tenant's row**. This job is what keeps that from
       # being a story about one afternoon.
-      - name: Apply the schema
+      # Applied as the owner, which then creates the restricted role the application will use.
+      #
+      # `APP_ROLE_PASSWORD` gives `govintel_app` a LOGIN so the next step can connect **as** it.
+      # Throwaway, like the owner credential above: both belong to a service container created and
+      # destroyed inside this job, reaching nothing outside it.
+      - name: Apply the schema and create the restricted application role
         env:
           DATABASE_URL_UNPOOLED: postgresql://postgres:postgres@localhost:5432/govintel_test # secret-scan-ignore
+          APP_ROLE_PASSWORD: ci-throwaway-role-password-for-an-ephemeral-container # secret-scan-ignore
         run: pnpm migrate
 
-      - name: Tenant isolation under a real pool
+      # Connects as `govintel_app`, not as the container's `postgres` superuser.
+      #
+      # This is the arrangement production runs, and CI has to match it or the check tests something
+      # nobody deploys. It also has teeth: when this job still connected as `postgres`, the gate
+      # failed — correctly — because a superuser that owns every table bypasses RLS unconditionally,
+      # which is SEC-001. Passing while connected as a superuser would have proved only that the
+      # queries were written correctly, not that the policies do anything.
+      - name: Tenant isolation under a real pool, as the restricted role
         env:
           APP_ENV: staging
-          DATABASE_URL_UNPOOLED: postgresql://postgres:postgres@localhost:5432/govintel_test # secret-scan-ignore
+          DATABASE_URL_UNPOOLED: postgresql://govintel_app:ci-throwaway-role-password-for-an-ephemeral-container@localhost:5432/govintel_test # secret-scan-ignore
         run: pnpm verify:isolation
 
       - name: Concurrency suites
