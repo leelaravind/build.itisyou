@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.8",
+    "@govintel/change": "workspace:*",
     "@govintel/db": "workspace:*",
     "@govintel/execution": "workspace:*",
     "@govintel/finance": "workspace:*",

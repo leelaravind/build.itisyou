@@ -1,0 +1,19 @@
+{
+  "name": "@govintel/change",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./propagation": "./src/propagation.ts",
+    "./impact": "./src/impact.ts",
+    "./request": "./src/request.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

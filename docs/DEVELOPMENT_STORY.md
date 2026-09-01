@@ -1961,3 +1961,171 @@ dependency-audit and production build are clean. `docs/THREAT_MODEL.md` is the n
 document. The Phase-11 gate — the release-readiness flow works end to end — is met by a test that
 walks a complete project through all six gates to `releasable`, which also stops every negative test
 in that file from passing against a flow that never passes anything.
+
+---
+
+## Entry 016 — Phase 12: what a change would break
+
+Phase 12 answers one question: if I change this, what else stops being true?
+
+The obvious implementation propagates through every edge and reports a count. It is useless in a
+specific way that is worth naming, because it is the failure most impact-analysis features have.
+Everything in a project is eventually connected to everything, so every change reports several dozen
+affected items; a count cannot be acted on and cannot be disputed; and the first time it is visibly
+wrong the reader stops believing it. From then on the feature is worse than not having it.
+
+So two decisions carry the design.
+
+**Propagation is a deny-by-default allowlist.** Nine of the seventeen edge classes carry no
+propagation at all. `CONTAINS` does not propagate — a project containing a changed task is not itself
+stale, and propagating up containment makes every change reach the project root, from which
+everything is reachable. `OWNED_BY` does not propagate — changing a requirement does not affect who
+owns it.
+
+**Every affected item carries the path that reached it**, hop by hop, with the rule's own reasoning at
+each step. "47 items affected" versus "the deployment approval needs revalidating, because it
+approved a deployment that depends on a component you changed". The second is checkable, and a claim
+nobody can check is one people stop believing.
+
+### Stale is not invalidated
+
+§27.1 gives four states and forbids deleting dependent evidence automatically. The distinction doing
+the work is stale versus invalidated: stale means the claim was made against an older version and
+*might* still hold, so somebody has to look; invalidated means it definitely does not hold. Collapse
+them one way and real breakage is buried in a pile of maybes; collapse them the other and every change
+looks like it destroyed the project.
+
+Nothing is deleted. A marked artefact still carries what it showed and when, which is the only record
+of what was true before.
+
+### The severity model I got wrong twice
+
+Severity decays with distance — a test verifying a changed requirement is invalidated, the evidence
+behind that test is stale, a document further out merely needs review. That much was right from the
+start.
+
+What was wrong was letting the decay run to nothing. A `STALE` rule weakened once became `CURRENT`,
+which meant stale relationships produced no result beyond the first hop — and §27's own worked example,
+"architecture component changed → costs", never arrived, because the estimate is two hops out through
+`DERIVED_FROM`. The golden scenario caught it: six assertions failed together, all of them things §27
+explicitly names.
+
+The fix is that `STALE` is the floor for anything reachable within the depth limit. That is honest —
+the thing *is* downstream of a change, and stale means precisely "may still hold, somebody has to
+look". Only the stronger verdicts decay.
+
+The second mistake was in the other direction. My golden scenario asserted the deployment's approval
+comes back invalidated. It does not: two hops out it is revalidation-required, because the approver
+approved a *deployment*, and it is the deployment that depends on what changed. I nearly changed the
+code to make the test pass. The right answer is that claiming at any distance to have voided
+somebody's decision is the point at which approvers stop reading the notification — so an approval is
+reported invalidated only when its own subject changed, and there are now two tests holding both
+halves of that line.
+
+### An edge the model was missing
+
+The golden scenario failed initially in a more interesting way: changing an architecture component
+reached two nodes.
+
+That was correct given the rules. It was also useless, and §27 explicitly requires "architecture
+component changed → implementation tasks, integration tests, deployment". The reason it could not
+work is that the twin had no edge between work and a component: `DEPENDS_ON` permitted
+`TASK → TASK` and `ARCHITECTURE_COMPONENT → ARCHITECTURE_COMPONENT` but nothing across. Work and
+components were siblings under a requirement with no relation between them.
+
+What decided it was that **two modules had independently needed that edge and neither could have
+it**. Phase 10's architecture checker looks for work committed against a component that is still
+proposed — a check that could never fire. Phase 12's propagation needs the same edge for the
+traversal §27 requires. Two independent needs is evidence the model is missing something rather than
+that both callers are wrong, so `TASK`, `SUBTASK` and `DEPLOYMENT` may now depend on an
+`ARCHITECTURE_COMPONENT`. Tests reach a component through `VERIFIES`, which was already legal — that
+is what an integration test is.
+
+This is the third time this project a defect has been "the code assumed an edge model different from
+the one the twin enforces". The first two were mine getting it wrong (KI-033, KI-035). This one was
+the model being incomplete, and the way to tell them apart was asking who else needed it.
+
+### The step §28 exists for
+
+The atomicity sequence lists ten steps. Nine are ordinary. Step 5 — "check optimistic concurrency" —
+is the reason the list exists:
+
+> Somebody previews a change against version 12, goes to a meeting, comes back and approves it.
+> Meanwhile the project is at version 15. Applying now applies a decision made about a different
+> project. The approver saw an impact report that is no longer true, and their name ends up on a
+> choice they did not make.
+
+Nothing errors without that check. The change applies cleanly and the record looks complete. It is the
+kind of defect that is only visible if you go looking for it, and it produces exactly the artefact
+somebody cites afterwards.
+
+A request whose base version has moved becomes `SUPERSEDED`, not `REJECTED`. Nobody decided against
+it; the world moved. And there is deliberately no route from `APPROVED` back to `PENDING_APPROVAL` —
+that would let an approval be reused across a project version it was never given against, which is
+the whole thing the check prevents.
+
+### One plan, not two implementations
+
+`plan()` produces what applying the change will do; the preview renders it; `apply()` executes it.
+
+A preview computed by separate code from the application is a second implementation, and the first
+time the two diverge it surfaces to a user as "the system did something other than what it showed
+me". A test asserts the applied plan is the *same object* the preview rendered, which is the cheapest
+possible guard against that ever becoming two code paths.
+
+`apply()` also does not touch the database. It decides whether the change may be applied and what
+applying it means; the caller performs all of it in one transaction. That is what §28 step 6 requires,
+and it is also what makes the concurrency case testable at all — a function that both decided and
+wrote could only be tested against a database, and the concurrency path would be the hardest thing in
+it to reach.
+
+Follow-up work is named rather than performed. Running a notification inside the transaction means a
+failed notification rolls back a successful change.
+
+### What the E2E caught
+
+The page reported "nothing else in the project depends on what you changed" for every requirement.
+That sentence was true of the graph it was analysing and false of the project.
+
+The stored graph holds requirements, phases and risks; the work, tests and evidence that hang off them
+are produced by the decomposer at render time, which the other surfaces merge in and this one did not.
+So the page was analysing a graph missing everything that could be affected — and because the module
+handles "nothing affected" gracefully and says so in plain English, the output looked considered
+rather than broken.
+
+That is the fourth time in four phases that a defect was visible only by looking at the rendered page.
+The pattern is consistent enough now to state as a rule: a unit suite verifies a function against the
+data you gave it, and cannot tell you that you gave it the wrong data.
+
+### Some smaller positions
+
+**Cosmetic changes propagate nothing.** A project where renaming a requirement invalidates its test
+suite produces impact reports that are mostly noise, and a noisy report gets skimmed — including on
+the occasion it matters.
+
+**Withdrawal escalates regardless of edge.** Dependants have not merely lost currency; they have lost
+their subject.
+
+**Truncation is reported.** A traversal that stopped at its depth limit says so, because a truncated
+analysis presented as complete is the specific way an impact tool lies: nobody can tell from the
+output that something was left out.
+
+**Termination is guaranteed twice over** — a visited set and a depth limit. `DEPENDS_ON` cycles are
+invalid and they exist in real projects, and an impact analyser that hangs on one is useless at
+exactly the moment somebody is trying to understand a mess. A 2,000-node fan-out is tested, per §26.1.
+
+**Self-approval is refused.** It records a decision with nobody independent behind it, which is worse
+than no approval at all, because the record looks complete.
+
+### Where Phase 12 stands
+
+1,754 unit tests and 597 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/IMPACT_PROPAGATION_SPEC.md` is the eighth
+generated document, and it enumerates *every* edge class — an edge with no rule appears as "does not
+propagate" rather than being silently absent, because an unlisted edge and a non-propagating edge look
+identical in a hand-written table.
+
+The Phase-12 gate — a major architecture-change golden scenario verified — is met by a scenario that
+reaches implementation work, the integration test, its evidence, the deployment, the approval on it,
+the dependent component, the estimate, the budget line derived from it, and the risk the component
+mitigates, each by a path the report shows.

@@ -86,7 +86,7 @@ one of them being correct.
 | Class | Reads as | Legal pairings | Notes |
 |---|---|--:|---|
 | `CONTAINS` | "cannot contain" | 44 | acyclic, at most one |
-| `DEPENDS_ON` | "cannot depend on" | 28 | acyclic |
+| `DEPENDS_ON` | "cannot depend on" | 31 | acyclic |
 | `BLOCKS` | "cannot block" | 37 | acyclic |
 | `IMPLEMENTS` | "cannot implement" | 8 | — |
 | `SATISFIES` | "cannot satisfy" | 5 | — |
@@ -115,7 +115,7 @@ the node twice, silently.
 ## 4. Legality matrix
 
 Deny by default. Of 17408 possible `(edge class, from, to)` combinations,
-**276** are legal — 1.6%.
+**279** are legal — 1.6%.
 
 The two rules gap-spec §8.3 names explicitly:
 
@@ -150,13 +150,13 @@ Anything not listed is refused. 44 of 1024 possible pairings are legal.
 | `WORKSTREAM` | `WORKSTREAM`, `PHASE` |
 | `MILESTONE` | `MILESTONE`, `PHASE`, `EPIC`, `TASK`, `GATE` |
 | `EPIC` | `EPIC`, `TASK`, `REQUIREMENT` |
-| `TASK` | `TASK`, `SUBTASK`, `EPIC` |
-| `SUBTASK` | `SUBTASK`, `TASK` |
+| `TASK` | `TASK`, `SUBTASK`, `EPIC`, `ARCHITECTURE_COMPONENT` |
+| `SUBTASK` | `SUBTASK`, `TASK`, `ARCHITECTURE_COMPONENT` |
 | `CHECKPOINT` | `CHECKPOINT`, `TASK`, `MILESTONE` |
-| `DEPLOYMENT` | `DEPLOYMENT`, `GATE`, `ENVIRONMENT` |
+| `DEPLOYMENT` | `DEPLOYMENT`, `GATE`, `ENVIRONMENT`, `ARCHITECTURE_COMPONENT` |
 | `OPERATIONAL_TASK` | `OPERATIONAL_TASK`, `TASK` |
 
-Anything not listed is refused. 28 of 1024 possible pairings are legal.
+Anything not listed is refused. 31 of 1024 possible pairings are legal.
 
 #### `BLOCKS`
 

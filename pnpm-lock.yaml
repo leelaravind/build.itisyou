@@ -68,6 +68,9 @@ importers:
       '@electric-sql/pglite':
         specifier: 0.5.8
         version: 0.5.8
+      '@govintel/change':
+        specifier: workspace:*
+        version: link:../../packages/change
       '@govintel/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -129,6 +132,18 @@ importers:
       tailwindcss:
         specifier: 4.3.3
         version: 4.3.3
+
+  packages/change:
+    dependencies:
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
 
   packages/db:
     dependencies:

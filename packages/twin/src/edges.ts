@@ -129,11 +129,23 @@ export const EDGE_LEGALITY: Readonly<Record<Exclude<EdgeClass, 'CONTAINS'>, Lega
     WORKSTREAM: ['WORKSTREAM', 'PHASE'],
     MILESTONE: ['MILESTONE', 'PHASE', 'EPIC', 'TASK', 'GATE'],
     EPIC: ['EPIC', 'TASK', 'REQUIREMENT'],
-    TASK: ['TASK', 'SUBTASK', 'EPIC'],
-    SUBTASK: ['SUBTASK', 'TASK'],
+    /*
+     * Work and deployments may depend on an architecture component.
+     *
+     * Added in Phase 12 because two modules needed it independently and neither could have it. The
+     * architecture checker looks for work committed against a component that is still proposed, and
+     * gap-spec §27 requires "architecture component changed → implementation tasks, integration
+     * tests, deployment". Without this edge, work and components are siblings under a requirement
+     * with no relation between them, and a component change reaches nothing that was built on it.
+     *
+     * A test reaches a component through `VERIFIES`, which already permits it — that is what an
+     * integration test is.
+     */
+    TASK: ['TASK', 'SUBTASK', 'EPIC', 'ARCHITECTURE_COMPONENT'],
+    SUBTASK: ['SUBTASK', 'TASK', 'ARCHITECTURE_COMPONENT'],
     REQUIREMENT: ['REQUIREMENT'],
     ARCHITECTURE_COMPONENT: ['ARCHITECTURE_COMPONENT'],
-    DEPLOYMENT: ['DEPLOYMENT', 'GATE', 'ENVIRONMENT'],
+    DEPLOYMENT: ['DEPLOYMENT', 'GATE', 'ENVIRONMENT', 'ARCHITECTURE_COMPONENT'],
     OPERATIONAL_TASK: ['OPERATIONAL_TASK', 'TASK'],
     CHECKPOINT: ['CHECKPOINT', 'TASK', 'MILESTONE'],
   },
