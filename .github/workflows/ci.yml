@@ -214,10 +214,25 @@ jobs:
       # Developer Mode or Administrator — so the build cannot be verified on a developer's machine
       # here (KI-051). It is an environment constraint rather than a defect, and the honest response
       # is to verify it somewhere that can, on every push, rather than to claim it works.
+      #
+      # `APP_ENV` is deliberately NOT set here.
+      #
+      # It was, and it is why this job failed on its first real run: with `APP_ENV=staging`,
+      # `parseEnv()` requires `DATABASE_URL` and `SESSION_SECRET`, and `next build` evaluates route
+      # modules to collect page data — so the build died on `/api/health` with
+      # *"Environment validation failed for: DATABASE_URL, SESSION_SECRET"* on a runner that has
+      # neither and should not need either.
+      #
+      # That is the `NODE_ENV` / `APP_ENV` distinction `packages/shared/src/env.ts` exists to draw,
+      # reintroduced from the other side. `NODE_ENV` answers "is this optimised?" and belongs to the
+      # build; `APP_ENV` answers "which environment is this serving?" and belongs to the deployment.
+      # A build that needs to know which environment will run it is a build that cannot be promoted,
+      # and promoting one artefact through stages is the whole point of the pipeline.
+      #
+      # The deployed Worker gets `APP_ENV` from `[env.*.vars]` in wrangler.toml, at runtime, where it
+      # is true.
       - name: Build the Next.js Worker (OpenNext)
         run: pnpm --filter=@govintel/web cf:build
-        env:
-          APP_ENV: staging
 
       # Compiles the Worker and resolves every binding without contacting an account. Catches a
       # wrangler.toml that references a binding the code does not use, or a handler signature the
