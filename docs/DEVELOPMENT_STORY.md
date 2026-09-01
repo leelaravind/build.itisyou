@@ -2713,3 +2713,104 @@ permissions.
 integration remains `PLANNED`, and Phase 17 added no connector. The plan's instruction for this
 phase — "do not let integration scope delay the deterministic core" — is honoured by having built
 none.
+
+---
+
+## Entry 022 — Phase 18: making forgetting fail
+
+A hardening phase is supposed to be about depth — more tests, more edge cases, more load. The most
+useful thing it did here was different: it found a protection that worked entirely because eight
+people had remembered to write it.
+
+### Eight tests written by somebody who remembered
+
+Every project surface had a hand-written test asserting a second guest gets a 404. Eight surfaces,
+eight tests, all passing.
+
+Which means the *ninth* page ships without one and nothing fails. The isolation existed because of
+diligence, and diligence is precisely what a hardening phase should stop relying on.
+
+So the new suite discovers routes from the filesystem — reading `app/plan/[projectId]/` the same way
+Next.js derives its routing — and asserts the isolation property across every one it finds. Adding a
+page puts it in the suite automatically.
+
+Verified by planting one: a page with no ownership check, added to that directory, fails three tests
+by name and reports `/plan/{id}/zzprobe Expected: 404 Received: 200`.
+
+There is also a test asserting the discovery found something, because a discovery that returned
+nothing would make every assertion below it pass vacuously — and an empty loop reports success. That
+is the same shape as the vacuous `if (partialView)` tests from Phase 15, caught this time before it
+could happen rather than after.
+
+### The instruction §52 gives, checked over the whole input space
+
+§52 says: *do not show stale mutation success.*
+
+The tempting implementation is the optimistic UI update — the user types, the screen shows it, the
+request fails behind it. It looks like resilience. It is the worst available outcome, because the
+person believes their change is saved, acts on that belief, and finds out at the moment they are
+relying on it hardest.
+
+Rather than test the cases I thought of, `checkDegradedModel` enumerates every combination of mode,
+attempted, timed-out and idempotent, and asserts that none of them produces `ACCEPTED` when the change
+could not have been applied. That is a stronger claim than a handful of examples, and it costs
+sixteen iterations.
+
+The state that makes this honest is `UNKNOWN`, and most systems do not have it. A request that timed
+out *after* being sent may or may not have been applied. Reporting it as failed is a lie in one
+direction; reporting it as succeeded is a lie in the other; and the user's correct next action differs
+between them. With an idempotency key, retrying is safe and the message says so — which turns an
+unanswerable question into an instruction.
+
+### Two failures that are indistinguishable without a distinction
+
+Three modules in this phase turned on the same idea, arrived at separately.
+
+**Job failure**: `FAILED_RETRYABLE` versus `FAILED_TERMINAL`. With only "failed", either everything
+retries — so a job that will never succeed occupies a worker and alerts forever — or nothing does, and
+a network blip permanently loses a side effect nobody finds out about.
+
+The classification is an allowlist of retryable codes rather than a denylist, which means an
+unrecognised error is terminal. That direction matters: defaulting to retryable means every
+unrecognised error retries five times before anybody looks at it, and unrecognised errors are exactly
+the ones most likely to be a genuine bug.
+
+**Degraded mode**: a section that is missing versus one that is empty. A page rendering happily while
+silently omitting a section leaves the reader unable to tell "nothing here" from "we could not look" —
+a distinction this platform makes everywhere else, and an outage must not be the one place it stops.
+
+**Outbox**: a change committed versus its consequences guaranteed. Enqueueing after the commit
+reintroduces a race where the change succeeds, the entry does not, and *nothing fails* — so nobody
+learns that a committed change had no consequences. Writing the entry in the same transaction makes
+that impossible by construction, at the cost of at-least-once delivery, which is why every entry
+carries an idempotency key rather than trusting the worker to be careful.
+
+### An off-by-one worth naming
+
+`recordFailure` increments the attempt count *before* classifying. Reversed, every job gets one more
+attempt than the limit says — the kind of error nobody notices until they are counting retries during
+an incident, at which point the numbers not adding up is one more thing to work out under pressure.
+
+### A document that is deliberately not generated
+
+Ten documents in `docs/` are generated from code and checked in CI. `MIGRATION_POLICY.md` is not, and
+the reason is worth stating in it: the generated ones describe code, and this describes a **procedure
+people follow**. Generating it from a constant would produce something that looks authoritative and is
+enforced by nothing.
+
+What *is* enforced is stated separately and narrowly: the schema fingerprint refusing to start against
+an unrecognised database (KI-026), the drift test comparing the DDL against the Drizzle schema, the
+tenant isolation tests under a `NOSUPERUSER` role (SEC-001), and the rebuild path throwing in a
+deployed environment. The additive-first sequence, the fixture shape and the rollback decision are
+procedural, and the document says a machine cannot check them — because a policy claiming otherwise
+would be the same false assurance this platform refuses everywhere else.
+
+### Where Phase 18 stands
+
+1,987 unit tests and 699 E2E tests — 2,686 in total, against a contractual minimum of 600. Format,
+lint, typecheck, generated-doc, secret-scan, dependency-audit and production build are clean.
+
+The Phase-18 gate is a release candidate, and what makes this one a candidate rather than a hope is
+narrower than the test count: a new page cannot ship without tenant isolation, a mutation cannot report
+success it did not achieve, a committed change cannot lose its consequences, and a schema that has
+drifted from the code cannot be run against.

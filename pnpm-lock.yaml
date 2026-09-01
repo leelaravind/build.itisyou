@@ -299,6 +299,15 @@ importers:
         specifier: 4.5.4
         version: 4.5.4
 
+  packages/resilience:
+    dependencies:
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
   packages/rules:
     dependencies:
       '@govintel/intake':
