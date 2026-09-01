@@ -16,6 +16,7 @@
     "@govintel/finance": "workspace:*",
     "@govintel/intake": "workspace:*",
     "@govintel/interchange": "workspace:*",
+    "@govintel/release": "workspace:*",
     "@govintel/rules": "workspace:*",
     "@govintel/shared": "workspace:*",
     "@govintel/traceability": "workspace:*",

@@ -1802,3 +1802,162 @@ written out explicitly rather than falling through to silence.
 1,630 unit tests and 546 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
 dependency-audit and production build are clean. `docs/TRACEABILITY_MODEL_SPEC.md` is the eighth
 generated document.
+
+---
+
+## Entry 015 — Phase 11: the gates people cite afterwards
+
+Phase 11 builds the six gates from §15.6 to §15.11 — testing, security, release readiness, production
+verification, operational readiness, handover — and composes them into one release decision.
+
+These are the gates that produce a *record*. Somebody screenshots the release page into a change
+ticket, and if something goes wrong three months later that screenshot is what gets read. Which means
+the cost of an over-confident rendering here is different in kind from anywhere else in the platform:
+elsewhere a wrong figure misleads somebody making a decision, and here it retroactively justifies one.
+
+Almost every design choice below follows from that.
+
+### An unchecked production check is not a passed one
+
+§15.9 asks for ten checks against the running system: availability, TLS, security headers, critical
+journeys, auth, APIs, monitoring, logging, backup/restore, deployment identity.
+
+**This platform cannot observe production.** It can only record what somebody checked and what they
+kept. So the default is `NOT_CHECKED`, and the gate returns **indeterminate** rather than passed.
+
+That is the most consequential default in the codebase. Software reporting its own production as
+healthy because nobody entered a failure is making the single most damaging false claim available to
+it, and there is no honest reading of a check nobody ran.
+
+The counterpart matters as much: a check that ran and *failed* is `FAILED`, not indeterminate. If the
+two read the same, a release record cannot distinguish "we looked and it is broken" from "nobody
+looked", and the second gets quietly treated as the first.
+
+### Exceptions are the mechanism by which a gate stops meaning anything
+
+§15.6 asks for "accepted exceptions documented". That sounds like a formality and it is the line the
+whole gate lives or dies on. One exception is a judgement call. Fifteen undated, unowned exceptions
+is a gate that passes every time and tells you nothing — and it gets there one reasonable decision at
+a time, with nobody ever deciding to make the gate meaningless.
+
+So an exception carries a reason, an owner, an expiry and a subject, and each of those exists because
+of a specific way exceptions go bad. An expired one is *reported* rather than silently dropped:
+dropping it would re-block the gate with no explanation, and whoever accepted it could not tell
+whether their decision had lapsed or been reversed.
+
+Two properties fell out of this that are worth stating.
+
+**An excepted finding is still reported, marked.** If excusing a problem and fixing it produced
+identical output, nobody at review could tell them apart. And a gate resting on four live exceptions
+passes *differently* from one resting on none — the result says which.
+
+**Exceptions have to apply consistently, or the mechanism is decorative.** This was a real bug. A
+live exception unblocked the failing-test finding, and the coverage check then reported the identical
+failure under a different name and blocked anyway. So accepting a failure could never actually clear
+the gate. Fixed by having coverage respect the same exceptions — while still reporting the
+requirement as an observation, because a requirement whose only verification is an excepted failing
+test is not verified.
+
+### A gate that must fail in order to be reached is not a gate
+
+The other real bug, and a more interesting one.
+
+`checkDeployment` decided whether to evaluate the ten production checks from `target ===
+'PRODUCTION'`. That conflates two questions that look like one: *is this release destined for
+production*, and *has production been verified*. The Release Readiness Gate — which asks whether the
+plans exist, before anything has shipped — therefore demanded evidence from a deployment it had not
+yet authorised. It could never pass, so nothing after it could ever be evaluated.
+
+The fix is an explicit `verifyProduction` flag. The lesson is that the two questions deserved
+separate names from the start; deriving one from the other read as economy and was a category error.
+
+### Three gate outcomes, and the ordering is enforced
+
+A gate whose prerequisite has not passed is `INDETERMINATE`, not `FAILED`. Saying it failed would
+blame it for a problem belonging to an earlier gate — sending somebody to fix production verification
+when the actual issue is that nobody approved the release.
+
+Testing and security are deliberately independent of each other and both come first. Nothing about
+the security position depends on the test position or the reverse, and making one wait on the other
+would hide real problems behind unrelated ones.
+
+### The threat model lives in code
+
+§34 says "Create: `docs/THREAT_MODEL.md`" and names nineteen threats. Writing that as prose would have
+satisfied the letter of it, and the document would have started decaying the same day — because prose
+does not fail a build.
+
+So the nineteen threats are a data structure. Each carries its mitigations, the tests that
+demonstrate them, and its residual risk. A threat with **no recorded verification** appears in the
+release report as a gap rather than being assumed handled, and the document is generated from the
+same data the security gate reads.
+
+Six of the nineteen currently have no verification, and most of those are mitigated by a feature not
+existing yet — no webhooks, no queue, no uploads, no outbound fetches. That is a real mitigation and
+a fragile one: adding the feature reintroduces the threat in full, and now the model says so rather
+than the knowledge living in somebody's memory.
+
+Every threat also states a residual risk, and those are the sentences worth arguing with. Audit logs
+are append-only against the application role and a database superuser can still alter anything;
+dependency audits only know about published advisories; redaction is a denylist over known shapes. A
+threat model claiming complete coverage would be the least believable kind.
+
+### What the E2E caught that the unit tests could not
+
+I wrote a test asserting the release page argues each blocker rather than naming it. It failed, and
+it was right to: `GateOutcome.blockers` was a list of strings. The reasoning existed in every
+underlying module — every finding carries a `why` — and was being discarded at the point the gates
+composed them.
+
+So the release page would have been the one surface in the entire platform stating a verdict with no
+argument behind it, on the page most likely to be pasted into an approval ticket. `blockers` and
+`observations` now carry `{ summary, why }` and the page renders both.
+
+The unit suite could not have caught this. It asserted the blockers were present and correct, which
+they were. What was missing was only visible by looking at the rendered page — the same lesson as
+KI-034 in Phase 9 and KI-035 in Phase 10, arriving for the third time from a different direction.
+
+Two smaller test-side corrections, both of premise rather than of code. One asserted the rollback
+plan's wording appears on a fresh project's page; it does not, because a fresh project stops at the
+testing gate and release readiness is never reached — the property worth guarding was that *every*
+blocker carries a reason, not which sentence appears. The other was a strict-mode locator ambiguity
+between a gate row and the blocker row inside it: the fourth time in this project, and the fourth
+time the feature worked and the selector needed tightening.
+
+### Some smaller positions
+
+**Test categories name what they cannot show.** A green unit suite demonstrates that functions behave
+as their authors expected, which is a much narrower claim than "it works". `ACCESSIBILITY` says
+plainly that a clean automated scan is not accessibility compliance — roughly a third of WCAG cannot
+be checked automatically, and reporting a passing scan as conformance is the most common accessibility
+lie.
+
+**Coverage is per requirement, never a percentage.** Line coverage is a proxy for a proxy: a suite
+can execute every line and assert nothing, and once it is a target it gets optimised. Named
+requirements can be acted on.
+
+**An unclassified test defaults to MAJOR, not MINOR.** Defaulting down would make forgetting to
+classify the safest option.
+
+**Mitigated is not resolved.** The symptom has stopped and the cause has not, which means the
+mitigation is now load-bearing without anybody having decided that. And `REVIEWED` sits beyond
+`RESOLVED`, because fixing an outage and understanding it are different work and the second is the
+one that gets skipped.
+
+**Technical debt is recorded, not resolved.** A handover gate demanding zero debt would be failed by
+every real project, waived every time, and would stop being a gate. What it demands is disclosure —
+undisclosed debt is what makes a handover a betrayal rather than a transfer. An *empty* register on a
+project that delivered work is itself reported: zero recorded debt does not mean there is none, it
+means nobody wrote them down.
+
+**Ownership is six separate areas.** A single owner field produces one name that is wrong for four of
+them. Data protection in particular is a legal obligation with a clock on it, and it is the one most
+often left unassigned.
+
+### Where Phase 11 stands
+
+1,697 unit tests and 573 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/THREAT_MODEL.md` is the ninth generated
+document. The Phase-11 gate — the release-readiness flow works end to end — is met by a test that
+walks a complete project through all six gates to `releasable`, which also stops every negative test
+in that file from passing against a flow that never passes anything.

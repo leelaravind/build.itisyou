@@ -1,0 +1,22 @@
+{
+  "name": "@govintel/release",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./testing": "./src/testing.ts",
+    "./security": "./src/security.ts",
+    "./deployment": "./src/deployment.ts",
+    "./operations": "./src/operations.ts",
+    "./readiness": "./src/readiness.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "@govintel/traceability": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

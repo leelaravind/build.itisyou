@@ -83,6 +83,9 @@ importers:
       '@govintel/interchange':
         specifier: workspace:*
         version: link:../../packages/interchange
+      '@govintel/release':
+        specifier: workspace:*
+        version: link:../../packages/release
       '@govintel/rules':
         specifier: workspace:*
         version: link:../../packages/rules
@@ -193,6 +196,21 @@ importers:
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/release:
+    dependencies:
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/traceability':
+        specifier: workspace:*
+        version: link:../traceability
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
       zod:
         specifier: 4.5.4
         version: 4.5.4
