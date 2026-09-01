@@ -75,7 +75,26 @@ export default defineConfig({
          * and CI's own build step is cheap to repeat next to a phantom debugging session.
          */
         command: 'pnpm --filter=@govintel/web build && pnpm --filter=@govintel/web start',
-        url: 'http://localhost:3000',
+        /*
+         * Readiness is `/api/health`, not `/`.
+         *
+         * `/` renders without touching the database, so the port accepting connections says nothing
+         * about whether the database is usable. On a fresh checkout the first request that *does*
+         * touch it pays for creating the PGlite instance and building the schema from the DDL —
+         * seconds, not milliseconds (KI-017) — and whichever test happens to run first absorbs that
+         * cost against a 5s `toHaveURL`.
+         *
+         * That is what failed in CI: two `ai-import` tests, on chromium only, asserting they had
+         * navigated to `/intake/{id}` and finding themselves still on `/start`. It looked like
+         * broken project creation and was a cold start. Locally it never appeared, because a
+         * `.pglite` directory from an earlier run was already warm.
+         *
+         * `/api/health` executes `select 1`, so waiting for it to answer means waiting for the
+         * database to exist. Using the health endpoint as the readiness probe is what health
+         * endpoints are for, and it removes the race for every spec at once rather than padding one
+         * timeout at a time.
+         */
+        url: 'http://localhost:3000/api/health',
         /*
          * Never reuse an existing server, not even locally.
          *

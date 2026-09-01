@@ -49,10 +49,23 @@ async function create(idea: string): Promise<string> {
   try {
     const session = await ensureGuestSession(GUEST_TTL_HOURS);
 
+    /*
+     * The project carries the guest session's own organisation as its tenant.
+     *
+     * It used to carry only `guestSessionId`, leaving `organization_id` NULL — which put the row
+     * outside every row-level security policy, since they all compare against
+     * `app.current_organization_id` and that is never equal to NULL. Guest projects were therefore
+     * unprotected by RLS entirely, and this insert failed outright the moment the application
+     * stopped connecting as a role that could bypass it.
+     *
+     * `guestSessionId` is still set, and still means "unclaimed". The two columns answer different
+     * questions now: which tenant owns this, and is that tenant a guest's.
+     */
     const [project] = await withDatabase((db) =>
       db
         .insert(projects)
         .values({
+          organizationId: session.organizationId,
           guestSessionId: session.id,
           name: deriveName(idea),
           summary: idea.slice(0, 2000),

@@ -2,7 +2,10 @@ import 'server-only';
 
 import { cookies } from 'next/headers';
 import { createGuestSession, findActiveGuestSession } from '@govintel/db/guest';
-import { withDatabase } from './database.ts';
+import { withUnscoped } from './database.ts';
+import { GUEST_COOKIE, guestCookieOptions } from './guest-cookie.ts';
+
+export { GUEST_COOKIE };
 
 /**
  * Guest session cookie handling.
@@ -14,27 +17,6 @@ import { withDatabase } from './database.ts';
  * projects, whether it has been converted — lives server-side, because a cookie is client-controlled
  * and any state kept there is state an attacker can edit.
  */
-
-export const GUEST_COOKIE = 'govintel_guest';
-
-/**
- * Cookie attributes.
- *
- * `httpOnly` keeps the id out of reach of any script, which matters because the document editor is a
- * stored-XSS surface (gap-spec §34): if XSS ever lands, it must not be able to read session ids.
- * `sameSite: 'lax'` blocks cross-site POSTs while still allowing a normal top-level navigation back
- * into the app. `secure` is conditional so local HTTP development works; deployed environments are
- * HTTPS-only.
- */
-function cookieOptions(maxAgeSeconds: number) {
-  return {
-    httpOnly: true,
-    sameSite: 'lax' as const,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: maxAgeSeconds,
-  };
-}
 
 /** The active guest session id from the cookie, or undefined. Does not create one. */
 export async function readGuestSessionId(): Promise<string | undefined> {
@@ -53,7 +35,12 @@ export async function getActiveGuestSession() {
   const sessionId = await readGuestSessionId();
   if (sessionId === undefined) return undefined;
 
-  return withDatabase((db) => findActiveGuestSession(db, sessionId));
+  /*
+   * Unscoped on purpose. This is what *resolves* the caller's tenant, so it cannot run inside one —
+   * and it does not need to: `guest_sessions` carries no RLS policy, because a session is not
+   * tenant-owned data. It is the thing that says which tenant you are.
+   */
+  return withUnscoped((db) => findActiveGuestSession(db, sessionId));
 }
 
 /**
@@ -67,10 +54,11 @@ export async function ensureGuestSession(ttlHours: number) {
   const existing = await getActiveGuestSession();
   if (existing !== undefined) return existing;
 
-  const session = await withDatabase((db) => createGuestSession(db, { ttlHours }));
+  // Also unscoped, and for the same reason: this creates the organisation the scope will point at.
+  const session = await withUnscoped((db) => createGuestSession(db, { ttlHours }));
 
   const store = await cookies();
-  store.set(GUEST_COOKIE, session.id, cookieOptions(ttlHours * 60 * 60));
+  store.set(GUEST_COOKIE, session.id, guestCookieOptions(ttlHours * 60 * 60));
 
   return session;
 }
@@ -78,5 +66,5 @@ export async function ensureGuestSession(ttlHours: number) {
 /** Clear the guest cookie — after conversion to an account, or on explicit abandonment. */
 export async function clearGuestSession(): Promise<void> {
   const store = await cookies();
-  store.set(GUEST_COOKIE, '', { ...cookieOptions(0), maxAge: 0 });
+  store.set(GUEST_COOKIE, '', { ...guestCookieOptions(0), maxAge: 0 });
 }

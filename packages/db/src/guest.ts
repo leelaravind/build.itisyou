@@ -15,10 +15,17 @@
  * second, and they click again. Losing that race means two projects, or worse, a half-converted one.
  */
 
+import { randomUUID } from 'node:crypto';
 import { and, eq, inArray, isNull, lt } from 'drizzle-orm';
 import { AppError } from '@govintel/shared/errors';
 import type { Database } from './client.ts';
-import { guestSessions, projects, type GuestSession, type Project } from './schema.ts';
+import {
+  guestSessions,
+  organizations,
+  projects,
+  type GuestSession,
+  type Project,
+} from './schema.ts';
 
 /** Default guest project lifetime. Overridden by `GUEST_PROJECT_TTL_HOURS` (gap-spec §5.3). */
 export const DEFAULT_GUEST_TTL_HOURS = 72;
@@ -37,9 +44,33 @@ export async function createGuestSession(
   const now = options.now ?? new Date();
   const expiresAt = new Date(now.getTime() + ttlHours * 60 * 60 * 1000);
 
+  /*
+   * The session's own organisation, created first because the session references it.
+   *
+   * A guest is a tenant of one. Without this the guest's rows carry no `organization_id`, and row-
+   * level security — which keys on exactly that — covers none of them. See `projects.organizationId`
+   * in the schema for what that cost.
+   *
+   * The name and slug are deliberately unmistakable. Anything that reads like a real organisation
+   * name invites somebody to treat one of these as a customer record; `guest-<uuid>` cannot be
+   * mistaken for one, and the slug is unique without needing a lookup.
+   */
+  const [organization] = await db
+    .insert(organizations)
+    .values({ name: 'Guest session', slug: `guest-${randomUUID()}`, createdAt: now })
+    .returning({ id: organizations.id });
+
+  if (organization === undefined) {
+    throw new AppError({
+      code: 'GUEST_SESSION_CREATE_FAILED',
+      category: 'INTERNAL',
+      safeMessage: 'Could not start a session. Please try again.',
+    });
+  }
+
   const [session] = await db
     .insert(guestSessions)
-    .values({ createdAt: now, lastSeenAt: now, expiresAt })
+    .values({ organizationId: organization.id, createdAt: now, lastSeenAt: now, expiresAt })
     .returning();
 
   if (session === undefined) {

@@ -178,20 +178,31 @@ export const projects = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     /**
-     * The tenant key.
+     * The tenant key. Always set — including for guest projects.
      *
-     * Nullable **only** on this table, and only because a guest project genuinely has no tenant
-     * until it is saved. The `projects_single_owner` check constraint below enforces that exactly
-     * one of `organization_id` and `guest_session_id` is set, so "no owner at all" is not
-     * representable. Every other tenant-owned table keeps `organization_id` NOT NULL.
+     * This was nullable, on the reasoning that a guest project "genuinely has no tenant until it is
+     * saved", and that a NULL made the row *invisible to the RLS policy*, which was described as
+     * correct behaviour.
      *
-     * A null here also means the row is invisible to the RLS policy — `organization_id::text = …`
-     * is never true for NULL — which is the correct behaviour: a guest project must not be reachable
-     * through any organisation's tenant scope.
+     * It was not correct. Invisible to a policy is not protected by it. `organization_id::text = …`
+     * is never true for NULL, so a guest project matched no policy in either direction: unreadable
+     * and unwritable under a role that cannot bypass RLS, and — while the application connected as
+     * the owner, which can — guarded by nothing except the application remembering to filter on
+     * `guest_session_id`. Every child row inherited the same NULL, so twin nodes and edges were in
+     * the same position. On staging that was 3,870 of 3,872 projects and all 108,480 twin rows.
+     *
+     * It surfaced the moment the application stopped connecting as a role that could bypass RLS:
+     * guest project creation began failing with *"new row violates row-level security policy"*. The
+     * guest journey had been working only because the control was off.
+     *
+     * A guest session now owns an organisation of its own (`guest_sessions.organization_id`), so the
+     * tenant key is real from the first request and every existing policy covers guest data with no
+     * second isolation axis and no new columns. `guestSessionId` below still says whether the
+     * project is claimed.
      */
-    organizationId: uuid('organization_id').references(() => organizations.id, {
-      onDelete: 'cascade',
-    }),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     summary: text('summary'),
     projectType: projectTypeEnum('project_type').notNull().default('UNKNOWN'),
@@ -224,16 +235,22 @@ export const projects = pgTable(
     check('projects_version_positive', sql`${table.version} >= 1`),
     check('projects_currency_iso', sql`char_length(${table.baseCurrency}) = 3`),
     /*
-     * Exactly one owner, always.
+     * A project always has an organisation; the guest reference says whether it is claimed.
      *
-     * Without this, three broken states are representable: a project with no owner (unreachable and
-     * unauditable), one with both (ambiguous — two different access paths to the same row), and a
-     * conversion that half-completed. The database refuses all three rather than trusting the
-     * conversion code to be correct.
+     * This replaces `projects_single_owner`, which required *exactly one* of the two and so forced
+     * `organization_id` to be NULL for every guest project. The constraint was enforcing the thing
+     * that broke tenant isolation: it guaranteed guest rows fell outside every RLS policy.
+     *
+     * The states it was protecting against are still unrepresentable. "No owner at all" cannot
+     * happen because `organization_id` is now NOT NULL. "Both set" is no longer ambiguous — it is
+     * the normal state of an unclaimed project, and the two columns answer different questions:
+     * which tenant owns this row, and is that tenant a guest's. A half-completed conversion is
+     * caught by the same NOT NULL, since claiming repoints `organization_id` and clears
+     * `guest_session_id` in one statement.
      */
     check(
-      'projects_single_owner',
-      sql`(${table.organizationId} IS NULL) <> (${table.guestSessionId} IS NULL)`,
+      'projects_guest_session_belongs_to_its_organization',
+      sql`${table.guestSessionId} IS NULL OR ${table.organizationId} IS NOT NULL`,
     ),
   ],
 );
@@ -410,6 +427,25 @@ export const guestSessions = pgTable(
   'guest_sessions',
   {
     id: uuid('id').primaryKey().defaultRandom(),
+    /**
+     * The organisation this guest session owns, created with it.
+     *
+     * A guest is a tenant of one. That sounds like ceremony and is the only reason guest data is
+     * protected at all: row-level security keys on `organization_id`, so before this existed every
+     * guest row carried NULL there and matched no policy in either direction — see
+     * `projects.organizationId` for the full account.
+     *
+     * Session-scoped rather than project-scoped because a guest may start more than one project
+     * (`findGuestProjects` queries by session), and those must share a tenant or they could not see
+     * each other.
+     *
+     * `ON DELETE CASCADE` on both sides is what makes expiry work: removing an expired session
+     * removes its organisation, and removing the organisation removes every row scoped to it. The
+     * guest TTL therefore deletes the data rather than merely hiding it.
+     */
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
     /** Guest projects expire automatically (gap-spec §5.3). */

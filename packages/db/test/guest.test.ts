@@ -123,17 +123,22 @@ describe('loading a guest session', () => {
 });
 
 describe('conversion to an account', () => {
-  async function seedGuestProject(sessionId: string, name = 'My idea'): Promise<string> {
+  async function seedGuestProject(
+    session: { id: string; organizationId: string },
+    name = 'My idea',
+  ): Promise<string> {
+    // A guest project carries its session's organisation as its tenant. Without it the row falls
+    // outside every RLS policy, which is what made guest data unprotected before.
     const [project] = await database.db
       .insert(projects)
-      .values({ name, guestSessionId: sessionId })
+      .values({ name, organizationId: session.organizationId, guestSessionId: session.id })
       .returning();
     return project!.id;
   }
 
   it('claims the guest project for the organisation', async () => {
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const result = await convertGuestSession(database.db, {
       guestSessionId: session.id,
@@ -148,7 +153,7 @@ describe('conversion to an account', () => {
   it('preserves the project id so existing links keep working', async () => {
     // Gap-spec §5.4 requires the project id or a durable mapping to survive conversion.
     const session = await createGuestSession(database.db);
-    const projectId = await seedGuestProject(session.id);
+    const projectId = await seedGuestProject(session);
 
     const result = await convertGuestSession(database.db, {
       guestSessionId: session.id,
@@ -161,7 +166,7 @@ describe('conversion to an account', () => {
 
   it('clears the guest session link so the project is no longer guest-owned', async () => {
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const result = await convertGuestSession(database.db, {
       guestSessionId: session.id,
@@ -174,7 +179,7 @@ describe('conversion to an account', () => {
 
   it('records who converted the session', async () => {
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const result = await convertGuestSession(database.db, {
       guestSessionId: session.id,
@@ -188,7 +193,7 @@ describe('conversion to an account', () => {
 
   it('preserves the project version across conversion', async () => {
     const session = await createGuestSession(database.db);
-    const projectId = await seedGuestProject(session.id);
+    const projectId = await seedGuestProject(session);
     await database.db.update(projects).set({ version: 4 }).where(eq(projects.id, projectId));
 
     const result = await convertGuestSession(database.db, {
@@ -202,7 +207,7 @@ describe('conversion to an account', () => {
 
   it('preserves the creation timestamp', async () => {
     const session = await createGuestSession(database.db);
-    const projectId = await seedGuestProject(session.id);
+    const projectId = await seedGuestProject(session);
 
     const [before] = await database.db.select().from(projects).where(eq(projects.id, projectId));
     const result = await convertGuestSession(database.db, {
@@ -216,8 +221,8 @@ describe('conversion to an account', () => {
 
   it('converts every project the session owns', async () => {
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id, 'first');
-    await seedGuestProject(session.id, 'second');
+    await seedGuestProject(session, 'first');
+    await seedGuestProject(session, 'second');
 
     const result = await convertGuestSession(database.db, {
       guestSessionId: session.id,
@@ -241,7 +246,7 @@ describe('conversion to an account', () => {
   it('refuses an expired session', async () => {
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     await expect(
       convertGuestSession(database.db, {
@@ -255,10 +260,17 @@ describe('conversion to an account', () => {
 });
 
 describe('conversion is idempotent', () => {
-  async function seedGuestProject(sessionId: string): Promise<string> {
+  async function seedGuestProject(session: {
+    id: string;
+    organizationId: string;
+  }): Promise<string> {
     const [project] = await database.db
       .insert(projects)
-      .values({ name: 'My idea', guestSessionId: sessionId })
+      .values({
+        name: 'My idea',
+        organizationId: session.organizationId,
+        guestSessionId: session.id,
+      })
       .returning();
     return project!.id;
   }
@@ -266,7 +278,7 @@ describe('conversion is idempotent', () => {
   it('does not create a second project when the request is replayed', async () => {
     // Gap-spec §5.4: "No duplicate project must be created from repeated save requests."
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const input = { guestSessionId: session.id, userId: USER, organizationId: ORG };
     await convertGuestSession(database.db, input);
@@ -279,7 +291,7 @@ describe('conversion is idempotent', () => {
   it('reports the replay as not-converted rather than throwing', async () => {
     // The user double-clicked. They did nothing wrong, so this is a no-op, not an error.
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const input = { guestSessionId: session.id, userId: USER, organizationId: ORG };
     const first = await convertGuestSession(database.db, input);
@@ -291,7 +303,7 @@ describe('conversion is idempotent', () => {
 
   it('returns the same project on the replayed request', async () => {
     const session = await createGuestSession(database.db);
-    const projectId = await seedGuestProject(session.id);
+    const projectId = await seedGuestProject(session);
 
     const input = { guestSessionId: session.id, userId: USER, organizationId: ORG };
     await convertGuestSession(database.db, input);
@@ -302,7 +314,7 @@ describe('conversion is idempotent', () => {
 
   it('does not overwrite the original conversion timestamp on replay', async () => {
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const input = { guestSessionId: session.id, userId: USER, organizationId: ORG };
     const first = await convertGuestSession(database.db, {
@@ -321,7 +333,7 @@ describe('conversion is idempotent', () => {
     // The case gap-spec §5.4 names explicitly. Both requests read the session at the same moment;
     // `SELECT ... FOR UPDATE` serialises them so the second waits rather than racing.
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     const input = { guestSessionId: session.id, userId: USER, organizationId: ORG };
     const results = await Promise.all([
@@ -340,7 +352,7 @@ describe('conversion is idempotent', () => {
     // A project moved to an organisation but with its session link intact would be worse than a
     // failed conversion: the user would see a project that had quietly lost its guest state.
     const session = await createGuestSession(database.db);
-    await seedGuestProject(session.id);
+    await seedGuestProject(session);
 
     await expect(
       database.db.transaction(async (tx) => {
@@ -361,7 +373,13 @@ describe('expiry sweep', () => {
   it('deletes expired unconverted sessions and their projects', async () => {
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db.insert(projects).values({ name: 'abandoned', guestSessionId: session.id });
+    await database.db
+      .insert(projects)
+      .values({
+        name: 'abandoned',
+        organizationId: session.organizationId,
+        guestSessionId: session.id,
+      });
 
     const result = await purgeExpiredGuestSessions(
       database.db,
@@ -389,7 +407,13 @@ describe('expiry sweep', () => {
     // would sever the provenance of every project created through the guest flow.
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db.insert(projects).values({ name: 'saved', guestSessionId: session.id });
+    await database.db
+      .insert(projects)
+      .values({
+        name: 'saved',
+        organizationId: session.organizationId,
+        guestSessionId: session.id,
+      });
 
     await convertGuestSession(database.db, {
       guestSessionId: session.id,

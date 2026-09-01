@@ -18,8 +18,11 @@ import {
 import type { ConnectionRole } from '@govintel/db/client';
 import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
+import { cookies } from 'next/headers';
+import { findActiveGuestSession } from '@govintel/db/guest';
 import { IS_DEPLOYED } from './config.ts';
 import { resolveConnectionString } from './connection-string.ts';
+import { GUEST_COOKIE } from './guest-cookie.ts';
 
 /**
  * Server-side database handle.
@@ -341,12 +344,71 @@ async function usingConnection<T>(fn: (db: DatabaseHandle) => Promise<T>): Promi
   }
 }
 
-/** The database handle. Serialised on the development path only. Use this from request handlers. */
-export async function withDatabase<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
+/**
+ * A database handle with **no tenant scope**.
+ *
+ * For the few things that are not tenant-owned data: looking up a guest session, creating one, and
+ * anything that touches `users`, `organizations` or `guest_sessions` — none of which carry an RLS
+ * policy, because none of them belong to a tenant. A session is not tenant data; it is the thing
+ * that says which tenant you are.
+ *
+ * Everything else should use `withDatabase`, which scopes automatically. Reaching for this to make a
+ * query "work" is how tenant isolation gets lost one call site at a time — and under the restricted
+ * role it would not work anyway: an unscoped read of an RLS-protected table returns nothing.
+ */
+export async function withUnscoped<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
   if (IS_DEPLOYED) return usingConnection(fn);
 
   const db = await getDatabase();
   return serialised(() => fn(db));
+}
+
+/**
+ * The caller's tenant, resolved from the request.
+ *
+ * Guests are tenants: each session owns an organisation (see `guest_sessions.organizationId`), so
+ * "guest" and "signed in" are the same shape here and the request layer does not branch on it.
+ *
+ * Returns `undefined` for a caller with no session at all — an anonymous visitor on the landing
+ * page. That is not an error, and the correct consequence is that RLS-protected tables return
+ * nothing, because a caller with no tenant owns no rows.
+ */
+async function currentOrganizationId(): Promise<string | undefined> {
+  const store = await cookies();
+  const sessionId = store.get(GUEST_COOKIE)?.value;
+
+  if (sessionId === undefined || sessionId === '') return undefined;
+
+  const session = await withUnscoped((db) => findActiveGuestSession(db, sessionId));
+
+  return session?.organizationId;
+}
+
+/**
+ * The database handle, scoped to whoever is asking. **Use this from request handlers.**
+ *
+ * ## Why this scopes rather than leaving it to call sites
+ *
+ * It used to be the unscoped handle, and roughly twenty call sites used it for tenant-owned reads
+ * and writes. That worked only because the application connected as a role that could bypass RLS.
+ * The moment it stopped — which is the whole point of `assertRestrictedRole` — guest project
+ * creation began failing with *"new row violates row-level security policy"*, and every guest read
+ * would have returned nothing.
+ *
+ * The alternative was to change those twenty call sites to pass a tenant they all had to look up
+ * first. That is twenty chances to forget, forever, on every new call site — and forgetting is
+ * silent: the query returns no rows rather than failing. Resolving the scope once, here, makes the
+ * safe thing the default and the unscoped thing something you have to ask for by name.
+ *
+ * `packages/db/src/tenancy.ts` still re-checks every fetched row against the caller's scope. This
+ * does not replace that; it means the database is enforcing the same rule underneath it.
+ */
+export async function withDatabase<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
+  const organizationId = await currentOrganizationId();
+
+  if (organizationId === undefined) return withUnscoped(fn);
+
+  return withTenant(organizationId, (tx) => fn(tx as unknown as DatabaseHandle));
 }
 
 /**

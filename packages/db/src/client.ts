@@ -198,8 +198,7 @@ export async function applySchema(client: PGlite): Promise<void> {
   await client.exec(SCHEMA_DDL);
 }
 
-export const SCHEMA_DDL = `
-CREATE TYPE organization_role AS ENUM ('OWNER','ADMIN','MEMBER','AUDITOR');
+export const SCHEMA_DDL = `CREATE TYPE organization_role AS ENUM ('OWNER','ADMIN','MEMBER','AUDITOR');
 CREATE TYPE project_role AS ENUM ('PROJECT_OWNER','PROJECT_MANAGER','ENGINEER','REVIEWER','APPROVER','VIEWER');
 CREATE TYPE lifecycle_state AS ENUM (
   'IDEA','DISCOVERY','PLANNING','PLANNED','APPROVED','IN_PROGRESS',
@@ -250,6 +249,17 @@ CREATE INDEX memberships_user_idx ON memberships (user_id);
 
 CREATE TABLE guest_sessions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- Every guest session owns an organisation, and that is what makes guest data protected at all.
+  --
+  -- Row-level security keys on organization_id. A guest project used to carry NULL there, so every
+  -- guest row sat outside every policy: unreadable and unwritable under a role that cannot bypass
+  -- RLS, and — while the application ran as the owner, which can — protected by nothing but the
+  -- application remembering to filter. 3,870 of 3,872 projects on staging were in that state.
+  --
+  -- Giving the session a tenant of its own fixes it without a second isolation axis: child rows
+  -- already inherit project.organization_id, so twin nodes, edges, audit events and everything else
+  -- become covered by the policies that already exist, with no new columns and no new settings.
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   created_at timestamptz NOT NULL DEFAULT now(),
   last_seen_at timestamptz NOT NULL DEFAULT now(),
   expires_at timestamptz NOT NULL,
@@ -261,7 +271,7 @@ CREATE INDEX guest_sessions_expires_idx ON guest_sessions (expires_at);
 
 CREATE TABLE projects (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   name text NOT NULL,
   summary text,
   project_type project_type NOT NULL DEFAULT 'UNKNOWN',
@@ -274,10 +284,23 @@ CREATE TABLE projects (
   updated_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT projects_version_positive CHECK (version >= 1),
   CONSTRAINT projects_currency_iso CHECK (char_length(base_currency) = 3),
-  -- Exactly one owner: an organisation (saved) or a guest session (unsaved), never both, never
-  -- neither. Prevents an unreachable orphan and an ambiguous dual-access row.
-  CONSTRAINT projects_single_owner
-    CHECK ((organization_id IS NULL) <> (guest_session_id IS NULL))
+  -- A project always belongs to an organisation; guest_session_id says whether that organisation
+  -- is a guest's own or a real one.
+  --
+  -- This replaces projects_single_owner, which required exactly one of the two and therefore made
+  -- organization_id NULL for every guest project. That was the whole of the guest isolation hole:
+  -- RLS keys on organization_id, so a NULL there put the row outside every policy. The old
+  -- constraint enforced the thing that broke it.
+  --
+  -- The distinction it was protecting is kept, just moved: a project is unclaimed exactly when
+  -- guest_session_id IS NOT NULL, and claiming it repoints organization_id at the real
+  -- organisation and clears the guest reference. guest_sessions.organization_id is ON DELETE
+  -- CASCADE, so an expired session takes its organisation — and everything scoped to it — with it.
+  CONSTRAINT projects_guest_session_belongs_to_its_organization
+    CHECK (
+      guest_session_id IS NULL
+      OR organization_id IS NOT NULL
+    )
 );
 CREATE INDEX projects_org_idx ON projects (organization_id);
 CREATE INDEX projects_org_lifecycle_idx ON projects (organization_id, lifecycle_state);

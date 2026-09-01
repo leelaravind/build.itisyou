@@ -78,23 +78,63 @@ describe('schema integrity', () => {
     ).rejects.toThrow();
   });
 
-  it('rejects a project owned by both an organisation and a guest session', async () => {
-    // Two owners means two access paths to the same row, and a conversion that half-completed.
+  /*
+   * These two replace a pair that asserted the opposite, and the reversal is the point.
+   *
+   * The old invariant was `projects_single_owner`: exactly one of `organization_id` and
+   * `guest_session_id`, never both. It read as careful and it was the guest isolation hole. RLS
+   * policies compare `organization_id::text` against the tenant setting, and that comparison is
+   * never true for NULL — so requiring guest projects to have a NULL tenant guaranteed every guest
+   * row fell outside every policy, in both directions. On staging that was 3,870 of 3,872 projects
+   * and all 108,480 twin rows, protected by nothing but the application remembering to filter.
+   *
+   * The new invariant is: a project always has a tenant, and `guest_session_id` says whether that
+   * tenant is a guest's own. Both columns set is now the normal state of an unclaimed project.
+   */
+  it('rejects a project with no organisation', async () => {
+    // The state the old constraint *required* for every guest project, now unrepresentable. A row
+    // with no tenant key matches no RLS policy, which means no policy protects it.
     await expect(
       database.db.execute(sql`
-        INSERT INTO projects (organization_id, guest_session_id, name)
-        VALUES (${ORG_A}, gen_random_uuid(), 'ambiguous')
+        INSERT INTO projects (guest_session_id, name)
+        VALUES (gen_random_uuid(), 'tenantless')
       `),
     ).rejects.toThrow();
   });
 
-  it('accepts a guest project with no organisation', async () => {
+  it('accepts an unclaimed guest project carrying both its tenant and its session', async () => {
+    // Both set: the organisation is the guest session's own, and the session reference is what marks
+    // the project unclaimed. The old constraint rejected exactly this.
     await expect(
       database.db.execute(sql`
-        INSERT INTO projects (guest_session_id, name)
-        VALUES (gen_random_uuid(), 'guest project')
+        INSERT INTO projects (organization_id, guest_session_id, name)
+        VALUES (${ORG_A}, gen_random_uuid(), 'unclaimed guest project')
       `),
     ).resolves.toBeDefined();
+  });
+
+  it('keeps a guest project inside its own tenant scope', async () => {
+    /*
+     * The property the whole change exists for, asserted end to end.
+     *
+     * A guest project belongs to organisation A. Read under B's scope it must not appear — which
+     * before this change was impossible to test, because a guest project had no tenant to compare
+     * against and every scoped read returned nothing regardless.
+     */
+    await database.db.execute(sql`
+      INSERT INTO projects (organization_id, guest_session_id, name)
+      VALUES (${ORG_A}, gen_random_uuid(), 'guest project of A')
+    `);
+
+    const asOwner = await database.asTenant(ORG_A, async (tx) =>
+      tx.execute<{ name: string }>(sql`SELECT name FROM projects`),
+    );
+    const asOther = await database.asTenant(ORG_B, async (tx) =>
+      tx.execute<{ name: string }>(sql`SELECT name FROM projects`),
+    );
+
+    expect(asOwner.rows.map((row) => row.name)).toContain('guest project of A');
+    expect(asOther.rows.map((row) => row.name)).not.toContain('guest project of A');
   });
 
   it('refuses an intake answer whose value contradicts its state', async () => {
