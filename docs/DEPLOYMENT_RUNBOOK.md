@@ -198,17 +198,38 @@ incident.
 | Would the database still work with it? | Yes for additive migrations; for anything else the migration's rollback decision applies |
 | How long does it take? | Timed during the drill, not estimated |
 
-### The drill
+### The drill — rehearsed 2026-09-01
 
-Run in staging, not in production, and run before it is needed:
+Run in staging, not in production, and run before it is needed. **This has now been done**, so the
+numbers below are measurements rather than estimates.
 
-1. Deploy version N.
-2. Deploy version N+1.
-3. Roll back to N.
-4. Time it, and check `/api/health` reports N.
+```
+wrangler versions list --env staging
+wrangler versions deploy <VERSION_ID>@100% --env staging --yes
+curl https://<staging-host>/api/health
+```
+
+| Step | Measured |
+|---|---|
+| Roll back one version, until `/api/health` served the older build | **13.1s** |
+| Roll forward again | **13.8s** |
+| Verification that it worked | `commit` went `617076c` → `0fc7d3f` and back |
+| Application after the round trip | `/`, `/start`, `/portfolio` all 200 |
+
+Two things this settled that reasoning could not.
+
+The rollback is **verifiable from outside**, which is the property that matters during an incident.
+`/api/health` reports `commit` from the running process, so "did the rollback take effect" is a
+question with an answer rather than an inference from the absence of new errors.
+
+And 13 seconds is fast enough that rolling back is a *first* response rather than a last one. That
+changes what it is for: a thing you do while diagnosing, not after.
 
 An untimed rollback plan is a hypothesis. Phase 11 reports one as such (`ROLLBACK_NOT_REHEARSED`) and
 does not block on it — blocking would make the field get ticked rather than the rehearsal get done.
+The staging field can now be answered honestly; **production remains unrehearsed**, and a drill in
+staging is not a drill in production, because the thing being tested is partly whether anybody is
+willing to press the button on the real system.
 
 ---
 
