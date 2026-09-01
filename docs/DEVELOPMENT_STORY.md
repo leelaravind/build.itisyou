@@ -3199,3 +3199,98 @@ otherwise and has been corrected.
 
 Nine defects found by deploying: KI-052 through KI-060. Four of them P1. None could have been found
 by any test that runs on a laptop, and the suite was green — 2,010 unit tests — for every one of them.
+
+---
+
+## Entry 026 — Phase 20: the control was off, and the product is smaller than the history says
+
+Two things happened in this phase and the second one matters more.
+
+### Guest data was never protected by row-level security
+
+The owner's instruction was plain: never run the application as a superuser, as a role with
+`BYPASSRLS`, or as the owner of the tables. Reasonable, and it turned out to be the thread that
+unravelled the security model.
+
+Neon makes both mistakes easy. `neondb_owner` is not a superuser and *does* have `rolbypassrls`, so
+connecting as it produces a database where every policy exists, appears in the catalogue, and
+enforces nothing. Creating a "restricted" role through Neon's API does not help — it comes back with
+`BYPASSRLS`, `CREATEDB` and `CREATEROLE` regardless of what you asked for, and `ALTER ROLE` on it is
+refused because the owner has no ADMIN over it. The role has to be created in SQL, by the owner, with
+the attributes denied explicitly and then **read back from `pg_roles`**, because the statement
+succeeding does not prove the outcome.
+
+With that done, staging broke. Guest project creation began failing with *"new row violates
+row-level security policy for table projects"*.
+
+The cause was a constraint that read as careful:
+
+    CONSTRAINT projects_single_owner
+      CHECK ((organization_id IS NULL) <> (guest_session_id IS NULL))
+
+Exactly one owner: an organisation, or a guest session. It meant every guest project carried a NULL
+tenant key — and RLS policies compare `organization_id::text` against the tenant setting, which is
+never true for NULL. Guest rows matched no policy in either direction. Child rows inherit
+`project.organization_id`, so they were in the same state. On staging: **3,870 of 3,872 projects and
+all 108,480 twin rows.**
+
+The schema comment had already reasoned about this and got it backwards:
+
+> A null here also means the row is invisible to the RLS policy … which is the correct behaviour.
+
+Invisible to a policy is not protected by it. That sentence is why this survived to Phase 20 — it
+looked like the question had been considered and closed.
+
+The fix is not a second isolation axis. A guest session now owns an organisation of its own, so the
+tenant key is real from the first request and every existing policy covers guest data with no new
+columns on seven tables and no changes to any domain write site — child rows already inherited the
+project's organisation, they simply start inheriting a valid one. `ON DELETE CASCADE` on both sides
+means guest expiry now deletes the data instead of hiding it.
+
+`withDatabase` resolves the caller's tenant and scopes automatically. The alternative was changing
+twenty call sites to pass a tenant they would each have to look up — twenty chances to forget,
+forever, where forgetting is silent, because an unscoped query returns no rows rather than failing.
+`withUnscoped` is the named exception, for the two tables that are not tenant data.
+
+Verified end to end: the isolation gate passes 6/6 as the restricted role and fails exactly the new
+first check as the owner; the guest journey passes 22/22 against staging with a role that cannot
+bypass anything.
+
+### The product is smaller than the history says
+
+Then a 186-agent analysis mapped both contracts against the implementation — each gap found by one
+agent and adversarially verified by a second, prompted to refute it and defaulting to refuted when
+uncertain.
+
+**118 gaps survived. 104 are required for V1 by the contract. 29 are blockers.**
+
+The individual items matter less than the shape:
+
+- No lifecycle transition exists anywhere in the product. Every project is permanently `IDEA`.
+- Nothing creates an EVIDENCE or APPROVAL node, so 16 blocking gate criteria across eight gates can
+  never pass.
+- No audit event is ever written, though the table, the triggers and the RLS policy all exist.
+- There is no sign-in: no authorization request, no callback, no token validation, no session store,
+  no logout — and, contrary to the runbook, no local mock provider either.
+- Guest expiry never runs. `purgeExpiredGuestSessions` is written, unit-tested, and has no caller.
+- The change engine's request/approve/apply sequence is dead code.
+
+The engine, the rules, the twin, the traceability chain and the change model are real and genuinely
+well tested. What is missing is the product on top of them. 2,018 unit tests pass, and they test
+libraries.
+
+This is written down — `docs/V1_GAP_REGISTER.md`, every gap with its contract reference and
+file-level evidence — rather than worked around, because the phase history had been drifting towards
+a claim the code does not support. Every gate in this project exists to stop exactly that.
+
+### Where that leaves the deployment
+
+The production environment is finished: Cloudflare Worker configured for `build.itisyou.app` with a
+custom domain, Hyperdrive with caching disabled pointing at a verified restricted role, schema
+migrated, tenant isolation verified 6/6 under concurrency on a branch of production, session secret
+stored, CI green on every gate including the isolation check against a real Postgres.
+
+**And production is not deployed**, because it should not be. Deploying a platform whose gates can
+never pass, whose lifecycle never advances and which has no way to sign in would be the precise
+failure the Phase-11 gate was built to prevent. The infrastructure is ready and waiting; what is not
+ready is V1.
