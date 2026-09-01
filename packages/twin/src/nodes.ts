@@ -108,6 +108,16 @@ export const CONTAINMENT: Readonly<Partial<Record<NodeClass, readonly NodeClass[
     'RISK',
     'BLOCKER',
     'GATE',
+    /*
+     * Tests and evidence hang off the project, not off a phase.
+     *
+     * A test written during build runs at verification and again at every release, so attaching it to
+     * one phase would misrepresent when it matters. Their absence here was found by the decomposer:
+     * with nowhere legal to attach a test, every generated test was an orphan — and `MUST_BE_CONTAINED`
+     * does not list TEST, so nothing warned about it.
+     */
+    'TEST',
+    'EVIDENCE',
     'DOCUMENT',
     'ENVIRONMENT',
     'ASSUMPTION',
@@ -119,11 +129,21 @@ export const CONTAINMENT: Readonly<Partial<Record<NodeClass, readonly NodeClass[
     'INCIDENT',
     'OPERATIONAL_TASK',
   ],
-  PHASE: ['MILESTONE', 'EPIC', 'CHECKPOINT', 'GATE'],
-  WORKSTREAM: ['EPIC', 'TASK'],
-  EPIC: ['TASK'],
+  /*
+   * Gap-spec §17 gives the canonical hierarchy as
+   * Project → Phase → Workstream → Milestone → Epic → Task → Subtask → Checkpoint,
+   * and says explicitly that not every project needs every level.
+   *
+   * Levels may therefore be *skipped*, which means each one has to be able to contain anything below
+   * it rather than only the next one down. An earlier version allowed only the immediate successor,
+   * and the §17 worked example — "Solo small project: Project → Phase → Milestone → Task" — was
+   * illegal in it. The decomposer produced exactly that shape and failed its own edge-legality check.
+   */
+  PHASE: ['WORKSTREAM', 'MILESTONE', 'EPIC', 'TASK', 'CHECKPOINT', 'GATE'],
+  WORKSTREAM: ['MILESTONE', 'EPIC', 'TASK', 'CHECKPOINT'],
+  MILESTONE: ['EPIC', 'TASK', 'CHECKPOINT'],
+  EPIC: ['TASK', 'CHECKPOINT'],
   TASK: ['SUBTASK'],
-  MILESTONE: ['CHECKPOINT'],
   REQUIREMENT: ['REQUIREMENT'],
   BUDGET_ITEM: ['BUDGET_ITEM'],
   ARCHITECTURE_COMPONENT: ['ARCHITECTURE_COMPONENT'],

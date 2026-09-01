@@ -1,0 +1,22 @@
+{
+  "name": "@govintel/execution",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./hierarchy": "./src/hierarchy.ts",
+    "./decompose": "./src/decompose.ts",
+    "./scheduling": "./src/scheduling.ts",
+    "./board": "./src/board.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/intake": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "@govintel/rules": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

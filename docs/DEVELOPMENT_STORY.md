@@ -1351,3 +1351,150 @@ suitable is not helping anyone choose, and the choice matters most to the people
 make it. `gatesFor()` returns every gate for every methodology, and `canSkipGate()` returns `false`
 unconditionally — a function rather than a constant, so a future change that wanted an exception would
 have to make it return something else, which is a change someone would notice in review.
+
+---
+
+## Entry 012 — the level that groups one thing
+
+**Phase 8 — work decomposition and execution. 1,466 unit tests, 483 E2E tests, all gate criteria
+green.**
+
+### One sentence, and most of the phase
+
+Gap-spec §17 gives the canonical hierarchy — eight levels, Project down to Checkpoint — and then
+adds: *"Not every project requires every hierarchy depth. Avoid fake hierarchy."*
+
+That second sentence is where nearly all of this phase's difficulty lived. A workstream containing one
+epic containing one task is three rows of ceremony wrapped around a day's work, and it makes the plan
+*harder* to read while looking more thorough. §18.3 says the same about solo delivery: decompose, but
+without "useless assignment bureaucracy".
+
+So the depth is derived from the project. Team size, task count, parallel areas and whether governance
+needs an audit trail decide which optional levels earn a place, and every decision — included or
+omitted — is explained on the page. The rule is stated as a property the tests assert: **a level earns
+its place only if it groups more than one thing.**
+
+### Three defects, all the same defect
+
+The fake-hierarchy check found all three, and each one looked different until it did not.
+
+**The decomposer created what it detected.** It built epics, reported them as fake hierarchy, and left
+them there. Detecting a defect the engine chose to introduce is not a check; it is a disclaimer. The
+depth chosen up front is a *prediction* from the shape of the project, and what the work actually
+needs is only knowable once it has been placed — so containers holding fewer than two things are now
+collapsed and their children re-parented. That is exactly the "fold it into its parent" the finding
+recommends, done rather than suggested.
+
+**Rules emit work for phases a project does not have.** A rule assigns a task to the "operate" phase
+because most project types have one; an internal tool does not. The result was an epic under a
+milestone that was never created — a dangling edge, and an epic grouping a single task. Phase keys are
+now normalised to phases the project actually has, falling back to the *last* phase rather than the
+first: work a rule assigned to operation belongs later, not at discovery.
+
+**Workstreams and epics divide by the same axis.** This one I did not reason out; the check found it.
+The engine has exactly two axes — the phase, and the family of work the emitting rule belongs to — and
+workstreams already use both. An epic beneath one contains that workstream's tasks and nothing else.
+Every workstream had exactly one epic, the collapse pass removed them, and the twelve-person fixture
+came out with *no workstreams at all* despite asking for three parallel areas.
+
+The fix is a deviation from §17's enterprise example, and it is recorded as one (KI-032). An
+organisation with a genuine third axis would justify both levels. Adding them without one would be
+putting rows on every screen to match a diagram.
+
+Milestones turned out to have the same shape of problem: a milestone divides by phase, a workstream by
+phase *and* family, so a milestone above one always contains exactly that workstream. Milestones are
+now in the task chain only when workstreams are absent — which matches **both** of §17's worked
+examples, the solo one having milestones and no workstreams, the enterprise one the reverse.
+
+### A model that made the spec's own example illegal
+
+The Phase-6 containment table allowed each level to contain only the *next* one. §17's solo example is
+`Project → Phase → Milestone → Task`, and under that table a phase could not contain a task — so the
+decomposer produced the shape the spec prescribes and failed the twin's edge-legality check.
+
+"Not every project requires every hierarchy depth" means levels get skipped, which means each level has
+to be able to contain anything below it. Fixed, and recorded as KI-033.
+
+The same investigation found that `TEST` had nowhere legal to attach at all: it appears in no
+containment list, so every generated test was an orphan — and `MUST_BE_CONTAINED` does not include
+`TEST`, so nothing warned. Tests and evidence now hang off the project, which is where they belong: a
+test written during build runs at verification and again at every release, so attaching it to one phase
+would misrepresent when it matters.
+
+### Capacity, and what plans leave out
+
+Gap-spec §19's formula is a list of subtractions:
+
+    Available Capacity = Working Hours − Leave − Non-project allocation − Overhead − Support
+
+Every one of those is something plans routinely omit, and each omission points the same way. So each
+deduction is itemised rather than folded into a single factor. "You have 22 hours" invites disagreement
+with no way to locate it; "37.5, minus 4.5 leave, minus 7.5 overhead, minus 3.75 other projects"
+locates it precisely.
+
+Allocation is applied **last**, to what remains. Applying it first deducts a full person's overhead
+from a half person's time, which produces a negative figure for anyone under about half allocation.
+
+Where a default is used, the result says so: *"assumed at 12% of contracted hours, because none was
+recorded"*. And splitting a person across projects costs more than the arithmetic suggests — that is
+stated as an assumption rather than silently applied, because the size of the effect is disputed and
+applying an unmeasured factor would be inventing precision.
+
+### AI tools are capabilities, not employees
+
+§18.2 is explicit, and the distinction is not pedantic. A capability changes how fast some work goes;
+an employee can be assigned accountability. So `AiCapability` has no role, no assignments, and no way
+to own anything — because §18.2 says directly that an AI tool "does not own approvals" and "cannot be
+responsible for legally required human accountability".
+
+Its effect on effort is a *range*, and it is reported as an assumption rather than added to the hours
+available. Folding an unmeasured multiplier into a capacity figure would turn a disputed effect into
+something that looks like a measurement.
+
+### Today is not the backlog with a heading
+
+The board is a view of state; the Today list is the one that makes a claim. So it is ranked, capped at
+five, and every entry carries the reason it is there — *"other work is waiting on this"*, *"this is
+finished and waiting for someone"*. Blocked work and work whose dependencies are unfinished are
+excluded: a focus list containing things you cannot start teaches people the list is not actionable.
+
+Review is its own board column, deliberately. Folding it into "in progress" hides the most common queue
+in software delivery — work that is finished, waiting for someone, and counted as active. A team can
+then be entirely busy with nothing moving.
+
+And completion counts *tasks*, with the caveat travelling alongside the number rather than sitting in
+small text: tasks are not equal in size, so "60% complete" is the proportion of items, not of the work.
+That difference is where every optimistic status report comes from.
+
+### An E2E test that lied about the hierarchy
+
+The work page reported the hierarchy as "milestone → epic → task". The depth was computed from the
+decomposer's own nodes, and `PROJECT` and `PHASE` come from the Phase-6 generator — so the page
+claimed a plan with no project and no phases.
+
+Computing it over the merged structure fixed the display and had a second effect: the fake-hierarchy
+check now sees phases too, so a phase holding a single milestone is reported. It was not before.
+
+### Result
+
+| Gate | Result |
+|---|---|
+| `format:check` | pass |
+| `lint` | pass |
+| `typecheck` | pass |
+| `test` | 1,466 passed |
+| `test:e2e` | 483 passed, 167 skipped (documented WebKit-over-HTTP scope, KI-024) |
+| `docs:check` | all four generated documents current |
+| `scan:secrets` | clean, 168 files |
+| `audit:deps` | no known vulnerabilities |
+| `build` | pass |
+
+The gate is "solo + 12-person fixtures produce valid execution plans", and *valid* is doing a lot of
+work in that sentence. Broken out, it means: the graph satisfies its own invariants, no level groups a
+single thing, every task traces to a rule or a requirement that required it, and — the one that matters
+most — the two fixtures produce genuinely different shapes. A decomposer that produced the same
+structure for one person and twelve would pass every other assertion and be useless.
+
+Both fixtures are built by running the *real* generator and the *real* rule evaluator. A fixture
+assembled by hand would test the decomposer against a shape I imagined rather than the shape the rest
+of the platform actually produces.

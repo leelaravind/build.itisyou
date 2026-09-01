@@ -18,6 +18,9 @@
     },
     {
       "path": "./packages/rules"
+    },
+    {
+      "path": "./packages/execution"
     }
   ]
 }

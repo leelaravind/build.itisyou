@@ -31,15 +31,15 @@ Two properties follow from that, and both are enforced rather than documented:
 
 | Class | Reads as | May contain | Notes |
 |---|---|---|---|
-| `PROJECT` | project | `OBJECTIVE`, `REQUIREMENT`, `ARCHITECTURE_COMPONENT`, `ARCHITECTURE_DECISION`, `PHASE`, `WORKSTREAM`, `MILESTONE`, `RESOURCE`, `BUDGET_ITEM`, `RISK`, `BLOCKER`, `GATE`, `DOCUMENT`, `ENVIRONMENT`, `ASSUMPTION`, `UNKNOWN`, `CHANGE_REQUEST`, `BASELINE`, `SCENARIO`, `FORECAST`, `INCIDENT`, `OPERATIONAL_TASK` | — |
+| `PROJECT` | project | `OBJECTIVE`, `REQUIREMENT`, `ARCHITECTURE_COMPONENT`, `ARCHITECTURE_DECISION`, `PHASE`, `WORKSTREAM`, `MILESTONE`, `RESOURCE`, `BUDGET_ITEM`, `RISK`, `BLOCKER`, `GATE`, `TEST`, `EVIDENCE`, `DOCUMENT`, `ENVIRONMENT`, `ASSUMPTION`, `UNKNOWN`, `CHANGE_REQUEST`, `BASELINE`, `SCENARIO`, `FORECAST`, `INCIDENT`, `OPERATIONAL_TASK` | — |
 | `OBJECTIVE` | objective | — | — |
 | `REQUIREMENT` | requirement | `REQUIREMENT` | — |
 | `ARCHITECTURE_COMPONENT` | architecture component | `ARCHITECTURE_COMPONENT` | — |
 | `ARCHITECTURE_DECISION` | architecture decision | — | — |
-| `PHASE` | phase | `MILESTONE`, `EPIC`, `CHECKPOINT`, `GATE` | — |
-| `WORKSTREAM` | workstream | `EPIC`, `TASK` | — |
-| `MILESTONE` | milestone | `CHECKPOINT` | — |
-| `EPIC` | epic | `TASK` | — |
+| `PHASE` | phase | `WORKSTREAM`, `MILESTONE`, `EPIC`, `TASK`, `CHECKPOINT`, `GATE` | — |
+| `WORKSTREAM` | workstream | `MILESTONE`, `EPIC`, `TASK`, `CHECKPOINT` | — |
+| `MILESTONE` | milestone | `EPIC`, `TASK`, `CHECKPOINT` | — |
+| `EPIC` | epic | `TASK`, `CHECKPOINT` | — |
 | `TASK` | task | `SUBTASK` | — |
 | `SUBTASK` | subtask | — | — |
 | `CHECKPOINT` | checkpoint | — | — |
@@ -85,7 +85,7 @@ one of them being correct.
 
 | Class | Reads as | Legal pairings | Notes |
 |---|---|--:|---|
-| `CONTAINS` | "cannot contain" | 35 | acyclic, at most one |
+| `CONTAINS` | "cannot contain" | 44 | acyclic, at most one |
 | `DEPENDS_ON` | "cannot depend on" | 28 | acyclic |
 | `BLOCKS` | "cannot block" | 37 | acyclic |
 | `IMPLEMENTS` | "cannot implement" | 8 | — |
@@ -115,7 +115,7 @@ the node twice, silently.
 ## 4. Legality matrix
 
 Deny by default. Of 17408 possible `(edge class, from, to)` combinations,
-**267** are legal — 1.5%.
+**276** are legal — 1.6%.
 
 The two rules gap-spec §8.3 names explicitly:
 
@@ -127,18 +127,18 @@ The two rules gap-spec §8.3 names explicitly:
 
 | From | May point at |
 |---|---|
-| `PROJECT` | `OBJECTIVE`, `REQUIREMENT`, `ARCHITECTURE_COMPONENT`, `ARCHITECTURE_DECISION`, `PHASE`, `WORKSTREAM`, `MILESTONE`, `RESOURCE`, `BUDGET_ITEM`, `RISK`, `BLOCKER`, `GATE`, `DOCUMENT`, `ENVIRONMENT`, `ASSUMPTION`, `UNKNOWN`, `CHANGE_REQUEST`, `BASELINE`, `SCENARIO`, `FORECAST`, `INCIDENT`, `OPERATIONAL_TASK` |
+| `PROJECT` | `OBJECTIVE`, `REQUIREMENT`, `ARCHITECTURE_COMPONENT`, `ARCHITECTURE_DECISION`, `PHASE`, `WORKSTREAM`, `MILESTONE`, `RESOURCE`, `BUDGET_ITEM`, `RISK`, `BLOCKER`, `GATE`, `TEST`, `EVIDENCE`, `DOCUMENT`, `ENVIRONMENT`, `ASSUMPTION`, `UNKNOWN`, `CHANGE_REQUEST`, `BASELINE`, `SCENARIO`, `FORECAST`, `INCIDENT`, `OPERATIONAL_TASK` |
 | `REQUIREMENT` | `REQUIREMENT` |
 | `ARCHITECTURE_COMPONENT` | `ARCHITECTURE_COMPONENT` |
-| `PHASE` | `MILESTONE`, `EPIC`, `CHECKPOINT`, `GATE` |
-| `WORKSTREAM` | `EPIC`, `TASK` |
-| `MILESTONE` | `CHECKPOINT` |
-| `EPIC` | `TASK` |
+| `PHASE` | `WORKSTREAM`, `MILESTONE`, `EPIC`, `TASK`, `CHECKPOINT`, `GATE` |
+| `WORKSTREAM` | `MILESTONE`, `EPIC`, `TASK`, `CHECKPOINT` |
+| `MILESTONE` | `EPIC`, `TASK`, `CHECKPOINT` |
+| `EPIC` | `TASK`, `CHECKPOINT` |
 | `TASK` | `SUBTASK` |
 | `BUDGET_ITEM` | `BUDGET_ITEM` |
 | `SCENARIO` | `FORECAST` |
 
-Anything not listed is refused. 35 of 1024 possible pairings are legal.
+Anything not listed is refused. 44 of 1024 possible pairings are legal.
 
 #### `DEPENDS_ON`
 
