@@ -12,6 +12,9 @@ export default tseslint.config(
       // Generated Cloudflare bundle. Linting build output reports problems in code nobody wrote and
       // cannot fix, and it inlines the environment — so it is also the last place to want a rule
       // quoting a line back in an error message.
+      // Vendored agent skills — third-party content that is gitignored and not part of the build.
+      // Some ship JS assets, which the type-aware parser cannot resolve to any tsconfig project.
+      '**/.claude/skills/**',
       '**/.open-next/**',
       '**/.wrangler/**',
       '**/coverage/**',

@@ -2,6 +2,7 @@ import 'server-only';
 
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
+import { sql } from 'drizzle-orm';
 import type { ExtractTablesWithRelations } from 'drizzle-orm';
 import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import * as schema from '@govintel/db/schema';
@@ -11,6 +12,7 @@ import {
   readSchemaFingerprint,
   readSchemaFingerprintFrom,
   rebuildSchema,
+  rowsOf,
 } from '@govintel/db/client';
 import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
@@ -204,6 +206,84 @@ async function ensureSchemaMatches(db: DatabaseHandle): Promise<void> {
   schemaChecked = true;
 }
 
+/** Whether the connecting role has already been checked in this isolate. See `schemaChecked`. */
+let roleChecked = false;
+
+/**
+ * Refuse to serve as a role that can ignore row-level security.
+ *
+ * ## Why this is a runtime check and not a deployment note
+ *
+ * SEC-001 established that RLS is enforced against the *current* role, so a superuser makes every
+ * policy inert. Phase 19 found the managed-provider version of the same thing: Neon's `neondb_owner`
+ * is not a superuser and still has `rolbypassrls`, so connecting as it produces a database where the
+ * policies exist, appear in the catalogue, and enforce nothing.
+ *
+ * Measured on the production branch, same database and same query: as `neondb_owner` an unscoped
+ * read of `projects` returned the row; as `govintel_app` it returned nothing.
+ *
+ * A runbook step cannot catch that. A connection string is one environment variable away from
+ * pointing at the owner — during an incident, while restoring a backup, when somebody copies staging
+ * config to production — and nothing in the application would look wrong afterwards. Tenant
+ * isolation would simply stop existing, silently, and every test would still pass because the tests
+ * do not run against the deployed credential.
+ *
+ * So the application asks the database what it is, and refuses to serve if the answer is unsafe.
+ *
+ * Ownership is checked too: `FORCE ROW LEVEL SECURITY` binds the owner, but an owner can `ALTER
+ * TABLE ... DISABLE ROW LEVEL SECURITY` at any moment. A role that can turn a control off is not
+ * constrained by it.
+ */
+async function assertRestrictedRole(db: DatabaseHandle): Promise<void> {
+  if (roleChecked) return;
+
+  const [role] = rowsOf<{
+    role: string;
+    superuser: boolean;
+    bypassrls: boolean;
+    owned: number;
+  }>(
+    await db.execute(sql`
+      SELECT current_user AS role,
+             r.rolsuper AS superuser,
+             r.rolbypassrls AS bypassrls,
+             (SELECT count(*)::int FROM pg_class c
+               WHERE c.relkind = 'r'
+                 AND c.relnamespace = 'public'::regnamespace
+                 AND c.relowner = r.oid) AS owned
+      FROM pg_roles r
+      WHERE r.rolname = current_user
+    `),
+  );
+
+  if (role === undefined) {
+    throw new Error(
+      'Could not determine the role this connection is using, so it cannot be shown to be safe. ' +
+        'Refusing to serve.',
+    );
+  }
+
+  const faults: string[] = [];
+
+  if (role.superuser) faults.push('is a superuser');
+  if (role.bypassrls) faults.push('can bypass row-level security');
+  if (role.owned > 0) faults.push(`owns ${String(role.owned)} table(s) and can disable their RLS`);
+
+  if (faults.length > 0) {
+    /*
+     * The role name is safe to include and worth including — it is the one fact that turns this from
+     * a puzzle into a one-line fix. The connection string is not, and is not touched here.
+     */
+    throw new Error(
+      `Refusing to serve: the database role "${role.role}" ${faults.join(', and ')}. ` +
+        'Row-level security would be defined and unenforced, so tenant isolation would not exist. ' +
+        'Point DATABASE_URL at the restricted application role — see docs/SECURITY.md SEC-001.',
+    );
+  }
+
+  roleChecked = true;
+}
+
 /**
  * Run an operation on a connection opened for it and closed after it.
  *
@@ -244,6 +324,7 @@ async function usingConnection<T>(fn: (db: DatabaseHandle) => Promise<T>): Promi
   const { db, close } = connect({ connectionString, maxConnections: 1 });
 
   try {
+    await assertRestrictedRole(db);
     await ensureSchemaMatches(db);
     return await fn(db);
   } finally {

@@ -58,6 +58,168 @@ if (connectionString === undefined || connectionString.trim() === '') {
 
 const sql = postgres(connectionString, { max: 1, prepare: false, onnotice: () => undefined });
 
+/**
+ * Privileges the application role needs on what already exists.
+ *
+ * Separate from the schema DDL so it can be re-applied on its own. Idempotent: granting something
+ * already granted is a no-op rather than an error.
+ */
+async function applyGrants(executor) {
+  await executor.unsafe(APPLICATION_ROLE_DDL);
+  await applyDefaultPrivileges(executor);
+}
+
+/**
+ * Privileges for tables a future migration creates.
+ *
+ * `GRANT ... ON ALL TABLES` covers what exists at the moment it runs. Without this, the next table
+ * added is invisible to the application until somebody remembers to re-grant — and the symptom is a
+ * permission error on one table, long after the migration that caused it.
+ */
+async function applyDefaultPrivileges(executor) {
+  await executor.unsafe(
+    `ALTER DEFAULT PRIVILEGES IN SCHEMA public
+       GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${APP_ROLE}`,
+  );
+  await executor.unsafe(
+    `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO ${APP_ROLE}`,
+  );
+}
+
+/**
+ * Give the application role a password, so the application can connect **as** it.
+ *
+ * Opt-in via `APP_ROLE_PASSWORD`, and deliberately not part of the shared DDL. The DDL creates the
+ * role `NOLOGIN`, which is the safe default: a role nobody can authenticate as cannot be used to
+ * reach the database at all, however the credential leaks. Handing it a password is a decision, and
+ * decisions belong in a deployment step rather than in a schema constant.
+ *
+ * ## Why this matters more than it looks
+ *
+ * There are two ways to run the application and they are not equally safe.
+ *
+ * Connect as the **owner** and `SET LOCAL ROLE` per transaction: every tenant-scoped query is
+ * correctly restricted, but anything outside a scope runs as a role that can bypass RLS entirely.
+ * On Neon the owner has `rolbypassrls`, so for those queries row-level security is inert — defined,
+ * listed in the catalogue, enforcing nothing.
+ *
+ * Connect **as the application role**: the connection itself cannot bypass RLS, cannot create roles
+ * or databases, and owns no tables. `SET LOCAL ROLE` becomes a self-set that Postgres always
+ * permits, so it still works and now means "belt" rather than "the only thing holding this up".
+ *
+ * Measured on the production branch: as `neondb_owner`, an unscoped read of `projects` returned the
+ * row. As `govintel_app`, it returned nothing. Same database, same policies, same query.
+ */
+async function setApplicationPassword(executor) {
+  const password = process.env.APP_ROLE_PASSWORD;
+
+  if (password === undefined || password.trim() === '') {
+    console.log(
+      `${APP_ROLE} left NOLOGIN. Set APP_ROLE_PASSWORD to let the application connect as it — ` +
+        'the arrangement a deployed environment requires.',
+    );
+    return;
+  }
+
+  if (password.length < 24) {
+    // Not advice. A short password on a role reachable from the public internet is a defect.
+    throw new Error('APP_ROLE_PASSWORD must be at least 24 characters.');
+  }
+
+  /*
+   * A literal, because `ALTER ROLE ... PASSWORD` does not accept a bind parameter. Quoted by
+   * doubling single quotes rather than concatenated raw — the generated passwords are base64url and
+   * contain nothing needing escaping, but the next person's might not be.
+   */
+  /*
+   * `NOSUPERUSER` is deliberately absent from this list.
+   *
+   * Postgres requires the SUPERUSER attribute to *change* the SUPERUSER attribute — even to clear
+   * it — so including it makes the whole statement fail as any ordinary owner, with
+   * *"Only roles with the SUPERUSER attribute may change the SUPERUSER attribute"*. The role is
+   * created `NOSUPERUSER` by the shared DDL and nothing here can promote it, so there is nothing to
+   * clear; asking anyway only breaks the statement that clears the attributes that DO matter.
+   */
+  await executor.unsafe(
+    `ALTER ROLE ${APP_ROLE} LOGIN PASSWORD ${quoteLiteral(password)} ` +
+      'NOCREATEDB NOCREATEROLE NOBYPASSRLS',
+  );
+
+  /*
+   * Verify rather than assume.
+   *
+   * The statement above succeeding does not prove the outcome: a provider can create roles with
+   * attributes the owner cannot alter, and the failure mode is silent. Neon does exactly this — a
+   * role created through its API comes back with `BYPASSRLS`, `CREATEDB` and `CREATEROLE`, and
+   * `ALTER ROLE` on it is refused outright. Reading the catalogue back is the only thing that
+   * distinguishes "restricted" from "believed to be restricted".
+   */
+  const [attributes] = await executor`
+    SELECT rolsuper AS superuser, rolbypassrls AS bypassrls,
+           rolcreatedb AS createdb, rolcreaterole AS createrole, rolcanlogin AS canlogin
+    FROM pg_roles WHERE rolname = ${APP_ROLE}
+  `;
+
+  const unsafe = [
+    attributes.superuser ? 'superuser' : null,
+    attributes.bypassrls ? 'bypassrls' : null,
+    attributes.createdb ? 'createdb' : null,
+    attributes.createrole ? 'createrole' : null,
+  ].filter(Boolean);
+
+  if (unsafe.length > 0) {
+    throw new Error(
+      `${APP_ROLE} still has: ${unsafe.join(', ')}. The application must not connect as a role that ` +
+        'can bypass row-level security or create roles. If the provider manages this role, drop it ' +
+        'and let the migration create it instead.',
+    );
+  }
+
+  if (!attributes.canlogin) {
+    throw new Error(
+      `${APP_ROLE} did not gain LOGIN; the application would not be able to connect.`,
+    );
+  }
+
+  console.log(
+    `${APP_ROLE} can log in. Verified from pg_roles: no superuser, bypassrls, createdb or createrole.`,
+  );
+}
+
+/** Quote a string as a SQL literal. Doubling single quotes is the whole of the rule. */
+function quoteLiteral(value) {
+  return `'${value.replace(/'/g, "''")}'`;
+}
+
+/**
+ * Let the connecting role become the application role — best effort.
+ *
+ * Two arrangements are supported and only one needs this:
+ *
+ * - **Connect as the application role** (production). `SET LOCAL ROLE govintel_app` is then a
+ *   self-set, which Postgres always permits, and the connection never holds owner privileges. This
+ *   is the stronger arrangement and the one to prefer.
+ * - **Connect as the owner and switch** (PGlite, and any host where the app shares the migration
+ *   role). `SET ROLE` to a role you are not a member of is an error, so this grant is what makes
+ *   `applyTenantScope` work at all.
+ *
+ * On Neon the second is unavailable for a platform-managed role, and that is not an obstacle to work
+ * around — it is the provider pushing towards the arrangement that was already better. Failure is
+ * reported rather than swallowed, because in the second arrangement it would mean a broken deploy.
+ */
+async function grantMembership(executor) {
+  try {
+    await executor.unsafe(`GRANT ${APP_ROLE} TO CURRENT_USER`);
+    console.log(`Granted ${APP_ROLE} to the connecting role; either arrangement will work.`);
+  } catch (error) {
+    console.log(
+      `Could not grant ${APP_ROLE} to the connecting role: ${error.message}\n` +
+        `Expected where roles are platform-managed, or where the application connects as\n` +
+        `${APP_ROLE} directly. The application asserts its own effective role at startup.`,
+    );
+  }
+}
+
 try {
   /*
    * Read the fingerprint without assuming the table exists.
@@ -76,7 +238,23 @@ try {
   console.log(`found     ${existing ?? 'nothing — the database has no schema_meta'}`);
 
   if (existing === SCHEMA_FINGERPRINT) {
-    console.log('\nUp to date. Nothing to do.');
+    /*
+     * The schema matches, but grants are re-applied anyway.
+     *
+     * Privileges drift independently of structure: a role is dropped and recreated, a branch is
+     * restored from a snapshot taken before the role existed, a provider replaces a managed role.
+     * None of those change the fingerprint, and every one of them leaves the application unable to
+     * read its own tables — a failure that surfaces as a permission error on one query, long after
+     * the change that caused it.
+     *
+     * Every statement is idempotent by construction, so doing this on every run costs a round trip
+     * and removes a whole class of "it worked yesterday".
+     */
+    console.log('\nSchema is up to date. Re-applying grants, which drift independently.');
+    await applyGrants(sql);
+    await setApplicationPassword(sql);
+    await grantMembership(sql);
+    await sql.end();
     process.exit(0);
   }
 
@@ -133,40 +311,15 @@ try {
     await tx.unsafe(SCHEMA_META_DDL);
     await tx.unsafe(APPLICATION_ROLE_DDL);
     await tx.unsafe(ROW_LEVEL_SECURITY_DDL);
-
-    /*
-     * Let the connecting role become the application role.
-     *
-     * This is the one thing the shared DDL cannot cover, and it is not an oversight in it. On PGlite
-     * the connecting user is a superuser, so `SET LOCAL ROLE govintel_app` just works. On a managed
-     * PostgreSQL it is an ordinary owner, and `SET ROLE` to a role it is not a member of is an error
-     * — so `applyTenantScope` would fail on its first statement, on every request.
-     *
-     * Granting membership does not weaken the control. RLS is enforced against the *current* role,
-     * `govintel_app` is `NOSUPERUSER`, and every tenant-scoped query runs as it. The owner keeping
-     * the ability to switch into it is what makes that possible at all.
-     */
-    await tx.unsafe(`GRANT ${APP_ROLE} TO CURRENT_USER`);
-
-    /*
-     * Default privileges for tables this role creates later.
-     *
-     * `GRANT ... ON ALL TABLES` in the role DDL covers what exists at the moment it runs. Without
-     * this, the next table added by a future migration is invisible to the application until somebody
-     * remembers to re-grant — and the symptom is a permission error on one table, long after.
-     */
-    await tx.unsafe(
-      `ALTER DEFAULT PRIVILEGES IN SCHEMA public
-         GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${APP_ROLE}`,
-    );
-    await tx.unsafe(
-      `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO ${APP_ROLE}`,
-    );
+    await applyDefaultPrivileges(tx);
 
     await tx`INSERT INTO schema_meta (fingerprint) VALUES (${SCHEMA_FINGERPRINT})`;
   });
 
   console.log(`Applied. schema_meta now records ${SCHEMA_FINGERPRINT}.`);
+
+  await setApplicationPassword(sql);
+  await grantMembership(sql);
 } finally {
   await sql.end();
 }

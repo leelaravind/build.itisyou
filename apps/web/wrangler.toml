@@ -115,18 +115,50 @@ binding = "OUTBOX_NUDGE"
 queue = "govintel-outbox-staging"
 
 # ---------------------------------------------------------------------------
-# Production — not provisioned
+# Production — provisioned 2026-09-01, serving build.itisyou.app
 # ---------------------------------------------------------------------------
 #
-# Deliberately left without bindings rather than filled with placeholder ids. A placeholder that
-# looks like an id is the shape that gets deployed by accident; an environment with no bindings fails
-# immediately and unmistakably. Phase 20 fills this in — see the runbook §6.
+# Named for the product rather than the internal system name. Staging keeps `govintel-*` because
+# renaming a working deployment buys nothing; production is new, so it starts with the name the
+# product actually has. The difference between the two is deliberate and useful: a staging
+# configuration cannot be deployed to production by accident, because none of the names match.
 
 [env.production]
-name = "govintel-web-production"
+name = "build-itisyou-web-production"
+
+# The custom domain, which also creates the DNS record and provisions the certificate.
+#
+# `custom_domain = true` rather than a route pattern: a route attaches a Worker to a hostname that
+# something else already serves, whereas a custom domain makes this Worker the origin and issues TLS
+# for it. There is no other origin here, so anything less would leave the name resolving to nothing.
+[[env.production.routes]]
+pattern = "build.itisyou.app"
+custom_domain = true
 
 [env.production.vars]
 APP_ENV = "production"
+
+# Same declaration as staging — see the note above. Without it, env validation rejects a deployment
+# whose database is correctly configured, because Hyperdrive is an object binding.
+DATABASE_URL_BINDING = "HYPERDRIVE"
+
+[env.production.assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[env.production.observability]
+enabled = true
+
+# Production Hyperdrive, created with `--caching-disabled` for the reason given above (KI-050).
+#
+# Its connection string points at the **restricted** `govintel_app` role, not the database owner.
+# On Neon the owner has `rolbypassrls`, which would make every row-level security policy inert while
+# leaving it visible in the catalogue. The application refuses to serve if the role it connects as
+# can bypass, own or disable RLS — see `assertRestrictedRole` — so this is enforced rather than
+# merely intended.
+[[env.production.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "c697deee65094523ac73e77dc94b9fd0"
 
 # Secrets are never in this file. Set with `wrangler secret put --env staging`:
 #   SESSION_SECRET    — guest session signing key

@@ -78,25 +78,75 @@ const asTenant = (organizationId, fn) =>
     return fn(tx);
   });
 
+/*
+ * Fixture rows are written **inside a tenant scope**, exactly as the application writes them.
+ *
+ * The earlier version inserted them unscoped, which worked only because the connection held owner
+ * privileges and RLS did not apply to it. Once the application moved to connecting as the restricted
+ * role, that seed failed with `42501` — the `WITH CHECK` half of the policy refusing a row whose
+ * `organization_id` did not match the (absent) tenant setting.
+ *
+ * That failure was the gate telling the truth: a fixture written with privileges the application does
+ * not have is not a fixture for the application. Scoping the writes both fixes it and makes the
+ * check exercise the real write path rather than a privileged shortcut around it.
+ */
 async function cleanup() {
-  await sql`DELETE FROM projects WHERE id IN (${PROJECT_A}, ${PROJECT_B})`;
+  for (const [organizationId, projectId] of [
+    [A, PROJECT_A],
+    [B, PROJECT_B],
+  ]) {
+    await asTenant(organizationId, (tx) => tx`DELETE FROM projects WHERE id = ${projectId}`);
+  }
+
+  // `organizations` carries no RLS policy, so this needs no scope.
   await sql`DELETE FROM organizations WHERE id IN (${A}, ${B})`;
 }
 
 try {
   await cleanup();
 
-  // Seeded as the owner, outside any scope, so the rows exist regardless of RLS.
   await sql`
     INSERT INTO organizations (id, name, slug)
     VALUES (${A}, 'Isolation check A', 'isolation-check-a'),
            (${B}, 'Isolation check B', 'isolation-check-b')
   `;
-  await sql`
-    INSERT INTO projects (id, organization_id, name)
-    VALUES (${PROJECT_A}, ${A}, 'Belongs to A'),
-           (${PROJECT_B}, ${B}, 'Belongs to B')
+
+  await asTenant(
+    A,
+    (tx) =>
+      tx`INSERT INTO projects (id, organization_id, name) VALUES (${PROJECT_A}, ${A}, 'Belongs to A')`,
+  );
+  await asTenant(
+    B,
+    (tx) =>
+      tx`INSERT INTO projects (id, organization_id, name) VALUES (${PROJECT_B}, ${B}, 'Belongs to B')`,
+  );
+
+  /*
+   * The connecting role itself, before anything about scopes.
+   *
+   * Every other check below is downstream of this one. A role that can bypass RLS makes them all
+   * pass for the wrong reason — the policies would be defined, listed in the catalogue, and
+   * enforcing nothing, and 40/40 isolation would prove only that the queries were written correctly.
+   *
+   * Neon supplies both failure modes: `neondb_owner` has `rolbypassrls`, and a role created through
+   * the Neon API comes back with `BYPASSRLS`, `CREATEDB` and `CREATEROLE` no matter what you asked
+   * for. Ownership counts too — an owner can `ALTER TABLE ... DISABLE ROW LEVEL SECURITY`, and a
+   * role that can switch a control off is not constrained by it.
+   */
+  const [connecting] = await sql`
+    SELECT current_user AS role, r.rolsuper AS superuser, r.rolbypassrls AS bypassrls,
+           (SELECT count(*)::int FROM pg_class c
+             WHERE c.relkind = 'r' AND c.relnamespace = 'public'::regnamespace
+               AND c.relowner = r.oid) AS owned
+    FROM pg_roles r WHERE r.rolname = current_user
   `;
+
+  check(
+    'the connecting role cannot bypass, own or disable row-level security',
+    connecting.superuser === false && connecting.bypassrls === false && connecting.owned === 0,
+    `role=${connecting.role} superuser=${connecting.superuser} bypassrls=${connecting.bypassrls} ownsTables=${connecting.owned}`,
+  );
 
   const own = await asTenant(A, (tx) => tx`SELECT name FROM projects WHERE id = ${PROJECT_A}`);
   check('a tenant sees its own row', own.length === 1);
@@ -165,12 +215,26 @@ try {
     ),
   );
 
-  const dirty = residue.filter(([row]) => (row.tenant ?? '') !== '' || row.role === APP_ROLE);
+  /*
+   * Residue is measured against the connection's *baseline* role, not against a fixed name.
+   *
+   * This used to assert `current_user !== govintel_app`, which was right while the application
+   * connected as the owner and switched into the app role: seeing the app role afterwards meant a
+   * `SET ROLE` had leaked. Once the application began connecting **as** `govintel_app`, that same
+   * assertion started failing on twenty perfectly clean connections — the role it was treating as
+   * evidence of a leak had become the correct resting state.
+   *
+   * Comparing against whatever the connection started as is true under both arrangements, and does
+   * not quietly stop testing anything when the deployment changes.
+   */
+  const dirty = residue.filter(
+    ([row]) => (row.tenant ?? '') !== '' || row.role !== connecting.role,
+  );
 
   check(
-    'no pooled connection carries a tenant or the application role afterwards',
+    'no pooled connection carries a tenant, or a role other than the one it connected as',
     dirty.length === 0,
-    `${dirty.length} dirty connection(s)`,
+    `${dirty.length} dirty connection(s), baseline role ${connecting.role}`,
   );
 
   /*
