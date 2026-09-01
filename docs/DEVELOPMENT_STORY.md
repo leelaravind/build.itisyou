@@ -1498,3 +1498,143 @@ structure for one person and twelve would pass every other assertion and be usel
 Both fixtures are built by running the *real* generator and the *real* rule evaluator. A fixture
 assembled by hand would test the decomposer against a shape I imagined rather than the shape the rest
 of the platform actually produces.
+
+---
+
+## Entry 013 — Phase 9: money, and the discipline of refusing to be precise
+
+Phase 9 is the arithmetic phase: effort, capacity, cost, contingency, feasibility, health. It is also
+the phase where the contract is most insistent about what _not_ to build. Four separate prohibitions,
+all pointing the same way:
+
+- §20: "Do not pretend to know exact delivery time."
+- §21.1: "Do not silently use live FX without recording rate provenance."
+- §21.5: "Contingency must be explicit and explainable. Never hide contingency inside inflated task
+  estimates."
+- §22 and §23: "Feasibility is not a magic score" / "Do not create an unexplained 83/100."
+
+Every one of those forbids something that is easy to build and looks good in a screenshot. Taken
+together they describe a product that is harder to demo and much harder to be wrong with.
+
+### Money is integers, and rounds symmetrically
+
+`0.1 + 0.2 !== 0.3` is the whole argument for holding amounts as integers in minor units. The second
+decision is less obvious: rounding is **half away from zero**, because `Math.round(-0.5)` is `-0` in
+JavaScript. That rounds a negative half _up_, so the direction of a rounding error would depend on the
+sign of the amount — refunds would drift one way and charges the other.
+
+Currencies carry their exponent. JPY and KRW have none, and assuming two decimal places inflates a yen
+figure a hundredfold. The list is deliberately short; anything absent is refused rather than guessed
+at, because a guessed exponent produces a plausible number that is wrong by a factor of a hundred.
+
+Adding two currencies is refused outright. It needs a rate, and a rate used without being recorded is
+exactly what §21.1 forbids — six months later the total no longer reconciles and nobody can say
+whether the difference is the rate, the scope, or a mistake.
+
+### There is no midpoint
+
+`MoneyRange` has no midpoint accessor, and `EffortEstimate` has no single-figure accessor. This is the
+one design decision in the phase I am most confident about, and it is enforced by absence rather than
+by documentation.
+
+The moment such an accessor exists, every caller downstream uses it — it is shorter, it fits in a
+column, and it never has to explain itself. The range becomes decoration, and the product is back to
+quoting a number it cannot support. Averaging a range also discards precisely the information the
+range was carrying.
+
+Aggregation sums the three points independently, which is deliberately the conservative choice: it
+assumes things go badly together at the conservative end. A statistical roll-up would produce a
+narrower, more flattering range on an independence assumption that does not hold — projects go wrong
+for reasons that hit many tasks at once. And the confidence of a total is the **lowest** of its parts,
+not an average: a total containing one unsized item is not medium-confidence because everything else
+was understood.
+
+### The UNKNOWN band is uncomfortable on purpose
+
+An unsized task estimates at 4 / 40 / 160 hours — a factor of forty. That is not a placeholder waiting
+to be tuned; it is what "nobody has looked at this" actually means. Narrowing it to something
+comfortable would be the platform inventing knowledge, and the discomfort of the number is the signal
+that the item needs sizing.
+
+The budget page currently estimates every generated task as UNKNOWN, because that is the truth: sixty
+tasks nobody has sized produce a range of 255 to 13,440 hours. A tool that showed 2,880 hours there
+would look far more competent and would be lying.
+
+### Contingency held as a line, not as padding
+
+§21.5's reasoning is worth restating because it is not obvious. Buffer distributed into every estimate
+gets consumed by whichever task overruns first, and nobody can see it going — the project looks fine
+right up until the padding runs out. Held as a named line, spending it is a decision somebody takes.
+
+So: contingency is a distinct type, adding a cost line of type `CONTINGENCY` is refused, contingency
+with no justification is refused, and the roll-up reports it separately at every level.
+`withContingency` exists as a distinct figure rather than as _the_ total — a single number silently
+including the allowance is contingency hidden one layer above where §21.5 forbids hiding it.
+
+It is sized from the actual uncertainty and every component is named, which matters mostly because it
+lets the figure **shrink**. A contingency nobody can decompose never shrinks; it just gets spent.
+
+### No score, anywhere
+
+There is no numeric field in either the feasibility or the health result, and that is asserted
+structurally rather than by review, so adding one later is a visible change to the type.
+
+Both assessments return dimensions with causes, and an overall status that is the **worst** dimension,
+naming it. Averaging would let one unrealistic dimension disappear into seven feasible ones, and a
+project that cannot be staffed is not seven-eighths feasible.
+
+`UNKNOWN` sits deliberately between the bad statuses and the good ones. It is not a failure — plenty
+of projects legitimately cannot answer a question yet — but treating it as healthy would let a project
+report as fine because nobody had filled anything in.
+
+### The defect the unit suite could not see
+
+Which brings me to the one real bug in the phase, and to how it was found.
+
+`budgetHealth` asked `input.budget === undefined`. `budgetFeasibility` asked
+`input.budgetCeilingKnown !== true`. Those look like the same question and are not: the first means
+"nothing has been costed", the second means "costs exist with nothing to measure them against".
+
+The budget page always constructs a budget — it needs somewhere to put the contingency. So for a
+project with no budget whatsoever, feasibility reported `Budget unknown` and health reported
+`Budget healthy`, from the same input, on the same page, eleven lines apart.
+
+Every unit fixture that omitted the ceiling also omitted the budget object, so the two branches never
+disagreed in a test. What surfaced it was reading the rendered page in a failing E2E assertion's
+output — the contradiction was sitting in plain text in the diff.
+
+Health is the dimension a reader scans first, so reporting it healthy is the "healthy because nobody
+filled in the form" failure §23 exists to prevent, in its most consequential position. Fixed by having
+health ask the same question feasibility already asked, with a regression test that fails when the
+check is removed (verified by removing it) and a counterpart asserting a recorded ceiling still
+reports healthy — otherwise the fix could degrade into a dimension that is permanently undecidable.
+
+### A test that forbade the right thing for the wrong reason
+
+The other failure in this phase was mine, in a test. `expect(body).not.toMatch(/\bscore\b/i)` failed —
+on the page's own sentence saying there is no score.
+
+Refusing to _produce_ a thing and refusing to _name_ it are different, and the disclaimer is the
+useful half: it tells a reader who expects a score why there isn't one. The assertion now forbids the
+word appearing near a number, which is the actual prohibition, and additionally requires the
+disclaimer to be present, so the test cannot pass for a page that simply says less.
+
+That is the fifth time in this project an unexpected test result turned out to be the test being wrong
+about its own subject rather than the code being broken. The distinguishing question each time has
+been the same: read what the code actually produced, rather than adjusting until green.
+
+### Two specifications, generated
+
+Gap-spec §19 and §21 both say "Create:" a document. Both are now generated from source — the sixth and
+seventh generated documents — and checked in CI.
+
+These two matter more than the earlier four because they describe _arithmetic_. A document claiming a
+12% leave deduction while the code applies 20% would make every figure in the product unreconcilable
+with its own explanation, and the drift would be invisible until somebody tried to reproduce a number
+by hand.
+
+### Where Phase 9 stands
+
+1,550 unit tests and 519 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are all clean. The calculation golden suite the plan names as
+the Phase-9 gate is green at 84 tests.

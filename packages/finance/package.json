@@ -1,0 +1,21 @@
+{
+  "name": "@govintel/finance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./money": "./src/money.ts",
+    "./estimate": "./src/estimate.ts",
+    "./budget": "./src/budget.ts",
+    "./feasibility": "./src/feasibility.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "@govintel/execution": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

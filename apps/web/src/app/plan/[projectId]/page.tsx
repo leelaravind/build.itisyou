@@ -220,6 +220,13 @@ export default async function PlanPage({
               See the work
               <MaterialIcon name="checklist" size={18} />
             </Link>
+            <Link
+              href={`/plan/${projectId}/budget`}
+              className="mt-sm inline-flex min-h-11 w-fit items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              See the money
+              <MaterialIcon name="payments" size={18} />
+            </Link>
           </section>
         ) : null}
 

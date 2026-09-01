@@ -74,6 +74,9 @@ importers:
       '@govintel/execution':
         specifier: workspace:*
         version: link:../../packages/execution
+      '@govintel/finance':
+        specifier: workspace:*
+        version: link:../../packages/finance
       '@govintel/intake':
         specifier: workspace:*
         version: link:../../packages/intake
@@ -145,6 +148,21 @@ importers:
       '@govintel/rules':
         specifier: workspace:*
         version: link:../rules
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/finance:
+    dependencies:
+      '@govintel/execution':
+        specifier: workspace:*
+        version: link:../execution
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared
