@@ -33,6 +33,9 @@
     },
     {
       "path": "./packages/change"
+    },
+    {
+      "path": "./packages/governance"
     }
   ]
 }

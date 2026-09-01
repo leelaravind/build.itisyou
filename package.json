@@ -28,13 +28,14 @@
     "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "clean": "node scripts/clean.mjs",
     "docs:permissions": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs",
-    "docs:check": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check",
+    "docs:check": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check && node --experimental-strip-types scripts/generate-governance-docs.mjs --check",
     "docs:twin": "node --experimental-strip-types scripts/generate-twin-schema.mjs",
     "docs:rules": "node --experimental-strip-types scripts/generate-rule-docs.mjs",
     "docs:calc": "node --experimental-strip-types scripts/generate-calculation-docs.mjs",
     "docs:trace": "node --experimental-strip-types scripts/generate-traceability-docs.mjs",
     "docs:threats": "node --experimental-strip-types scripts/generate-threat-model.mjs",
-    "docs:impact": "node --experimental-strip-types scripts/generate-impact-docs.mjs"
+    "docs:impact": "node --experimental-strip-types scripts/generate-impact-docs.mjs",
+    "docs:governance": "node --experimental-strip-types scripts/generate-governance-docs.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

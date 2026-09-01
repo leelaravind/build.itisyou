@@ -2129,3 +2129,168 @@ The Phase-12 gate — a major architecture-change golden scenario verified — i
 reaches implementation work, the integration test, its evidence, the deployment, the approval on it,
 the dependent component, the estimate, the budget line derived from it, and the risk the component
 mitigates, each by a path the report shows.
+
+---
+
+## Entry 017 — Phase 13: records that mean something later
+
+Phase 13 is the governance layer: baselines, evidence, approvals, documents and the audit log. What
+connects them is that every one is a record somebody will read after the fact, usually when something
+has gone wrong and they need to know what was true at a particular moment.
+
+That reframes what "correct" means for this code. The question is not whether a function returns the
+right value today; it is whether the record it produces will still support a claim in two years, in
+front of somebody who was not there.
+
+### Enforcement by absence
+
+Two of §29 and §40's requirements are prohibitions: never edit a baseline, never update or delete an
+audit event.
+
+Both are enforced by the functions **not existing**. Not a guard that throws — an absence. A guard is
+a decision somebody can reverse in a hurry at two in the morning with a comment saying "temporary".
+A missing function is one they have to notice they are adding.
+
+There is a test for each, asserting no export matches `edit`/`update`/`amend`/`delete`. Both are
+pure reflection, which is exactly the kind of test that can be quietly vacuous, so I planted an
+`editBaseline` and a `deleteEvent` and confirmed both tests fail by name. They do.
+
+### Redaction, not deletion
+
+§40 says "if legal deletion requires special handling, document the strategy", which is the most
+interesting sentence in the section because the requirement is real and the obvious implementation is
+wrong.
+
+An erasure request can cover personal data that ended up in an audit payload. Deleting the row
+satisfies the request and destroys the sequence — and a log with unexplained gaps proves nothing
+about anything near them, because a missing row cannot be distinguished from a row that was never
+written.
+
+So: the event keeps its id, its position, its timestamp, its actor, its category and its action. The
+named payload keys go, replaced by a record of what was removed, by whom, and under what authority.
+A reader sees an event that happened, in its place, with a note saying part of it was removed. That
+is strictly more truthful than a gap.
+
+A redaction with no recorded authority is refused — the basis is what distinguishes a lawful erasure
+from somebody removing an inconvenient record. Redacting an already-redacted event is refused too,
+because that would overwrite the record of the first redaction, which is the one thing a second
+redaction must not do. And the redaction is itself appended to the log as an auditable act.
+
+There is a test asserting a redacted log still verifies with no sequence gap. That is the property the
+whole strategy exists to preserve.
+
+### Quarantine, not deletion either
+
+The same shape, arrived at independently, in the evidence model. Evidence failing its integrity check
+is quarantined and kept.
+
+The fact that evidence was tampered with is the most important thing the system knows about it, and
+deleting the record destroys exactly that. A quarantined record still says what it claimed, who
+uploaded it and when — which is what an investigation needs.
+
+It also keeps the *absence* of evidence meaningful. If tampered records were deleted, a missing one
+could mean "never existed" or "was removed", and nobody could tell which.
+
+The consequence worth writing a test for: a retention sweep cannot delete quarantined evidence
+regardless of its class. Housekeeping that tidies away the record of tampering is the most convenient
+possible bug, and while it ran it would look like housekeeping working correctly.
+
+### The integrity check that must not repair itself
+
+A baseline failing verification is not fixed by recomputing its hash. That would erase the only sign
+anything was wrong.
+
+The explanation says so, in the result, because a boolean answers "is this broken" and what somebody
+needs at the moment they ask is what it means: until the difference is explained, this baseline
+cannot be used as evidence of what was agreed. That is a much stronger statement than `false`.
+
+### Two instructions pulling opposite ways
+
+§31 is the hardest thing in this phase. Canonical data wins; preserve user edits; do not silently
+overwrite; identify affected sections; offer merge.
+
+Resolve it badly and you get one of the two failure modes every document generator has. Overwrite,
+and somebody's carefully worded paragraph disappears without warning — the second time it happens
+they stop using the feature. Never overwrite, and the document drifts from the project until it is
+actively misleading, which is worse, because it still looks authoritative.
+
+The resolution is per-section provenance. A section nobody has touched regenerates silently: there is
+nothing to lose. A section somebody edited is never overwritten; regeneration produces a proposal
+showing what the data now says beside what the section holds, and a person decides.
+
+Two details that took thinking about:
+
+**The proposal says what ignoring it would mean** — "the document says something the project no
+longer does". A prompt reading "these differ" is a chore. One that says what it costs is a reason.
+
+**Accepting a proposal returns the section to GENERATED.** Leaving it EDITED would prompt forever,
+which teaches people to dismiss the prompt — and then the next one, and the one that mattered.
+
+### Deliberate asymmetries
+
+Several places in this phase have rules that apply in one direction and not the other, and each one
+took a decision:
+
+**A rejection needs a reason; an approval does not.** A rejection with no reason leaves the requester
+guessing at what would make it acceptable, so the next attempt is a guess too. An approval is complete
+on its own: the thing was found acceptable as it stood.
+
+**A release baseline needs an approval; an approved plan does not.** The plan is often the artefact
+the approval is *about*, so requiring the approval first would make it impossible to produce.
+
+**An approval goes stale when its subject changes; a rejection does not.** A rejection records what
+somebody thought of the version they saw, and that remains true.
+
+### The strict reading of §33
+
+"If subject changes after approval: approval becomes stale/invalid as policy dictates." The policy
+chosen is strict — a materially changed subject invalidates the approval.
+
+The lenient reading makes a claim about a person. An approver who signed off version 3 has not signed
+off version 7, and any system treating their approval as still standing has put their name on a
+decision they did not make. That is worse than an inconvenient re-approval, and it is the kind of
+error nobody discovers until the moment it matters most.
+
+The same logic decides two smaller things. A decision is refused outright if the subject moved
+between the request and the decision — recording it against the requested version misattributes it,
+and recording it against the current one claims the approver reviewed a request nobody showed them.
+And a stale approval does not count towards a multi-party sign-off, or the gate could be satisfied by
+decisions made about a version nobody is shipping.
+
+Sign-off requires **every** named role, not any one of them. "Any of" is how a multi-party sign-off
+quietly becomes a single-party one: the fastest approver clears it and the others never look.
+
+### Absent rather than present-and-unused
+
+§29.1 names two more baseline types as "optional later". They are not in the enum.
+
+An enum member nothing produces looks like a supported feature to everyone reading the type, and the
+first person to select it discovers it does nothing. The same reasoning removed `ASSERTION` from the
+verification methods in Phase 10 and kept `NOT_CHECKED` meaningful in Phase 11 — a type that offers a
+choice the system does not honour is worse than one that offers fewer.
+
+SVG is absent from the upload allowlist for a different reason and with the same shape: it is an image
+to a user and a script host to a browser, and it is the single most common way an image upload becomes
+stored cross-site scripting.
+
+### Nothing surprising this time
+
+For the first phase in five, no defect was found only in the rendered page. The seventy-two unit tests
+passed on the first run, which in this project is unusual enough to be worth checking rather than
+celebrating — hence planting the two violations to confirm the absence tests were not vacuous.
+
+What that probably reflects is that this phase has less coupling than the last four. Traceability,
+release readiness and impact all had to agree with a graph model that existed elsewhere, and every
+defect came from assuming rather than reading it. Governance mostly defines its own shapes and builds
+on primitives Phase 6 already tested.
+
+### Where Phase 13 stands
+
+1,826 unit tests and 624 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/GOVERNANCE_MODEL_SPEC.md` is the ninth
+generated document.
+
+The Phase-13 gate — immutable baseline plus evidence audit verified — is met by: the absence tests,
+verified by planting violations; a tampered-baseline test proving the checksum detects modification
+and removal; a redacted-log test proving the sequence survives a lawful erasure; and a
+quarantine-retention test proving housekeeping cannot delete the record of tampering.

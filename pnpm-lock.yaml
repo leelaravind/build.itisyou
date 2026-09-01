@@ -80,6 +80,9 @@ importers:
       '@govintel/finance':
         specifier: workspace:*
         version: link:../../packages/finance
+      '@govintel/governance':
+        specifier: workspace:*
+        version: link:../../packages/governance
       '@govintel/intake':
         specifier: workspace:*
         version: link:../../packages/intake
@@ -184,6 +187,18 @@ importers:
       '@govintel/execution':
         specifier: workspace:*
         version: link:../execution
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/governance:
+    dependencies:
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared

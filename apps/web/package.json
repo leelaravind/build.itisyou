@@ -15,6 +15,7 @@
     "@govintel/db": "workspace:*",
     "@govintel/execution": "workspace:*",
     "@govintel/finance": "workspace:*",
+    "@govintel/governance": "workspace:*",
     "@govintel/intake": "workspace:*",
     "@govintel/interchange": "workspace:*",
     "@govintel/release": "workspace:*",

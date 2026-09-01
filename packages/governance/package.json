@@ -1,0 +1,21 @@
+{
+  "name": "@govintel/governance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./baseline": "./src/baseline.ts",
+    "./evidence": "./src/evidence.ts",
+    "./approval": "./src/approval.ts",
+    "./document": "./src/document.ts",
+    "./audit": "./src/audit.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "zod": "4.5.4"
+  }
+}
