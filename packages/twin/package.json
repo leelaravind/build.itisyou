@@ -1,0 +1,23 @@
+{
+  "name": "@govintel/twin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./nodes": "./src/nodes.ts",
+    "./edges": "./src/edges.ts",
+    "./graph": "./src/graph.ts",
+    "./invariants": "./src/invariants.ts",
+    "./versioning": "./src/versioning.ts",
+    "./generate": "./src/generate.ts",
+    "./repository": "./src/repository.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/intake": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

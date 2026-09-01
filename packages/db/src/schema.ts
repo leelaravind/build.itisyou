@@ -549,6 +549,193 @@ export const projectMembersRelations = relations(projectMembers, ({ one }) => ({
 }));
 
 /* -------------------------------------------------------------------------- */
+/* Project Digital Twin (gap-spec §8)                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The canonical project graph.
+ *
+ * One row per node, not one per version. Gap-spec §8.4 forbids copying the database per change, so
+ * history lives in `twinChanges` and `twinBaselines` — see `packages/twin/src/versioning.ts` for
+ * why those are three separate mechanisms rather than one.
+ *
+ * The id is `text`, not `uuid`. The generator derives ids from a stable path
+ * (`<project>:req:accessibility`) precisely so that regenerating a plan produces the same ids and
+ * the two versions stay comparable; a UUID column would force random ids and destroy that.
+ */
+export const twinNodes = pgTable(
+  'twin_nodes',
+  {
+    id: text('id').primaryKey(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+
+    /** One of the closed taxonomy in `packages/twin/src/nodes.ts`. */
+    class: text('class').notNull(),
+    label: text('label').notNull(),
+    description: text('description'),
+    state: text('state').notNull().default('ACTIVE'),
+
+    /** Where the content came from, and how much weight it carries. */
+    provenance: text('provenance').notNull(),
+    confidence: text('confidence').notNull(),
+    sourceRef: text('source_ref'),
+
+    revision: integer('revision').notNull().default(1),
+    attributes: jsonb('attributes').$type<Record<string, unknown>>().notNull().default({}),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('twin_nodes_project_idx').on(table.projectId),
+    index('twin_nodes_org_idx').on(table.organizationId),
+    index('twin_nodes_project_class_idx').on(table.projectId, table.class),
+    check('twin_nodes_state_check', sql`${table.state} IN ('ACTIVE','SUPERSEDED','WITHDRAWN')`),
+    check('twin_nodes_revision_check', sql`${table.revision} >= 1`),
+    /*
+     * An AI cannot claim a user confirmed something.
+     *
+     * The interchange schema already makes `USER_CONFIRMED` unrepresentable in an import, but a node
+     * can also arrive from a rule, a migration or a future integration — and the schema only guards
+     * one of those paths. This guards the column itself.
+     */
+    check(
+      'twin_nodes_provenance_check',
+      sql`${table.provenance} IN ('USER_CONFIRMED','DETERMINISTIC_CALCULATION','USER_PROVIDED','EXTERNAL_SOURCE','ASSUMPTION','EXTERNAL_AI_INFERENCE','FUTURE_ML_PREDICTION')`,
+    ),
+    check('twin_nodes_confidence_check', sql`${table.confidence} IN ('LOW','MEDIUM','HIGH')`),
+  ],
+);
+
+export const twinEdges = pgTable(
+  'twin_edges',
+  {
+    id: text('id').primaryKey(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    class: text('class').notNull(),
+    fromId: text('from_id')
+      .notNull()
+      .references(() => twinNodes.id, { onDelete: 'cascade' }),
+    toId: text('to_id')
+      .notNull()
+      .references(() => twinNodes.id, { onDelete: 'cascade' }),
+    /** Why the edge exists. The traceability report reads this. */
+    rationale: text('rationale'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('twin_edges_project_idx').on(table.projectId),
+    index('twin_edges_org_idx').on(table.organizationId),
+    index('twin_edges_from_idx').on(table.fromId, table.class),
+    index('twin_edges_to_idx').on(table.toId, table.class),
+    /* The same relationship twice between the same pair is a duplicate every traversal would count. */
+    uniqueIndex('twin_edges_unique_idx').on(table.fromId, table.class, table.toId),
+    /* Irreflexive in every relation the taxonomy has, so enforced at the column rather than left to
+       the invariant pass. */
+    check('twin_edges_no_self_reference', sql`${table.fromId} <> ${table.toId}`),
+  ],
+);
+
+/** One entry per material change. Deliberately not one row per node version. */
+export const twinChanges = pgTable(
+  'twin_changes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    correlationId: uuid('correlation_id').notNull(),
+    kind: text('kind').notNull(),
+    targetId: text('target_id').notNull(),
+    /** Only the fields that differed, never whole snapshots. */
+    beforeValue: jsonb('before_value').$type<Record<string, unknown>>(),
+    afterValue: jsonb('after_value').$type<Record<string, unknown>>(),
+    reason: text('reason'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('twin_changes_project_idx').on(table.projectId, table.version),
+    index('twin_changes_target_idx').on(table.targetId),
+    check(
+      'twin_changes_kind_check',
+      sql`${table.kind} IN ('NODE_CREATED','NODE_UPDATED','NODE_SUPERSEDED','NODE_WITHDRAWN','EDGE_CREATED','EDGE_REMOVED')`,
+    ),
+  ],
+);
+
+/**
+ * Immutable snapshots.
+ *
+ * Immutability is enforced by trigger, not by convention — the same argument as the audit table. A
+ * baseline the application can edit is a claim about the past rather than a record of it, and
+ * "we never call UPDATE on it" is a promise rather than a control.
+ */
+export const twinBaselines = pgTable(
+  'twin_baselines',
+  {
+    id: text('id').primaryKey(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    label: text('label').notNull(),
+    correlationId: uuid('correlation_id').notNull(),
+    /** SHA-256 of the canonical serialisation. What makes the snapshot evidence rather than a copy. */
+    checksum: text('checksum').notNull(),
+    snapshot: jsonb('snapshot').$type<Record<string, unknown>>().notNull(),
+    takenAt: timestamp('taken_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('twin_baselines_project_idx').on(table.projectId, table.version),
+    check('twin_baselines_checksum_check', sql`char_length(${table.checksum}) = 64`),
+  ],
+);
+
+/** A recorded calculation, with everything needed to explain it months later. */
+export const twinCalculations = pgTable(
+  'twin_calculations',
+  {
+    id: text('id').primaryKey(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    calculation: text('calculation').notNull(),
+    /** Lets an old result stay correct-as-of-then when the formula changes. */
+    formulaVersion: text('formula_version').notNull(),
+    correlationId: uuid('correlation_id').notNull(),
+    inputs: jsonb('inputs').$type<Record<string, unknown>>().notNull(),
+    result: jsonb('result').$type<Record<string, unknown>>().notNull(),
+    /** Node ids the result depends on. What makes staleness detectable rather than silent. */
+    dependsOn: text('depends_on').array().notNull().default([]),
+    /** Surfaced with the number, never buried. */
+    assumptions: text('assumptions').array().notNull().default([]),
+    computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('twin_calculations_project_idx').on(table.projectId, table.calculation)],
+);
+
+/* -------------------------------------------------------------------------- */
 /* Type exports                                                               */
 /* -------------------------------------------------------------------------- */
 
@@ -566,6 +753,14 @@ export type IntakeAnswer = typeof intakeAnswers.$inferSelect;
 export type AiImport = typeof aiImports.$inferSelect;
 export type NewAiImport = typeof aiImports.$inferInsert;
 export type NewIntakeAnswer = typeof intakeAnswers.$inferInsert;
+
+export type TwinNodeRow = typeof twinNodes.$inferSelect;
+export type NewTwinNodeRow = typeof twinNodes.$inferInsert;
+export type TwinEdgeRow = typeof twinEdges.$inferSelect;
+export type NewTwinEdgeRow = typeof twinEdges.$inferInsert;
+export type TwinChangeRow = typeof twinChanges.$inferSelect;
+export type TwinBaselineRow = typeof twinBaselines.$inferSelect;
+export type TwinCalculationRow = typeof twinCalculations.$inferSelect;
 
 export type OrganizationRole = (typeof organizationRoleEnum.enumValues)[number];
 export type ProjectRole = (typeof projectRoleEnum.enumValues)[number];

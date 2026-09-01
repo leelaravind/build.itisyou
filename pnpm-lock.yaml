@@ -80,6 +80,9 @@ importers:
       '@govintel/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../../packages/twin
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@electric-sql/pglite@0.5.8)
@@ -124,6 +127,9 @@ importers:
       '@electric-sql/pglite':
         specifier: 0.5.8
         version: 0.5.8
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
 
   packages/intake:
     dependencies:
@@ -148,6 +154,18 @@ importers:
 
   packages/shared:
     dependencies:
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/twin:
+    dependencies:
+      '@govintel/intake':
+        specifier: workspace:*
+        version: link:../intake
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
       zod:
         specifier: 4.5.4
         version: 4.5.4

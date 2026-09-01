@@ -1008,3 +1008,168 @@ browser workers buy no parallelism and only lengthen the queue.
 Materialisation into the Digital Twin is deliberately not implemented: the canonical entities do not
 exist until Phase 6. Acceptance records the decision and stops, which is the honest state of the
 system rather than a stub pretending to apply something.
+
+---
+
+## Entry 010 — a graph that refuses things, and a dollar sign that ate a trigger
+
+**Phase 6 — Project Digital Twin. 1,036 unit tests, 384 E2E tests, all nine gate criteria green.**
+
+### The distinction the whole phase rests on
+
+Gap-spec §8 says the Digital Twin is the canonical project graph, "not merely a dashboard concept".
+That sentence decides everything else. A dashboard can afford a loose schema because nothing depends
+on it; this is the thing every calculation, gate, report and document reads from.
+
+So the taxonomy is closed — 32 node classes, 17 edge classes, both `as const` — and, more
+importantly, **which pairings are legal is an allowlist**. Of the 17,408 possible
+`(edge class, from, to)` combinations, 267 are permitted. 1.5%.
+
+That number is asserted by a test, and the assertion is not a style preference. A permissive matrix
+would pass every specific rule below while making the graph structurally meaningless, and it would
+look identical to a strict one from the outside.
+
+### The rule that makes traceability mean anything
+
+Gap-spec §8.3 names it directly: a **test** may verify a requirement; a **task** may not.
+
+The distinction is the entire basis of the traceability matrix. If work could verify a requirement,
+the matrix would report "verified" for anything anyone had touched — and a compliance report that is
+confidently wrong is worse than none, because it stops people looking. Both directions are tests, and
+the refusal explains itself: *"A task cannot verify anything."*
+
+### Three mechanisms, because there are three questions
+
+Gap-spec §8.4 forbids copying the database per version. The obvious implementation — duplicate every
+node on every edit — is wrong three ways at once: unbounded growth, "what is the current value"
+becomes a query rather than a lookup, and it still fails to answer what anyone actually asks.
+
+| Question | Mechanism |
+|---|---|
+| What is true now? | The nodes and edges. One row per entity. |
+| What changed, when, why? | The change log — one entry per material change, holding only the fields that differed. |
+| What did we commit to then? | A baseline: complete, immutable, checksummed. |
+
+A baseline *is* a full copy, deliberately. What the spec forbids is copying on every change; a
+baseline is taken when a plan is agreed and must survive everything it referred to moving on.
+
+Its SHA-256 is computed over a canonical serialisation with sorted keys, deliberately **excluding**
+timestamps and revision counts — two graphs with identical content saved at different moments are the
+same plan, and a checksum that disagreed would make baselines useless for comparison.
+
+### Determinism as a feature, not an implementation detail
+
+The Phase-6 gate is "deterministic generation from golden fixture". The product's claim is that its
+plans are reproducible and explainable, and that claim survives exactly as long as the generator has
+no clock, no randomness and no unordered iteration.
+
+Three bans, each load-bearing:
+
+- **No `Date.now()`.** The timestamp is an input. A generator that stamps its own output cannot
+  produce byte-identical results twice, so the golden test could not be written at all.
+- **No random ids.** Node ids derive from a stable path — `…:req:accessibility`. Random ids would
+  make two versions of a plan incomparable and the change log useless: every regeneration would read
+  as though everything had been replaced.
+- **No unordered iteration.** Including the topological sort's tie-break, which without an explicit
+  sort returns map-insertion order — stable enough to pass a two-run test and not a guarantee.
+
+The suite asserts byte-identical output across **ten** runs per fixture, not two. A generator
+depending on `Map` ordering or a hash-built `Set` is usually stable across two.
+
+And it asserts that different inputs produce different graphs — without which every determinism test
+would pass for a generator that returned nothing.
+
+### A test that would have passed with the table missing
+
+The first version of the schema-agreement test built two databases from the same DDL and diffed
+them. That is a tautology: both come from one string, so it would have passed just as happily with
+`ai_imports` missing from both.
+
+It now compares the built database against the **Drizzle schema**, which is the disagreement that
+actually causes the bug — a table declared in `schema.ts` and never added to the DDL typechecks,
+passes review, and fails at runtime. Verified by deleting `ai_imports` from the DDL and confirming
+three tests fail.
+
+### The dollar sign
+
+Every scripted edit in this project goes through `String.prototype.replace`. The twin DDL includes a
+trigger:
+
+```sql
+CREATE OR REPLACE FUNCTION twin_baselines_immutable() RETURNS trigger AS $$
+```
+
+It arrived in the file as `AS $`. `replace` with a **string** replacement interprets `$$` as an
+escaped dollar sign. So are the `$&`, `$1` and back-reference patterns. The whole schema then failed to apply with
+"syntax error at or near $", three layers from anything resembling the cause.
+
+A replacer *function* receives the replacement verbatim, which is what should have been used. Swept
+the rest of the repository for the same corruption; nothing else was affected.
+
+### A check that was present and inert
+
+`rowsFromGraph` accepted an `archived` flag and forwarded it to the invariant pass. The archived
+invariant only fires when it is told *what changed* — and the flag was forwarded without that, so a
+write to an archived project sailed through.
+
+The test caught it in the least useful way possible: it was named *"refuses to write to an archived
+project"* and asserted `.not.toThrow()`. It passed. Both the name and the assertion agreed with the
+broken behaviour.
+
+Writing the whole graph *is* changing every node in it, and saying so is what makes the rule apply.
+This is the same shape as SEC-001 — a control that exists on paper and does nothing — which is now
+the second time in this project a security-adjacent check has been inert while looking present.
+
+### Two E2E tests that proved less than they claimed
+
+**"another guest cannot trigger generation"** fired an unauthenticated POST at the route and asserted
+the status was not 2xx. The transport rejects that before any application code runs, so it would have
+passed against an action with no ownership check whatsoever.
+
+Rewritten as a real BOLA attempt: a genuine second guest, with a valid session, on a page they are
+entitled to, submitting the real form with the hidden project id rewritten to someone else's. That
+request reaches the server action. Verified by deleting the ownership check and confirming the test
+fails.
+
+**"states what it had to assume"** accepted "we assumed" *or* "do not know". The second is on the
+page for nearly every project, so it passed without the assumptions section existing.
+
+Tightening it found a real defect. The generator's most consequential assumption — that it fell back
+to a generic phase structure because the project type was unknown, and that the security, testing and
+release obligations keyed off project type are therefore **absent** — lived only in a summary array
+that the page never read. An assumption the user cannot see is indistinguishable from a decision
+nobody had to make. It is now a node in the graph, rendered with the rest.
+
+### What the plan page had to get right
+
+Every item carries its provenance **beside it**, never in a tooltip: "Worked out by the engine",
+"You confirmed this", "Assumed". A reader who cannot tell an engine conclusion from a confirmed fact
+cannot judge either, and provenance nobody reads is provenance that does not exist.
+
+The plan is reachable before the intake is finished, and that is deliberate. Gating it behind
+twenty-five answers would defeat the engine's entire purpose — producing something honest from
+partial information and saying what it assumed. A user who must finish the questionnaire before
+seeing anything leaves at question four.
+
+### Result
+
+| Gate | Result |
+|---|---|
+| `format:check` | pass |
+| `lint` | pass |
+| `typecheck` | pass |
+| `test` | 1,036 passed |
+| `test:e2e` | 384 passed, 101 skipped (documented WebKit-over-HTTP scope, KI-024) |
+| `docs:check` | permissions matrix and twin schema both current |
+| `scan:secrets` | clean, 136 files |
+| `audit:deps` | no known vulnerabilities |
+| `build` | pass |
+
+`docs/PROJECT_DIGITAL_TWIN_SCHEMA.md` is generated from `packages/twin/src/` and checked in CI. The
+legality matrix is 17 classes over 32 — it could not be maintained by hand, and a stale copy would
+misrepresent what the traceability report proves.
+
+Estimates, budgets and the rules engine arrive in Phases 7 and 9. The graph deliberately has no
+numbers in it yet: a figure with no formula version, no recorded inputs and no stated assumptions
+carries an authority it has not earned, and the snapshot structure that prevents that is in place
+before anything starts producing them.

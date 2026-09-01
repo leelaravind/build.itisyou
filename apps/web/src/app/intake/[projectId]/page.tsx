@@ -96,13 +96,22 @@ export default async function IntakePage({ params }: { params: Promise<{ project
             <p className="mt-sm font-sans text-body-sm text-on-surface-variant">
               Next: the platform writes a research request for everything you flagged as unknown.
             </p>
-            <Link
-              href={`/intake/${projectId}/prompt`}
-              className="mt-md inline-flex min-h-11 items-center gap-sm rounded bg-primary px-lg font-sans text-body-sm font-medium text-on-primary transition-colors hover:bg-primary-fixed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              Write the research request
-              <MaterialIcon name="arrow_forward" size={18} />
-            </Link>
+            <div className="mt-md flex flex-wrap gap-md">
+              <Link
+                href={`/plan/${projectId}`}
+                className="inline-flex min-h-11 items-center gap-sm rounded bg-primary px-lg font-sans text-body-sm font-medium text-on-primary transition-colors hover:bg-primary-fixed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Build the plan
+                <MaterialIcon name="account_tree" size={18} />
+              </Link>
+              <Link
+                href={`/intake/${projectId}/prompt`}
+                className="inline-flex min-h-11 items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Write the research request
+                <MaterialIcon name="arrow_forward" size={18} />
+              </Link>
+            </div>
           </section>
         ) : (
           <QuestionCard

@@ -20,6 +20,7 @@
     "drizzle-orm": "0.45.2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.5.8"
+    "@electric-sql/pglite": "0.5.8",
+    "@govintel/twin": "workspace:*"
   }
 }

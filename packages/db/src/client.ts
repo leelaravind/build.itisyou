@@ -279,6 +279,144 @@ CREATE INDEX ai_imports_project_idx ON ai_imports (project_id);
 CREATE INDEX ai_imports_org_idx ON ai_imports (organization_id);
 CREATE UNIQUE INDEX ai_imports_idempotency_idx ON ai_imports (idempotency_key);
 
+-- ---------------------------------------------------------------------------
+-- Project Digital Twin (gap-spec §8).
+--
+-- The canonical project graph. One row per node, one per edge — not one per
+-- version: gap-spec §8.4 forbids copying the database per change, so history
+-- lives in twin_changes and twin_baselines instead.
+--
+-- The class column is text with a CHECK rather than a Postgres enum. Enums require an
+-- ALTER TYPE to extend, which locks the table and cannot run inside the same
+-- transaction as its use; a CHECK is a cheap constraint change. The taxonomy is
+-- still closed: it is enforced in packages/twin/src/nodes.ts and asserted
+-- against this list by a test, so the two cannot drift.
+-- ---------------------------------------------------------------------------
+CREATE TABLE twin_nodes (
+  id text PRIMARY KEY,
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  class text NOT NULL,
+  label text NOT NULL,
+  description text,
+  state text NOT NULL DEFAULT 'ACTIVE',
+  provenance text NOT NULL,
+  confidence text NOT NULL,
+  source_ref text,
+  revision integer NOT NULL DEFAULT 1,
+  attributes jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT twin_nodes_state_check CHECK (state IN ('ACTIVE','SUPERSEDED','WITHDRAWN')),
+  CONSTRAINT twin_nodes_revision_check CHECK (revision >= 1),
+  -- An AI cannot claim a user confirmed something. Same rule as the interchange
+  -- schema, enforced again here because a node can also arrive from a rule, an
+  -- import or a migration — the schema only guards one of those paths.
+  CONSTRAINT twin_nodes_provenance_check CHECK (
+    provenance IN (
+      'USER_CONFIRMED','DETERMINISTIC_CALCULATION','USER_PROVIDED','EXTERNAL_SOURCE',
+      'ASSUMPTION','EXTERNAL_AI_INFERENCE','FUTURE_ML_PREDICTION'
+    )
+  ),
+  CONSTRAINT twin_nodes_confidence_check CHECK (confidence IN ('LOW','MEDIUM','HIGH'))
+);
+CREATE INDEX twin_nodes_project_idx ON twin_nodes (project_id);
+CREATE INDEX twin_nodes_org_idx ON twin_nodes (organization_id);
+CREATE INDEX twin_nodes_project_class_idx ON twin_nodes (project_id, class);
+
+CREATE TABLE twin_edges (
+  id text PRIMARY KEY,
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  class text NOT NULL,
+  from_id text NOT NULL REFERENCES twin_nodes(id) ON DELETE CASCADE,
+  to_id text NOT NULL REFERENCES twin_nodes(id) ON DELETE CASCADE,
+  rationale text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  -- Irreflexivity is a property of every edge class in the taxonomy, so it is
+  -- enforced here rather than left to the invariant pass. A node that depends on
+  -- itself is meaningless in every relation the graph has.
+  CONSTRAINT twin_edges_no_self_reference CHECK (from_id <> to_id)
+);
+CREATE INDEX twin_edges_project_idx ON twin_edges (project_id);
+CREATE INDEX twin_edges_org_idx ON twin_edges (organization_id);
+CREATE INDEX twin_edges_from_idx ON twin_edges (from_id, class);
+CREATE INDEX twin_edges_to_idx ON twin_edges (to_id, class);
+-- The same relationship asserted twice between the same pair is not additional
+-- information; it is a duplicate that every traversal would then count twice.
+CREATE UNIQUE INDEX twin_edges_unique_idx ON twin_edges (from_id, class, to_id);
+
+-- One entry per material change. Not one row per node version.
+CREATE TABLE twin_changes (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  version integer NOT NULL,
+  correlation_id uuid NOT NULL,
+  kind text NOT NULL,
+  target_id text NOT NULL,
+  before_value jsonb,
+  after_value jsonb,
+  reason text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT twin_changes_kind_check CHECK (
+    kind IN ('NODE_CREATED','NODE_UPDATED','NODE_SUPERSEDED','NODE_WITHDRAWN',
+             'EDGE_CREATED','EDGE_REMOVED')
+  )
+);
+CREATE INDEX twin_changes_project_idx ON twin_changes (project_id, version);
+CREATE INDEX twin_changes_target_idx ON twin_changes (target_id);
+
+-- Immutable, and enforced by trigger rather than by convention — the same
+-- argument as the audit table. A baseline the application can edit is a claim
+-- about the past, not a record of it.
+CREATE TABLE twin_baselines (
+  id text PRIMARY KEY,
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  version integer NOT NULL,
+  label text NOT NULL,
+  correlation_id uuid NOT NULL,
+  checksum text NOT NULL,
+  snapshot jsonb NOT NULL,
+  taken_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT twin_baselines_checksum_check CHECK (char_length(checksum) = 64)
+);
+CREATE INDEX twin_baselines_project_idx ON twin_baselines (project_id, version);
+
+CREATE OR REPLACE FUNCTION twin_baselines_immutable() RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'twin_baselines is immutable: % is not permitted', TG_OP
+    USING ERRCODE = 'insufficient_privilege';
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER twin_baselines_no_update
+  BEFORE UPDATE ON twin_baselines
+  FOR EACH ROW EXECUTE FUNCTION twin_baselines_immutable();
+
+CREATE TRIGGER twin_baselines_no_delete
+  BEFORE DELETE ON twin_baselines
+  FOR EACH ROW EXECUTE FUNCTION twin_baselines_immutable();
+
+-- A stored figure with no record of the formula version or the inputs cannot be
+-- explained later, and carries an authority it has not earned.
+CREATE TABLE twin_calculations (
+  id text PRIMARY KEY,
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  version integer NOT NULL,
+  calculation text NOT NULL,
+  formula_version text NOT NULL,
+  correlation_id uuid NOT NULL,
+  inputs jsonb NOT NULL,
+  result jsonb NOT NULL,
+  depends_on text[] NOT NULL DEFAULT '{}',
+  assumptions text[] NOT NULL DEFAULT '{}',
+  computed_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX twin_calculations_project_idx ON twin_calculations (project_id, calculation);
+
 CREATE TABLE audit_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id uuid REFERENCES organizations(id) ON DELETE RESTRICT,
@@ -373,6 +511,36 @@ CREATE POLICY memberships_tenant_isolation ON memberships
 ALTER TABLE audit_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_events FORCE ROW LEVEL SECURITY;
 CREATE POLICY audit_events_tenant_isolation ON audit_events
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE twin_nodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE twin_nodes FORCE ROW LEVEL SECURITY;
+CREATE POLICY twin_nodes_tenant_isolation ON twin_nodes
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE twin_edges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE twin_edges FORCE ROW LEVEL SECURITY;
+CREATE POLICY twin_edges_tenant_isolation ON twin_edges
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE twin_changes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE twin_changes FORCE ROW LEVEL SECURITY;
+CREATE POLICY twin_changes_tenant_isolation ON twin_changes
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE twin_baselines ENABLE ROW LEVEL SECURITY;
+ALTER TABLE twin_baselines FORCE ROW LEVEL SECURITY;
+CREATE POLICY twin_baselines_tenant_isolation ON twin_baselines
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE twin_calculations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE twin_calculations FORCE ROW LEVEL SECURITY;
+CREATE POLICY twin_calculations_tenant_isolation ON twin_calculations
   USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
   WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
 
