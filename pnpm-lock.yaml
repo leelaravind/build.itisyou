@@ -77,6 +77,9 @@ importers:
       '@govintel/interchange':
         specifier: workspace:*
         version: link:../../packages/interchange
+      '@govintel/rules':
+        specifier: workspace:*
+        version: link:../../packages/rules
       '@govintel/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -148,6 +151,21 @@ importers:
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/rules:
+    dependencies:
+      '@govintel/intake':
+        specifier: workspace:*
+        version: link:../intake
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
       zod:
         specifier: 4.5.4
         version: 4.5.4

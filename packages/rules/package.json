@@ -1,0 +1,24 @@
+{
+  "name": "@govintel/rules",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schema": "./src/schema.ts",
+    "./catalogue": "./src/catalogue.ts",
+    "./evaluate": "./src/evaluate.ts",
+    "./precedence": "./src/precedence.ts",
+    "./lifecycle": "./src/lifecycle.ts",
+    "./gates": "./src/gates.ts",
+    "./methodology": "./src/methodology.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/intake": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

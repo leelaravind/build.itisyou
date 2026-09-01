@@ -199,6 +199,23 @@ export default async function PlanPage({
           </>
         ) : null}
 
+        {generated ? (
+          <section className="flex flex-col gap-sm rounded-lg border border-outline-variant bg-surface-container-low p-lg">
+            <h2 className="font-sans text-headline-sm text-on-surface">What the rules require</h2>
+            <p className="font-sans text-body-sm text-on-surface-variant">
+              The engine checks this project against a catalogue of rules and quality gates. Each
+              finding names the rule behind it, so you can disagree with it.
+            </p>
+            <Link
+              href={`/plan/${projectId}/rules`}
+              className="mt-sm inline-flex min-h-11 w-fit items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              See the findings
+              <MaterialIcon name="rule" size={18} />
+            </Link>
+          </section>
+        ) : null}
+
         <Link
           href={`/intake/${projectId}`}
           className="inline-flex w-fit items-center gap-sm font-sans text-body-sm text-on-surface-variant transition-colors hover:text-on-surface"

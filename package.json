@@ -28,8 +28,9 @@
     "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "clean": "node scripts/clean.mjs",
     "docs:permissions": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs",
-    "docs:check": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check",
-    "docs:twin": "node --experimental-strip-types scripts/generate-twin-schema.mjs"
+    "docs:check": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check",
+    "docs:twin": "node --experimental-strip-types scripts/generate-twin-schema.mjs",
+    "docs:rules": "node --experimental-strip-types scripts/generate-rule-docs.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

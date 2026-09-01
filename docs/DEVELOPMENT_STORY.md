@@ -1173,3 +1173,181 @@ Estimates, budgets and the rules engine arrive in Phases 7 and 9. The graph deli
 numbers in it yet: a figure with no formula version, no recorded inputs and no stated assumptions
 carries an authority it has not earned, and the snapshot structure that prevents that is in place
 before anything starts producing them.
+
+---
+
+## Entry 011 — 287 rules, and four tests that were wrong about their own subject
+
+**Phase 7 — rules, lifecycle and quality gates. 1,358 unit tests, 435 E2E tests, all gate criteria
+green.**
+
+### Why the rules are data
+
+Gap-spec §13 says the engine must be data-driven. That is easy to read as an architecture preference
+and it is not; it is what makes three separate requirements achievable at all.
+
+A rule written as code can read a clock, call a service, or mutate the project it is evaluating. A
+rule written as data can only *describe* a condition and *declare* what follows. So:
+
+- **Determinism is structural** rather than a discipline. A declarative condition has nowhere to hide
+  a clock.
+- **Explanations are free.** §13.3 wants every emitted action to answer "why is this required?"; a
+  rule carrying its own rationale and remediation answers it without per-rule explanation code, which
+  would rot within a month.
+- **Rules can be reviewed by people who do not read TypeScript.** A security rule only a developer can
+  audit is a security rule nobody audits.
+
+The condition language is deliberately small — comparisons, set membership, presence, and `ALL`/`ANY`.
+No nesting. A rule needing three levels of boolean structure is two rules squashed together, and a
+squashed rule cannot be explained: the engine can say "this fired", not "this fired because of the
+middle clause of the second disjunct".
+
+### The distinction the whole engine rests on
+
+Every rule evaluates to one of three outcomes, and the third is the one that matters:
+
+- `APPLIED`
+- `NOT_APPLICABLE`
+- `INDETERMINATE` — the rule needs an input the project has not answered
+
+An engine with only the first two silently reports "does not apply" for every rule blocked by missing
+information. A security rule conditioned on *the system holds payment data* would quietly not apply to
+every project that skipped the question, and the plan would show **no payment obligations at all** —
+indistinguishable from a project that genuinely has none.
+
+So an unanswered input returns `UNKNOWN` from the condition evaluator, and `UNKNOWN` propagates:
+under `ALL`, one definite `FALSE` settles it, but an unknown alongside only trues does not. The page
+shows what cannot be decided *above* the findings, with the questions that would settle it, because
+that is the part the user can act on.
+
+### Never resolving a critical conflict
+
+§13.2 orders six sources of authority and then adds: *"Never resolve conflicting critical rules
+silently."*
+
+That sentence rules out the obvious implementation. Sorting by precedence and taking the winner
+produces a plan that looks decided when it is not. If a legal obligation and an explicit project
+constraint genuinely contradict each other, nobody in the system is entitled to pick — resolving it
+may mean changing the project rather than changing a setting.
+
+So conflicts have two outcomes. Ordinary ones resolve by precedence and record what was overridden.
+Critical ones — two `MANDATORY` rules from different authorities — resolve to *nothing*: they are
+reported, the emission is **withheld**, and whatever depended on it stays blocked. Emitting one side
+anyway would be resolving it, quietly, in favour of whichever rule was evaluated first.
+
+Two mandatory rules from the *same* authority are also unresolvable, and reported as a defect in the
+ruleset rather than in the project. Picking arbitrarily between two deliberately-written rules would
+hide a catalogue mistake behind a project-level message.
+
+### The catalogue: 287 rules, and what stops them being padding
+
+Gap-spec §14 sets minimum counts per category and adds: *"The rules must be meaningful. Do not create
+artificial rules solely to meet a number."*
+
+That is unenforceable by counting, which is why the counts are a floor rather than a target. What *is*
+enforceable is the structure that makes a padded rule hard to write. `defineRule` refuses a rule that:
+
+- emits nothing and affects no calculation — it would count towards the total and do nothing;
+- is mandatory, legal or security, and cites no source;
+- has a test claiming to verify a requirement the rule does not emit;
+- is deprecated before it becomes active.
+
+The citation rule fired twice while I was writing the packs, on `PRD-AUTH-001` and
+`REQ-COMPLIANCE-001`. Both were genuinely uncitable as written, and an uncitable mandatory obligation
+becomes folklore that nobody can challenge or retire. I added the actual sources rather than a
+plausible-looking one — a fabricated citation is worse than none, because it looks checkable.
+
+Every rule states a specific consequence. Not "follow best practice" but *"a 403 tells an attacker the
+identifier is real"*, *"a backup nobody has restored from is a belief about a backup"*, *"an alert
+delivered to an unread inbox is worse than no alert, because it makes people believe they are
+covered"*.
+
+### The lifecycle: all 144 pairs
+
+Plan §6 asks for golden tests covering **every allowed and prohibited transition**. Twelve states is
+144 ordered pairs, and the suite generates all of them rather than listing a selection.
+
+The exhaustiveness is the point. A hand-picked set tests the transitions somebody thought of, and the
+dangerous ones are the ones nobody thought of. Twelve are also named individually with why they are
+refused — `IDEA → LIVE` because nothing has been decided, built or checked; `LIVE → COMPLETED`
+because production verification would be skipped.
+
+Backwards transitions are deliberately present. Verification finding something and returning a project
+to `IN_PROGRESS` is the system working, and a machine that only moves forward forces people to lie
+about where they are. An unevaluated gate counts as **not passed** — treating it as satisfied would
+make every gate optional for anyone who never ran it.
+
+### Gates that read the graph rather than asking
+
+Gap-spec §15 requires each gate to define **exact criteria**. A criterion phrased as "security
+reviewed" is a checkbox; a criterion has to be a question the platform can answer.
+
+39 of the 56 criteria are answered from the project graph. The rest need an EVIDENCE or APPROVAL node
+— still stricter than a checkbox, because something has to exist in the record, attributable and
+timestamped.
+
+A criterion that cannot be decided returns *undecidable* rather than *failed*, and a gate with any
+undecidable blocking criterion is `INDETERMINATE`. Same reasoning as the rule evaluator: collapsing
+them into failure teaches people that gate failures are noise.
+
+### Four tests that were wrong about their own subject
+
+**The conflict test could not produce a conflict.** My helper derived a requirement's priority from
+its severity, so two `MANDATORY` rules always emitted `MUST` — they agreed, no conflict was detected,
+and the withholding test passed against an engine that might have done nothing. Priority is now a
+separate parameter.
+
+**The manual-criteria test caught a misclassification, not a bug.** It asserted every `MANUAL`
+criterion fails on an empty graph. `exceptions-documented` passed, because a project with no failing
+tests has nothing to document. Looking at it, the check reads the graph and decides — producing the
+evidence is a human act, but *checking whether it exists* is not. The classification was wrong, so I
+changed the code rather than the test.
+
+**The applied-count test asserted the wrong property.** I wrote `expect(applied).toBeLessThan(220)` on
+the theory that a long list is unusable. It failed at 249. Measuring rather than adjusting: **164 of
+the 287 rules have no conditions and no scope at all** — "estimates are ranges", "work is broken
+down", "a test must be able to fail". Those genuinely do apply to every project, and narrowing them to
+shorten a list would make the catalogue less true to make a screen tidier. The premise was wrong, not
+the engine. Replaced with an assertion that the *conditional* rules discriminate: at least a fifth of
+them must answer differently for two unlike projects.
+
+**An E2E helper never arrived.** `reachRules` clicked "See the findings" then asserted a level-1
+heading was visible — which is true on the plan page too, so it resolved before the navigation and
+every later assertion ran against the wrong page. The failures read as missing content rather than as
+a helper that never got there.
+
+### One real defect the linter surfaced
+
+The findings page read `project.projectType === null`. The column is `notNull` with a default of
+`'UNKNOWN'`, so the check was dead and `'UNKNOWN'` was being passed through as a real project type —
+which would make every type-scoped rule report `NOT_APPLICABLE`. A project that never answered the
+question would have silently escaped every type-specific security obligation, and the page would have
+shown them as not applying.
+
+`no-unnecessary-condition` caught it as a types-have-no-overlap error. The lint rule found a semantic
+bug, which is not what it is for.
+
+### Result
+
+| Gate | Result |
+|---|---|
+| `format:check` | pass |
+| `lint` | pass |
+| `typecheck` | pass |
+| `test` | 1,358 passed |
+| `test:e2e` | 435 passed, 135 skipped (documented WebKit-over-HTTP scope, KI-024) |
+| `docs:check` | permissions matrix, twin schema, rule format spec and gate catalogue all current |
+| `scan:secrets` | clean, 157 files |
+| `audit:deps` | no known vulnerabilities |
+| `build` | pass |
+
+`docs/RULE_FORMAT_SPEC.md` and `docs/GATE_CATALOGUE.md` are generated from
+`packages/rules/src/` and checked in CI. The rule listing alone is 287 entries — nobody would
+maintain it by hand, and a stale copy would misrepresent which obligations are in force.
+
+The methodology engine supports the five delivery methods gap-spec §16 names, and each profile states
+what it is **bad** at as well as what it is good at. A tool presenting every option as equally
+suitable is not helping anyone choose, and the choice matters most to the people least equipped to
+make it. `gatesFor()` returns every gate for every methodology, and `canSkipGate()` returns `false`
+unconditionally — a function rather than a constant, so a future change that wanted an exception would
+have to make it return something else, which is a change someone would notice in review.
