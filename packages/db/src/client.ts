@@ -129,6 +129,8 @@ export interface TestDatabase {
  * that nobody adds here will show up as state leaking between tests.
  */
 const TRUNCATABLE = [
+  'evidence',
+  'approvals',
   'outbox_events',
   'audit_events',
   'intake_answers',
@@ -531,6 +533,66 @@ CREATE INDEX audit_events_project_time_idx ON audit_events (project_id, occurred
 CREATE INDEX audit_events_correlation_idx ON audit_events (correlation_id);
 CREATE INDEX audit_events_actor_idx ON audit_events (actor_user_id);
 
+CREATE TABLE evidence (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  -- The gate criterion this is offered against. Vocabulary comes from evidencePurposes() in
+  -- packages/rules, derived from the criteria themselves.
+  purpose text NOT NULL,
+  type text NOT NULL,
+  label text NOT NULL,
+  note text,
+  uri text,
+  -- Randomised and server-generated, never derived from the filename (gap-spec 35).
+  storage_key text,
+  content_hash text,
+  mime_type text,
+  size_bytes integer,
+  state text NOT NULL DEFAULT 'CURRENT',
+  collected_by text NOT NULL,
+  collected_at timestamptz NOT NULL DEFAULT now(),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT evidence_state_check CHECK (state IN ('CURRENT','SUPERSEDED','QUARANTINED')),
+  -- Evidence with no note, no link and no file is a claim that something exists, which is the one
+  -- thing evidence must not be. An attestation (note alone) is weaker evidence, not absent evidence.
+  CONSTRAINT evidence_has_substance
+    CHECK (note IS NOT NULL OR uri IS NOT NULL OR storage_key IS NOT NULL)
+);
+
+CREATE INDEX evidence_project_purpose_idx ON evidence (project_id, purpose);
+CREATE INDEX evidence_org_idx ON evidence (organization_id);
+
+CREATE TABLE approvals (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  subject_type text NOT NULL,
+  subject_id text NOT NULL,
+  -- Without this, "approved" has no scope and the only honest reading is "somebody approved this at
+  -- some point". A change to the subject makes the approval stale.
+  subject_version integer NOT NULL,
+  requested_by text NOT NULL,
+  requested_at timestamptz NOT NULL DEFAULT now(),
+  approver_role project_role NOT NULL,
+  state text NOT NULL DEFAULT 'REQUESTED',
+  approver_user text,
+  decided_at timestamptz,
+  comment text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT approvals_state_check
+    CHECK (state IN ('REQUESTED','APPROVED','REJECTED','WITHDRAWN','INVALIDATED')),
+  CONSTRAINT approvals_subject_version_positive CHECK (subject_version >= 1),
+  -- A decided approval missing its decider attributes a judgement to nobody, which is worse than an
+  -- undecided one because it looks settled.
+  CONSTRAINT approvals_decision_complete
+    CHECK ((state IN ('REQUESTED','WITHDRAWN'))
+           OR (approver_user IS NOT NULL AND decided_at IS NOT NULL AND comment IS NOT NULL))
+);
+
+CREATE INDEX approvals_project_subject_idx ON approvals (project_id, subject_type);
+CREATE INDEX approvals_org_idx ON approvals (organization_id);
+
 CREATE TABLE outbox_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
@@ -640,6 +702,18 @@ CREATE POLICY twin_baselines_tenant_isolation ON twin_baselines
 ALTER TABLE twin_calculations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE twin_calculations FORCE ROW LEVEL SECURITY;
 CREATE POLICY twin_calculations_tenant_isolation ON twin_calculations
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE evidence ENABLE ROW LEVEL SECURITY;
+ALTER TABLE evidence FORCE ROW LEVEL SECURITY;
+CREATE POLICY evidence_tenant_isolation ON evidence
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE approvals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE approvals FORCE ROW LEVEL SECURITY;
+CREATE POLICY approvals_tenant_isolation ON approvals
   USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
   WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
 

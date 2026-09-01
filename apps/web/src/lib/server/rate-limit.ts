@@ -47,6 +47,7 @@ const LIMITS: Readonly<Record<string, number>> = {
   // Sized like project creation rather than like intake: a transition reads the whole twin graph and
   // evaluates every gate, so it is the most expensive thing an unauthenticated caller can ask for.
   'project-transition': 600,
+  'evidence-record': 600,
   search: 3_000,
   export: 300,
 };

@@ -219,6 +219,13 @@ export default async function PlanPage({
               finding names the rule behind it, so you can disagree with it.
             </p>
             <Link
+              href={`/plan/${projectId}/evidence`}
+              className="mt-sm inline-flex min-h-11 w-fit items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              Record evidence and approvals
+              <MaterialIcon name="verified" size={18} />
+            </Link>
+            <Link
               href={`/plan/${projectId}/rules`}
               className="mt-sm inline-flex min-h-11 w-fit items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >

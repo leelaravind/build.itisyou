@@ -775,8 +775,139 @@ export const twinCalculations = pgTable(
 );
 
 /* -------------------------------------------------------------------------- */
+/* Evidence and approvals                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Recorded evidence (gap-spec §32, §35).
+ *
+ * The durable record. Gates read EVIDENCE nodes from the twin graph, and the twin is rebuilt from
+ * scratch every time a plan is regenerated — so evidence stored only as a node would be destroyed by
+ * the next `Build the plan`. It lives here and is projected into the graph on read.
+ *
+ * `purpose` is the field the gates actually match on. Its vocabulary is not free text: it comes from
+ * `evidencePurposes()` in `packages/rules`, derived from the criteria themselves, so the set of
+ * things a user can record is exactly the set of things a gate looks for.
+ */
+export const evidence = pgTable(
+  'evidence',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    /** Which gate criterion this is offered against. Matches `GateCriterion.evidencePurpose`. */
+    purpose: text('purpose').notNull(),
+    /** `EVIDENCE_TYPES` in packages/governance. Weight differs by type, so it is recorded. */
+    type: text('type').notNull(),
+    label: text('label').notNull(),
+    /** What the person asserts. For an attestation this *is* the evidence. */
+    note: text('note'),
+    /** A link to the artefact, when it lives somewhere else — a CI run, a ticket, a dashboard. */
+    uri: text('uri'),
+    /**
+     * The R2 object key, when a file was uploaded.
+     *
+     * Randomised and server-generated, never derived from the filename (§35). A user-controlled path
+     * is a path traversal waiting for somebody to try it.
+     */
+    storageKey: text('storage_key'),
+    /** Content hash. §32: the field that makes this evidence rather than testimony. */
+    contentHash: text('content_hash'),
+    mimeType: text('mime_type'),
+    sizeBytes: integer('size_bytes'),
+    /** `CURRENT`, `SUPERSEDED` or `QUARANTINED`. */
+    state: text('state').notNull().default('CURRENT'),
+    collectedBy: text('collected_by').notNull(),
+    collectedAt: timestamp('collected_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('evidence_project_purpose_idx').on(table.projectId, table.purpose),
+    index('evidence_org_idx').on(table.organizationId),
+    check('evidence_state_check', sql`${table.state} IN ('CURRENT','SUPERSEDED','QUARANTINED')`),
+    /*
+     * Evidence must actually point at something.
+     *
+     * A record with no note, no link and no file is a claim that something exists, which is the one
+     * thing evidence must not be. Attestations are permitted — `note` alone is enough — because a
+     * named person asserting something is weaker evidence, not absent evidence, and §32 grades it
+     * that way rather than forbidding it.
+     */
+    check(
+      'evidence_has_substance',
+      sql`${table.note} IS NOT NULL OR ${table.uri} IS NOT NULL OR ${table.storageKey} IS NOT NULL`,
+    ),
+  ],
+);
+
+/**
+ * Approvals and sign-offs (gap-spec §33).
+ *
+ * `subjectVersion` is the field that makes an approval mean something: without it, "approved" has no
+ * scope and the only honest reading is "somebody approved this at some point". A change to the
+ * subject makes the approval stale, which `isStale` decides and the lifecycle machine enforces.
+ */
+export const approvals = pgTable(
+  'approvals',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    /** `APPROVABLE_SUBJECTS` in packages/governance. */
+    subjectType: text('subject_type').notNull(),
+    subjectId: text('subject_id').notNull(),
+    /** The version of the subject that was approved. See the note above. */
+    subjectVersion: integer('subject_version').notNull(),
+    requestedBy: text('requested_by').notNull(),
+    requestedAt: timestamp('requested_at', { withTimezone: true }).notNull().defaultNow(),
+    /** Decided by policy rather than by the requester, so a requester cannot choose a soft approver. */
+    approverRole: projectRoleEnum('approver_role').notNull(),
+    /** `REQUESTED`, `APPROVED`, `REJECTED`, `WITHDRAWN`, `INVALIDATED`. */
+    state: text('state').notNull().default('REQUESTED'),
+    approverUser: text('approver_user'),
+    decidedAt: timestamp('decided_at', { withTimezone: true }),
+    /** Why. Required on any decision, including approval. */
+    comment: text('comment'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('approvals_project_subject_idx').on(table.projectId, table.subjectType),
+    index('approvals_org_idx').on(table.organizationId),
+    check(
+      'approvals_state_check',
+      sql`${table.state} IN ('REQUESTED','APPROVED','REJECTED','WITHDRAWN','INVALIDATED')`,
+    ),
+    check('approvals_subject_version_positive', sql`${table.subjectVersion} >= 1`),
+    /*
+     * A decision carries who made it, when, and why — or none of the three.
+     *
+     * A decided approval missing its decider attributes a judgement to nobody, which is worse than an
+     * undecided one because it looks settled.
+     */
+    check(
+      'approvals_decision_complete',
+      sql`(${table.state} IN ('REQUESTED','WITHDRAWN'))
+          OR (${table.approverUser} IS NOT NULL AND ${table.decidedAt} IS NOT NULL AND ${table.comment} IS NOT NULL)`,
+    ),
+  ],
+);
+
+/* -------------------------------------------------------------------------- */
 /* Type exports                                                               */
 /* -------------------------------------------------------------------------- */
+
+export type Evidence = typeof evidence.$inferSelect;
+export type NewEvidence = typeof evidence.$inferInsert;
+export type ApprovalRow = typeof approvals.$inferSelect;
+export type NewApprovalRow = typeof approvals.$inferInsert;
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

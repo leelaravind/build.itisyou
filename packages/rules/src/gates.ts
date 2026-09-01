@@ -57,6 +57,18 @@ export interface GateCriterion {
   readonly rationale: string;
   /** Reads the graph. Returns null when the criterion cannot be decided from what exists. */
   readonly check: (graph: TwinGraph) => boolean | null;
+  /**
+   * For a MANUAL criterion, the evidence purpose that satisfies it.
+   *
+   * Declared as data as well as embedded in `check`, so the product can *ask* the catalogue what it
+   * needs rather than a person copying the list into a form. Sixteen criteria are satisfied by an
+   * evidence record and two by any approval; before this, both facts existed only inside a closure,
+   * which meant no surface could offer the right thing and none did — all seventeen MANUAL criteria
+   * were permanently unsatisfiable.
+   */
+  readonly evidencePurpose?: string;
+  /** For a MANUAL criterion satisfied by any recorded approval rather than a specific artefact. */
+  readonly satisfiedByApproval?: boolean;
 }
 
 export interface Gate {
@@ -285,6 +297,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Security retrofitted onto a finished design costs several times what designing for it costs, and usually cannot reach the same standard.',
+        evidencePurpose: 'security-architecture',
         check: evidenceFor('security-architecture'),
       },
     ],
@@ -356,6 +369,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Committing money and time is a decision a person takes. The platform records it; it does not make it.',
+        satisfiedByApproval: true,
         check: has('APPROVAL'),
       },
     ],
@@ -386,6 +400,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Review is the cheapest defect-detection available, and it is the first thing dropped under time pressure — which is exactly when it is most needed.',
+        evidencePurpose: 'code-review',
         check: evidenceFor('code-review'),
       },
       {
@@ -472,6 +487,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'A scan nobody read is a scan that was not run, except that it also produces a false sense of having been.',
+        evidencePurpose: 'security-review',
         check: evidenceFor('security-review'),
       },
       {
@@ -507,6 +523,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Most breaches arrive through a dependency nobody chose and a credential nobody meant to commit.',
+        evidencePurpose: 'dependency-scan',
         check: evidenceFor('dependency-scan'),
       },
     ],
@@ -532,6 +549,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'The moment a rollback is needed is the worst possible moment to design one. An untested rollback plan is a hypothesis.',
+        evidencePurpose: 'rollback-plan',
         check: evidenceFor('rollback-plan'),
       },
       {
@@ -541,6 +559,7 @@ export const GATES: readonly Gate[] = [
         blocking: false,
         rationale:
           'Code rolls back cleanly; data does not. A migration without a reverse path makes the whole release one-way.',
+        evidencePurpose: 'migration-plan',
         check: evidenceFor('migration-plan'),
       },
       {
@@ -549,6 +568,7 @@ export const GATES: readonly Gate[] = [
         kind: 'MANUAL',
         blocking: true,
         rationale: 'Someone accountable has to say yes, and the record has to show who.',
+        satisfiedByApproval: true,
         check: has('APPROVAL'),
       },
       {
@@ -558,6 +578,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Monitoring added after a release cannot tell you whether the release caused what you are now seeing.',
+        evidencePurpose: 'monitoring',
         check: evidenceFor('monitoring'),
       },
       {
@@ -576,6 +597,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'A backup nobody has restored from is a belief about a backup. The restore is the part that fails.',
+        evidencePurpose: 'backup-restore',
         check: evidenceFor('backup-restore'),
       },
     ],
@@ -594,6 +616,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'A deployment that reported success and a system that is serving traffic are different claims.',
+        evidencePurpose: 'production-availability',
         check: evidenceFor('production-availability'),
       },
       {
@@ -603,6 +626,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Certificate and redirect problems appear only against the real hostname, which is exactly what staging does not have.',
+        evidencePurpose: 'production-tls',
         check: evidenceFor('production-tls'),
       },
       {
@@ -612,6 +636,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Headers are frequently correct in the application and stripped or overridden by whatever sits in front of it.',
+        evidencePurpose: 'production-headers',
         check: evidenceFor('production-headers'),
       },
       {
@@ -621,6 +646,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'Everything can be individually healthy while the thing users actually do is broken.',
+        evidencePurpose: 'production-journeys',
         check: evidenceFor('production-journeys'),
       },
       {
@@ -630,6 +656,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'The first incident is the wrong time to discover that logging was never wired up in this environment.',
+        evidencePurpose: 'production-logging',
         check: evidenceFor('production-logging'),
       },
     ],
@@ -656,6 +683,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'An alert delivered to an unread inbox is worse than no alert, because it makes people believe they are covered.',
+        evidencePurpose: 'alerting',
         check: evidenceFor('alerting'),
       },
       {
@@ -664,6 +692,7 @@ export const GATES: readonly Gate[] = [
         kind: 'MANUAL',
         blocking: true,
         rationale: 'Deciding who does what during an outage costs time nobody has at the time.',
+        evidencePurpose: 'incident-process',
         check: evidenceFor('incident-process'),
       },
       {
@@ -747,6 +776,7 @@ export const GATES: readonly Gate[] = [
         blocking: true,
         rationale:
           'A handover where the original team still holds the only administrative access is not a handover.',
+        evidencePurpose: 'ownership-transfer',
         check: evidenceFor('ownership-transfer'),
       },
       {
@@ -847,6 +877,55 @@ function explain(
 /** Evaluate every gate. Order is the catalogue's, which follows the lifecycle. */
 export function evaluateGates(graph: TwinGraph): readonly GateOutcome[] {
   return GATES.map((gate) => evaluateGate(gate, graph));
+}
+
+/**
+ * Every MANUAL criterion in the catalogue, with what would satisfy it.
+ *
+ * The product's evidence surface is built from this rather than from a hand-written list, so a gate
+ * criterion added tomorrow appears in the UI without anybody remembering to add it — and a criterion
+ * nobody can satisfy becomes visible rather than silent.
+ *
+ * That silence is what this replaces. All seventeen MANUAL criteria, sixteen of them blocking across
+ * eight gates, were permanently unsatisfiable because nothing in the product created an EVIDENCE or
+ * APPROVAL node and nothing could say which purposes were wanted.
+ */
+export interface ManualCriterion {
+  readonly gate: GateKey;
+  readonly gateTitle: string;
+  readonly key: string;
+  readonly statement: string;
+  readonly rationale: string;
+  readonly blocking: boolean;
+  /** The evidence purpose that satisfies it, or `null` when any recorded approval does. */
+  readonly evidencePurpose: string | null;
+}
+
+export function manualCriteria(): readonly ManualCriterion[] {
+  return GATES.flatMap((gate) =>
+    gate.criteria
+      .filter((criterion) => criterion.kind === 'MANUAL')
+      .map((criterion) => ({
+        gate: gate.key,
+        gateTitle: gate.title,
+        key: criterion.key,
+        statement: criterion.statement,
+        rationale: criterion.rationale,
+        blocking: criterion.blocking,
+        evidencePurpose: criterion.evidencePurpose ?? null,
+      })),
+  );
+}
+
+/** The distinct evidence purposes the catalogue asks for, in catalogue order. */
+export function evidencePurposes(): readonly string[] {
+  return [
+    ...new Set(
+      manualCriteria()
+        .map((criterion) => criterion.evidencePurpose)
+        .filter((purpose): purpose is string => purpose !== null),
+    ),
+  ];
 }
 
 export function findGate(key: string): Gate | undefined {
