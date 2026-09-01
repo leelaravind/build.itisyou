@@ -76,7 +76,20 @@ async function answerIntake(page: Page, projectId: string): Promise<void> {
       await skip.click();
     }
 
-    if (answered.size < 2) await expect(heading).not.toHaveText(asked, { timeout: 15_000 });
+    /*
+     * Wait after **every** answer, including the last one — the same fix as in `trace.spec.ts` and
+     * `change.spec.ts`, and the third copy of this helper to need it.
+     *
+     * The `if (answered.size < 2)` guard did not skip a read; it skipped waiting for the server
+     * action to finish, and `buildPlan` navigates on the next line. Against a real deployment the
+     * write takes ~300ms and the navigation cancelled it. Locally it completes in single-digit
+     * milliseconds, so the race cannot open at all.
+     *
+     * That this exists in three files is itself the finding: the helper was copied rather than
+     * shared, so one fix had to be made three times and the third was found only by a full run
+     * against staging. See KI-060.
+     */
+    await expect(heading).not.toHaveText(asked, { timeout: 15_000 });
   }
 
   expect(answered.size, 'intake did not reach the questions that generate requirements').toBe(2);

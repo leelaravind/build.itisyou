@@ -155,6 +155,27 @@ jobs:
       - name: Install (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
+      # The gate that PGlite cannot run.
+      #
+      # `packages/db/test/tenant-scope.test.ts` covers tenant isolation and is structurally incapable
+      # of catching the bug it was written for: PGlite is one connection behind a mutex, so a leaked
+      # scope has nowhere to leak to. The discriminating condition is a pool, which needs a real
+      # server — and there is one right here, in the service container above.
+      #
+      # Measured against the pre-fix implementation on a four-connection pool, the interleaving check
+      # returned 18 of 40 requests carrying **another tenant's row**. This job is what keeps that from
+      # being a story about one afternoon.
+      - name: Apply the schema
+        env:
+          DATABASE_URL_UNPOOLED: postgresql://postgres:postgres@localhost:5432/govintel_test # secret-scan-ignore
+        run: pnpm migrate
+
+      - name: Tenant isolation under a real pool
+        env:
+          APP_ENV: staging
+          DATABASE_URL_UNPOOLED: postgresql://postgres:postgres@localhost:5432/govintel_test # secret-scan-ignore
+        run: pnpm verify:isolation
+
       - name: Concurrency suites
         env:
           # Throwaway credential for the ephemeral service container above: created and destroyed

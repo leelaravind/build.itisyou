@@ -337,9 +337,52 @@ That was the point of deferring it, and it held.
 
 ---
 
-## 11. What this document does not claim
+## 11. As built, 2026-09-01
 
-No deployment has happened. **The Phase-19 gate is not green and the Phase-20 gate is not evaluated.**
+The design above was written before anything ran. This section records what was actually deployed and
+what deploying it changed, because a design document that never gets marked up against reality is a
+document nobody can trust the second time.
+
+| Component | As designed | As built |
+|---|---|---|
+| Runtime | Workers via OpenNext | Unchanged. `govintel-web-staging` |
+| Background work | A second Worker, Queues, Cron | Unchanged. `govintel-worker-staging`, cron `* * * * *` |
+| Database | External PostgreSQL behind Hyperdrive | Neon `tiny-mode-81422275`, branch `staging`. Hyperdrive `fa38480586e44cebab20fe15ac2121a0`, **caching disabled** |
+| Object storage | R2, private | `govintel-evidence-staging` |
+| Minimum external services | Two | Confirmed: managed PostgreSQL now, an OIDC provider when auth ships |
+| D1, Redis, BullMQ, Workflows | Not introduced | Not introduced |
+
+### Four assumptions in this document that were wrong
+
+The design survived contact largely intact. These four did not, and each is now recorded against the
+section that asserted it.
+
+**§3 said nothing in the application would know Cloudflare is there**, because Hyperdrive presents an
+ordinary connection string. True of the *string* and false of how it arrives: Hyperdrive is an object
+binding and cannot be copied into `process.env`. One module now names Cloudflare —
+`connection-string.ts` — and nothing behind it does (KI-053, KI-056).
+
+**§3 assumed a pooled handle held for the process**, which is how every previous deployment target
+this project considered would work. A Worker may not use a socket opened by a different request, so
+the deployed path opens a connection per operation. That is not a compromise: §3's own sentence is
+*"Hyperdrive pools connections for a runtime that cannot hold a pool itself"*, and holding one anyway
+was the contradiction (KI-057).
+
+**§5 described the outbox as the mechanism for recording side effects.** The mechanism is built and
+verified; no domain path emits into it. `outbox_events` held zero rows after 1,539 projects created
+through the UI (KI-059).
+
+**§9 listed what must change in the code** and was accurate as far as it went. It could not list the
+three defects that only a running deployment exposes — a driver result shape, an environment
+validation rule, and a connection lifetime — which between them accounted for every hour of the
+deployment that was not spent waiting for a build.
+
+---
+
+## 12. What this document does not claim
+
+Staging is deployed and verified. **Phase 20 is not evaluated, and the Phase-19 gate is green only
+for staging.**
 
 The ten §15.9 production checks remain `NOT_CHECKED`, and per the platform's own model that makes the
 production verification gate **indeterminate, not passed**. Recording it otherwise here would be the
