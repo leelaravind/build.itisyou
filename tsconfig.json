@@ -42,6 +42,9 @@
     },
     {
       "path": "./packages/organization"
+    },
+    {
+      "path": "./packages/design"
     }
   ]
 }

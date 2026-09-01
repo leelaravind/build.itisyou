@@ -104,7 +104,15 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-sm">
+            {/*
+              Stacked on a phone, three across from the small-tablet breakpoint.
+
+              This was `grid-cols-3` at every size, which is the exact failure §3.3 names: three
+              equal columns of labelled cards need roughly 425px of content and a phone gives 412,
+              so the whole page scrolled sideways. Nothing looked broken — the cards simply pushed
+              the document wider than the viewport, which is what a shrunk desktop does.
+            */}
+            <div className="grid grid-cols-1 gap-sm sm:grid-cols-3">
               {PIPELINE_STAGES.map((stage) => (
                 <div
                   key={stage.id}

@@ -1,0 +1,15 @@
+{
+  "name": "@govintel/design",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./responsive": "./src/responsive.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*"
+  }
+}

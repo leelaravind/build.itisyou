@@ -2525,3 +2525,89 @@ dependency-audit and production build are clean.
 The Phase-15 gate — multi-project and role behaviour verified — is met, and the verification that
 mattered was not the passing tests but the planted defect that showed two of them had been asserting
 nothing at all.
+
+---
+
+## Entry 020 — Phase 16: a testable version of "not merely a shrunk desktop"
+
+§3.3 contains the sentence *"The implementation must not merely shrink desktop UI."* It is easy to
+agree with and almost impossible to test directly. Nothing in a DOM says whether a layout was
+designed at 1280px and squeezed.
+
+But the symptom is completely testable: **a shrunk desktop scrolls sideways.** A layout designed for
+a wide viewport has widths in it that a 412px phone cannot honour, and the result is a page you have
+to drag left and right to read. So the load-bearing test in this phase is horizontal overflow,
+applied to every route — objective, catching breakage anywhere on a page rather than at the one
+element somebody thought to check, and failing for exactly the reason the spec cares about.
+
+### It found a real defect on the first run
+
+The landing page needed 458px on a 412px screen.
+
+Tracking it down was more interesting than the fix. No element's bounding box exceeded the viewport,
+and the body did not overflow its own box, so the usual "which element is too wide" query returned
+nothing. What eventually located it was walking down from the root looking for the deepest node whose
+`scrollWidth` exceeded its `clientWidth` — which is a different question from "does this element
+stick out", and it is the question that finds content overflowing a container rather than a container
+overflowing its parent.
+
+The offender was a decorative three-column panel: `grid-cols-3` at every size, needing about 425px of
+labelled cards. It never stacked. Nothing looked broken in a screenshot — the cards rendered
+perfectly — and the whole document was simply wider than the phone.
+
+That is precisely the failure mode §3.3 names, and it is one no amount of looking at screenshots
+finds, because the page looks fine. You have to measure.
+
+### The distinction §3.4 makes that most designs collapse
+
+§3.4 asks four things about each of ten dense representations: desktop, tablet, mobile, **and an
+accessible alternative**. The fourth is listed separately from the third, and treating them as the
+same thing is the mistake this phase exists to prevent.
+
+A mobile fallback is what a small screen gets. An accessible alternative is what somebody gets who
+cannot perceive the visual form **at any size**. A screen-reader user on a 27-inch monitor needs the
+alternative, and a design that ships it only below 640px has not shipped one at all.
+
+So the contract here is stronger than §3.4 strictly requires: the accessible alternative is **always
+in the document**, and the visual representation is supplementary to it. That inverts the usual
+arrangement — where a table sits behind a toggle as the degraded option — and it is the only
+arrangement where the alternative cannot rot, because everybody is looking at it.
+
+A test asserts, for all ten, that the alternative is not merely a restatement of the mobile fallback.
+Writing them as the same sentence is how the alternative ends up behind a media query.
+
+### Touch targets, measured rather than inspected
+
+WCAG 2.2 §2.5.8 sets 24px. This uses 44px, and the reason is worth stating: 24px is the level below
+which a target *fails*, and designing to a failure threshold makes every rounding error a defect.
+44px is roughly the pad of an adult finger, which is the constraint the criterion approximates.
+
+The check measures rendered boxes rather than inspecting classes. A class that should produce 44px
+and does not — because something overrode it, or the element is inline — is exactly the failure a
+class-based check cannot see.
+
+Targets inside a sentence are exempt, as §2.5.8 exempts them. Enforcing it there would mean no prose
+could contain a link, and a rule that makes writing impossible gets switched off.
+
+### The test premise that was wrong again
+
+The traceability-chain test asserted against a project built from a bare idea, which has no
+requirements, so no chain rendered. It failed for the right reason — the page correctly showed
+nothing — and the fix was to answer the two intake questions that generate requirements, as the
+Phase-10 and Phase-12 suites already do.
+
+This is the third time a test has asserted against a project that had not been given enough to work
+with. The pattern is specific enough to name: **a surface derived from intake needs intake**, and a
+project created from a sentence has almost none. Assertions about derived content have to build the
+input first, or they test the empty case while claiming to test the full one.
+
+### Where Phase 16 stands
+
+1,914 unit tests and 687 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/RESPONSIVE_CONTRACT.md` is the tenth generated
+document.
+
+The Phase-16 gate — defined mobile E2Es and accessibility passing — is met: twelve mobile tests on a
+412px Pixel 7 viewport, covering five public routes and all ten project surfaces for horizontal
+overflow, touch target sizes measured on rendered boxes, the dense representations reading as text,
+and axe passing separately at phone width, because reflow changes what axe sees.
