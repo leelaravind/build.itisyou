@@ -373,13 +373,11 @@ describe('expiry sweep', () => {
   it('deletes expired unconverted sessions and their projects', async () => {
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db
-      .insert(projects)
-      .values({
-        name: 'abandoned',
-        organizationId: session.organizationId,
-        guestSessionId: session.id,
-      });
+    await database.db.insert(projects).values({
+      name: 'abandoned',
+      organizationId: session.organizationId,
+      guestSessionId: session.id,
+    });
 
     const result = await purgeExpiredGuestSessions(
       database.db,
@@ -407,13 +405,11 @@ describe('expiry sweep', () => {
     // would sever the provenance of every project created through the guest flow.
     const now = new Date('2026-01-01T00:00:00Z');
     const session = await createGuestSession(database.db, { now, ttlHours: 1 });
-    await database.db
-      .insert(projects)
-      .values({
-        name: 'saved',
-        organizationId: session.organizationId,
-        guestSessionId: session.id,
-      });
+    await database.db.insert(projects).values({
+      name: 'saved',
+      organizationId: session.organizationId,
+      guestSessionId: session.id,
+    });
 
     await convertGuestSession(database.db, {
       guestSessionId: session.id,
