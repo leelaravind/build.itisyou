@@ -4,7 +4,14 @@ import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
 import { sql } from 'drizzle-orm';
 import * as schema from '@govintel/db/schema';
-import { SCHEMA_DDL, ROW_LEVEL_SECURITY_DDL, APP_ROLE } from '@govintel/db/client';
+import {
+  APP_ROLE,
+  SCHEMA_FINGERPRINT,
+  readSchemaFingerprint,
+  rebuildSchema,
+} from '@govintel/db/client';
+import { logger } from '@govintel/shared/logging';
+import { IS_DEPLOYED } from './config.ts';
 
 /**
  * Server-side database handle.
@@ -41,25 +48,46 @@ const cache: Cache = (globalCache.__govintelDb ??= {});
 const DEV_DATA_DIR = '.pglite';
 
 async function initialise(): Promise<DatabaseHandle> {
+  /*
+   * A deployed environment must never reach this function. PGlite is a single-connection embedded
+   * database and `rebuildSchema` below destroys data; both are correct for a laptop and catastrophic
+   * anywhere else. The guard is here rather than in a comment because the failure mode is silent —
+   * the app would start, serve traffic, and lose everything on the next deploy.
+   */
+  if (IS_DEPLOYED) {
+    throw new Error(
+      'The embedded development database was reached in a deployed environment. ' +
+        'Deployed environments require a networked Postgres and real migrations (Phase 19).',
+    );
+  }
+
   const client = new PGlite(DEV_DATA_DIR);
   const db = drizzle(client, { schema });
 
-  // Idempotent: the schema is applied only if the tables are absent, so a restart against an
-  // existing data directory keeps whatever the developer already has.
-  const existing = await client.query<{ count: number }>(
-    `SELECT count(*)::int AS count FROM information_schema.tables
-     WHERE table_schema = 'public' AND table_name = 'projects'`,
-  );
+  /*
+   * Rebuild when the structure on disk is not the structure this build expects.
+   *
+   * The previous version asked "does `projects` exist?" and treated yes as "the schema is current".
+   * That is true exactly once — the first time. Every table added afterwards was silently missing
+   * from any data directory created before it, and the symptom surfaced as an insert failing against
+   * a relation that does not exist, three layers away from the cause. `ai_imports` was the first to
+   * hit it; every future table would have hit it too.
+   *
+   * Comparing a fingerprint of the DDL catches the general case instead of that one instance. The
+   * local database is disposable by construction — it holds a developer's scratch projects, not a
+   * customer's — so rebuilding is the right response, and it is logged loudly rather than done
+   * quietly, because silently discarding local work is its own kind of unpleasant surprise.
+   */
+  const found = await readSchemaFingerprint(client);
 
-  if ((existing.rows[0]?.count ?? 0) === 0) {
-    await client.exec(SCHEMA_DDL);
-    await client.exec(`
-      CREATE ROLE ${APP_ROLE} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;
-      GRANT USAGE ON SCHEMA public TO ${APP_ROLE};
-      GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${APP_ROLE};
-      GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${APP_ROLE};
-    `);
-    await client.exec(ROW_LEVEL_SECURITY_DDL);
+  if (found !== SCHEMA_FINGERPRINT) {
+    logger.warn(
+      found === null
+        ? 'building the development database'
+        : 'the development database was built from a different schema; rebuilding it',
+      { expected: SCHEMA_FINGERPRINT, found, dataDir: DEV_DATA_DIR },
+    );
+    await rebuildSchema(client);
   }
 
   cache.client = client;

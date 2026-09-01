@@ -91,7 +91,7 @@ export function EmptyState({
       </p>
 
       {description === undefined ? null : (
-        <p className="max-w-md font-sans text-body-sm text-on-surface-variant">{description}</p>
+        <p className="max-w-narrow font-sans text-body-sm text-on-surface-variant">{description}</p>
       )}
 
       {action === undefined ? null : <div className="mt-sm">{action}</div>}

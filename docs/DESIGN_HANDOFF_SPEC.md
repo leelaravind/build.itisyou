@@ -219,6 +219,48 @@ JetBrains Mono and the Material Symbols subset.
 
 ---
 
+### D7 — the spacing scale silently shadows Tailwind's container scale
+
+**Found in Phase 5, by an automated assertion rather than by review.**
+
+Tailwind 4 resolves `max-w-<name>` through the **spacing** namespace before the container one. This
+design system defines `--spacing-md`, `--spacing-xl`, `--spacing-2xl` and `--spacing-3xl` (§5), so
+across the entire application:
+
+| Class written | Intended | Actually resolved to |
+|---|---|---|
+| `max-w-md` | 28rem (448px) | `--spacing-md` → **16px** |
+| `max-w-xl` | 36rem (576px) | `--spacing-xl` → **32px** |
+| `max-w-2xl` | 42rem (672px) | `--spacing-2xl` → **48px** |
+| `max-w-3xl` | 48rem (768px) | `--spacing-3xl` → **64px** |
+| `max-w-4xl` | 56rem (896px) | 56rem — *correct*, because no `--spacing-4xl` exists |
+
+That last row is why the defect survived: the breakage was inconsistent. Pages using `max-w-4xl`
+looked right, and pages using `max-w-3xl` had a main column the width of their longest word — which
+still wraps, still uses the right colours, and still throws nothing.
+
+**Resolution.** Named container tokens that no spacing token can shadow:
+
+```css
+--container-narrow: 448px;
+--container-form: 576px;
+--container-prose: 672px;
+--container-content: 768px;
+--container-wide: 896px;
+```
+
+Every `max-w-*` in the application now names one of these.
+
+**Guard.** `apps/web/test/design/utility-collisions.test.ts` asserts the general rule — *no sizing
+utility may name a token the spacing scale also names* — plus that every `max-w-*` used names a
+defined container token, and that no container token is narrower than 320px. Verified by
+reintroducing `max-w-md` into `login/page.tsx` and confirming two tests fail.
+
+**The lesson for the rest of the design system.** Any token name shared with a Tailwind default
+namespace is a silent override, not an error. `md`, `lg`, `xl`, `2xl` and `3xl` are the names most
+likely to collide, and they are exactly the names a spacing scale wants to use. The spacing scale
+keeps them; anything that is *not* spacing gets a name that says what it is.
+
 ## 5. Tokens this project must define (absent from handoff)
 
 Marked **DERIVED**; each carries its rationale so it is reviewable.

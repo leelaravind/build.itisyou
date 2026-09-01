@@ -13,6 +13,8 @@
  * exist to catch.
  */
 
+import { createHash } from 'node:crypto';
+
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle as drizzlePglite } from 'drizzle-orm/pglite';
 import { sql } from 'drizzle-orm';
@@ -51,6 +53,7 @@ const TRUNCATABLE = [
   'outbox_events',
   'audit_events',
   'intake_answers',
+  'ai_imports',
   'project_members',
   'projects',
   'memberships',
@@ -247,6 +250,35 @@ CREATE UNIQUE INDEX intake_answers_project_field_idx ON intake_answers (project_
 CREATE INDEX intake_answers_project_idx ON intake_answers (project_id);
 CREATE INDEX intake_answers_org_idx ON intake_answers (organization_id);
 
+CREATE TABLE ai_imports (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  prompt_id text,
+  state text NOT NULL DEFAULT 'RAW',
+  raw text NOT NULL,
+  response jsonb,
+  validation jsonb,
+  schema_version text,
+  validator_version text,
+  decided_by uuid REFERENCES users(id) ON DELETE SET NULL,
+  decision_reason text,
+  idempotency_key text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ai_imports_state_check CHECK (
+    state IN ('RAW','PARSED','VALIDATED','ACCEPTED','REJECTED','MATERIALIZED')
+  ),
+  -- The third lock. The application refuses this twice already; the database refuses it at a layer
+  -- that a bug in the other two cannot bypass.
+  CONSTRAINT ai_imports_decided_requires_validation CHECK (
+    state NOT IN ('ACCEPTED','MATERIALIZED') OR validation IS NOT NULL
+  )
+);
+CREATE INDEX ai_imports_project_idx ON ai_imports (project_id);
+CREATE INDEX ai_imports_org_idx ON ai_imports (organization_id);
+CREATE UNIQUE INDEX ai_imports_idempotency_idx ON ai_imports (idempotency_key);
+
 CREATE TABLE audit_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id uuid REFERENCES organizations(id) ON DELETE RESTRICT,
@@ -363,10 +395,95 @@ export async function applyRowLevelSecurity(client: PGlite): Promise<void> {
  * paper. The role is granted DML on the tenant tables and nothing more; no DDL, no ownership.
  */
 export async function createApplicationRole(client: PGlite): Promise<void> {
-  await client.exec(`
+  await client.exec(APPLICATION_ROLE_DDL);
+}
+
+/**
+ * Role creation, written to be safe to run twice.
+ *
+ * Roles live in the cluster, not in a schema, so they outlive `DROP SCHEMA public CASCADE` — which
+ * `rebuildSchema` does. A bare `CREATE ROLE` would then fail on the second boot with a duplicate
+ * object error, and the grants after it would never run, leaving the application unable to read its
+ * own tables. The grants are re-issued unconditionally because a rebuilt schema contains new tables
+ * that the earlier `GRANT ... ON ALL TABLES` never covered.
+ */
+export const APPLICATION_ROLE_DDL = `
+DO $role$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${APP_ROLE}') THEN
     CREATE ROLE ${APP_ROLE} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;
-    GRANT USAGE ON SCHEMA public TO ${APP_ROLE};
-    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${APP_ROLE};
-    GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${APP_ROLE};
-  `);
+  END IF;
+END
+$role$;
+GRANT USAGE ON SCHEMA public TO ${APP_ROLE};
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ${APP_ROLE};
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ${APP_ROLE};
+`;
+
+/**
+ * A fingerprint of the structure this build expects.
+ *
+ * There is no migration system yet — that arrives with the deployment target in Phase 19 — so a
+ * development data directory created by an earlier build keeps whatever tables it had. The old
+ * bootstrap asked "does `projects` exist?" and treated yes as "the schema is current", which meant
+ * every table added after the directory was created was silently absent. `ai_imports` was the first
+ * to hit it, and the symptom was a generic insert failure three layers away from the cause.
+ *
+ * A hash of the DDL turns "the local database is out of date" from a silent wrong answer into a
+ * detectable condition. It is not a migration: it can tell you the structure changed, not how to get
+ * from one to the other. That is the correct trade for a development-only path, and deliberately not
+ * good enough for a deployed one — where the data cannot be thrown away and real migrations are
+ * required.
+ */
+export const SCHEMA_FINGERPRINT = createHash('sha256')
+  .update(SCHEMA_DDL)
+  .update(ROW_LEVEL_SECURITY_DDL)
+  .digest('hex')
+  .slice(0, 32);
+
+/** Records which structure a database was built from, so drift is detectable rather than silent. */
+export const SCHEMA_META_DDL = `
+CREATE TABLE IF NOT EXISTS schema_meta (
+  fingerprint text PRIMARY KEY,
+  applied_at timestamptz NOT NULL DEFAULT now()
+);
+`;
+
+/**
+ * The fingerprint a database was built from, or `null` if it predates fingerprinting or is empty.
+ */
+export async function readSchemaFingerprint(client: PGlite): Promise<string | null> {
+  const present = await client.query<{ count: number }>(
+    `SELECT count(*)::int AS count FROM information_schema.tables
+     WHERE table_schema = 'public' AND table_name = 'schema_meta'`,
+  );
+
+  if ((present.rows[0]?.count ?? 0) === 0) return null;
+
+  const row = await client.query<{ fingerprint: string }>(
+    'SELECT fingerprint FROM schema_meta ORDER BY applied_at DESC LIMIT 1',
+  );
+
+  return row.rows[0]?.fingerprint ?? null;
+}
+
+/**
+ * Build the schema from nothing, discarding whatever was there.
+ *
+ * `DROP SCHEMA public CASCADE` rather than dropping tables one by one: the enum types, triggers and
+ * functions have to go too, and enumerating them is a list that will be wrong the moment someone
+ * adds one.
+ *
+ * **Development and test only.** Nothing in a deployed environment may call this: it destroys data,
+ * and the whole point of the Phase-19 migration work is that deployed schemas change without doing
+ * that. `assertNotDeployed` is the caller's responsibility, because this module has no view of the
+ * environment.
+ */
+export async function rebuildSchema(client: PGlite): Promise<void> {
+  await client.exec('DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;');
+  await client.exec(SCHEMA_DDL);
+  await client.exec(SCHEMA_META_DDL);
+  await client.exec(APPLICATION_ROLE_DDL);
+  await client.exec(ROW_LEVEL_SECURITY_DDL);
+  await client.query('INSERT INTO schema_meta (fingerprint) VALUES ($1)', [SCHEMA_FINGERPRINT]);
 }

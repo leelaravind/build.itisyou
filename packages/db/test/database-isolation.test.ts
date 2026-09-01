@@ -146,6 +146,66 @@ describe('schema integrity', () => {
     ).rejects.toThrow();
   });
 
+  it('refuses to mark an import accepted with no validation result', async () => {
+    /*
+     * The third lock on the airlock.
+     *
+     * `acceptStagedImport` and `materializeStagedImport` both refuse this already. The constraint
+     * exists because the guarantee — untrusted AI output never reaches the project unvalidated —
+     * should not rest solely on application code being correct.
+     */
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'imp') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'ACCEPTED', '{}')
+      `),
+    ).rejects.toThrow();
+  });
+
+  it('refuses to mark an import materialised with no validation result', async () => {
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'imp2') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'MATERIALIZED', '{}')
+      `),
+    ).rejects.toThrow();
+  });
+
+  it('allows an unvalidated import to sit in RAW', async () => {
+    // RAW is exactly where an unvalidated import belongs.
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'imp3') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'RAW', 'pasted text')
+      `),
+    ).resolves.toBeDefined();
+  });
+
+  it('rejects an unknown import state', async () => {
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${ORG_A}, 'imp4') RETURNING id
+    `);
+    const projectId = project.rows[0]!.id;
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'APPLIED', '{}')
+      `),
+    ).rejects.toThrow();
+  });
+
   it('rejects a project referencing a non-existent organisation', async () => {
     await expect(
       database.db.execute(sql`

@@ -252,6 +252,105 @@ table nobody adds to the reset list shows up as state leaking between tests.
 
 ---
 
+## 9b. The external-AI interchange as a security boundary
+
+**Contract:** plan §11; gap-spec §11.3, §12.1–§12.3. Phase 5.
+
+The interchange is the only place in the product where data deliberately leaves the tenant boundary,
+and the only place where content of entirely unknown provenance is invited back in. Both directions
+are treated as hostile.
+
+### 9b.1 What actually crosses the boundary
+
+Nothing is sent by the platform. The user copies a prompt and pastes a reply — which means the
+platform cannot be compromised by a malicious *provider*, only by malicious *content*. It also means
+there is no API key to leak and no paid dependency, which is a locked product requirement (plan §2.3)
+rather than a cost decision.
+
+Outbound, `packages/interchange/src/redaction.ts` runs nine detectors over everything destined for
+the prompt. Anything classified `RESTRICTED` is redacted unconditionally; the rest is counted and
+shown. The copy-safety screen (gap-spec §11.3) states what is included, what was removed and what was
+flagged **before** the copy button, never after — an E2E test asserts that DOM ordering structurally,
+so a reword cannot silently invert it. Nothing can be un-pasted.
+
+### 9b.2 Untrusted input never reaches the canonical project
+
+An import is written verbatim to `ai_imports` and stays there. It is parsed, validated and previewed
+from that staging row, and only an explicit user decision moves it forward. The guarantee that
+untrusted content cannot mutate the project rests on three independent locks, deliberately not one:
+
+1. **The state machine** (`staging.ts`) has no `RAW → MATERIALIZED` edge. Every path to
+   materialisation passes through `VALIDATED`.
+2. **The application** refuses to accept an import whose stored validation does not set
+   `canMaterialize`.
+3. **The database** refuses the row outright:
+   `CHECK (state NOT IN ('ACCEPTED','MATERIALIZED') OR validation IS NOT NULL)`.
+
+The third lock exists because the first two are application code, and application code has bugs.
+
+### 9b.3 What the AI is structurally unable to claim
+
+`aiProvenanceSchema` admits exactly three values: `EXTERNAL_SOURCE`, `EXTERNAL_AI_INFERENCE` and
+`ASSUMPTION`. `USER_CONFIRMED` and `DETERMINISTIC_CALCULATION` are **not representable** in the
+interchange schema, so a response asserting one is rejected at the shape layer rather than judged on
+its merits later.
+
+This matters more than it first appears. The entire trust ordering in `packages/shared/provenance.ts`
+depends on `USER_CONFIRMED` (rank 100) meaning *a person said so*. An AI able to assert it could
+overwrite anything in the project by claiming the user had already agreed. The schema, not a policy
+check, is what prevents that.
+
+A related consequence, which caught out a test before it caught out the code: an uncited AI inference
+(rank 20) **cannot** overwrite a value the platform merely assumed (rank 30). That is correct — a
+guess should not displace a considered default — and the test asserting otherwise was wrong, not the
+implementation. The test was split: uncited inference conflicts; a cited `EXTERNAL_SOURCE` claim
+(rank 50) wins.
+
+### 9b.4 The fourteen validation layers, and the order they run in
+
+`validate.ts` runs the layers of gap-spec §12.1 in a fixed order, and the order is load-bearing:
+
+- **`PAYLOAD_SIZE` and `ENCODING` first**, before anything parses the content. A 512KB ceiling is
+  enforced against the raw bytes, so an oversized or malformed payload is refused without ever being
+  handed to the JSON parser.
+- **`SCHEMA_VERSION` before `JSON_SCHEMA`.** A response written against a different contract must be
+  reported as unsupported, not as a list of shape errors that invites the user to "fix" it.
+- **`POLICY_SECURITY` early**, so injection-shaped content is refused before the more expensive
+  semantic layers run on it.
+- **`REFERENCE_INTEGRITY`** resolves `dependsOn` edges and detects cycles with an iterative walk. A
+  recursive one is a stack-overflow denial of service on attacker-supplied graph depth.
+
+The schema is `.strict()` throughout: an unknown property is a rejection, not a warning. A response
+carrying fields this platform does not understand was written against something other than this
+contract.
+
+### 9b.5 Untrusted content in logs and in the DOM
+
+`safeExcerpt` strips control characters and angle brackets from anything quoted back to the user or
+written to a log. Both halves matter: a newline in a log line forges an entry, and angle brackets in
+the DOM do the obvious. The import payload itself is **never** logged — only its id, status and issue
+count — because the point of the airlock is that untrusted content does not spread beyond the staging
+row.
+
+Rendering is React text interpolation throughout. No import value reaches `dangerouslySetInnerHTML`,
+and none is used to build a URL, class name or element id. An E2E test pastes a payload containing
+`<img src=x onerror=...>` and `<script>` and asserts no script executed and no element was created.
+
+### 9b.6 No hidden reasoning is requested or stored
+
+The prompt explicitly instructs the model not to include chain-of-thought, and the schema has nowhere
+to put it. What is stored is `rationale` (one or two sentences), `provenance`, `confidence`,
+`sources` and `assumptions`. Retaining a model's internal deliberation would mean keeping a large
+volume of unverified text of unclear provenance attached to a customer's project, for no benefit the
+user can act on.
+
+### 9b.7 Rate limiting
+
+AI import validation is the most expensive operation an unauthenticated caller can trigger, and is
+rate-limited accordingly (`ai-import`, gap-spec §36). The limiter's current weaknesses are KI-022.
+
+---
+
 ## 10. Open items
 
 | Item | Phase | Note |
@@ -264,3 +363,5 @@ table nobody adds to the reset list shows up as state leaking between tests.
 | Authorisation attack suite | 18 | Gap-spec §65 — BOLA, privilege escalation, IDOR, mass assignment |
 | Non-superuser DB role in deployment config | 19 | Arising from SEC-001; pre-live checklist item |
 | Rollback and restore drills | 18–19 | |
+| Materialisation of accepted imports into the Digital Twin | 6 | Acceptance currently records the decision and stops; the canonical entities do not exist yet |
+| Real migrations, replacing the schema-fingerprint rebuild | 19 | KI-026 — the rebuild path destroys data and is refused in deployed environments |

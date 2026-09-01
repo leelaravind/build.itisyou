@@ -23,7 +23,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background">
       <PublicHeader />
 
-      <main id="main" className="mx-auto flex max-w-md flex-col gap-lg px-md py-3xl">
+      <main id="main" className="mx-auto flex max-w-narrow flex-col gap-lg px-md py-3xl">
         <h1 className="font-sans text-headline-lg text-on-surface">Sign in</h1>
 
         <div

@@ -24,6 +24,10 @@ const ROUTES = [
 test.describe('axe — no violations', () => {
   for (const route of ROUTES) {
     test(`${route.name} has no WCAG 2.2 A/AA violations`, async ({ page }) => {
+      // Axe is CPU-heavy and contends with the other browser workers; a timeout here is a scheduling
+      // artefact, not a violation. Budgeted for this test alone rather than globally.
+      test.slow();
+
       await page.goto(route.path);
 
       const results = await new AxeBuilder({ page })
@@ -37,6 +41,10 @@ test.describe('axe — no violations', () => {
     });
 
     test(`${route.name} passes best-practice checks`, async ({ page }) => {
+      // Axe is CPU-heavy and contends with the other browser workers; a timeout here is a scheduling
+      // artefact, not a violation. Budgeted for this test alone rather than globally.
+      test.slow();
+
       // Best-practice rules are not WCAG requirements but catch real usability defects:
       // duplicate landmarks, missing main, unlabelled regions.
       await page.goto(route.path);
@@ -252,6 +260,10 @@ test.describe('reflow and zoom', () => {
   });
 
   test('has no axe violations at mobile width', async ({ page }) => {
+    // Axe is CPU-heavy and contends with the other browser workers; a timeout here is a scheduling
+    // artefact, not a violation. Budgeted for this test alone rather than globally.
+    test.slow();
+
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/p/proj_demo');
 

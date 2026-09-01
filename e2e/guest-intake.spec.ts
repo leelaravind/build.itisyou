@@ -249,6 +249,10 @@ test.describe('accessibility of the guest journey', () => {
 
   for (const route of ROUTES) {
     test(`${route} has no axe violations`, async ({ page }) => {
+      // Axe is CPU-heavy and contends with the other browser workers; a timeout here is a scheduling
+      // artefact, not a violation. Budgeted for this test alone rather than globally.
+      test.slow();
+
       await page.goto(route);
 
       const results = await new AxeBuilder({ page })
@@ -266,6 +270,10 @@ test.describe('accessibility of the guest journey', () => {
   }
 
   test('the intake wizard has no axe violations', async ({ page }) => {
+    // Axe is CPU-heavy and contends with the other browser workers; a timeout here is a scheduling
+    // artefact, not a violation. Budgeted for this test alone rather than globally.
+    test.slow();
+
     await page.goto('/start');
     await page.getByLabel(/describe your project/i).fill('An accessibility check project.');
     await page.getByRole('button', { name: /continue/i }).click();

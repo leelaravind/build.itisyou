@@ -169,6 +169,29 @@
   --spacing-container-max: 1440px;
 
   /* ---------------------------------------------------------------------
+   * Content widths.
+   *
+   * These exist because Tailwind's `max-w-*` resolves through the spacing
+   * namespace before the container one. The design system defines
+   * `--spacing-md`, `--spacing-xl`, `--spacing-2xl` and `--spacing-3xl`,
+   * which silently shadowed Tailwind's built-in container scale: `max-w-3xl`
+   * meant 64px rather than 48rem, and `max-w-md` meant 16px.
+   *
+   * The result was pages whose main column collapsed to the width of its
+   * longest word. It was invisible in review because the text still wrapped
+   * and the colours were right — it only surfaced when a heading measured
+   * zero pixels wide and an automated check called it hidden.
+   *
+   * Named rather than numbered, so no future spacing token can collide with
+   * one, and so the name says what the width is for.
+   * ------------------------------------------------------------------- */
+  --container-narrow: 448px;
+  --container-form: 576px;
+  --container-prose: 672px;
+  --container-content: 768px;
+  --container-wide: 896px;
+
+  /* ---------------------------------------------------------------------
    * Radius - the DESIGN.md contract scale (D2).
    *
    * The exports emit every name shifted one step down, with `full` at 0.75rem rather than 9999px.

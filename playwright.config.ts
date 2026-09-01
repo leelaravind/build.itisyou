@@ -16,7 +16,19 @@ export default defineConfig({
   // that lets a broken build reach staging looking green.
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+  /*
+   * Capped, not left to the default half-the-cores.
+   *
+   * The application under test is backed by PGlite, which is single-connection, so every request
+   * queues behind the previous one in the withDatabase queue (KI-013). Adding browser workers past a handful
+   * therefore buys no parallelism at all — it just lengthens the queue until requests exceed the
+   * per-test timeout. On this machine the default worker count pushed the Firefox accessibility runs
+   * past 45s and the software compositor crashed outright, which reads as a flaky browser rather
+   * than as backpressure from the database.
+   *
+   * Four is enough to overlap browser startup, which is where the real wall-clock goes.
+   */
+  workers: 4,
   reporter: process.env.CI
     ? [['github'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/e2e.json' }]]
     : [['list'], ['html', { open: 'never' }]],
@@ -50,7 +62,19 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: 'pnpm --filter=@govintel/web start',
+        /*
+         * Build, then start. `next start` serves whatever is in `.next`, which is not necessarily
+         * the code on disk — so running the suite without building first tests the previous commit.
+         *
+         * That cost real time a third time: every new route in a freshly written spec returned 404,
+         * which reads exactly like a routing bug and sends you looking for one. `reuseExistingServer`
+         * below already rules out a stale *process*; this rules out a stale *artefact*, which is the
+         * same failure wearing different clothes.
+         *
+         * The build is not skipped in CI. A conditional here would restore the very hole it closes,
+         * and CI's own build step is cheap to repeat next to a phantom debugging session.
+         */
+        command: 'pnpm --filter=@govintel/web build && pnpm --filter=@govintel/web start',
         url: 'http://localhost:3000',
         /*
          * Never reuse an existing server, not even locally.
@@ -64,6 +88,7 @@ export default defineConfig({
          * Starting a fresh server costs a few seconds. Debugging a phantom failure costs far more.
          */
         reuseExistingServer: false,
-        timeout: 120_000,
+        // Generous, because this now covers a production build as well as the server start.
+        timeout: 300_000,
       },
 });

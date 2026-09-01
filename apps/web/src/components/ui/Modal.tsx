@@ -35,7 +35,7 @@ interface ModalProps {
   readonly size?: 'sm' | 'md' | 'lg';
 }
 
-const SIZES = { sm: 'max-w-md', md: 'max-w-2xl', lg: 'max-w-4xl' } as const;
+const SIZES = { sm: 'max-w-narrow', md: 'max-w-prose', lg: 'max-w-wide' } as const;
 
 export function Modal({
   open,

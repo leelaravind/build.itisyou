@@ -326,6 +326,75 @@ export const intakeAnswers = pgTable(
   ],
 );
 
+/**
+ * AI import staging (gap-spec §12.3).
+ *
+ * The raw text is stored verbatim, separately from anything derived from it. That separation is the
+ * point: `raw` is evidence of what was actually submitted, and `response` is what the validator was
+ * willing to make of it. Keeping only the parsed form would destroy the ability to answer "what did
+ * the user actually paste?" after a dispute.
+ *
+ * Nothing in this table has touched the project. The `state` column is the gate.
+ */
+export const aiImports = pgTable(
+  'ai_imports',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id').references(() => organizations.id, {
+      onDelete: 'cascade',
+    }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+
+    /** The prompt this answers, when known. A mismatch is surfaced as a warning. */
+    promptId: text('prompt_id'),
+
+    state: text('state').notNull().default('RAW'),
+
+    /** Exactly what was pasted. Never rewritten. */
+    raw: text('raw').notNull(),
+    /** The parsed response, present only once the schema layer passed. */
+    response: jsonb('response').$type<Record<string, unknown>>(),
+    /** The full validation result, including every issue, for the review screen and the audit. */
+    validation: jsonb('validation').$type<Record<string, unknown>>(),
+
+    /** The four version identifiers in force when this was validated (plan §11). */
+    schemaVersion: text('schema_version'),
+    validatorVersion: text('validator_version'),
+
+    decidedBy: uuid('decided_by').references(() => users.id, { onDelete: 'set null' }),
+    decisionReason: text('decision_reason'),
+
+    /** Deduplicates a replayed accept (gap-spec §48). */
+    idempotencyKey: text('idempotency_key'),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('ai_imports_project_idx').on(table.projectId),
+    index('ai_imports_org_idx').on(table.organizationId),
+    uniqueIndex('ai_imports_idempotency_idx').on(table.idempotencyKey),
+    check(
+      'ai_imports_state_check',
+      sql`${table.state} IN ('RAW','PARSED','VALIDATED','ACCEPTED','REJECTED','MATERIALIZED')`,
+    ),
+    /*
+     * An import cannot be accepted or materialised without a stored validation result.
+     *
+     * The application already refuses both, twice. This is the third lock, at the layer that cannot
+     * be bypassed by a bug in the other two — the whole point of the staging table is that untrusted
+     * content never reaches the project, and that guarantee should not rest solely on application
+     * code being correct.
+     */
+    check(
+      'ai_imports_decided_requires_validation',
+      sql`${table.state} NOT IN ('ACCEPTED','MATERIALIZED') OR ${table.validation} IS NOT NULL`,
+    ),
+  ],
+);
+
 /* -------------------------------------------------------------------------- */
 /* Guest sessions                                                             */
 /* -------------------------------------------------------------------------- */
@@ -494,6 +563,8 @@ export type GuestSession = typeof guestSessions.$inferSelect;
 export type AuditEvent = typeof auditEvents.$inferSelect;
 export type OutboxEvent = typeof outboxEvents.$inferSelect;
 export type IntakeAnswer = typeof intakeAnswers.$inferSelect;
+export type AiImport = typeof aiImports.$inferSelect;
+export type NewAiImport = typeof aiImports.$inferInsert;
 export type NewIntakeAnswer = typeof intakeAnswers.$inferInsert;
 
 export type OrganizationRole = (typeof organizationRoleEnum.enumValues)[number];

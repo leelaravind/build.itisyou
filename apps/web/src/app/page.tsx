@@ -54,7 +54,7 @@ export default function LandingPage() {
               <span className="text-primary">executable engineering system.</span>
             </h1>
 
-            <p className="max-w-xl font-sans text-body-lg text-on-surface-variant">
+            <p className="max-w-form font-sans text-body-lg text-on-surface-variant">
               The intelligence layer between your vision and production. A deterministic engine
               maps, validates and orchestrates the work — rules, quality gates and traceability, not
               generic AI chat. No account required to start.

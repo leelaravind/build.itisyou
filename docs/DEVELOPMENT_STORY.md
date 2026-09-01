@@ -816,3 +816,195 @@ exactly the wrong moment, after the user has already invested effort.
 ---
 
 <!-- Entries are appended below as work proceeds. Newest last. -->
+
+---
+
+## Entry 009 — an airlock for someone else's AI, and a layout bug that had been there for three phases
+
+**Phase 5 — external-AI interchange. 830 unit tests, 330 E2E tests, all nine gate criteria green.**
+
+### The shape of the problem
+
+The product's position on AI is unusual and worth restating, because everything in this phase follows
+from it: the platform never calls a model. There is no API key, no provider account, no paid
+dependency. The user copies a request, takes it to whatever assistant they already pay for, and
+pastes the reply back.
+
+That removes an entire category of risk — no vendor lock-in, no per-token cost, no provider outage —
+and creates exactly one in its place. Content of completely unknown provenance arrives, by paste,
+into a system whose whole pitch is that its numbers are explainable and its facts are traceable.
+
+So the interchange is built as an airlock rather than as an import feature. Two directions, both
+treated as hostile.
+
+### Outbound: the disclosure has to come first
+
+The copy-safety screen is not a footnote on the prompt page; it is most of the page. Fields included,
+fields removed automatically, fields flagged for the user to look at — stated **above** the copy
+button, because nothing can be un-pasted and a warning placed after the action has already failed.
+
+The E2E test for this does not read the copy. It compares DOM positions:
+
+```ts
+return (heading.compareDocumentPosition(button) & 4) !== 0 ? 'disclosure-first' : 'button-first';
+```
+
+A test that asserted the warning text exists would keep passing if someone moved it below the button.
+A test that asserts the ordering cannot.
+
+### Inbound: three locks, because application code has bugs
+
+A pasted response is written verbatim to `ai_imports` and stays there. Validated from the staging row,
+previewed from the staging row, and moved forward only by an explicit decision. Three independent
+things must all fail before untrusted content could reach the project:
+
+1. The state machine has no `RAW → MATERIALIZED` edge.
+2. The application refuses to accept an import whose validation did not set `canMaterialize`.
+3. The database refuses the row:
+   `CHECK (state NOT IN ('ACCEPTED','MATERIALIZED') OR validation IS NOT NULL)`.
+
+The third is the one that matters. The first two are code I wrote, and I have been wrong before in
+this project — SEC-001 was a security control that existed entirely on paper.
+
+### What the AI is structurally unable to say
+
+The interchange schema admits exactly three provenance values: `EXTERNAL_SOURCE`,
+`EXTERNAL_AI_INFERENCE`, `ASSUMPTION`. `USER_CONFIRMED` is not representable.
+
+This is the single most important line in the phase. The trust ordering depends on `USER_CONFIRMED`
+(rank 100) meaning *a person said so*. An AI that could assert it could overwrite anything by claiming
+the user had already agreed. That is prevented by the schema, not by a policy check that might be
+skipped on some path.
+
+### A test that was wrong, and the code that was right
+
+One of my Phase-5 tests was called *"lets a claim overwrite a value the platform merely assumed"* and
+it failed. My first instinct was that the conflict layer had a bug.
+
+It did not. `ASSUMPTION` ranks 30 and `EXTERNAL_AI_INFERENCE` ranks 20, so an uncited AI guess
+correctly **cannot** displace a value the platform had reasoned its way to. The test encoded my
+assumption about the ordering rather than the ordering itself. I split it in two: an uncited inference
+conflicts, and a cited `EXTERNAL_SOURCE` claim (rank 50) wins.
+
+Worth recording because the reflex — "the test failed, so the code is broken" — is wrong roughly as
+often as it is right, and in this project it has now been wrong twice in a row.
+
+### Three stale artefacts, three phases running
+
+Every new route in the interchange spec returned 404. That reads as a routing bug, and I spent time
+looking for one.
+
+`next start` serves whatever is in `.next`. I had not rebuilt. The suite was testing the previous
+commit.
+
+This is the third time a stale artefact has produced a confident, reproducible failure against code
+that was already correct. KI-025 covers the first two — both a stale *server*, fixed with
+`reuseExistingServer: false`. This was a stale *build*, which that setting does nothing about. The
+Playwright `webServer` command now builds before it starts, in CI too, because a conditional would
+restore the hole it closes.
+
+### The bug the fingerprint found
+
+With the build fixed, the insert failed: `relation "ai_imports" does not exist`.
+
+The development bootstrap decided whether to create the schema by asking one question — *does the
+`projects` table exist?* That question has the right answer exactly once. Every table added after a
+data directory was created was silently missing from it, and would have stayed missing for every
+remaining phase.
+
+The fix is a SHA-256 fingerprint of the DDL, recorded in the database and compared on boot. It detects
+drift generally instead of fixing the one table. It is explicitly **not** a migration system: it can
+say the structure changed, not how to get from one version to the other. That is the right trade for a
+disposable local database and the wrong one for anything holding real data, so the rebuild path throws
+if `APP_ENV` names a deployed environment (KI-026).
+
+Thirteen tests guard it. The first version of one of them compared a rebuilt database against another
+rebuilt database — a tautology that would have passed just as happily with `ai_imports` missing from
+both. It now compares the built database against the **Drizzle schema**, which is the disagreement
+that actually causes the bug. Verified by deleting `ai_imports` from the DDL and confirming three
+tests fail.
+
+### The layout bug that had been there since Phase 2
+
+Then a heading was reported as hidden. It was in the DOM, `visibility: visible`, `opacity: 1`. Zero
+pixels wide.
+
+Walking up the tree: `<main class="max-w-3xl">` had a computed `max-width` of **64px**.
+
+Tailwind resolves `max-w-<name>` through the **spacing** namespace before the container one. This
+design system defines `--spacing-3xl: 64px`. So `max-w-3xl` meant 64 pixels. `max-w-md` meant
+sixteen. Across every page, since the design tokens landed in Phase 2.
+
+What makes it a good bug is why nobody caught it. The pages *rendered*. Text wrapped, colours were
+right, nothing threw — the main column had simply collapsed to the width of its longest word.
+`max-w-4xl` was unaffected, because no `--spacing-4xl` exists, so the breakage was inconsistent
+enough to look like ordinary layout variation. And `max-w-3xl` is the most ordinary class in Tailwind;
+no reviewer would look twice at it.
+
+Fixed with named container tokens that no spacing token can shadow. The guard asserts the general rule
+— *no sizing utility may name a token the spacing scale also names* — rather than banning the five
+classes that happened to be wrong, because banning the five would pass right up until someone added
+`--spacing-4xl`. Verified by putting `max-w-md` back into the login page and watching two tests fail.
+Recorded as design defect D7 and KI-028.
+
+### A file that grep called binary
+
+Incidentally: `grep` reported `validate.ts` as a binary file. It contained literal control bytes,
+including a NUL, inside a regex character class where I had meant to write escape sequences. The code
+was *correct* — the character class matched exactly what it should — but the file was opaque to grep,
+diff, and anything that normalises text.
+
+Rewriting them as `\uXXXX` took two attempts, because typing the escape text produced the raw bytes
+again. The third attempt built the replacement from numeric character codes with no literals at all.
+KI-029.
+
+### The hostile payloads
+
+The unit suite already covered the fourteen validation layers exhaustively. What it could not cover is
+whether a *user* is actually stopped — an engine that refuses a payload is worthless if the page then
+offers an Accept button anyway. So each hostile E2E case asserts both: the response is refused, **and**
+the Accept button is absent.
+
+- A claim asserting `USER_CONFIRMED`.
+- Instructions dressed as data (*"ignore all previous instructions…"*).
+- A response written against schema version 9.9.9.
+- A dependency cycle between requirements.
+- An unknown top-level property (`executeSql`).
+- Text that is not JSON.
+- `<img src=x onerror=...>` and `<script>` in a value — asserting nothing executed.
+- A 600KB payload.
+
+Plus the case that matters most for adoption: a response wrapped in *"Sure — here is the analysis:"*
+and a markdown fence, which is what real assistants actually return. Rejecting that would push people
+into hand-editing JSON, which is worse for everyone.
+
+### Two timeouts that were not defects
+
+The full suite surfaced two timeouts that were budgets rather than bugs. Axe walks the whole
+accessibility tree and re-runs about a hundred rules; alone it takes seconds, but with four browser
+workers contending it exceeded the 30s per-test limit and Firefox's software compositor crashed
+outright. And the schema-drift tests build real Postgres instances, three to six seconds each.
+
+Both got their own budget — `test.slow()` and a file-scoped `testTimeout` — rather than a raised global
+timeout, which would hide genuine slowness in the eight hundred tests that should finish in
+milliseconds. The Playwright worker count is also now capped at four, because the application is
+backed by a single-connection database (KI-013): every request queues behind the last, so extra
+browser workers buy no parallelism and only lengthen the queue.
+
+### Result
+
+| Gate | Result |
+|---|---|
+| `format:check` | pass |
+| `lint` | pass |
+| `typecheck` | pass |
+| `test` | 830 passed |
+| `test:e2e` | 330 passed, 65 skipped (documented WebKit-over-HTTP scope, KI-024) |
+| `docs:check` | pass |
+| `scan:secrets` | clean, 116 files |
+| `audit:deps` | no known vulnerabilities |
+| `build` | pass |
+
+Materialisation into the Digital Twin is deliberately not implemented: the canonical entities do not
+exist until Phase 6. Acceptance records the decision and stops, which is the honest state of the
+system rather than a stub pretending to apply something.

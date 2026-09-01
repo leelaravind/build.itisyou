@@ -1,0 +1,22 @@
+{
+  "name": "@govintel/interchange",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./versions": "./src/versions.ts",
+    "./schema": "./src/schema.ts",
+    "./prompt": "./src/prompt.ts",
+    "./redaction": "./src/redaction.ts",
+    "./validate": "./src/validate.ts",
+    "./staging": "./src/staging.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/intake": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

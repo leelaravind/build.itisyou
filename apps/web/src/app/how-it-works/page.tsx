@@ -47,7 +47,7 @@ export default function HowItWorksPage() {
     <div className="min-h-screen bg-background">
       <PublicHeader />
 
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-lg px-md py-3xl">
+      <main id="main" className="mx-auto flex max-w-content flex-col gap-lg px-md py-3xl">
         <h1 className="font-sans text-headline-lg text-on-surface">How it works</h1>
         <p className="font-sans text-body-lg text-on-surface-variant">
           The engine is deterministic: the same inputs and the same ruleset produce the same plan,

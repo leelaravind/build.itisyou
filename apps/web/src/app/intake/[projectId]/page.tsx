@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import { intakeAnswers, projects } from '@govintel/db/schema';
@@ -7,6 +8,7 @@ import type { IntakeField } from '@govintel/intake/schema';
 import { withDatabase } from '../../../lib/server/database.ts';
 import { readGuestSessionId } from '../../../lib/server/session.ts';
 import { PublicHeader } from '../../../components/shell/PublicHeader.tsx';
+import { MaterialIcon } from '../../../components/ui/MaterialIcon.tsx';
 import { QuestionCard } from '../../../components/intake/QuestionCard.tsx';
 import { IntakeProgress } from '../../../components/intake/IntakeProgress.tsx';
 
@@ -64,7 +66,7 @@ export default async function IntakePage({ params }: { params: Promise<{ project
     <div className="min-h-screen bg-background">
       <PublicHeader />
 
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-lg px-md py-xl">
+      <main id="main" className="mx-auto flex max-w-content flex-col gap-lg px-md py-xl">
         <header className="flex flex-col gap-sm">
           <p className="font-sans text-label-caps tracking-wider text-on-surface-variant uppercase">
             Project intake
@@ -94,6 +96,13 @@ export default async function IntakePage({ params }: { params: Promise<{ project
             <p className="mt-sm font-sans text-body-sm text-on-surface-variant">
               Next: the platform writes a research request for everything you flagged as unknown.
             </p>
+            <Link
+              href={`/intake/${projectId}/prompt`}
+              className="mt-md inline-flex min-h-11 items-center gap-sm rounded bg-primary px-lg font-sans text-body-sm font-medium text-on-primary transition-colors hover:bg-primary-fixed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              Write the research request
+              <MaterialIcon name="arrow_forward" size={18} />
+            </Link>
           </section>
         ) : (
           <QuestionCard
@@ -102,6 +111,26 @@ export default async function IntakePage({ params }: { params: Promise<{ project
             existing={answeredById.get(question.id)}
           />
         )}
+
+        {analysis.researchRequests.length > 0 ? (
+          <section className="flex flex-col gap-sm rounded-lg border border-outline-variant bg-surface-container-low p-lg">
+            <h2 className="font-sans text-headline-sm text-on-surface">
+              Stuck on {analysis.researchRequests.length}{' '}
+              {analysis.researchRequests.length === 1 ? 'question' : 'questions'}
+            </h2>
+            <p className="font-sans text-body-sm text-on-surface-variant">
+              The platform can write these up as a request you paste into any AI you already use.
+              Nothing is sent from here, and you will see exactly what leaves before you copy it.
+            </p>
+            <Link
+              href={`/intake/${projectId}/prompt`}
+              className="mt-sm inline-flex w-fit min-h-11 items-center gap-sm rounded border border-outline-variant px-lg font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              Write the research request
+              <MaterialIcon name="arrow_forward" size={18} />
+            </Link>
+          </section>
+        ) : null}
 
         {/* "What we know" — locked screen 5, as a section rather than a page. */}
         {answers.length > 0 ? (

@@ -29,7 +29,7 @@ export default function StartProjectPage({
     <div className="min-h-screen bg-background">
       <PublicHeader />
 
-      <main id="main" className="mx-auto flex max-w-2xl flex-col gap-lg px-md py-3xl">
+      <main id="main" className="mx-auto flex max-w-prose flex-col gap-lg px-md py-3xl">
         <div>
           <p className="font-sans text-label-caps tracking-wider text-primary uppercase">
             Step 1 of 3
