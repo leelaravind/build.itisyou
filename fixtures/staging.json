@@ -1,0 +1,98 @@
+{
+  "generatedFor": "staging",
+  "warning": "Synthetic data. Contains no real people, organisations or projects. Never seed staging from a production snapshot: it moves personal data somewhere its retention rules do not reach and its access controls are weaker.",
+  "organizations": [
+    {
+      "id": "fixture-org-1",
+      "name": "Fixture Organisation A"
+    },
+    {
+      "id": "fixture-org-2",
+      "name": "Fixture Organisation B"
+    }
+  ],
+  "people": [
+    {
+      "id": "fixture-user-1",
+      "name": "Fixture One",
+      "email": "fixture-1@example.invalid"
+    },
+    {
+      "id": "fixture-user-2",
+      "name": "Fixture Two",
+      "email": "fixture-2@example.invalid"
+    },
+    {
+      "id": "fixture-user-3",
+      "name": "Fixture Three",
+      "email": "fixture-3@example.invalid"
+    },
+    {
+      "id": "fixture-user-4",
+      "name": "Fixture Four",
+      "email": "fixture-4@example.invalid"
+    },
+    {
+      "id": "fixture-user-5",
+      "name": "Fixture Five",
+      "email": "fixture-5@example.invalid"
+    }
+  ],
+  "projects": [
+    {
+      "id": "fixture-project-solo",
+      "organizationId": "fixture-org-1",
+      "key": "solo",
+      "name": "Fixture: solo project",
+      "exercises": "The one-person hierarchy collapse, and the rule that a solo project reports no unassigned work.",
+      "teamSize": 1,
+      "health": "HEALTHY",
+      "archived": false,
+      "restricted": false
+    },
+    {
+      "id": "fixture-project-team",
+      "organizationId": "fixture-org-2",
+      "key": "team",
+      "name": "Fixture: twelve-person delivery",
+      "exercises": "The full hierarchy, workstream selection, and cross-project resource load.",
+      "teamSize": 12,
+      "health": "WATCH",
+      "archived": false,
+      "restricted": false
+    },
+    {
+      "id": "fixture-project-failing",
+      "organizationId": "fixture-org-1",
+      "key": "failing",
+      "name": "Fixture: failing gates",
+      "exercises": "Gate failure propagation into release readiness and closure, and the exception path.",
+      "teamSize": 4,
+      "health": "CRITICAL",
+      "archived": false,
+      "restricted": false
+    },
+    {
+      "id": "fixture-project-archived",
+      "organizationId": "fixture-org-2",
+      "key": "archived",
+      "name": "Fixture: archived project",
+      "exercises": "Read-only behaviour, and that an archived project sorts last regardless of health.",
+      "teamSize": 3,
+      "health": "CRITICAL",
+      "archived": true,
+      "restricted": false
+    },
+    {
+      "id": "fixture-project-restricted",
+      "organizationId": "fixture-org-1",
+      "key": "restricted",
+      "name": "Fixture: restricted project",
+      "exercises": "The partial-view path: visible to members with an explicit project role, absent for everybody else.",
+      "teamSize": 2,
+      "health": "HEALTHY",
+      "archived": false,
+      "restricted": true
+    }
+  ]
+}

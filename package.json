@@ -36,7 +36,8 @@
     "docs:threats": "node --experimental-strip-types scripts/generate-threat-model.mjs",
     "docs:impact": "node --experimental-strip-types scripts/generate-impact-docs.mjs",
     "docs:governance": "node --experimental-strip-types scripts/generate-governance-docs.mjs",
-    "docs:responsive": "node --experimental-strip-types scripts/generate-responsive-docs.mjs"
+    "docs:responsive": "node --experimental-strip-types scripts/generate-responsive-docs.mjs",
+    "seed:staging": "node scripts/seed-staging.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

@@ -98,6 +98,9 @@ importers:
       '@govintel/release':
         specifier: workspace:*
         version: link:../../packages/release
+      '@govintel/resilience':
+        specifier: workspace:*
+        version: link:../../packages/resilience
       '@govintel/rules':
         specifier: workspace:*
         version: link:../../packages/rules

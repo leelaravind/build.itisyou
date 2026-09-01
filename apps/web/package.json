@@ -21,6 +21,7 @@
     "@govintel/interchange": "workspace:*",
     "@govintel/organization": "workspace:*",
     "@govintel/release": "workspace:*",
+    "@govintel/resilience": "workspace:*",
     "@govintel/rules": "workspace:*",
     "@govintel/shared": "workspace:*",
     "@govintel/traceability": "workspace:*",
