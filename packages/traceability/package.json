@@ -1,0 +1,21 @@
+{
+  "name": "@govintel/traceability",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./requirements": "./src/requirements.ts",
+    "./architecture": "./src/architecture.ts",
+    "./chain": "./src/chain.ts",
+    "./gaps": "./src/gaps.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "zod": "4.5.4",
+    "@govintel/intake": "workspace:*"
+  }
+}

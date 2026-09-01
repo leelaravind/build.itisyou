@@ -1638,3 +1638,167 @@ by hand.
 1,550 unit tests and 519 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
 dependency-audit and production build are all clean. The calculation golden suite the plan names as
 the Phase-9 gate is green at 84 tests.
+
+---
+
+## Entry 014 — Phase 10: traceability, and a bug that reported nothing
+
+Phase 10's gate is one line: "complete Requirement→Release chain verified". The chain is the argument
+a project makes for believing it did what it said — requirement, design, work, test, evidence,
+approval, release — and its whole value is in being *walkable*, node by node, rather than asserted.
+
+### A requirement has to be capable of being failed
+
+A requirement is the only thing here that can justify work existing. Everything downstream is
+defensible only by pointing back at one, so the quality of the requirement set is a hard ceiling on
+everything else.
+
+The central check is testability. "The system must be fast" cannot be passed or failed; it can only
+be argued about. Detecting that when the requirement is written is cheap. Discovering it at the
+release gate, when somebody has to decide on the day whether "fast" was achieved, is not.
+
+Two calibration decisions are worth recording:
+
+**Subjective wording is advisory, not blocking.** Blocking on it would train people to write
+requirements that pass the word filter rather than requirements that can be failed, which is strictly
+worse than the problem. The list of terms is deliberately short for the same reason — a check that
+fires on reasonable prose gets switched off, taking the useful cases with it.
+
+**A regulatory requirement verified only by demonstration is blocked.** A demonstration convinces the
+people in the room and nobody else. A regulator asking two years later needs something they can
+examine.
+
+There is no `ASSERTION` verification method. "Somebody said so" is what the *absence* of a method
+already means, and giving it a name would make it selectable.
+
+### The bug: a report that was empty and confident
+
+The first version of the chain had components *satisfying* requirements and tests *verifying tasks*.
+Neither edge is legal under the twin's `EDGE_LEGALITY`. `SATISFIES` is reserved for requirement →
+objective and evidence → requirement; a component realises a requirement, which is `IMPLEMENTS`. And
+the twin is explicit that a **task** cannot verify a requirement — only a **test** can, with a comment
+saying that conflating the two "produces a compliance report that is confidently wrong".
+
+I wrote a chain that could not match anything, over a graph model that had already written down why.
+
+The failure mode is the interesting part. Nothing threw. Every hop simply found nothing, so every
+trace came back with no design and no test — and **an empty trace looks exactly like a project that
+has not done the work**. If the fixtures had been slightly different I would have shipped a
+traceability engine that reported every project as untraced and been unable to tell it was broken.
+
+Worse: my strongest test — "does not credit a test that verifies a different requirement" — *passed*.
+It passed because the hop returned MISSING for every requirement, including the one it was supposed
+to find. The test that existed to prove the walk was a genuine path was passing because the walk
+found nothing at all.
+
+Three things came out of it:
+
+1. **A guard that checks every hop against `checkEdgeLegality`.** Reintroducing the defect now fails
+   that test by name, plus seven others. Verified by putting the bug back.
+2. **A second guard** that each hop departs from a point appearing earlier in the chain, so a hop
+   cannot silently read an empty frontier.
+3. **An E2E test that asserts the page reports a non-zero requirement count.** Unit fixtures are
+   constructed by hand and can agree with a wrong model; only walking a graph the application
+   actually produced could catch this class of error.
+
+The chain also turned out not to be a line. It is a **tree rooted at the requirement**: work, tests
+and deployments all attach to the requirement directly, and only evidence and approval hang off an
+earlier hop. Threading one frontier through in order was what made the TEST hop look at tasks.
+
+That correction invalidated another test's premise — one asserting that removing the work edge
+cascades into the test and evidence hops. It does not, and should not: a test verifying the
+requirement survives the work being deleted. The behaviour it was guarding (only the earliest broken
+hop blocks) is still worth guarding, so it was rewritten to break two hops by two independent causes.
+
+### Backward traceability
+
+Forward — does every requirement reach work, a test, evidence — is the half every tool implements.
+Backward is the half that gets left out, and it catches the more expensive problem: work that traces
+back to no requirement is either scope nobody asked for or a requirement nobody wrote down. Neither is
+visible from the forward direction, where the report can be a wall of green while a third of the build
+is unaccounted for.
+
+Rule-generated work is exempt. The rule *is* the recorded reason — it names the obligation and cites
+its source. Reporting the platform's own output as unjustified would fill that section with noise and
+teach people to skim it, which is precisely where real scope creep would then hide.
+
+### A chain whose every edge exists can still be broken
+
+If the requirement changed after the evidence was captured, the evidence attests to a different
+requirement. Every link is present, a presence-checking tool reports complete coverage, and the claim
+is false.
+
+That is what `STALE` is for, and it is the check that earns this module its keep. Alongside it,
+`UNVERIFIED` covers the third outcome that two-state models collapse: a test that exists and has never
+run, evidence with no artefact hash, an approval still pending. Folding that into "absent" understates
+work that has been done; folding it into "present" is the lie above.
+
+Counting an unrun test as coverage would mean the report improves the moment somebody creates a test
+file. That is not an incentive to have.
+
+### Holding the platform to its own standard
+
+Phase 10 introduced a standard for requirements, and the engine writes requirements of its own. A
+platform that applies a rule to the user's requirements and exempts the ones it writes itself is
+asserting that its own conclusions need no justification — exactly the position it exists to argue
+against.
+
+When the standard first ran against the generator's output, every generated requirement failed: they
+carried a priority and nothing else. No kind, no verification method, no criteria. The generator was
+changed, not the check — seven rules now declare what kind of obligation they are, how they are
+verified, and what would count as meeting them.
+
+Two failures came out of that, and the second is the more interesting.
+
+**The first was mine.** I marked the personal-data requirement as `REGULATORY` *and* gave it the
+`PRIVACY` quality attribute. A requirement is one kind; naming both puts it in two categories with
+different checks, and the quality-attribute check would demand a number where the real obligation is
+to hold a record. Fixed in the generator.
+
+**The second was not fixable, and should not have been.** Availability is recorded in the intake as
+prose — "99.9% during working hours" — and prose is not something a test can be run against. So the
+generated requirement genuinely has no measurable criterion, and the check genuinely fires.
+
+The temptation was to parse a number out of the sentence. That would be inventing structure the user
+never supplied, which is the same failure as inventing the number. The right answer is that the
+platform reports it: the user's answer cannot be tested and they need to know, and without the check
+"99.9% during working hours" would sit in the requirement set looking like a specification until
+somebody at the release gate had to decide whether it had been met.
+
+So the test was split along a line that turned out to be worth naming: **defects the platform is
+responsible for, and defects the answer is responsible for.** The platform must never emit a
+requirement broken in a way the user cannot fix by answering better — no missing verification method,
+no missing criteria, no regulatory obligation with nothing to show for it. Those would be the engine's
+own omissions dressed up as the project's problem.
+
+### Two E2E lessons
+
+**A locator that matches nothing fails silently in the useful direction.** I anchored the page helper
+on `getByRole('heading', { name: /^traceability$/i })`. "Traceability" on that page is an eyebrow
+label, not a heading. And `getByRole('term', { name })` matches no `dt`, because `dt` and `dd` do not
+compute an accessible name from their contents.
+
+**Waiting for the network is not waiting for the page.** The intake driver awaited `networkidle` after
+each answer, which resolves immediately after a streamed server action. The next iteration read the
+heading of the question it had just answered, decided it had handled it, and clicked "I don't know"
+through the entire wizard without ever reaching the two questions the helper exists to answer. Fixed
+by waiting for the question text to change.
+
+Both of those produced the same shape of failure as the chain bug: something that found nothing and
+carried on as though nothing was there.
+
+### No percentage
+
+The report carries absolute counts and no ratio. "87% traceable" is the same failure as the
+unexplained 83/100 §23 forbids — unactionable, optimisable, and it moves for reasons nobody can see.
+What a reader needs is *which* requirement has no test, and the id so they can go and look.
+
+And §25's "healthy items stay quiet" creates a specific hazard: an empty report and a report on an
+empty project render identically, and one is much worse news than the other. So the empty case is
+written out explicitly rather than falling through to silence.
+
+### Where Phase 10 stands
+
+1,630 unit tests and 546 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/TRACEABILITY_MODEL_SPEC.md` is the eighth
+generated document.

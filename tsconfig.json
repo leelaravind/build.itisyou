@@ -24,6 +24,9 @@
     },
     {
       "path": "./packages/finance"
+    },
+    {
+      "path": "./packages/traceability"
     }
   ]
 }
