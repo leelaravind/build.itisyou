@@ -3102,3 +3102,100 @@ That constraint has now paid for itself four times in one afternoon. It would ha
 ago, to call Phase 19 done on the strength of a green local suite and a configuration file that looked
 right. The suite was green the entire time the drainer could not drain, the web app could not connect,
 and eighteen of every forty requests would have handed one tenant another tenant's data.
+
+---
+
+## Entry 025 — Phase 19, concluded: the deployment is real
+
+`https://govintel-web-staging.kpleelaaravind.workers.dev` answers, and answers with its own version
+and commit read from the running process. Getting there took three more defects after Entry 024, and
+every one of them was invisible until something real was running.
+
+### The environment was rejected for being correctly configured
+
+`parseEnv()` requires `DATABASE_URL` in every deployed stage. Hyperdrive is an object binding, so
+there is nothing for it to require. The Worker returned 500 on every request with the database
+perfectly well configured — and this was found *immediately after* fixing KI-053, because
+`database.ts` had been taught about the binding while `config.ts` still rejected the environment at
+module load, before any of that ran.
+
+The temptation was to relax the rule. What went in instead was `DATABASE_URL_BINDING`, which names
+the binding carrying the connection string — a **declaration rather than an exemption**. Validation
+still requires one of the two to say where the database is: a deployment may say where the value
+comes from, but it may not decline to say. And the name is read at runtime to find the binding, so a
+typo fails at startup rather than satisfying a rule that nothing checks.
+
+### The Worker hung, and only under load
+
+Twenty-five concurrent requests: twenty `500`s and five `200`s. The five were the ones that landed on
+the isolate which had opened the connection.
+
+`database.ts` memoised the pool on `globalThis`. That is right for `next dev` — module state survives
+hot reloads, and re-creating PGlite each time would discard a developer's local work. On Cloudflare a
+Worker may not use a socket opened by a *different request*, so the memoisation that saves a
+reconnection locally is the thing that hangs the runtime remotely.
+
+The deployed path now opens a connection per operation and closes it. Against a bare Postgres that
+would be indefensible. Here it is the shape the architecture already described: *"Hyperdrive pools
+connections for a runtime that cannot hold a pool itself."* The memoised handle was the application
+trying to hold one anyway.
+
+The fingerprint check moved onto the caller's own connection and is remembered as a **boolean, not a
+promise**. Caching the promise would have reproduced the same bug one level up — two concurrent cold
+requests would share one in-flight check, and the second would await I/O owned by the first.
+
+A single `curl` returned `200` throughout all of this.
+
+### A production password, one `git add` away
+
+`@opennextjs/cloudflare` inlines the resolved environment into `.open-next/cloudflare/next-env.mjs`.
+With a Neon-linked `.env.local`, that file held a live production `DATABASE_URL` — host, user,
+password — as an exported constant. `.open-next/` was not in `.gitignore`. Thirty-four files,
+untracked and stageable.
+
+The scanner caught it, and only because of a change made hours earlier for an unrelated reason: it
+had failed on a correctly-placed local credential, and rather than adding an exception, its file
+selection changed to ask git what can enter the repository. The property that mattered showed up
+later the same day — **a file is scanned precisely when it is not ignored.**
+
+### The last one was a test, and it was hiding something
+
+Twenty-four to twenty-eight failures per full run, on two specs, appearing under four parallel workers
+and vanishing when run alone. Everything about it said load.
+
+It was not load. Measured in isolation, `/plan` responds in 120ms and the engine renders in 508ms.
+The first fix — changing the navigation's `waitUntil` — was aimed at the symptom and changed nothing.
+
+`answerIntake` waited for the wizard to advance only `if (answered.size < 2)`. That guard did not skip
+a read; it skipped waiting for the *server action to finish*, and the next line navigated away. Local
+runs cannot open that race: the write completes in single-digit milliseconds against an in-process
+database. Against a real one it takes ~300ms, and the navigation was cancelled mid-write.
+
+Which is the part worth keeping. Had the navigation won the race rather than losing it, the second
+answer might simply not have been recorded — and the traceability assertions would have failed
+against an empty graph, for a reason having nothing to do with traceability. The helper's own comments
+say that is exactly what it exists to prevent. The flake was the good outcome.
+
+### What Phase 19 actually verified
+
+- Tenant isolation on a real four-connection pool: 40/40. The pre-fix code, restored faithfully,
+  measured **18 of 40 requests returning another tenant's row**.
+- Cron → Hyperdrive → Queue → consumer: three events processed, one unrecognised event
+  **dead-lettered** rather than quietly marked done.
+- 25/25 concurrent on health and on a rendering page, against 5/25 before.
+- The full browser suite against the deployed URL, with real TLS, HSTS and a nonce-based CSP.
+
+### What it did not verify, and says so
+
+The outbox has a table, a drainer, a consumer — and **no producer**. After 1,539 projects created
+through the UI on staging, `outbox_events` held nothing. The mechanism is genuinely verified; the
+application emits nothing into it. Those two read alike and only the first is true, so KI-059 records
+the difference rather than letting "the outbox works" stand in for "side effects are recorded".
+
+`pnpm seed:staging` likewise generates a fixture file and loads nothing (KI-058). The runbook implied
+otherwise and has been corrected.
+
+### The count
+
+Nine defects found by deploying: KI-052 through KI-060. Four of them P1. None could have been found
+by any test that runs on a laptop, and the suite was green — 2,010 unit tests — for every one of them.

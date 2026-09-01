@@ -154,7 +154,7 @@ secret, and a value set by hand is a value that drifts from what is actually dep
    pnpm --filter=@govintel/web cf:deploy -- --env staging
    pnpm --filter=@govintel/worker cf:deploy -- --env staging
    ```
-4. **Seed.** `pnpm seed:staging` — see §4 below.
+4. **Seed.** `pnpm seed:staging` — **generates `fixtures/staging.json` and loads nothing** (KI-058). See §4 for what the fixture is for and why it is synthetic. Staging is not empty regardless: the E2E suite creates projects through the application, which is stronger evidence than rows inserted behind it.
 5. **Verify.** `pnpm test:e2e` against the staging URL, plus `e2e/staging.spec.ts` for deployment
    identity and the performance smoke.
 6. **Confirm rollback readiness.** §5.

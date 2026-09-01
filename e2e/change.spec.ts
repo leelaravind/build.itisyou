@@ -58,7 +58,25 @@ async function answerIntake(page: Page, projectId: string): Promise<void> {
 
     // Waits for the question to change rather than for the network, which resolves immediately after
     // a streamed server action and would let this loop skip the whole wizard.
-    if (answered.size < 2) await expect(heading).not.toHaveText(asked, { timeout: 15_000 });
+    /*
+     * Wait for the wizard to advance after **every** answer, including the last one.
+     *
+     * This used to be guarded by `if (answered.size < 2)`, on the reasoning that once both answers
+     * are in there is nothing left to read. But the guard did not skip a *read* — it skipped waiting
+     * for the server action to finish, and the caller navigates to `/plan` on the next line.
+     *
+     * Locally that race cannot open: the action completes in single-digit milliseconds against an
+     * in-process database, long before the navigation starts. Against a real deployment it takes
+     * ~300ms, so the navigation began while the final answer was still being written and Chromium
+     * cancelled it — `net::ERR_ABORTED`, in roughly one run in thirty, on the two specs that answer
+     * questions rather than skipping them.
+     *
+     * The failure was worth more than the flake it caused: had the navigation won the race, the
+     * second answer might not have been recorded, and the trace would have been empty for a reason
+     * having nothing to do with traceability — which is the exact failure this helper's own comments
+     * say it exists to prevent.
+     */
+    await expect(heading).not.toHaveText(asked, { timeout: 15_000 });
   }
 
   expect(answered.size, 'intake did not reach the questions that generate requirements').toBe(2);
