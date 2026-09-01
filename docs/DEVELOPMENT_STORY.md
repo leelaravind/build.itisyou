@@ -2294,3 +2294,115 @@ The Phase-13 gate — immutable baseline plus evidence audit verified — is met
 verified by planting violations; a tampered-baseline test proving the checksum detects modification
 and removal; a redacted-log test proving the sequence survives a lawful erasure; and a
 quarantine-retention test proving housekeeping cannot delete the record of tampering.
+
+---
+
+## Entry 018 — Phase 14: closing, and the strongest claim the platform makes
+
+The Phase-14 gate reads: *a project can formally close only when criteria pass or accepted exceptions
+exist.* The first clause is ordinary. The second is one careless implementation away from being a
+bypass, and a bypass here matters more than anywhere else, because "this project closed successfully"
+is the strongest claim this platform ever makes about anything.
+
+### Closure exceptions are held higher than release exceptions
+
+Phase 11 built exceptions that expire, are owned, and are named on the gate result. Those properties
+are right for a release, where somebody will review the exception in a month.
+
+At closure there is nobody left to review anything, so the same shape would be wrong. The differences:
+
+- **Permanent, with no expiry.** A closure exception is a statement rather than a deferral, and it
+  has to be written as one.
+- **Accepted by somebody other than the person closing the project.** Accepting your own exception on
+  the way out records a decision with nobody independent behind it — and the record looks complete,
+  which is what makes it worse than no exception at all.
+- **A consequence, not just a reason.** A reason explains the outgoing team's decision. A consequence
+  tells the incoming team what it means for them, and they are the only people who will ever read it.
+
+I gave this its own type rather than reusing `@govintel/release/testing`'s `Exception`. Sharing it
+would have meant either an expiry nobody honours or a nullable field that quietly makes release
+exceptions permanent too.
+
+And a malformed exception excuses nothing. Otherwise the highest-standard gate in the platform could
+be cleared by an exception with no reason, no owner and no consequence — which is not an accepted
+exception, it is a blank line where one should be.
+
+### The distinction I nearly missed
+
+Criteria have four outcomes here, not three: met, not met, **excepted**, and **unknown**.
+
+The fourth came from asking what an exception is actually for. An exception accepts a shortfall
+somebody knows about. If a criterion cannot be evaluated at all — because, say, some requirements
+record no way of being verified, so whether they were met is undecidable in either direction — then
+there is nothing to accept, and letting an exception cover it turns *"we could not tell"* into *"we
+decided it was fine"*.
+
+That is the more dangerous of the two by a long way, and the two look identical on a closure record.
+So `UNKNOWN` cannot be excepted, and the message says why: the underlying question has to be answered
+first.
+
+I planted the defect afterwards — collapsing `UNKNOWN` into `NOT_MET` so an exception could reach it —
+and two tests fail, one of them by name.
+
+### Archiving is not a way around the gate
+
+Archiving a project as **cancelled** is always allowed. Work gets cancelled; clients leave; the record
+is the most useful thing that survives, because somebody will ask why.
+
+Archiving it as **completed** is a claim about the project — the same claim the closure criteria
+decide. So that specific combination is refused unless closure was assessed. Without that refusal the
+closure gate is optional, reachable by anybody who prefers the archive button.
+
+The related refusal: archiving cannot proceed while evidence under a regulatory or indefinite
+retention obligation is quarantined. That obligation does not end because the project did, and
+archiving with the evidence unusable satisfies the letter of retention while defeating it — invisibly,
+until somebody asks for the evidence and it is not usable.
+
+Note that the rule is about the *obligation*, not the quarantine. Blocking on every quarantined record
+would make archiving impossible for any project that ever found a hash mismatch, which is a rule
+people would route around.
+
+### Lessons that transfer
+
+Most retrospective records are worthless, and the reason is not that people write them badly. The
+format does not demand the thing that makes a lesson usable, so what gets recorded is a feeling —
+"communication could have been better", "we underestimated" — and a feeling cannot be applied by
+somebody who was not there.
+
+Four parts, three of them required: what was **expected**, what **happened**, **why** they differed,
+and what would be done **differently**.
+
+The expectation is the one people skip and the one that decides everything. Without it there is no way
+to tell whether the outcome was a surprise, a known risk that materialised, or exactly what everybody
+predicted and nobody acted on — and those need completely different responses.
+
+The fourth part has a check that catches intentions dressed as actions: "be more careful with
+estimates" against "obtain a real sample file before estimating any import". It is **advisory**, for
+the same reason the subjective-wording check in Phase 10 is advisory — a rule that rejects real
+writing gets worked around, and the workaround produces worse lessons that pass the check.
+
+There is also a `WORKED` category, and a retrospective with nothing in it is reported. A retrospective
+recording only failures teaches the next team what to avoid and nothing about what to repeat, and it
+makes the exercise something people dread, which is how retrospectives stop happening.
+
+### A small type-system lesson
+
+The test asserting closure blocks with no retrospective originally wrote `retrospective: undefined`.
+That fails under `exactOptionalPropertyTypes`, which distinguishes *absent* from *present and
+undefined*.
+
+The fix was to build the fixture by omission — and it is the better test for a reason beyond
+appeasing the compiler. The module checks `=== undefined`, and callers can only ever produce the
+absent form. A test that could only construct the other one would be exercising a case the type
+system forbids.
+
+### Where Phase 14 stands
+
+1,868 unit tests and 648 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean.
+
+The Phase-14 gate — a project can formally close only when criteria pass or accepted exceptions exist
+— is met, with the second clause held to a standard that stops it becoming the first clause's
+loophole: malformed exceptions excuse nothing, self-accepted ones are refused, undecidable criteria
+cannot be excepted at all, and a project resting on exceptions never renders identically to one
+resting on none.

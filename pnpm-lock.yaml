@@ -71,6 +71,9 @@ importers:
       '@govintel/change':
         specifier: workspace:*
         version: link:../../packages/change
+      '@govintel/completion':
+        specifier: workspace:*
+        version: link:../../packages/completion
       '@govintel/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -138,6 +141,24 @@ importers:
 
   packages/change:
     dependencies:
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@govintel/twin':
+        specifier: workspace:*
+        version: link:../twin
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/completion:
+    dependencies:
+      '@govintel/governance':
+        specifier: workspace:*
+        version: link:../governance
+      '@govintel/release':
+        specifier: workspace:*
+        version: link:../release
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared

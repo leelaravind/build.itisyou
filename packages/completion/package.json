@@ -1,0 +1,21 @@
+{
+  "name": "@govintel/completion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./retrospective": "./src/retrospective.ts",
+    "./closure": "./src/closure.ts",
+    "./archive": "./src/archive.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/twin": "workspace:*",
+    "@govintel/governance": "workspace:*",
+    "@govintel/release": "workspace:*",
+    "zod": "4.5.4"
+  }
+}
