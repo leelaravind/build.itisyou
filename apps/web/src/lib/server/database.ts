@@ -12,8 +12,10 @@ import {
   readSchemaFingerprint,
   readSchemaFingerprintFrom,
   rebuildSchema,
+  roleSafetyFaults,
   rowsOf,
 } from '@govintel/db/client';
+import type { ConnectionRole } from '@govintel/db/client';
 import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
 import { IS_DEPLOYED } from './config.ts';
@@ -233,16 +235,27 @@ let roleChecked = false;
  * Ownership is checked too: `FORCE ROW LEVEL SECURITY` binds the owner, but an owner can `ALTER
  * TABLE ... DISABLE ROW LEVEL SECURITY` at any moment. A role that can turn a control off is not
  * constrained by it.
+ *
+ * ## What this catches, and what it does not
+ *
+ * The result is cached for the life of the isolate, so this catches a **deployment** pointed at an
+ * unsafe role — every deploy starts fresh isolates, and the first request through each one pays for
+ * the check. It does not catch a connection string repointed underneath a running isolate: that is
+ * only noticed when the isolate recycles, which on Workers is usually minutes and is not guaranteed.
+ *
+ * That limit is real and was measured rather than assumed. Repointing the staging Hyperdrive at the
+ * database owner and re-requesting `/api/health` returned `200` — warm isolates, cached answer. The
+ * decision itself is therefore tested directly instead: `roleSafetyFaults` is pure and exported, and
+ * `packages/db/test/role-safety.test.ts` covers every fault including the two that look safe.
+ *
+ * Caching it is still right. The alternative is a catalogue query on every database operation, to
+ * defend against a change that only happens when somebody edits infrastructure — at which point a
+ * deploy follows, and the deploy is caught.
  */
 async function assertRestrictedRole(db: DatabaseHandle): Promise<void> {
   if (roleChecked) return;
 
-  const [role] = rowsOf<{
-    role: string;
-    superuser: boolean;
-    bypassrls: boolean;
-    owned: number;
-  }>(
+  const [role] = rowsOf<ConnectionRole>(
     await db.execute(sql`
       SELECT current_user AS role,
              r.rolsuper AS superuser,
@@ -263,11 +276,7 @@ async function assertRestrictedRole(db: DatabaseHandle): Promise<void> {
     );
   }
 
-  const faults: string[] = [];
-
-  if (role.superuser) faults.push('is a superuser');
-  if (role.bypassrls) faults.push('can bypass row-level security');
-  if (role.owned > 0) faults.push(`owns ${String(role.owned)} table(s) and can disable their RLS`);
+  const faults = roleSafetyFaults(role);
 
   if (faults.length > 0) {
     /*

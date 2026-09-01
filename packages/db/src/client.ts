@@ -718,6 +718,50 @@ CREATE TABLE IF NOT EXISTS schema_meta (
  * effectively did, and "there is nothing to do" is indistinguishable from "I could not tell" right up
  * until somebody asks why a queue never drained.
  */
+/** What the database reports about the role a connection is using. */
+export interface ConnectionRole {
+  readonly role: string;
+  readonly superuser: boolean;
+  readonly bypassrls: boolean;
+  /** Tables in `public` owned by this role. An owner can disable RLS on what it owns. */
+  readonly owned: number;
+}
+
+/**
+ * The reasons a role must not be used to serve requests, in words, or an empty list.
+ *
+ * Pure and exported so the decision can be tested directly. The runtime wrapper around it does one
+ * query and cannot be unit-tested against a role it has no way to create — which matters, because
+ * the live attempt to verify it was inconclusive: Workers cache the check per isolate and Hyperdrive
+ * does not repoint existing pooled connections immediately, so pointing staging at an unsafe role
+ * and watching for a refusal proved nothing either way. Logic worth trusting has to be reachable
+ * without infrastructure.
+ *
+ * ## What each fault means
+ *
+ * `superuser` — bypasses row-level security unconditionally. This is SEC-001, and the reason the
+ * application role is `NOSUPERUSER`.
+ *
+ * `bypassrls` — the same effect without the name, and the one that is easy to miss. Neon's
+ * `neondb_owner` is not a superuser and has `rolbypassrls`; a role created through the Neon API
+ * comes back with it too, whatever was asked for. Measured on the production branch: as the owner an
+ * unscoped read returned the row, as the application role it returned nothing.
+ *
+ * `owned` — `FORCE ROW LEVEL SECURITY` does bind the owner, but an owner can
+ * `ALTER TABLE ... DISABLE ROW LEVEL SECURITY` whenever it likes. A role that can switch a control
+ * off is not constrained by it, and the migration role that creates the tables should not be the one
+ * serving requests against them.
+ */
+export function roleSafetyFaults(role: ConnectionRole): string[] {
+  const faults: string[] = [];
+
+  if (role.superuser) faults.push('is a superuser');
+  if (role.bypassrls) faults.push('can bypass row-level security');
+  if (role.owned > 0) faults.push(`owns ${String(role.owned)} table(s) and can disable their RLS`);
+
+  return faults;
+}
+
 export function rowsOf<T>(result: unknown): T[] {
   if (Array.isArray(result)) return result as T[];
 
