@@ -2406,3 +2406,122 @@ The Phase-14 gate — a project can formally close only when criteria pass or ac
 loophole: malformed exceptions excuse nothing, self-accepted ones are refused, undecidable criteria
 cannot be excepted at all, and a project resting on exceptions never renders identically to one
 resting on none.
+
+---
+
+## Entry 019 — Phase 15: the view that spans projects
+
+Phase 15 adds organisations, membership and the portfolio. Two of those are ordinary. The portfolio
+is not, because it is the only query in the platform that deliberately spans projects — every other
+surface is scoped to one and fails closed — and that makes it the easiest place to leak.
+
+### The leak that looks like a feature
+
+"Seven projects are at risk" tells the reader there are seven projects. If they can open four, the
+other three have been disclosed: their existence, their count, and something about their state.
+
+A tenanted product leaks through aggregates far more often than through a missing ownership check,
+because an aggregate does not look like a disclosure. Nobody reviews a count. So the portfolio filters
+before it counts, and everything downstream — totals, ordering, the headline, the resource roll-up —
+operates only on what the viewer may see.
+
+The corollary took a moment to get right: when the view *is* partial, the page says so as a fact about
+the viewer's access, never as a number. "You cannot see everything here" is honest. "3 projects are
+hidden from you" discloses that there are three, which is precisely what the permission was
+withholding.
+
+### A control that could not fire
+
+Then I checked whether that protection was reachable, and it was not.
+
+The RBAC model grants `project:read` to every organisation role. Every member of an organisation can
+read every project in it, so `partialView` was permanently `false`, and both tests guarding it were
+written as `if (portfolio.partialView) { ... }` — which passed, every time, having asserted nothing.
+
+Two failures stacked on each other. The control guarded a situation that could not arise, and the
+tests were shaped so that they could not notice. This is the third time in this project something has
+been present and inert (SEC-001's row-level security, KI-031's archived-project check), and it is the
+failure mode I now trust least, because a control that cannot fire reads in review exactly like one
+that can.
+
+The fix had to make the control real rather than delete it, because the missing concept is a genuine
+one: organisations run client work, acquisitions and disciplinary matters, and "everybody in the
+company can read this" is the wrong default for those. So a project can be **restricted**, and a
+restricted project needs an explicit project role — organisation membership alone does not open it.
+
+An owner is deliberately not exempt. Restriction is narrower than the organisation, and exempting the
+most powerful role removes exactly the case it exists for.
+
+Both tests are now unconditional, and removing the guard fails three of them.
+
+### A test that failed to land
+
+Worth recording because it nearly went unnoticed: my first attempt to rewrite those tests used a
+string replacement that silently did not match, so the file kept the old conditional version. The
+suite still passed — 35 tests, all green — and the only reason I caught it was that planting the
+defect afterwards produced *one* failure where I expected three.
+
+Two lessons. A replacement that can silently no-op needs an assertion on the match count, which I use
+elsewhere and skipped here. And verifying a guard by planting the defect catches not only weak code
+but weak *edits* — the count of failures is information, not just the fact of them.
+
+The same edit also left a literal backspace byte in a regex, from a Python escape that lost a
+backslash. That is the second time in this project a text transformation has injected a control
+character into source (KI-029 was the first, with NUL bytes). Lint caught it this time.
+
+### Do not fake functionality
+
+§44 says an integrations screen may exist before any connector does, and immediately says not to fake
+anything. Those pull against each other, and the resolution is that the *states* carry the honesty
+rather than the connectors.
+
+`PLANNED` is not a softer `NOT_CONNECTED`. It means there is nothing to connect to. Rendering the two
+alike puts a Connect button on something that cannot connect — and that is how an integrations screen
+actually fakes functionality: not by claiming a feature works, but by offering an action the user
+discovers is inert by pressing it.
+
+So `offersConnect` is a function rather than a rendering detail, the E2E asserts no Connect button
+exists anywhere on the page, and a catalogue check fails the build if any integration declares a state
+other than `PLANNED` without a connector behind it.
+
+Each integration also records **what it still would not do** once built. Every integration is oversold
+by omission — people assume a connected source control means the platform knows what the code does —
+and one sentence is the cheapest available correction.
+
+### Membership rules that exist because of specific failures
+
+**The last owner** cannot be removed or demoted. An organisation with no owner cannot appoint one,
+because appointing an owner requires being one, so it is not recoverable through the product — only
+through database access, which is exactly the situation a tenanted system exists to avoid. Guarding
+removal alone is insufficient; demotion reaches the same state by another route.
+
+**Nobody may grant a role above their own.** Without it, an admin makes somebody an owner and is then
+removed by them: escalation in two hops, using only permitted operations, leaving an audit trail of
+entirely legitimate actions.
+
+**Self-demotion is refused.** It is the one change nobody can undo, and it is the second half of the
+last-owner problem.
+
+**An auditor cannot hold a project role.** Their value is being outside the work. The platform cannot
+enforce independence, and it can decline to record the arrangement that destroys it.
+
+**Revoked and expired invitations stay distinct.** Revoked means somebody decided this person should
+not join; expired means nobody acted. Only one of the two should be re-sent without a conversation.
+
+### One more over-broad test
+
+The portfolio E2E originally forbade any percentage on the page. It failed on the page's own example
+of a person split 60/60 across two projects — an allocation, not a score.
+
+Same shape as the "score" assertion in Phase 9: the prohibition is a number standing in for a
+*verdict*, and banning the general case makes the page less able to explain itself. Narrowed to
+percentages attached to health or completion.
+
+### Where Phase 15 stands
+
+1,904 unit tests and 675 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean.
+
+The Phase-15 gate — multi-project and role behaviour verified — is met, and the verification that
+mattered was not the passing tests but the planted defect that showed two of them had been asserting
+nothing at all.

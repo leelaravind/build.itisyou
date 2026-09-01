@@ -46,6 +46,13 @@ export function PublicHeader() {
         </Link>
 
         <Link
+          href="/portfolio"
+          className="hidden min-h-11 items-center rounded px-sm font-sans text-label-caps tracking-wider text-on-surface-variant uppercase transition-colors hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:inline-flex"
+        >
+          Portfolio
+        </Link>
+
+        <Link
           href="/login"
           className="inline-flex min-h-11 items-center rounded px-sm font-sans text-label-caps tracking-wider text-on-surface-variant uppercase transition-colors hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >

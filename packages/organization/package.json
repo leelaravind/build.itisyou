@@ -1,0 +1,19 @@
+{
+  "name": "@govintel/organization",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./membership": "./src/membership.ts",
+    "./portfolio": "./src/portfolio.ts",
+    "./integrations": "./src/integrations.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/db": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

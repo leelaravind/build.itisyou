@@ -19,6 +19,7 @@
     "@govintel/governance": "workspace:*",
     "@govintel/intake": "workspace:*",
     "@govintel/interchange": "workspace:*",
+    "@govintel/organization": "workspace:*",
     "@govintel/release": "workspace:*",
     "@govintel/rules": "workspace:*",
     "@govintel/shared": "workspace:*",

@@ -92,6 +92,9 @@ importers:
       '@govintel/interchange':
         specifier: workspace:*
         version: link:../../packages/interchange
+      '@govintel/organization':
+        specifier: workspace:*
+        version: link:../../packages/organization
       '@govintel/release':
         specifier: workspace:*
         version: link:../../packages/release
@@ -244,6 +247,18 @@ importers:
       '@govintel/intake':
         specifier: workspace:*
         version: link:../intake
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
+  packages/organization:
+    dependencies:
+      '@govintel/db':
+        specifier: workspace:*
+        version: link:../db
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared
