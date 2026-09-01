@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { createGuestSession, findActiveGuestSession } from '@govintel/db/guest';
 import { withUnscoped } from './database.ts';
 import { GUEST_COOKIE, guestCookieOptions } from './guest-cookie.ts';
+import { sign, unsign } from './signed-cookie.ts';
 
 export { GUEST_COOKIE };
 
@@ -37,7 +38,14 @@ export { GUEST_COOKIE };
  */
 export async function readGuestSessionId(): Promise<string | undefined> {
   const store = await cookies();
-  return store.get(GUEST_COOKIE)?.value;
+
+  /*
+   * Unsigned first, so a tampered or fabricated cookie is rejected before it costs a database
+   * lookup. A forged identifier used to cost one query per attempt, which is a free amplification
+   * primitive — a few thousand random ids a second become a few thousand queries a second, and the
+   * connection pool runs out before anything else does.
+   */
+  return unsign(store.get(GUEST_COOKIE)?.value);
 }
 
 /**
@@ -90,7 +98,7 @@ export async function ensureGuestSession(ttlHours: number) {
   const session = await withUnscoped((db) => createGuestSession(db, { ttlHours }));
 
   const store = await cookies();
-  store.set(GUEST_COOKIE, session.id, guestCookieOptions(ttlHours * 60 * 60));
+  store.set(GUEST_COOKIE, sign(session.id), guestCookieOptions(ttlHours * 60 * 60));
 
   return session;
 }

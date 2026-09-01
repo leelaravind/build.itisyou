@@ -42,7 +42,23 @@ export default defineConfig({
            * never arrive, it waits on a database that is definitely being built.
            */
           hookTimeout: 30_000,
-          include: ['packages/*/test/**/*.test.ts', 'apps/*/test/design/**/*.test.ts'],
+          /*
+           * `server-only` throws on import by design — it exists to turn "this module reached a
+           * client bundle" into a build error. The test runner is neither a server component nor a
+           * client bundle, so it trips the guard while proving nothing. Stubbed rather than removed
+           * from the modules under test, where the marker is doing real work.
+           */
+          alias: {
+            'server-only': new URL('./apps/web/test/stubs/server-only.ts', import.meta.url)
+              .pathname,
+          },
+          include: [
+            'packages/*/test/**/*.test.ts',
+            'apps/*/test/design/**/*.test.ts',
+            // Server-side application code: cookie signing, session handling. Node environment, no
+            // DOM — which is why it belongs in this project rather than the `client` one.
+            'apps/*/test/server/**/*.test.ts',
+          ],
           exclude: ['**/node_modules/**', '**/dist/**', '**/.next/**', 'e2e/**'],
         },
       },

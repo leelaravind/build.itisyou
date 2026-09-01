@@ -23,6 +23,7 @@ import { findActiveGuestSession } from '@govintel/db/guest';
 import { IS_DEPLOYED } from './config.ts';
 import { resolveConnectionString } from './connection-string.ts';
 import { GUEST_COOKIE } from './guest-cookie.ts';
+import { unsign } from './signed-cookie.ts';
 
 /**
  * Server-side database handle.
@@ -375,7 +376,7 @@ export async function withUnscoped<T>(fn: (db: DatabaseHandle) => Promise<T>): P
  */
 async function currentOrganizationId(): Promise<string | undefined> {
   const store = await cookies();
-  const sessionId = store.get(GUEST_COOKIE)?.value;
+  const sessionId = unsign(store.get(GUEST_COOKIE)?.value);
 
   if (sessionId === undefined || sessionId === '') return undefined;
 
