@@ -50,3 +50,14 @@ stitch_project_blueprint_system.zip
 # The secret scanner caught it, which is the only reason this is a note rather than an incident.
 .open-next/
 .wrangler/
+
+# Agent skills and local agent settings.
+#
+# `.claude/skills/` holds 148 vendored third-party skills (Google Cloud, Three.js, Neon) totalling
+# ~6 MB across 724 files. They are development tooling: nothing in the build, the tests or CI reads
+# them, and vendoring Apache-2.0 content into a private product repo adds licence-tracking burden for
+# no build benefit. Reproduce them from `E:\Project\skills-src` (see docs/DEVELOPMENT_STORY.md).
+#
+# `settings.local.json` is per-machine by definition — the name says so.
+.claude/skills/
+.claude/settings.local.json
