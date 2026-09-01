@@ -694,6 +694,46 @@ CREATE TABLE IF NOT EXISTS schema_meta (
 `;
 
 /**
+ * The rows of an `execute()` result, whichever driver produced it.
+ *
+ * The two drivers disagree about the shape and nothing in the type system says so. Drizzle's PGlite
+ * adapter returns `{ rows: [...] }`; its postgres-js adapter returns the array itself. `execute()` is
+ * typed loosely enough that both satisfy it, so reading `.rows` compiles against either and is
+ * correct against only one.
+ *
+ * This was found on the first real staging deployment and it had produced two live defects:
+ *
+ * - The outbox drainer read `.rows.length` off an array, threw `TypeError` inside the cron handler,
+ *   and left claimed rows unpublished. Every tick failed identically; the only trace was a log line
+ *   in a Worker nothing was watching.
+ * - `readSchemaFingerprintFrom` read `.rows[0]` off an array and would have returned `null` for every
+ *   deployed database — so the web Worker would have refused to serve, reporting a migration failure
+ *   against a database whose schema was in fact correct.
+ *
+ * Both were invisible locally because every test runs on PGlite, which is the shape the code assumed.
+ * That is the same root cause as KI-049: **the development database is not the deployed one, and the
+ * places they differ are exactly the places tests cannot reach.**
+ *
+ * Throws rather than returning `[]` for an unrecognised shape. Returning empty is what the drainer
+ * effectively did, and "there is nothing to do" is indistinguishable from "I could not tell" right up
+ * until somebody asks why a queue never drained.
+ */
+export function rowsOf<T>(result: unknown): T[] {
+  if (Array.isArray(result)) return result as T[];
+
+  if (typeof result === 'object' && result !== null) {
+    const { rows } = result as { rows?: unknown };
+    if (Array.isArray(rows)) return rows as T[];
+  }
+
+  throw new TypeError(
+    `Unrecognised query result shape: expected an array or { rows }, received ${
+      result === null ? 'null' : typeof result
+    }. A driver has changed its result shape — see rowsOf() in packages/db/src/client.ts.`,
+  );
+}
+
+/**
  * The fingerprint a database was built from, or `null` if it predates fingerprinting or is empty.
  */
 export async function readSchemaFingerprint(client: PGlite): Promise<string | null> {
@@ -723,18 +763,20 @@ export async function readSchemaFingerprint(client: PGlite): Promise<string | nu
  * distinguishes them in its message.
  */
 export async function readSchemaFingerprintFrom(tx: SqlExecutor): Promise<string | null> {
-  const present = (await tx.execute(
-    sql`SELECT count(*)::int AS count FROM information_schema.tables
-        WHERE table_schema = 'public' AND table_name = 'schema_meta'`,
-  )) as { rows: { count: number }[] };
+  const present = rowsOf<{ count: number }>(
+    await tx.execute(
+      sql`SELECT count(*)::int AS count FROM information_schema.tables
+          WHERE table_schema = 'public' AND table_name = 'schema_meta'`,
+    ),
+  );
 
-  if ((present.rows[0]?.count ?? 0) === 0) return null;
+  if ((present[0]?.count ?? 0) === 0) return null;
 
-  const row = (await tx.execute(
-    sql`SELECT fingerprint FROM schema_meta ORDER BY applied_at DESC LIMIT 1`,
-  )) as { rows: { fingerprint: string }[] };
+  const rows = rowsOf<{ fingerprint: string }>(
+    await tx.execute(sql`SELECT fingerprint FROM schema_meta ORDER BY applied_at DESC LIMIT 1`),
+  );
 
-  return row.rows[0]?.fingerprint ?? null;
+  return rows[0]?.fingerprint ?? null;
 }
 
 /**

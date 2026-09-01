@@ -15,6 +15,7 @@ import {
 import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
 import { IS_DEPLOYED } from './config.ts';
+import { resolveConnectionString } from './connection-string.ts';
 
 /**
  * Server-side database handle.
@@ -100,14 +101,16 @@ async function initialise(): Promise<DatabaseHandle> {
      * is not the one this build expects is a migration that has not run, and the correct response is
      * to stop, not to guess (KI-026).
      */
-    const connectionString = process.env.DATABASE_URL;
-
-    if (connectionString === undefined || connectionString.trim() === '') {
-      throw new Error(
-        'DATABASE_URL is not set. A deployed environment requires a networked PostgreSQL; ' +
-          'see docs/CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md.',
-      );
-    }
+    /*
+     * Resolved rather than read from `process.env` directly.
+     *
+     * On Cloudflare the connection string arrives on the Hyperdrive *binding*, which is an object and
+     * therefore cannot appear in `process.env` the way a var or a secret does. Reading the variable
+     * here threw "DATABASE_URL is not set" on the first staging request with the binding present and
+     * correct. `resolveConnectionString` holds that one piece of provider knowledge so this module
+     * keeps having none.
+     */
+    const connectionString = await resolveConnectionString();
 
     const { db: pooled } = connect({ connectionString });
 

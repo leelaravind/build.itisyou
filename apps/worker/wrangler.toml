@@ -5,6 +5,20 @@
 # upgrade. Two Workers sharing `packages/*` is the arrangement that survives somebody else's upgrade.
 #
 # See docs/CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md §5.
+#
+# ---------------------------------------------------------------------------
+# Why every binding is repeated under each environment
+# ---------------------------------------------------------------------------
+#
+# Wrangler environments do **not** inherit top-level bindings. `[[hyperdrive]]`, `[[queues.*]]` and
+# `[triggers]` declared at the top of this file apply to the environment-less deployment and to
+# nothing else, so a Worker deployed with `--env staging` against the earlier version of this file
+# would have started with no database binding, no queue and no cron — and the first symptom would
+# have been a `scheduled` handler reading `env.HYPERDRIVE.connectionString` off `undefined` once a
+# minute, in a Worker nothing was watching yet.
+#
+# The duplication is therefore load-bearing rather than untidy. It is the format's rule, not a
+# preference, and collapsing it would silently produce a Worker missing everything it needs.
 
 name = "govintel-worker"
 main = "src/index.ts"
@@ -16,47 +30,60 @@ compatibility_flags = ["nodejs_compat"]
 [observability]
 enabled = true
 
-# Same Hyperdrive configuration as the web Worker, and it must be the same one — two configurations
-# over one database would be two pools with two independent caches, and the caching decision (KI-050)
-# would then have to be right in both places.
-# Local development uses an environment variable rather than a connection string in this file:
-#
-#   WRANGLER_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgres://...
-#
-# The obvious alternative is `localConnectionString` here. The secret scanner rejected it, and it was
-# right to: a DSN with inline credentials committed to the repository is the exact shape that later
-# gets edited to hold a real one, and by then it is in the history.
-[[hyperdrive]]
-binding = "HYPERDRIVE"
-id = "REPLACE_WITH_HYPERDRIVE_ID"
-
-# Producer: the drainer publishes claimed rows.
-[[queues.producers]]
-binding = "OUTBOX_QUEUE"
-queue = "govintel-outbox"
-
-# Consumer: the same Worker performs the effects.
-#
-# `max_retries` is 5 to match MAX_ATTEMPTS in packages/resilience — the two counters bound the same
-# thing from opposite ends, and letting them disagree means a row is either abandoned while Queues
-# still retries it, or retried after the row says it was abandoned.
-[[queues.consumers]]
-queue = "govintel-outbox"
-max_batch_size = 10
-max_batch_timeout = 5
-max_retries = 5
-dead_letter_queue = "govintel-outbox-dlq"
-
-# Every minute. The outbox is the durable record, so this cadence decides *latency* rather than
-# whether a side effect happens at all — which is why a minute is comfortable rather than tight.
-[triggers]
-crons = ["* * * * *"]
+# ---------------------------------------------------------------------------
+# Staging — provisioned 2026-09-01
+# ---------------------------------------------------------------------------
 
 [env.staging]
 name = "govintel-worker-staging"
 
 [env.staging.vars]
 APP_ENV = "staging"
+
+# The same Hyperdrive configuration as the web Worker, and it must be the same one: two
+# configurations over one database would be two pools with two independent caches, and the caching
+# decision (KI-050) would then have to be right in both places rather than one.
+#
+# Created with `--caching-disabled`. That flag is a security control, not a performance preference —
+# Hyperdrive keys its cache on the query and its parameters, and under RLS two tenants issue
+# byte-identical queries while being entitled to different rows. The discriminating input is
+# `app.current_organization_id`, which is transaction state rather than a parameter, so a cache
+# cannot see it and would serve one tenant's rows to another.
+[[env.staging.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "fa38480586e44cebab20fe15ac2121a0"
+
+# Producer: the drainer publishes claimed rows.
+[[env.staging.queues.producers]]
+binding = "OUTBOX_QUEUE"
+queue = "govintel-outbox-staging"
+
+# Consumer: the same Worker performs the effects.
+#
+# `max_retries` is 5 to match MAX_ATTEMPTS in packages/resilience — the two counters bound the same
+# thing from opposite ends, and letting them disagree means a row is either abandoned while Queues
+# still retries it, or retried after the row says it was abandoned.
+[[env.staging.queues.consumers]]
+queue = "govintel-outbox-staging"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 5
+dead_letter_queue = "govintel-outbox-dlq-staging"
+
+# Every minute. The outbox is the durable record, so this cadence decides *latency* rather than
+# whether a side effect happens at all — which is why a minute is comfortable rather than tight.
+[env.staging.triggers]
+crons = ["* * * * *"]
+
+# ---------------------------------------------------------------------------
+# Production — not provisioned
+# ---------------------------------------------------------------------------
+#
+# Deliberately left without bindings rather than filled with placeholder ids.
+#
+# A placeholder that looks like an id is the shape that gets deployed by accident; an environment
+# with no bindings fails immediately and unmistakably at deploy time. Phase 20 provisions these
+# against the production account and fills this section in — see the runbook §6.
 
 [env.production]
 name = "govintel-worker-production"

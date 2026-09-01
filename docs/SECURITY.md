@@ -218,11 +218,104 @@ Caching is **disabled** for V1 (`--caching-disabled` at Hyperdrive creation). Th
 tenant and mutable, the benefit is marginal, and the failure mode is cross-tenant disclosure.
 Recorded as a decision rather than left as a default nobody examined. See KI-050.
 
+### Measured, not argued
+
+Everything above was reasoning about a mechanism. On 2026-09-01 a real staging environment made it
+an observation.
+
+The pre-fix implementation was restored faithfully from commit `0fd0cac` and run against a Neon
+PostgreSQL through a four-connection pool, with forty requests from two tenants interleaved:
+
+    { "WRONG TENANT": 18, "correct": 20, "empty": 2 }
+
+**Eighteen of forty requests returned another tenant's row.** The fixed implementation returns 40/40.
+
+The two failure classes are counted separately on purpose. `empty` is a malfunction: somebody sees a
+blank page and complains, and it gets fixed. `WRONG TENANT` is the disclosure, and nobody complains,
+because the data that arrives looks entirely plausible to whoever receives it.
+
+This is now a standing gate — `pnpm verify:isolation` (`scripts/verify-pooled-isolation.mjs`). It
+refuses to run unless `APP_ENV=staging`, because it writes and removes rows and a check that merely
+*asks* to be pointed at the right database eventually gets pointed at the wrong one.
+
+It also settles what the PGlite suite could not. Those tests were thorough and structurally
+incapable of failing: one connection, serialised behind a mutex, so a leaked scope had nowhere to
+leak to. Passing tests were evidence of nothing, and there was no way to tell from inside them.
+
+### Related: SEC-003c - the deployed database is not the development one
+
+The same sentence a third time, and it cost two live defects on the first staging deployment.
+
+Drizzle's PGlite adapter returns `{ rows: [...] }` from `execute()`. Its postgres-js adapter returns
+the array itself. Both satisfy the declared return type, so reading `.rows` compiles against either
+and is correct against only one - and every test in this project runs on PGlite.
+
+The outbox drainer threw `TypeError` on every cron tick, leaving claimed rows unpublished; the schema
+fingerprint check would have returned `null` for every deployed database, so the web Worker would have
+refused to serve against a schema that was in fact correct. Neither could fail locally. See KI-052.
+
+The general form is worth stating plainly: **a test suite that runs only against the development
+database cannot see anything that differs about the deployed one**, and the differences are not
+limited to performance. They include result shapes, privilege models and pooling behaviour - which is
+to say, exactly the things security controls are built on.
+
+### A Neon-specific privilege note
+
+`neondb_owner` - the role the migration runs as and the role Hyperdrive connects as - has
+**`rolbypassrls = true`**, confirmed by querying `pg_roles` on the staging branch.
+
+So `FORCE ROW LEVEL SECURITY` does not constrain it, and `SET LOCAL ROLE govintel_app` is not defence
+in depth on top of RLS: **it is the only thing that makes RLS apply at all.** A tenant-scoped query
+that skipped the role switch would see every tenant's rows while every policy remained defined and
+listed in the catalogue.
+
+That is SEC-001 restated for a managed provider, and it is verified rather than assumed - the
+isolation gate asserts `govintel_app` is neither a superuser nor a `BYPASSRLS` role, so a future
+provider change or a mistaken `ALTER ROLE` fails a check instead of silently removing the control.
+
 ### The pattern
 
-Both are the same sentence: **connection-level state is invisible to anything that pools or caches
-above it.** Worth carrying into any future work that introduces a layer between the application and
-the database.
+All of these are the same sentence: **state that lives on the connection is invisible to anything
+that pools, caches, or substitutes for it** - and so are the assumptions a local database lets you
+make. Worth carrying into any future work that introduces a layer between the application and the
+database.
+
+---
+
+## 2d. Finding SEC-004 - a production credential in a build artefact
+
+Found in Phase 19 by `pnpm scan:secrets`, before anything was committed.
+
+`@opennextjs/cloudflare` inlines the resolved environment into
+`.open-next/cloudflare/next-env.mjs`. With a Neon-linked `.env.local` present, that file contained a
+live **production** `DATABASE_URL` - host, user and password - written in plain text as an exported
+constant.
+
+`.open-next/` was not in `.gitignore`. Thirty-four files were untracked but stageable, so a single
+`git add -A` would have committed a production database credential to the repository.
+
+**Resolved** by ignoring `.open-next/` and `.wrangler/`. Nothing reached the index or the history.
+
+Two things are worth keeping from it.
+
+The first is that the scanner found it only because of a change made hours earlier for an unrelated
+reason. `neon link` had written a real DSN into `.env.local`, and the scanner - which walked the disk
+using a hand-maintained skip list - failed the gate on a correctly-placed local credential. The fix
+was to scan exactly the set of files git can see:
+
+    git ls-files --cached --others --exclude-standard
+
+That answers the question the scanner is actually asking, since its own failure message says *remove
+it from the tree and history* and a gitignored file is in neither. It also has the property that
+matters here: **a file is scanned precisely when it is not ignored.** `.open-next` was not ignored, so
+it was in scope, so the credential was found. Under the previous design the directory would have had
+to be added to a second hand-maintained list to be scanned - and nobody adds build output to a list
+of things to scan.
+
+The second is the general hazard, which is **not** resolved by the `.gitignore` entry: any build run
+on a machine holding real credentials bakes them into an artefact. CI must never publish `.open-next`
+as a build artefact, and build output must not be copied off a machine that has a populated
+`.env.local`. See KI-054.
 
 ---
 

@@ -38,3 +38,15 @@ stitch_project_blueprint_system.zip
 
 # Local PGlite development data directory
 .pglite/
+.neon
+
+# Cloudflare build output and local state.
+#
+# Not merely noise. `@opennextjs/cloudflare` inlines the resolved environment into
+# `.open-next/cloudflare/next-env.mjs`, and with a Neon-linked `.env.local` that file contains a live
+# `DATABASE_URL` — password and all. The directory was untracked but not ignored, so 34 files were
+# stageable and `git add -A` would have committed a production database credential.
+#
+# The secret scanner caught it, which is the only reason this is a note rather than an incident.
+.open-next/
+.wrangler/

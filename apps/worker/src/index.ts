@@ -1,5 +1,6 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { connect, type PooledDatabase } from '@govintel/db/connect';
+import { rowsOf } from '@govintel/db/client';
 import { outboxEvents } from '@govintel/db/schema';
 import { classify, MAX_ATTEMPTS } from '@govintel/resilience/jobs';
 import { logger } from '@govintel/shared/logging';
@@ -131,7 +132,12 @@ async function drain(db: PooledDatabase, env: Env): Promise<void> {
    * failing to publish eventually exceeds `MAX_ATTEMPTS` and is dead-lettered rather than retried
    * forever — §46's distinction between a failure worth repeating and one that is not.
    */
-  const claimed = (await db.execute(sql`
+  const claimed = rowsOf<{
+    id: string;
+    idempotency_key: string | null;
+    event_type: string;
+    correlation_id: string;
+  }>(await db.execute(sql`
     WITH claimed AS (
       SELECT id
       FROM outbox_events
@@ -149,18 +155,11 @@ async function drain(db: PooledDatabase, env: Env): Promise<void> {
     FROM claimed
     WHERE o.id = claimed.id
     RETURNING o.id, o.idempotency_key, o.event_type, o.correlation_id
-  `)) as unknown as {
-    rows: {
-      id: string;
-      idempotency_key: string | null;
-      event_type: string;
-      correlation_id: string;
-    }[];
-  };
+  `));
 
-  if (claimed.rows.length === 0) return;
+  if (claimed.length === 0) return;
 
-  for (const row of claimed.rows) {
+  for (const row of claimed) {
     await env.OUTBOX_QUEUE.send({
       id: row.id,
       idempotencyKey: row.idempotency_key,
@@ -169,7 +168,7 @@ async function drain(db: PooledDatabase, env: Env): Promise<void> {
     });
   }
 
-  logger.info('outbox drained', { published: claimed.rows.length, environment: env.APP_ENV });
+  logger.info('outbox drained', { published: claimed.length, environment: env.APP_ENV });
 
   await deadLetterExhausted(db);
 }

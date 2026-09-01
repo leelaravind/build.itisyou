@@ -29,6 +29,7 @@
     "@govintel/shared": "workspace:*",
     "@govintel/traceability": "workspace:*",
     "@govintel/twin": "workspace:*",
+    "@opennextjs/cloudflare": "1.20.4",
     "drizzle-orm": "0.45.2",
     "next": "16.3.3",
     "postgres": "^3.4.9",
