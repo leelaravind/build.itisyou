@@ -29,6 +29,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
+import { PROJECT_ROLES } from '@govintel/shared/roles';
 
 /* -------------------------------------------------------------------------- */
 /* Enumerations                                                               */
@@ -44,14 +45,14 @@ export const organizationRoleEnum = pgEnum('organization_role', [
 ]);
 
 /** Project-level roles (gap-spec §7.3). */
-export const projectRoleEnum = pgEnum('project_role', [
-  'PROJECT_OWNER',
-  'PROJECT_MANAGER',
-  'ENGINEER',
-  'REVIEWER',
-  'APPROVER',
-  'VIEWER',
-]);
+/*
+ * Derived from the shared list rather than repeating it.
+ *
+ * The six roles are a vocabulary the domain layer also needs (gap-spec §7.3), and when this was the
+ * only definition, `packages/governance` could not reach it — so its sign-off requirements named two
+ * roles that exist nowhere. Deriving the enum keeps one list and makes disagreement a compile error.
+ */
+export const projectRoleEnum = pgEnum('project_role', PROJECT_ROLES);
 
 /** Canonical project lifecycle states (plan §6). Transitions are validated centrally in Phase 7. */
 export const lifecycleStateEnum = pgEnum('lifecycle_state', [

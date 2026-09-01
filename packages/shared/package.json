@@ -9,6 +9,7 @@
     "./logging": "./src/logging.ts",
     "./provenance": "./src/provenance.ts",
     "./result": "./src/result.ts",
+    "./roles": "./src/roles.ts",
     "./env": "./src/env.ts"
   },
   "scripts": {

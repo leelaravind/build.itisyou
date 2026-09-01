@@ -6,6 +6,8 @@ import type { TwinNode } from '@govintel/twin/nodes';
 import { PublicHeader } from '../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon.tsx';
 import { generatePlan, loadPlanRows } from './actions.ts';
+import { availableTransitions } from './lifecycle-actions.ts';
+import { LifecycleCard } from '../../../components/lifecycle/LifecycleCard.tsx';
 
 /**
  * The generated plan.
@@ -47,6 +49,8 @@ export default async function PlanPage({
 
   const { project, nodes, edges } = loaded;
 
+  const lifecycle = await availableTransitions(projectId);
+
   const graph = graphFromRows(
     projectId,
     nodes.map((n) => ({ ...n, attributes: n.attributes })),
@@ -87,6 +91,14 @@ export default async function PlanPage({
               ? 'This project is archived, so its plan cannot be regenerated.'
               : 'The plan could not be generated. Nothing was changed.'}
           </p>
+        )}
+
+        {lifecycle === null ? null : (
+          <LifecycleCard
+            projectId={projectId}
+            current={lifecycle.current}
+            options={lifecycle.options}
+          />
         )}
 
         {generated ? null : (

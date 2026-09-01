@@ -18,6 +18,8 @@
  * Contract: gap-spec §33, §29.2 (baseline approval), §15.8 (release approval).
  */
 
+import type { ProjectRole } from '@govintel/shared/roles';
+
 /* -------------------------------------------------------------------------- */
 /* Shape                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -249,8 +251,19 @@ export function invalidateIfStale(
 
 export interface SignOffRequirement {
   readonly subjectType: ApprovableSubject;
-  /** Roles that must each approve. Every one, not any one. */
-  readonly roles: readonly string[];
+  /**
+   * Roles that must each approve. Every one, not any one.
+   *
+   * Typed to `ProjectRole` rather than `string`, and that change is the whole of a real defect. As
+   * `readonly string[]` this list named `ENGINEERING_LEAD` and `PRODUCT_OWNER` — neither of which
+   * exists in gap-spec §7.3's six project roles, or anywhere else in the system. Every sign-off
+   * requirement was therefore unsatisfiable by any member of any project, in a module with full test
+   * coverage, because the tests asserted the requirement was *returned* and agreed with it about the
+   * names.
+   *
+   * A string is not a vocabulary. Now a role that does not exist will not compile.
+   */
+  readonly roles: readonly ProjectRole[];
   readonly why: string;
 }
 
@@ -263,17 +276,17 @@ export interface SignOffRequirement {
 export const SIGN_OFF: readonly SignOffRequirement[] = [
   {
     subjectType: 'DEPLOYMENT',
-    roles: ['ENGINEERING_LEAD', 'PRODUCT_OWNER'],
+    roles: ['ENGINEER', 'PROJECT_OWNER'],
     why: 'Shipping is both a technical judgement and a product one, and they are frequently in tension. One person holding both is one person deciding which of their own concerns wins.',
   },
   {
     subjectType: 'BASELINE',
-    roles: ['PRODUCT_OWNER'],
+    roles: ['PROJECT_OWNER'],
     why: 'A baseline is a statement about what was agreed, so the person who agreed it signs it.',
   },
   {
     subjectType: 'CHANGE_REQUEST',
-    roles: ['PRODUCT_OWNER'],
+    roles: ['PROJECT_OWNER'],
     why: 'A change alters what was agreed, which is the same person’s decision as agreeing it.',
   },
 ];

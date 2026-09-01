@@ -291,6 +291,9 @@ importers:
 
   packages/governance:
     dependencies:
+      '@govintel/rules':
+        specifier: workspace:*
+        version: link:../rules
       '@govintel/shared':
         specifier: workspace:*
         version: link:../shared

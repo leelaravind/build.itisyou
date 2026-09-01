@@ -44,6 +44,9 @@ const LIMITS: Readonly<Record<string, number>> = {
   'guest-project-create': 600,
   'ai-import': 300,
   'intake-answer': 3_000,
+  // Sized like project creation rather than like intake: a transition reads the whole twin graph and
+  // evaluates every gate, so it is the most expensive thing an unauthenticated caller can ask for.
+  'project-transition': 600,
   search: 3_000,
   export: 300,
 };

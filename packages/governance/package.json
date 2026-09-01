@@ -8,12 +8,14 @@
     "./evidence": "./src/evidence.ts",
     "./approval": "./src/approval.ts",
     "./document": "./src/document.ts",
-    "./audit": "./src/audit.ts"
+    "./audit": "./src/audit.ts",
+    "./lifecycle": "./src/lifecycle.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
   },
   "dependencies": {
+    "@govintel/rules": "workspace:*",
     "@govintel/shared": "workspace:*",
     "@govintel/twin": "workspace:*",
     "zod": "4.5.4"

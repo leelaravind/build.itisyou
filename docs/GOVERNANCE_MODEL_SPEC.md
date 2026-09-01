@@ -193,9 +193,9 @@ remains true.
 
 | Subject | Roles | Why |
 |---|---|---|
-| `DEPLOYMENT` | `ENGINEERING_LEAD` **and** `PRODUCT_OWNER` | Shipping is both a technical judgement and a product one, and they are frequently in tension. One person holding both is one person deciding which of their own concerns wins. |
-| `BASELINE` | `PRODUCT_OWNER` | A baseline is a statement about what was agreed, so the person who agreed it signs it. |
-| `CHANGE_REQUEST` | `PRODUCT_OWNER` | A change alters what was agreed, which is the same person’s decision as agreeing it. |
+| `DEPLOYMENT` | `ENGINEER` **and** `PROJECT_OWNER` | Shipping is both a technical judgement and a product one, and they are frequently in tension. One person holding both is one person deciding which of their own concerns wins. |
+| `BASELINE` | `PROJECT_OWNER` | A baseline is a statement about what was agreed, so the person who agreed it signs it. |
+| `CHANGE_REQUEST` | `PROJECT_OWNER` | A change alters what was agreed, which is the same person’s decision as agreeing it. |
 
 Every named role must approve, not any one of them. "Any of" is how a multi-party sign-off quietly
 becomes a single-party one: the fastest approver clears it and the others never look.

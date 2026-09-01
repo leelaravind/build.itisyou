@@ -142,7 +142,7 @@ function approval(overrides: Partial<Approval> = {}): Approval {
     subjectVersion: 3,
     requestedBy: 'R. Okafor',
     requestedAt: AT,
-    approverRole: 'ENGINEERING_LEAD',
+    approverRole: 'ENGINEER',
     state: 'REQUESTED',
     evidence: [],
     ...overrides,
@@ -647,20 +647,20 @@ describe('gap-spec §33: approvals', () => {
      */
     const engineering = approval({
       state: 'APPROVED',
-      approverRole: 'ENGINEERING_LEAD',
+      approverRole: 'ENGINEER',
       approverUser: 'A. Patel',
     });
 
     const partial = signOffStatus('DEPLOYMENT', [engineering], 3);
 
     expect(partial.satisfied).toBe(false);
-    expect(partial.missing).toEqual(['PRODUCT_OWNER']);
+    expect(partial.missing).toEqual(['PROJECT_OWNER']);
     expect(partial.explanation).toMatch(/technical judgement and a product one/i);
 
     const product = approval({
       id: 'a2',
       state: 'APPROVED',
-      approverRole: 'PRODUCT_OWNER',
+      approverRole: 'PROJECT_OWNER',
       approverUser: 'S. Nkemelu',
     });
 
@@ -671,13 +671,13 @@ describe('gap-spec §33: approvals', () => {
     // Otherwise a multi-party gate is satisfied by decisions made about a version nobody is shipping.
     const stale = approval({
       state: 'APPROVED',
-      approverRole: 'ENGINEERING_LEAD',
+      approverRole: 'ENGINEER',
       subjectVersion: 2,
     });
 
-    const product = approval({ id: 'a2', state: 'APPROVED', approverRole: 'PRODUCT_OWNER' });
+    const product = approval({ id: 'a2', state: 'APPROVED', approverRole: 'PROJECT_OWNER' });
 
-    expect(signOffStatus('DEPLOYMENT', [stale, product], 3).missing).toEqual(['ENGINEERING_LEAD']);
+    expect(signOffStatus('DEPLOYMENT', [stale, product], 3).missing).toEqual(['ENGINEER']);
   });
 
   it('states why each sign-off requirement exists', () => {
