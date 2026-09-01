@@ -2611,3 +2611,105 @@ The Phase-16 gate — defined mobile E2Es and accessibility passing — is met: 
 412px Pixel 7 viewport, covering five public routes and all ten project surfaces for horizontal
 overflow, touch target sizes measured on rendered boxes, the dense representations reading as text,
 and axe passing separately at phone width, because reflow changes what axe sees.
+
+---
+
+## Entry 021 — Phase 17: three features that are each a permission check wearing a disguise
+
+Search, the command palette and notifications look like three unrelated conveniences. They are the
+same thing three times: each takes a set the user is not entitled to see all of, and presents part of
+it. Which makes each of them a place where a permission model quietly stops applying.
+
+The specification noticed. §41 ends "every search result must enforce permission and tenant scope
+server-side", and §42 ends "command palette is not a security bypass". Those sentences are there
+because both features are normally built by wiring existing functions to a new front end — and the
+permission checks were in the *rendering* of the old front end.
+
+### Search leaks through ranking, not through results
+
+The obvious leak is returning a document somebody cannot open. The subtle one is that a ranking
+computed over the full corpus lets the invisible half decide the order of the visible half.
+
+So the rule here is that **filtering happens before ranking and counting**. It is slower, and it is
+the only order in which nothing about the hidden set can influence what a user sees. The count is
+over the visible set too: a total computed before filtering tells the searcher exactly how much they
+cannot see.
+
+The third property took a moment to get right. "Nothing matched" and "everything that matched is
+hidden from you" must read **identically**. Telling them apart is precisely how a search box confirms
+the existence of something a permission is withholding — type a codename, see a different message,
+learn it exists.
+
+Planting the defect afterwards — filtering after ranking instead of before — fails four tests.
+
+### The palette re-checks what it already filtered
+
+`availableTo` filters commands by permission. `run` checks the permission again.
+
+That looks redundant and is not: the first is a rendering decision and the second is the
+authorisation. A palette that trusted its own list would be authorising by rendering, and nobody
+attacking it would use the list.
+
+Two smaller positions. A command the user cannot run is **absent**, not greyed out — a disabled
+"Archive project" tells somebody archiving happens here and that they are not allowed to do it, which
+is the same disclosure a search result would be, delivered by a control they cannot press. And a
+destructive command still confirms: the palette is a faster way to reach an action, never a way to
+reach it with fewer questions.
+
+A catalogue check fails the build if a destructive command is added without a confirmation, because
+the way §42's rule actually gets broken is not a deliberate bypass — it is somebody adding a fifteenth
+command in a hurry.
+
+### A missing permission, found by needing one
+
+Search needed a permission to check before returning a document, and there wasn't one. The RBAC
+matrix had `evidence:read` and nothing for documents.
+
+That is a real gap rather than an oversight in this phase: Phase 13 built a versioned document system
+with its own approval and freeze semantics, and §7.4 requires the matrix to cover every sensitive
+action. A document carrying an approval is one. Added `documents:read` and `documents:edit`, granted
+to contributors and editors respectively; the generated matrix picked them up and now lists forty
+permissions.
+
+Worth noticing how it surfaced. Nobody reviewing the matrix spotted the hole — it took a feature that
+had to ask "may this person see this?" and found no way to ask.
+
+### "Avoid excessive low-value notifications" is a correctness requirement
+
+§43's closing instruction is usually read as tuning. It is not.
+
+A person receiving forty notifications a day mutes the channel, and from that moment the one that
+mattered does not reach them either. Every low-value notification spends credibility the important
+ones depend on — so the failure mode is not annoyance, it is a security release blocker arriving in a
+channel nobody reads.
+
+Four rules follow, and all four are structural rather than configurable:
+
+**The eight types are the whole set.** Nothing else generates one. Adding a ninth is a decision
+somebody makes in that file rather than a side effect of adding a feature.
+
+**Every type names what the recipient should do.** A notification about a state a person cannot change
+is news, and news belongs on a page somebody chooses to open.
+
+**Nobody is notified about their own action.** They were there. This is the single largest source of
+notification noise in most systems, because the easiest implementation notifies everybody watching a
+thing including whoever just touched it — and it is the one nobody defends once it is pointed out.
+
+**Repeats coalesce, differently per type.** A failing gate suppresses: one failing gate is one fact,
+and re-sending it on every evaluation is how a signal becomes a filter rule in somebody's inbox. An
+assignment replaces: two entries about the same task make a list look busier than the situation is.
+
+There is also a hard ceiling of two urgent types, checked by a test. That is unusual and deliberate:
+the way a notification system decays is that each new urgent type is individually defensible and
+nobody ever compares the total against what a person can absorb.
+
+### Where Phase 17 stands
+
+1,953 unit tests and 687 E2E tests pass; format, lint, typecheck, generated-doc, secret-scan,
+dependency-audit and production build are clean. `docs/PERMISSIONS_MATRIX.md` regenerated at forty
+permissions.
+
+§44's integration boundary was already built in Phase 15, and nothing here changes it: every
+integration remains `PLANNED`, and Phase 17 added no connector. The plan's instruction for this
+phase — "do not let integration scope delay the deterministic core" — is honoured by having built
+none.

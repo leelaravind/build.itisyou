@@ -194,6 +194,18 @@ importers:
         specifier: workspace:*
         version: link:../shared
 
+  packages/discovery:
+    dependencies:
+      '@govintel/db':
+        specifier: workspace:*
+        version: link:../db
+      '@govintel/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 4.5.4
+        version: 4.5.4
+
   packages/execution:
     dependencies:
       '@govintel/intake':

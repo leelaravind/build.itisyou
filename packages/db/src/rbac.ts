@@ -59,6 +59,17 @@ export const PERMISSIONS = [
   'evidence:read',
   'evidence:upload',
   'evidence:delete',
+
+  /*
+   * Documents.
+   *
+   * Added in Phase 17, because Phase 13 built a versioned document system with its own
+   * approval and the matrix had no permission covering it — §7.4 requires the matrix to cover
+   * every sensitive action, and a document that carries an approval is one. Search surfaced it:
+   * there was no permission to check before returning a document in results.
+   */
+  'documents:read',
+  'documents:edit',
   'gate:read',
   'gate:approve',
   'gate:override',
@@ -91,6 +102,7 @@ const READ_PERMISSIONS: readonly Permission[] = [
   'risks:read',
   'budget:read',
   'evidence:read',
+  'documents:read',
   'gate:read',
   'members:read',
   'audit:read',
@@ -131,6 +143,7 @@ const CONTRIBUTOR_READS: readonly Permission[] = [
   'work:read',
   'risks:read',
   'evidence:read',
+  'documents:read',
   'gate:read',
   'members:read',
 ];
@@ -147,6 +160,7 @@ const PROJECT_GRANTS: Readonly<Record<ProjectRole, readonly Permission[]>> = {
     'ai_import:approve',
     'requirements:edit',
     'architecture:edit',
+    'documents:edit',
     'work:edit',
     'risks:edit',
     'budget:read',
@@ -174,6 +188,7 @@ const PROJECT_GRANTS: Readonly<Record<ProjectRole, readonly Permission[]>> = {
     'ai_import:approve',
     'requirements:edit',
     'architecture:edit',
+    'documents:edit',
     'work:edit',
     'risks:edit',
     'budget:read',
@@ -196,6 +211,7 @@ const PROJECT_GRANTS: Readonly<Record<ProjectRole, readonly Permission[]>> = {
     ...CONTRIBUTOR_READS,
     'requirements:edit',
     'architecture:edit',
+    'documents:edit',
     'work:edit',
     'risks:edit',
     'evidence:upload',

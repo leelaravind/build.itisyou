@@ -48,6 +48,8 @@ object-level authorisation), §83 (authorisation must remain deterministic).
 | `evidence:read` | ✅ | ✅ | · | ✅ |
 | `evidence:upload` | ✅ | ✅ | · | · |
 | `evidence:delete` | ✅ | ✅ | · | · |
+| `documents:read` | ✅ | ✅ | · | ✅ |
+| `documents:edit` | ✅ | ✅ | · | · |
 | `gate:read` | ✅ | ✅ | · | ✅ |
 | `gate:approve` | ✅ | ✅ | · | · |
 | `gate:override` | ✅ | ✅ | · | · |
@@ -91,6 +93,8 @@ object-level authorisation), §83 (authorisation must remain deterministic).
 | `evidence:read` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | · |
 | `evidence:upload` | ✅ | ✅ | ✅ | · | · | · | · |
 | `evidence:delete` | ✅ | · | · | · | · | · | · |
+| `documents:read` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | · |
+| `documents:edit` | ✅ | ✅ | ✅ | · | · | · | · |
 | `gate:read` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | · |
 | `gate:approve` | ✅ | · | · | · | ✅ | · | · |
 | `gate:override` | · | · | · | · | · | · | · |
@@ -109,7 +113,7 @@ object-level authorisation), §83 (authorisation must remain deterministic).
 
 ## Read-only permissions
 
-These 10 permissions carry no write authority. `AUDITOR` is granted exactly this
+These 11 permissions carry no write authority. `AUDITOR` is granted exactly this
 set and nothing else, so an auditor never needs a write grant merely to inspect.
 
 - `project:read`
@@ -119,6 +123,7 @@ set and nothing else, so an auditor never needs a write grant merely to inspect.
 - `risks:read`
 - `budget:read`
 - `evidence:read`
+- `documents:read`
 - `gate:read`
 - `members:read`
 - `audit:read`
@@ -138,7 +143,7 @@ Deliberate exclusions, each of which would defeat a control if granted:
 
 ## Coverage
 
-- Permissions defined: **38**
+- Permissions defined: **40**
 - Organisation roles: **4** (OWNER, ADMIN, MEMBER, AUDITOR)
 - Project roles: **6** (PROJECT_OWNER, PROJECT_MANAGER, ENGINEER, REVIEWER, APPROVER, VIEWER)
 - Permissions available to a guest: **10**

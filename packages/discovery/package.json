@@ -1,0 +1,19 @@
+{
+  "name": "@govintel/discovery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./search": "./src/search.ts",
+    "./palette": "./src/palette.ts",
+    "./notifications": "./src/notifications.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@govintel/shared": "workspace:*",
+    "@govintel/db": "workspace:*",
+    "zod": "4.5.4"
+  }
+}

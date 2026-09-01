@@ -45,6 +45,9 @@
     },
     {
       "path": "./packages/design"
+    },
+    {
+      "path": "./packages/discovery"
     }
   ]
 }
