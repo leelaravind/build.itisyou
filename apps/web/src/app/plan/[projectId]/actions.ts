@@ -11,7 +11,7 @@ import type { IntakeField } from '@govintel/intake/schema';
 import { generateProject } from '@govintel/twin/generate';
 import { rowsFromGraph } from '@govintel/twin/repository';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readGuestSessionId } from '../../../lib/server/session.ts';
+import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 
 /**
  * Generate the project plan.
@@ -47,7 +47,7 @@ export async function generatePlan(formData: FormData): Promise<void> {
 
 async function generate(projectId: string): Promise<Outcome> {
   try {
-    const sessionId = await readGuestSessionId();
+    const sessionId = await readActiveGuestSessionId();
 
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),
@@ -126,7 +126,7 @@ async function generate(projectId: string): Promise<Outcome> {
 
 /** Read the stored graph for a project the caller owns. Returns null when they do not. */
 export async function loadPlanRows(projectId: string) {
-  const sessionId = await readGuestSessionId();
+  const sessionId = await readActiveGuestSessionId();
 
   const [project] = await withDatabase((db) =>
     db.select().from(projects).where(eq(projects.id, projectId)),

@@ -9,7 +9,7 @@ import { intakeAnswers, projects } from '@govintel/db/schema';
 import { answerField, type AnswerMode } from '@govintel/intake/schema';
 import { findField } from '@govintel/intake/fields';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readGuestSessionId } from '../../../lib/server/session.ts';
+import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
 
 /**
@@ -94,7 +94,7 @@ async function record(input: {
   }
 
   try {
-    const sessionId = await readGuestSessionId();
+    const sessionId = await readActiveGuestSessionId();
 
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, input.projectId)),

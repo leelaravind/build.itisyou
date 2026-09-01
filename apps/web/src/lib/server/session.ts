@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { createGuestSession, findActiveGuestSession } from '@govintel/db/guest';
 import { withUnscoped } from './database.ts';
@@ -18,20 +19,51 @@ export { GUEST_COOKIE };
  * and any state kept there is state an attacker can edit.
  */
 
-/** The active guest session id from the cookie, or undefined. Does not create one. */
+/**
+ * The raw cookie value, unverified. **Not an authorisation decision.**
+ *
+ * This is the id the browser sent, and nothing more: it is not checked against the database, so it
+ * may name a session that has expired, been converted, or never existed. Comparing it to a row's
+ * `guest_session_id` decides ownership from a value the client controls the lifetime of.
+ *
+ * That is what it was used for, at nine call sites, and the effect was that an **expired guest
+ * session still granted full access to its projects** — the cookie outlived the session it named,
+ * and gap-spec §5.3's "guest projects expire automatically" only ever applied to the sweeper, which
+ * itself has no caller (see the register).
+ *
+ * Use `readActiveGuestSessionId` for anything that gates access. This remains only for the one
+ * legitimate question — "did the caller send a cookie at all?" — which `ensureGuestSession` asks
+ * before deciding whether to mint one.
+ */
 export async function readGuestSessionId(): Promise<string | undefined> {
   const store = await cookies();
   return store.get(GUEST_COOKIE)?.value;
 }
 
 /**
+ * The caller's session id, **verified against the database**, or undefined.
+ *
+ * Expiry is checked at read time, so a session past its lifetime resolves to nothing even though the
+ * cookie is still in the browser and the sweeper has not run. This is the value ownership checks
+ * must compare against.
+ */
+export async function readActiveGuestSessionId(): Promise<string | undefined> {
+  return (await getActiveGuestSession())?.id;
+}
+
+/**
  * The caller's active guest session, verified against the database.
+ *
+ * Memoised per request with React's `cache`, because verifying is a database round trip and the
+ * ownership checks that need it run on nearly every route — nine call sites, plus the scope
+ * resolution in `database.ts`. Without this, correctness here would cost a query per check and the
+ * pressure would be to skip the check.
  *
  * The cookie is never trusted on its own: a stale or forged id must resolve to nothing rather than
  * to a session. Expiry is checked at read time, so a session past its lifetime is treated as absent
  * even if the sweeper has not run.
  */
-export async function getActiveGuestSession() {
+export const getActiveGuestSession = cache(async () => {
   const sessionId = await readGuestSessionId();
   if (sessionId === undefined) return undefined;
 
@@ -41,7 +73,7 @@ export async function getActiveGuestSession() {
    * tenant-owned data. It is the thing that says which tenant you are.
    */
   return withUnscoped((db) => findActiveGuestSession(db, sessionId));
-}
+});
 
 /**
  * Return the caller's session, creating one if they have none.

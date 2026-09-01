@@ -10,7 +10,7 @@ import type { IntakeField } from '@govintel/intake/schema';
 import { validateImport } from '@govintel/interchange/validate';
 import { currentVersions } from '@govintel/interchange/versions';
 import { withDatabase } from '../../../../lib/server/database.ts';
-import { readGuestSessionId } from '../../../../lib/server/session.ts';
+import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
 import { checkRateLimit } from '../../../../lib/server/rate-limit.ts';
 
 /**
@@ -54,7 +54,7 @@ export async function submitImport(formData: FormData): Promise<void> {
 
 async function store(projectId: string, raw: string): Promise<Outcome> {
   try {
-    const sessionId = await readGuestSessionId();
+    const sessionId = await readActiveGuestSessionId();
 
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),
@@ -164,7 +164,7 @@ async function decide(
   decision: 'ACCEPTED' | 'REJECTED',
 ): Promise<Outcome> {
   try {
-    const sessionId = await readGuestSessionId();
+    const sessionId = await readActiveGuestSessionId();
 
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),

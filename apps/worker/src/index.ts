@@ -2,6 +2,7 @@ import { and, eq, isNull, sql } from 'drizzle-orm';
 import { connect, type PooledDatabase } from '@govintel/db/connect';
 import { rowsOf } from '@govintel/db/client';
 import { outboxEvents } from '@govintel/db/schema';
+import { purgeExpiredGuestSessions } from '@govintel/db/guest';
 import { classify, MAX_ATTEMPTS } from '@govintel/resilience/jobs';
 import { logger } from '@govintel/shared/logging';
 
@@ -83,14 +84,32 @@ export default {
   scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): void {
     const { db, close } = connect({ connectionString: env.HYPERDRIVE.connectionString });
 
-    // The connection must outlive the handler's return but not the invocation, or the drain is
-    // cancelled halfway with rows claimed and unpublished.
+    /*
+     * Two jobs, and only one of them is the outbox.
+     *
+     * Guest expiry is the single clock-driven job V1 actually requires: gap-spec §5.3 says guest
+     * projects expire automatically, and §5.2 forbids keeping full project data indefinitely without
+     * signup. `purgeExpiredGuestSessions` implements it, is unit-tested, and until now had **no
+     * caller anywhere** — so the retention promise was written down, stamped onto every session as
+     * `expires_at`, and never kept. Expired guest data simply accumulated; on staging it had reached
+     * 3,872 projects.
+     *
+     * They run independently rather than in sequence: a failure to drain must not stop data being
+     * deleted, and a failure to delete must not stop side effects being published. Chaining them
+     * would make the less important one able to block the one with a privacy obligation behind it.
+     *
+     * The connection must outlive the handler's return but not the invocation, or a job is cancelled
+     * halfway — the drain with rows claimed and unpublished, the purge mid-transaction.
+     */
     ctx.waitUntil(
-      drain(db, env)
-        .catch((error: unknown) => {
+      Promise.allSettled([
+        drain(db, env).catch((error: unknown) => {
           logger.error('outbox drain failed', { error: String(error) });
-        })
-        .finally(() => close()),
+        }),
+        purge(db).catch((error: unknown) => {
+          logger.error('guest session purge failed', { error: String(error) });
+        }),
+      ]).finally(() => close()),
     );
   },
 
@@ -113,6 +132,36 @@ export default {
     }
   },
 };
+
+/* -------------------------------------------------------------------------- */
+/* Retention                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Delete guest sessions past their expiry, and the projects that belong to them.
+ *
+ * The retention obligation V1 actually has. Gap-spec §5.3 requires guest projects to expire
+ * automatically and §5.2 forbids keeping full project data indefinitely without signup — and every
+ * session has carried an `expires_at` since Phase 3 that nothing ever acted on.
+ *
+ * Converted sessions are exempt, which `purgeExpiredGuestSessions` enforces by checking
+ * `converted_at IS NULL`: once a guest has saved their work to an account, the session's expiry is
+ * about the session, not about their data.
+ *
+ * Deletion rather than soft-deletion, deliberately. A retention rule that hides rows instead of
+ * removing them satisfies the letter of "expire" while leaving the data exactly where it was, which
+ * is the failure mode §5.2 is written against. The cascades do the rest: removing a session removes
+ * its organisation, and removing the organisation removes everything scoped to it.
+ */
+async function purge(db: PooledDatabase): Promise<void> {
+  const { sessionsDeleted, projectsDeleted } = await purgeExpiredGuestSessions(db);
+
+  // Logged only when something happened. A line every minute saying "deleted nothing" is a line
+  // nobody reads, and it would bury the one that matters.
+  if (sessionsDeleted > 0 || projectsDeleted > 0) {
+    logger.info('expired guest data purged', { sessionsDeleted, projectsDeleted });
+  }
+}
 
 /* -------------------------------------------------------------------------- */
 /* Draining                                                                   */
