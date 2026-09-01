@@ -232,7 +232,16 @@ async function ensureSchemaMatches(db: DatabaseHandle): Promise<void> {
  */
 async function usingConnection<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
   const connectionString = await resolveConnectionString();
-  const { db, close } = connect({ connectionString });
+
+  /*
+   * One connection, because one operation needs one connection.
+   *
+   * The shared default is five, which is right for the background Worker: a cron tick claims a batch
+   * and works through it, so a small pool is doing real work. Here it is not. A request-scoped client
+   * that may open five connections and uses one multiplies the Worker's connection footprint by five
+   * for nothing — and the resource being multiplied is the one Hyperdrive meters.
+   */
+  const { db, close } = connect({ connectionString, maxConnections: 1 });
 
   try {
     await ensureSchemaMatches(db);

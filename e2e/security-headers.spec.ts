@@ -105,13 +105,19 @@ test.describe('landing page', () => {
     );
   });
 
-  test('loads no third-party resources', async ({ page }) => {
+  test('loads no third-party resources', async ({ page, baseURL }) => {
     // Privacy: plan section 19 requires data minimisation. Nothing should be fetched off-origin.
+    //
+    // "Off-origin" is measured against the origin under test rather than a hard-coded localhost.
+    // The earlier version listed `127.0.0.1` and `localhost` as the permitted hostnames, which was
+    // true of every environment it had ever run in and false of the first real deployment: against
+    // staging it reported the site's own stylesheet and twenty of its own chunks as third-party
+    // resources. A test that only passes on a laptop is not testing the deployment.
+    const origin = new URL(baseURL ?? 'http://localhost:3000').origin;
     const external: string[] = [];
+
     page.on('request', (request) => {
-      const url = new URL(request.url());
-      if (url.hostname !== '127.0.0.1' && url.hostname !== 'localhost')
-        external.push(request.url());
+      if (new URL(request.url()).origin !== origin) external.push(request.url());
     });
 
     await page.goto('/', { waitUntil: 'networkidle' });
