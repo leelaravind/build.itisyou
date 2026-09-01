@@ -50,9 +50,31 @@ const schema = z.object({
   /**
    * Postgres connection string.
    * Optional in development and test: those environments use PGlite, which needs no URL
-   * (ADR-0002). Required everywhere else - enforced by the refinement below.
+   * (ADR-0002). Required everywhere else - enforced by the refinement below, unless
+   * `DATABASE_URL_BINDING` declares that the platform supplies it instead.
    */
   DATABASE_URL: z.string().min(1).optional(),
+
+  /**
+   * The name of a platform binding that carries the connection string, when one does.
+   *
+   * Some hosts do not pass a connection string as an environment variable at all. Cloudflare
+   * Hyperdrive is an *object* binding exposing a `connectionString` property, and an object cannot be
+   * copied into `process.env` the way a var or a secret can - so on that platform `DATABASE_URL` is
+   * legitimately absent while the database is perfectly well configured. Requiring the variable there
+   * rejected a correct deployment, which is how this was found: the staging Worker returned 500 on
+   * every request with the binding present and working.
+   *
+   * This is a *declaration*, not an escape hatch, and the difference matters. The default is unset,
+   * so the strict rule below is unchanged for every environment that does not say otherwise; an
+   * operator cannot skip the check by omission, only by stating where the value comes from instead.
+   * Naming the binding also means the deployment records its own wiring, so a missing connection is a
+   * discrepancy between two stated facts rather than a silence.
+   *
+   * The value is genuinely used, not decorative - `resolveConnectionString` reads this name to find
+   * the binding, so a typo here surfaces as a startup failure rather than being ignored.
+   */
+  DATABASE_URL_BINDING: z.string().min(1).optional(),
 
   /** Signing key for guest session cookies (gap-spec section 5.2). */
   SESSION_SECRET: z.string().min(32).optional(),
@@ -97,7 +119,15 @@ export function parseEnv(source: Record<string, string | undefined> = process.en
   const missing: string[] = [];
 
   if (DEPLOYED.has(env.APP_ENV)) {
-    if (env.DATABASE_URL === undefined) missing.push('DATABASE_URL');
+    /*
+     * One of the two must say where the database is. Neither means nobody has said, which is the
+     * condition this check exists to catch; the binding declaration narrows *how* it may be answered
+     * without letting it go unanswered.
+     */
+    if (env.DATABASE_URL === undefined && env.DATABASE_URL_BINDING === undefined) {
+      missing.push('DATABASE_URL');
+    }
+
     if (env.SESSION_SECRET === undefined) missing.push('SESSION_SECRET');
   }
 

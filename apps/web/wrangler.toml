@@ -49,6 +49,14 @@ name = "govintel-web-staging"
 [env.staging.vars]
 APP_ENV = "staging"
 
+# Declares that the connection string arrives on a binding rather than as a variable.
+#
+# Without this, env validation rejects a deployment whose database is perfectly well configured:
+# Hyperdrive is an object binding and cannot be copied into `process.env`. It is a declaration rather
+# than a bypass — the check still requires *one* of the two to say where the database is, and this
+# name is read at runtime to find the binding, so a typo fails at startup instead of being ignored.
+DATABASE_URL_BINDING = "HYPERDRIVE"
+
 [env.staging.assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
@@ -74,7 +82,7 @@ enabled = true
 # Local development supplies a connection string through an environment variable rather than a
 # `localConnectionString` key here:
 #
-#   WRANGLER_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgres://...
+#   CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgres://...
 #
 # The secret scanner rejected the inline form and was right to: a DSN with inline credentials
 # committed to the repository is the exact shape that later gets edited to hold a real one, and by

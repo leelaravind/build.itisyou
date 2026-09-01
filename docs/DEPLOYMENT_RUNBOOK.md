@@ -15,9 +15,20 @@ generating it from a constant would make it look authoritative while being enfor
 Queues and Cron Triggers for the outbox, Hyperdrive in front of an external managed PostgreSQL. The
 architecture and the reasoning are in `CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md`.
 
-**Still open: the accounts.** Provisioning needs a Cloudflare account and a PostgreSQL provider, and
-those are the only two things standing between this and a staging deployment. Every command below is
-written out; none has been run.
+**Settled: the accounts.** Both arrived on 2026-09-01 and staging is partly built. Commands below
+that have been run against the real account are marked; the values they returned are recorded rather
+than described, because a runbook that says "put the returned id somewhere" is a runbook nobody can
+follow a year later.
+
+| Resource | Value | Notes |
+|---|---|---|
+| Cloudflare account | `a0365f6aaae5fe32b3fdb8fa08fd000c` | Shares the account with unrelated `itisyou-*` resources; everything here is namespaced `govintel-*` |
+| PostgreSQL | Neon project `tiny-mode-81422275` | Branch `staging` (`br-frosty-waterfall-zarolebw`), forked from `production` |
+| Hyperdrive | `fa38480586e44cebab20fe15ac2121a0` | Created `--caching-disabled`. Same id in both Workers |
+| R2 | `govintel-evidence-staging` | Private; no public bucket exists |
+| Queues | `govintel-outbox-staging`, `govintel-outbox-dlq-staging` | |
+| Worker (outbox) | `govintel-worker-staging` | **Deployed and verified.** Cron `* * * * *`, producer and consumer |
+| Worker (web) | `govintel-web-staging` | **Not yet deployed** — see §8 |
 
 **Decided:**
 
@@ -80,6 +91,44 @@ replacing `REPLACE_WITH_HYPERDRIVE_ID`. **The same id in both** — two Hyperdri
 one database would be two pools with two independent caches, and the caching decision would then have
 to be right in two places.
 
+### Building the web Worker on Windows
+
+The OpenNext bundler creates symlinks, and Windows refuses them without Developer Mode or
+Administrator (KI-051). Confirmed directly: `fs.symlinkSync` is denied, `fs.symlinkSync(..., 'junction')`
+is allowed — so it is a privilege restriction on symlinks specifically, not a filesystem limitation.
+
+Enabling Developer Mode is a machine-wide change. The build runs under WSL instead:
+
+```
+# One-off: a Linux toolchain matching the Windows one. nvm is user-local, no sudo.
+wsl -e bash -lc "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash"
+wsl -e bash -lc ". ~/.nvm/nvm.sh && nvm install 22.23.2 && corepack enable && corepack prepare pnpm@11.22.0 --activate"
+
+# An isolated tree. Deliberately NOT the Windows checkout: running Linux pnpm against a
+# node_modules built by Windows pnpm rewrites its links and breaks the Windows tree.
+# It lives on E: so neither the source nor the 895 MB of node_modules lands on C:.
+cd /mnt/e/Project/build && tar --exclude=node_modules --exclude=.git --exclude='.env*'   --exclude=.next --exclude=.open-next --exclude=dist -cf - . | (cd ../build-wsl && tar -xf -)
+
+cd /mnt/e/Project/build-wsl && pnpm install --frozen-lockfile --store-dir /mnt/e/Project/.pnpm-store-wsl
+```
+
+Three things that are easy to get wrong:
+
+- **`deploy` does not build.** `opennextjs-cloudflare deploy` reads the compiled config and runs
+  `wrangler deploy`; it does not re-run the bundler. Syncing source and deploying ships the *previous*
+  build, silently and successfully. Always `cf:build` first.
+- **The local Hyperdrive string is required even to deploy.** The deploy path starts a local platform
+  proxy to read the environment, which refuses without
+  `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE`. Give it a **credential-free placeholder**
+  (`postgres://127.0.0.1:5432/unused-local-emulation-only`); it is used only by the local emulator, and
+  putting the real DSN there would write a live credential into a shell history for no benefit.
+- **Wrangler credentials are shared, not re-created.** Point WSL at the Windows config rather than
+  logging in twice: `export XDG_CONFIG_HOME=/mnt/c/Users/<you>/AppData/Roaming/xdg.config`.
+
+The alternative is CI on `ubuntu-latest`, which needs a `CLOUDFLARE_API_TOKEN` repository secret —
+a `wrangler login` OAuth token cannot be used from CI. That is the only thing in this runbook that
+must be created by hand in the dashboard.
+
 ### Secrets
 
 ```
@@ -92,18 +141,23 @@ secret, and a value set by hand is a value that drifts from what is actually dep
 
 ### Steps
 
-1. **Migrate.** Additive only; see `MIGRATION_POLICY.md`. The application refuses to start against a
-   schema whose fingerprint it does not recognise, so a failed migration surfaces at boot rather than
-   at the first query.
-2. **Deploy.**
+1. **Migrate.** `DATABASE_URL_UNPOOLED=... pnpm migrate`. Additive only; see `MIGRATION_POLICY.md`.
+   The script creates a schema **from empty and nothing else** — it refuses a database holding a
+   different fingerprint, and refuses one holding unrelated tables, because guessing at a migration is
+   how a script destroys data on the day the guess is wrong. There is no `DROP` in it, not even behind
+   a flag. The application separately refuses to start against a schema whose fingerprint it does not
+   recognise, so a failed migration surfaces at boot rather than at the first query.
+2. **Verify isolation.** `APP_ENV=staging DATABASE_URL_UNPOOLED=... pnpm verify:isolation`. This is
+   the check that cannot run anywhere but a real pooled database — see SEC-003.
+3. **Deploy.**
    ```
    pnpm --filter=@govintel/web cf:deploy -- --env staging
    pnpm --filter=@govintel/worker cf:deploy -- --env staging
    ```
-3. **Seed.** `pnpm seed:staging` — see §4 below.
-4. **Verify.** `pnpm test:e2e` against the staging URL, plus `e2e/staging.spec.ts` for deployment
+4. **Seed.** `pnpm seed:staging` — see §4 below.
+5. **Verify.** `pnpm test:e2e` against the staging URL, plus `e2e/staging.spec.ts` for deployment
    identity and the performance smoke.
-5. **Confirm rollback readiness.** §5.
+6. **Confirm rollback readiness.** §5.
 
 ### What "staging green" means
 
@@ -210,13 +264,29 @@ Recording them as targets now would be the fake precision the whole platform ref
 
 | Item | Blocked on |
 |---|---|
-| Staging provisioning and deployment | A Cloudflare account |
-| The managed PostgreSQL instance | A database provider account |
-| Production deployment | Both of the above, plus a passing staging gate |
+| **Web Worker deployment** | The OpenNext build (KI-051). Being built under WSL; if that fails, CI on `ubuntu-latest` builds it and needs a `CLOUDFLARE_API_TOKEN` repository secret — the one thing here that must be created by hand in the dashboard, because a `wrangler login` OAuth token cannot be used from CI |
+| E2E against a staging URL | The web Worker being deployed |
+| `SESSION_SECRET` | Generated at deploy time; not sourced from anywhere, so not a blocker |
+| Production deployment | A passing staging gate |
 | The ten §15.9 production checks | A running production deployment |
 | RPO/RTO acceptance | A restore drill, which needs a real database |
 | Rollback timing | A staging environment to drill in |
 | OIDC provider | Deliberately deferred; local mock in use |
+
+### What staging has already proved
+
+Not "the configuration parses" — the behaviour, end to end, against the real thing:
+
+| Check | Result |
+|---|---|
+| Schema applied to a networked PostgreSQL | `pnpm migrate` — first non-PGlite schema this project has ever had |
+| Tenant isolation under a real pool | `pnpm verify:isolation` — 40/40 isolated. The pre-fix code measured 18/40 **wrong tenant** |
+| RLS is enforced, not merely defined | Application role is neither superuser nor `BYPASSRLS`; `neondb_owner` *is*, which is why the role switch is load-bearing |
+| Cron → Hyperdrive → Queue → consumer | Three events processed; one unrecognised event **dead-lettered**, not silently marked done |
+
+Four P1 defects were found by doing this that no local test could have found — KI-052 through KI-055,
+plus the measurement that turned KI-049 from a reasoned risk into an observed one. That is the
+argument for staging existing, made concrete.
 
 Everything else is built and verified. The Worker bundles and resolves its bindings
 (`wrangler deploy --dry-run`: 349.85 KiB, 72.29 KiB gzipped), the tenant scope is safe under pooling

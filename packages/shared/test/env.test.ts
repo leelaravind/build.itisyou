@@ -72,6 +72,69 @@ describe('deployed environments', () => {
   });
 });
 
+/**
+ * Some hosts do not pass a connection string as an environment variable at all.
+ *
+ * Cloudflare Hyperdrive is an *object* binding carrying a `connectionString` property, and an object
+ * cannot be copied into `process.env` the way a var or a secret can. Requiring `DATABASE_URL` there
+ * rejected a deployment whose database was correctly configured — the staging Worker answered 500 on
+ * every request with the binding present and working.
+ *
+ * The fix is a declaration rather than an exemption, and these tests are what hold that line: a
+ * deployment may say *where* the connection string comes from, but it may not decline to say.
+ */
+describe('a connection string supplied by a platform binding', () => {
+  it.each(['preview', 'staging', 'production'] as const)(
+    'accepts %s when the deployment declares the binding that carries it',
+    (appEnv) => {
+      const env = parseEnv({
+        APP_ENV: appEnv,
+        DATABASE_URL_BINDING: 'HYPERDRIVE',
+        SESSION_SECRET: 'a'.repeat(32),
+      });
+
+      expect(env.DATABASE_URL).toBeUndefined();
+      expect(env.DATABASE_URL_BINDING).toBe('HYPERDRIVE');
+    },
+  );
+
+  it('still rejects a deployment that names neither source', () => {
+    /*
+     * The load-bearing test. If this ever passes, the declaration has become an exemption: an
+     * operator would be able to skip the check by omitting both, which is precisely the
+     * misconfiguration the check exists to catch.
+     */
+    try {
+      parseEnv({ APP_ENV: 'production', SESSION_SECRET: 'a'.repeat(32) });
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect((error as EnvValidationError).variables).toContain('DATABASE_URL');
+    }
+  });
+
+  it('does not let the declaration excuse anything else', () => {
+    // SESSION_SECRET is unrelated to where the database lives and must stay required.
+    try {
+      parseEnv({ APP_ENV: 'production', DATABASE_URL_BINDING: 'HYPERDRIVE' });
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect((error as EnvValidationError).variables).toEqual(['SESSION_SECRET']);
+    }
+  });
+
+  it('rejects an empty binding name rather than treating it as a declaration', () => {
+    // An empty string is what a mis-templated deployment variable looks like. It names no binding,
+    // so it must not satisfy the requirement to name one.
+    expect(() =>
+      parseEnv({
+        APP_ENV: 'production',
+        DATABASE_URL_BINDING: '',
+        SESSION_SECRET: 'a'.repeat(32),
+      }),
+    ).toThrow(EnvValidationError);
+  });
+});
+
 describe('validation errors never leak values', () => {
   it('does not quote a malformed DATABASE_URL in the message', () => {
     // The URL embeds a password. Echoing it would write the credential to startup logs -

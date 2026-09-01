@@ -2980,3 +2980,125 @@ Phase 20 is not evaluated. The ten §15.9 production checks remain `NOT_CHECKED`
 platform's own model makes that gate indeterminate rather than passed — and recording it otherwise in
 the phase that implements the gate would be the most straightforward way imaginable to prove the whole
 project was theatre.
+
+---
+
+## Entry 024 — Phase 19, continued: what the first real deployment found
+
+The accounts arrived. A Cloudflare account, and a Neon PostgreSQL project linked into the working
+directory. Within a few hours staging had a schema, a pool, a queue, a cron trigger and a deployed
+Worker — and had found four P1 defects that 2,004 passing tests could not.
+
+Every one of them is the same sentence: **the development database is not the deployed one, and the
+places they differ are exactly the places tests cannot reach.**
+
+### First, the measurement
+
+Entry 023 argued KI-049 from the mechanism. `set_config(..., false)` is session-scoped, a pooled
+connection carries it, therefore disclosure. Correct reasoning, and still reasoning.
+
+Staging made it an observation. The pre-fix implementation was restored faithfully from commit
+`0fd0cac` — no strawman; the first attempt at reproducing it *was* a strawman, wrapping the statements
+in a transaction the original did not have, and it passed, which is how I learned to go and read the
+old code instead of remembering it. The real thing issues `SET ROLE`, the query, and `RESET ROLE` as
+three separate statements on a pool, so they can land on three different connections.
+
+Forty interleaved requests from two tenants, four connections:
+
+    { "WRONG TENANT": 18, "correct": 20, "empty": 2 }
+
+Eighteen of forty requests returned another tenant's row. The fixed implementation returns 40/40.
+
+The two failure classes are counted apart deliberately. `empty` is a malfunction — somebody sees a
+blank page, complains, it gets fixed. `WRONG TENANT` is the disclosure, and **nobody complains**,
+because what arrives looks entirely plausible to whoever receives it.
+
+That number is now a gate rather than an anecdote: `pnpm verify:isolation`, which refuses to run
+unless `APP_ENV=staging` because it writes rows, and a check that merely *asks* to be pointed at the
+right database eventually gets pointed at the wrong one.
+
+### Then, four things nobody could have found locally
+
+**The drainer never drained.** Cron fired, claimed a row, and threw. Drizzle's PGlite adapter returns
+`{ rows: [...] }` from `execute()`; its postgres-js adapter returns the array itself. Both satisfy the
+declared return type, so `.rows` compiles against either and is correct against only one — and every
+test in this project runs on PGlite.
+
+The same mistake sat in `readSchemaFingerprintFrom`, where it would have been worse: `null` for every
+deployed database, so the web Worker would have refused to serve against a schema that was in fact
+correct, reporting a migration failure that had not happened. The fix, `rowsOf()`, throws on an
+unrecognised shape rather than returning `[]` — because returning empty is precisely what the broken
+drainer did in effect, and *"there is nothing to do"* reads identically to *"I could not tell"* right
+up until somebody asks why a queue never drained.
+
+The function's own doc comment had named the hazard — *"the deployed path talks to postgres-js and the
+development path talks to PGlite"* — and then the code assumed one shape. Knowing about a difference
+is not the same as handling it.
+
+**The web app could not have connected.** It read `process.env.DATABASE_URL`. Hyperdrive is an
+*object* binding, and the adapter copies vars and secrets into `process.env` but cannot copy an object
+carrying a `connectionString` property. The first request would have died with the binding present and
+perfectly configured.
+
+**A production credential was one `git add -A` away from the history.** `@opennextjs/cloudflare`
+inlines the resolved environment into `.open-next/cloudflare/next-env.mjs`. With a Neon-linked
+`.env.local`, that file held a live production `DATABASE_URL` — host, user, password — as an exported
+constant. `.open-next/` was not in `.gitignore`. Thirty-four files, untracked and stageable.
+
+The scanner caught it, and only because of a change made hours earlier for an unrelated reason.
+`neon link` had written a real DSN into `.env.local` and the scanner failed the gate on it — a
+correctly-placed local credential in the conventional file. The temptation there is to add an
+exception. Instead the file selection changed to ask git:
+
+    git ls-files --cached --others --exclude-standard
+
+which is the question the scanner is actually asking, since its own failure message says *remove it
+from the tree and history* and a gitignored file is in neither. The property that mattered turned up
+an hour later: **a file is scanned precisely when it is not ignored.** `.open-next` was not ignored,
+so it was in scope, so the credential was found. Under the old hand-maintained skip list, somebody
+would have had to think to add build output to a list of things to scan.
+
+A check that fires on correct practice is a check people switch off, and it takes the real findings
+with it. Fixing where it looked kept it, and the next thing it looked at was a production password.
+
+**The staging Worker would have had no bindings.** Wrangler environments do not inherit top-level
+configuration. `[env.staging]` overrode `name` and `vars`; `hyperdrive`, `queues`, `r2_buckets` and
+`triggers` sat above it and applied to nothing. A `--dry-run` says so if you read the binding table,
+which is the only reason this was caught before deploying rather than after.
+
+Production is now left with *no* bindings rather than placeholder ids. A placeholder that looks like
+an id is the shape that gets deployed by accident; an environment with nothing fails at deploy time,
+unmistakably.
+
+### One provider detail worth keeping
+
+`neondb_owner` — the role migrations run as and the role Hyperdrive connects as — has
+`rolbypassrls = true`. Not a superuser, but exempt from every policy all the same.
+
+So `SET LOCAL ROLE govintel_app` is not defence in depth layered on top of RLS. **It is the only thing
+that makes RLS apply at all.** SEC-001 said this about superusers on PGlite; a managed provider says
+it again with different privilege bits. The isolation gate now asserts the application role can
+neither bypass nor own the policies, so a future `ALTER ROLE` fails a check instead of quietly
+removing tenant isolation while leaving every policy visible in the catalogue.
+
+### What is actually verified
+
+Not "the configuration parses". The behaviour, against the real thing:
+
+- A schema on a networked PostgreSQL — the first non-PGlite schema this project has ever had, applied
+  by a migration script that creates from empty and **refuses everything else**, with no `DROP` in it
+  at any privilege level.
+- Tenant isolation under a four-connection pool: 40/40.
+- Cron → Hyperdrive → Queue → consumer, end to end: three events processed, and one unrecognised
+  event **dead-lettered** rather than silently marked done — the distinction §46 exists for, working.
+
+### Where Phase 19 stands
+
+**Still not green.** The outbox Worker is deployed and verified; the web Worker is not built, because
+KI-051 still blocks the OpenNext bundle on Windows and the build is being attempted under WSL instead.
+Until a web deployment answers a real URL, "staging green" is not a thing anybody may write down.
+
+That constraint has now paid for itself four times in one afternoon. It would have been easy, a week
+ago, to call Phase 19 done on the strength of a green local suite and a configuration file that looked
+right. The suite was green the entire time the drainer could not drain, the web app could not connect,
+and eighteen of every forty requests would have handed one tenant another tenant's data.

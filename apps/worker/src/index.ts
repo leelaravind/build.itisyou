@@ -137,7 +137,8 @@ async function drain(db: PooledDatabase, env: Env): Promise<void> {
     idempotency_key: string | null;
     event_type: string;
     correlation_id: string;
-  }>(await db.execute(sql`
+  }>(
+    await db.execute(sql`
     WITH claimed AS (
       SELECT id
       FROM outbox_events
@@ -155,7 +156,8 @@ async function drain(db: PooledDatabase, env: Env): Promise<void> {
     FROM claimed
     WHERE o.id = claimed.id
     RETURNING o.id, o.idempotency_key, o.event_type, o.correlation_id
-  `));
+  `),
+  );
 
   if (claimed.length === 0) return;
 

@@ -62,13 +62,6 @@ interface Cache {
   client?: PGlite;
   db?: DatabaseHandle;
   ready?: Promise<DatabaseHandle>;
-  /**
-   * Whether the handle is a real pool.
-   *
-   * Decides whether operations are serialised. PGlite has one connection and needs the mutex;
-   * a pool hands out a connection per transaction and serialising would discard the pool.
-   */
-  pooled?: boolean;
 }
 
 const globalCache = globalThis as unknown as { __govintelDb?: Cache };
@@ -84,52 +77,22 @@ const DEV_DATA_DIR = '.pglite';
 
 async function initialise(): Promise<DatabaseHandle> {
   /*
-   * A deployed environment must never reach this function. PGlite is a single-connection embedded
-   * database and `rebuildSchema` below destroys data; both are correct for a laptop and catastrophic
-   * anywhere else. The guard is here rather than in a comment because the failure mode is silent —
-   * the app would start, serve traffic, and lose everything on the next deploy.
+   * Development only, and the guard is load-bearing rather than documentation.
+   *
+   * PGlite is a single-connection embedded database and `rebuildSchema` below destroys data; both are
+   * correct for a laptop and catastrophic anywhere else. The failure mode is silent — the app would
+   * start, serve traffic, and lose everything on the next deploy — so this throws rather than warns.
+   *
+   * The deployed path does not come through here at all. It has no long-lived handle to initialise;
+   * see `usingConnection` for why.
    */
   if (IS_DEPLOYED) {
-    /*
-     * Deployed: a networked PostgreSQL, reached through whatever pooler is in front of it.
-     *
-     * On Cloudflare that is Hyperdrive, which presents an ordinary connection string — so nothing
-     * here names Cloudflare, and moving to a different pooler or host is a configuration change.
-     *
-     * There is deliberately no schema bootstrap on this path. `rebuildSchema` destroys data, and the
-     * fingerprint check below refuses to serve rather than repairing: a deployed database whose shape
-     * is not the one this build expects is a migration that has not run, and the correct response is
-     * to stop, not to guess (KI-026).
-     */
-    /*
-     * Resolved rather than read from `process.env` directly.
-     *
-     * On Cloudflare the connection string arrives on the Hyperdrive *binding*, which is an object and
-     * therefore cannot appear in `process.env` the way a var or a secret does. Reading the variable
-     * here threw "DATABASE_URL is not set" on the first staging request with the binding present and
-     * correct. `resolveConnectionString` holds that one piece of provider knowledge so this module
-     * keeps having none.
-     */
-    const connectionString = await resolveConnectionString();
-
-    const { db: pooled } = connect({ connectionString });
-
-    const deployedFingerprint = await readSchemaFingerprintFrom(pooled);
-
-    if (deployedFingerprint !== SCHEMA_FINGERPRINT) {
-      throw new Error(
-        `The database schema does not match this build. Expected ${SCHEMA_FINGERPRINT}, ` +
-          `found ${deployedFingerprint ?? 'no fingerprint at all'}. A migration has not run, or ran ` +
-          'against a different database. Refusing to serve rather than guessing — see ' +
-          'docs/MIGRATION_POLICY.md.',
-      );
-    }
-
-    cache.pooled = true;
-    return pooled;
+    throw new Error(
+      'The embedded development database must never be used in a deployed environment. ' +
+        'This is a bug in the caller: deployed code reaches the database through withDatabase or ' +
+        'withTenant, which open a connection per operation.',
+    );
   }
-
-  cache.pooled = false;
 
   const client = new PGlite(DEV_DATA_DIR);
   const db = drizzle(client, { schema });
@@ -206,21 +169,85 @@ export function serialised<T>(fn: () => Promise<T>): Promise<T> {
   return result;
 }
 
-/**
- * Whether operations must queue.
+/*
+ * Whether the schema has already been checked in this isolate.
  *
- * True for PGlite, which has one connection. False for a pool, where serialising would hand back the
- * throughput the pool exists to provide — and where it would also be *misleading*, because the mutex
- * used to be part of the tenant isolation story and no longer is (KI-049).
+ * A plain boolean, deliberately — not a cached handle and not a cached promise.
+ *
+ * Caching the *promise* would be the same bug one level up: two concurrent cold requests would share
+ * one in-flight check, so the second would await I/O belonging to the first request's context and
+ * hang exactly as the pooled handle did. Setting a boolean only after success means at worst a few
+ * requests during a cold start each pay for their own check, which costs one round trip and cannot
+ * hang.
  */
-function mustSerialise(): boolean {
-  return cache.pooled !== true;
+let schemaChecked = false;
+
+/**
+ * Refuse to serve against a schema this build does not recognise (KI-026).
+ *
+ * Runs on the caller's own connection rather than a shared one, so it happens inside the request that
+ * needs it. After the first success it is a no-op for the life of the isolate.
+ */
+async function ensureSchemaMatches(db: DatabaseHandle): Promise<void> {
+  if (schemaChecked) return;
+
+  const found = await readSchemaFingerprintFrom(db);
+
+  if (found !== SCHEMA_FINGERPRINT) {
+    throw new Error(
+      `The database schema does not match this build. Expected ${SCHEMA_FINGERPRINT}, ` +
+        `found ${found ?? 'no fingerprint at all'}. A migration has not run, or ran against a ` +
+        'different database. Refusing to serve rather than guessing — see docs/MIGRATION_POLICY.md.',
+    );
+  }
+
+  schemaChecked = true;
+}
+
+/**
+ * Run an operation on a connection opened for it and closed after it.
+ *
+ * ## Why a connection per operation, rather than one per process
+ *
+ * Because a Worker may not use a socket opened by a different request.
+ *
+ * The first staging deployment memoised the pool on `globalThis`, which is right for `next dev` —
+ * module state survives hot reloads and re-creating PGlite each time would discard local data. On
+ * Cloudflare the same code hung: under 25 concurrent requests, twenty returned
+ * *"the Workers runtime canceled this request because it detected that your Worker's code had hung
+ * and would never generate a response"*, and five succeeded. The successes were the requests that
+ * happened to land on the isolate that had opened the connection.
+ *
+ * Intermittent, load-dependent, and invisible to a single `curl` — which returned 200 throughout.
+ *
+ * ## Why this is not the waste it looks like
+ *
+ * Opening a connection per operation would be indefensible against a bare Postgres. It is the
+ * intended shape here: Hyperdrive exists precisely to hold the pool that this runtime cannot, and the
+ * architecture document says so — *"Hyperdrive pools connections for a runtime that cannot hold a
+ * pool itself."* The connection this opens is to Hyperdrive, not to Neon.
+ *
+ * `close()` runs in a `finally` because a Worker that leaks sockets exhausts its connection limit and
+ * then fails in a way that looks like the database being slow.
+ */
+async function usingConnection<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
+  const connectionString = await resolveConnectionString();
+  const { db, close } = connect({ connectionString });
+
+  try {
+    await ensureSchemaMatches(db);
+    return await fn(db);
+  } finally {
+    await close();
+  }
 }
 
 /** The database handle. Serialised on the development path only. Use this from request handlers. */
 export async function withDatabase<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
+  if (IS_DEPLOYED) return usingConnection(fn);
+
   const db = await getDatabase();
-  return mustSerialise() ? serialised(() => fn(db)) : fn(db);
+  return serialised(() => fn(db));
 }
 
 /**
@@ -236,13 +263,16 @@ export async function withTenant<T>(
   organizationId: string,
   fn: (tx: TenantScope) => Promise<T>,
 ): Promise<T> {
-  const db = await getDatabase();
-
-  const scope = (): Promise<T> =>
+  const scope = (db: DatabaseHandle): Promise<T> =>
     db.transaction(async (tx) => {
       await applyTenantScope(tx, organizationId);
       return fn(tx);
     });
 
-  return mustSerialise() ? serialised(scope) : scope();
+  // Deployed: its own connection, and no mutex. Serialising would hand back the concurrency
+  // Hyperdrive exists to provide, and it no longer carries any isolation meaning (KI-049).
+  if (IS_DEPLOYED) return usingConnection(scope);
+
+  const db = await getDatabase();
+  return serialised(() => scope(db));
 }

@@ -78,7 +78,20 @@ async function hyperdriveConnectionString(): Promise<string | undefined> {
      * — and the synchronous form would throw there rather than return a value.
      */
     const context = await getCloudflareContext({ async: true });
-    const { HYPERDRIVE: binding } = context.env as unknown as Record<string, unknown>;
+
+    /*
+     * The binding is found by the name the deployment declared, not by a constant here.
+     *
+     * `DATABASE_URL_BINDING` is what lets env validation accept a missing `DATABASE_URL` at all, so
+     * reading the same value to locate the binding keeps the two from drifting: a typo in the
+     * declaration produces a startup failure rather than a validation rule that was quietly satisfied
+     * by a name nothing uses.
+     */
+    const name = process.env.DATABASE_URL_BINDING;
+
+    if (name === undefined || name.trim() === '') return undefined;
+
+    const binding = (context.env as unknown as Record<string, unknown>)[name];
 
     if (binding === undefined || binding === null) return undefined;
 
@@ -90,15 +103,15 @@ async function hyperdriveConnectionString(): Promise<string | undefined> {
        * and falling through to `DATABASE_URL` would hide it behind whatever that happens to hold.
        */
       throw new Error(
-        'The HYPERDRIVE binding is present but has no connectionString. Check the hyperdrive id ' +
-          'in wrangler.toml matches a configuration in this account.',
+        `The ${name} binding is present but has no connectionString. Check the hyperdrive id in ` +
+          'wrangler.toml matches a configuration in this account.',
       );
     }
 
     return connectionString;
   } catch (error) {
     // Rethrow our own diagnosis; swallow only "this is not Cloudflare".
-    if (error instanceof Error && error.message.includes('HYPERDRIVE binding')) throw error;
+    if (error instanceof Error && error.message.includes('has no connectionString')) throw error;
 
     return undefined;
   }

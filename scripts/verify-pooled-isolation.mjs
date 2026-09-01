@@ -159,8 +159,9 @@ try {
 
   // Nothing left on any connection for the next request to inherit.
   const residue = await Promise.all(
-    Array.from({ length: 20 }, () =>
-      sql`SELECT current_setting(${TENANT_SETTING}, true) AS tenant, current_user AS role`,
+    Array.from(
+      { length: 20 },
+      () => sql`SELECT current_setting(${TENANT_SETTING}, true) AS tenant, current_user AS role`,
     ),
   );
 

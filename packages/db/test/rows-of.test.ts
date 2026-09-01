@@ -16,7 +16,10 @@ import { rowsOf } from '../src/client.ts';
 describe('rowsOf', () => {
   it('reads the PGlite shape', () => {
     // What drizzle-orm/pglite returns.
-    expect(rowsOf<{ id: number }>({ rows: [{ id: 1 }, { id: 2 }] })).toEqual([{ id: 1 }, { id: 2 }]);
+    expect(rowsOf<{ id: number }>({ rows: [{ id: 1 }, { id: 2 }] })).toEqual([
+      { id: 1 },
+      { id: 2 },
+    ]);
   });
 
   it('reads the postgres-js shape', () => {
