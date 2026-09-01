@@ -132,6 +132,100 @@ real opportunity — which is the argument for running it on every push rather t
 
 ---
 
+## 2c. Finding SEC-003 - the tenant scope was safe only because the database had one connection
+
+Found in Phase 19 while designing the Cloudflare deployment, before any deployment happened.
+
+### What it was
+
+`withTenant` established the tenant scope with `SET ROLE` and `set_config(..., false)`, cleaned up in
+a `finally`.
+
+The third argument to `set_config` is `is_local`. **`false` means session-scoped** - the setting
+persists on the connection until something changes it. `SET ROLE` is session-scoped too.
+
+The code was explicit that it knew this, and the comment is the finding:
+
+> *The whole scope is serialised: `SET ROLE` and the tenant setting are connection state, so an
+> interleaved request would run under another tenant's scope. **On a single-connection database that
+> is not a theoretical risk.***
+
+That sentence is exactly true of PGlite and exactly false of anything pooled. The `serialised()`
+mutex - introduced for a completely different reason, PGlite having one connection (KI-013) - was
+silently the thing making tenant isolation safe.
+
+### Why it would not have been caught
+
+Every isolation test passes under the old implementation. They run against PGlite, where a leaked
+session setting has nowhere to leak *to*: one connection, one request at a time, cleanup always runs.
+
+The suite proved the right property against the one environment in which the bug cannot reproduce.
+
+### What it would have done
+
+Behind Hyperdrive, a connection returns to the pool still carrying an organisation. The `finally`
+narrows the window rather than closing it - a process that dies mid-request, or an isolate evicted
+between the query and the reset, hands the next request a primed connection.
+
+Row-level security would then apply that organisation **correctly**. Every query would return the
+wrong tenant's rows, no error would be raised, and nothing in the system would report it.
+
+### The fix
+
+One shared `applyTenantScope`, called inside a transaction, with `SET LOCAL ROLE` and
+`set_config(..., true)`.
+
+Both are discarded when the transaction ends - whether it commits, rolls back, or the connection
+dies. **There is no window and no cleanup to fail to run**, which is a stronger guarantee than a
+shorter window.
+
+Three further changes came with it:
+
+- **One implementation, not two.** The test helper previously duplicated the production statements,
+  so the isolation suite verified a *copy* of the mechanism. Both now call the same function.
+- **The callback receives the transaction**, typed as such. Handing it the database would compile
+  while letting a caller issue queries outside the scope, under the owner role, seeing everything.
+- **Serialisation is now a PGlite concern only.** It no longer carries any isolation meaning, and the
+  deployed path does not serialise.
+
+### The regression tests
+
+`packages/db/test/tenant-scope.test.ts` - eleven tests that attack the mechanism rather than the
+outcome, because the outcome was already correct.
+
+Two of them are deliberately tests *of Postgres*: one shows a session-scoped setting surviving its
+transaction, one shows a transaction-scoped setting not surviving. They establish that the two forms
+genuinely differ, so the rest is testing something real rather than a convention.
+
+The load-bearing test asserts the scope leaves no residue **with no cleanup step present at all** -
+if it passes, there is nothing for a pooled connection to carry.
+
+Verified by reintroducing the defect: reverting `applyTenantScope` to the session-scoped form fails
+four tests, including *"shows nothing at all once the scope has ended"* — which is the disclosure
+itself, written as an assertion.
+
+The abort test passes under *both* implementations, and that is worth stating rather than glossing:
+Postgres rolls back a session-scoped `SET` when a transaction aborts, so the old code was safe on that
+path. It was unsafe on the commit path, which is the ordinary one.
+
+### Related: SEC-003b - Hyperdrive query caching
+
+The same root cause one layer up. Hyperdrive caches on the query and its parameters, and under RLS
+two tenants issue byte-identical queries while being entitled to different rows - the discriminating
+input is connection state, not a parameter.
+
+Caching is **disabled** for V1 (`--caching-disabled` at Hyperdrive creation). The data is small per
+tenant and mutable, the benefit is marginal, and the failure mode is cross-tenant disclosure.
+Recorded as a decision rather than left as a default nobody examined. See KI-050.
+
+### The pattern
+
+Both are the same sentence: **connection-level state is invisible to anything that pools or caches
+above it.** Worth carrying into any future work that introduces a layer between the application and
+the database.
+
+---
+
 ## 3. Tenant isolation
 
 Layered, because cross-tenant disclosure is the highest-severity failure this system can produce and

@@ -167,3 +167,40 @@ jobs:
             echo "No concurrency suite yet - introduced in Phase 3 with the schema."
             echo "Postgres service is wired and reachable, so the suite can run the moment it exists."
           fi
+
+  cloudflare-build:
+    name: Cloudflare Worker build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      # The deployable artefact, built rather than assumed.
+      #
+      # This job exists because the OpenNext bundler creates symlinks, which Windows refuses without
+      # Developer Mode or Administrator — so the build cannot be verified on a developer's machine
+      # here (KI-051). It is an environment constraint rather than a defect, and the honest response
+      # is to verify it somewhere that can, on every push, rather than to claim it works.
+      - name: Build the Next.js Worker (OpenNext)
+        run: pnpm --filter=@govintel/web cf:build
+        env:
+          APP_ENV: staging
+
+      # Compiles the Worker and resolves every binding without contacting an account. Catches a
+      # wrangler.toml that references a binding the code does not use, or a handler signature the
+      # runtime will not accept.
+      - name: Validate the outbox Worker
+        run: pnpm exec wrangler deploy --dry-run --outdir="${RUNNER_TEMP}/worker-bundle" --env=""
+        working-directory: apps/worker

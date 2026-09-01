@@ -101,7 +101,20 @@ test.describe('performance smoke', () => {
     });
   }
 
-  test('a fully planned project renders within the smoke budget', async ({ page }) => {
+  test('a fully planned project renders within the smoke budget', async ({ page, browserName }) => {
+    /*
+     * Skipped on WebKit, and only here.
+     *
+     * This is the one test in the file that needs a guest session, and WebKit drops the session
+     * cookie over plain HTTP (KI-024) — so it times out for a reason that has nothing to do with
+     * performance. The request-based tests above have no session and stay on every browser, which is
+     * where their value is.
+     */
+    test.skip(
+      browserName === 'webkit',
+      'WebKit drops the session cookie over plain HTTP; verified against HTTPS at the staging gate (KI-024)',
+    );
+
     /*
      * The route that does the most work: rules evaluation, decomposition, estimation, budget
      * roll-up, feasibility and health, all on one request. If anything in the deterministic core has

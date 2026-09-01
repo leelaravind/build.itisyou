@@ -17,10 +17,39 @@ import { createHash } from 'node:crypto';
 
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle as drizzlePglite } from 'drizzle-orm/pglite';
-import { sql } from 'drizzle-orm';
+import { sql, type ExtractTablesWithRelations, type SQL } from 'drizzle-orm';
+import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import * as schema from './schema.ts';
 
-export type Database = ReturnType<typeof drizzlePglite<typeof schema>>;
+/**
+ * A Drizzle handle over this schema, whichever driver is underneath.
+ *
+ * Drizzle's common supertype rather than the PGlite type it used to be. Every function taking a
+ * `Database` performs schema operations that are identical on PGlite and on postgres-js, and typing
+ * them to one driver meant the deployed path could not call them — which would have forced a second
+ * copy of each, and a second copy is how the tenant scope drifted in the first place (KI-049).
+ *
+ * A transaction handle also satisfies this, which is what lets tenant-scoped callbacks pass their
+ * transaction straight into these functions instead of reaching for the database and escaping the
+ * scope.
+ */
+export type Database = PgDatabase<
+  PgQueryResultHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
+
+/**
+ * The PGlite-backed handle specifically.
+ *
+ * Tests run on PGlite and nothing else, so they get the concrete type and keep their result typing:
+ * `execute<{ id: string }>()` returns rows of that shape here, where on the driver-agnostic
+ * supertype it cannot.
+ */
+export type EmbeddedDatabase = ReturnType<typeof drizzlePglite<typeof schema>>;
+
+/** The transaction handle a PGlite transaction callback receives. */
+export type EmbeddedTransaction = Parameters<Parameters<EmbeddedDatabase['transaction']>[0]>[0];
 
 /**
  * The Postgres role application queries run as.
@@ -31,14 +60,64 @@ export type Database = ReturnType<typeof drizzlePglite<typeof schema>>;
  */
 export const APP_ROLE = 'govintel_app';
 
-/** Session setting the RLS policies read to determine the current tenant. */
+/** Setting the RLS policies read to determine the current tenant. */
 export const TENANT_SETTING = 'app.current_organization_id';
 
+/**
+ * Anything that can issue SQL. Both a Drizzle database and a Drizzle transaction satisfy it.
+ *
+ * Structural rather than nominal so this module does not have to name a driver: PGlite in
+ * development and postgres-js when deployed produce different Drizzle types, and the tenant scope is
+ * the same statements either way.
+ */
+export interface SqlExecutor {
+  execute: (query: SQL) => Promise<unknown>;
+}
+
+/**
+ * Apply the tenant scope. **Must be called inside a transaction.**
+ *
+ * This is the whole of KI-049, and the word doing the work is `LOCAL`.
+ *
+ * The previous implementation used `SET ROLE` and `set_config(..., false)` — both *session*-scoped —
+ * with a `finally` that reset them. That is correct on PGlite, which is one connection serialised
+ * behind a mutex, and unsafe behind any connection pooler: a pooled connection returns to the pool
+ * still carrying a tenant identity, and the reset narrows the window without closing it. A process
+ * that dies mid-request, or an isolate evicted between the query and the reset, hands the next
+ * request a connection primed with somebody else's organisation.
+ *
+ * Row-level security would then apply that organisation *correctly*, and every query would return the
+ * wrong tenant's rows while every test still passed.
+ *
+ * `SET LOCAL` and `is_local = true` are discarded when the transaction ends — whether it commits,
+ * rolls back, or the connection dies. There is no window and no cleanup to fail to run. It is also
+ * correct under transaction-mode poolers generally, so which pooler sits in front stops being
+ * load-bearing.
+ *
+ * Exported and shared rather than written twice. The test helper below and the request layer in
+ * `apps/web` both call this, so the isolation suite exercises the mechanism the application uses
+ * rather than a copy of it that can drift.
+ */
+export async function applyTenantScope(tx: SqlExecutor, organizationId: string): Promise<void> {
+  /*
+   * `SET LOCAL ROLE` matters as much as the setting.
+   *
+   * A superuser bypasses row-level security unconditionally — `FORCE ROW LEVEL SECURITY` covers the
+   * table *owner*, not a superuser — so without switching role the policies are defined and never
+   * enforced. That is SEC-001.
+   */
+  await tx.execute(sql`SET LOCAL ROLE ${sql.raw(APP_ROLE)}`);
+  await tx.execute(sql`SELECT set_config(${TENANT_SETTING}, ${organizationId}, true)`);
+}
+
 export interface TestDatabase {
-  readonly db: Database;
+  readonly db: EmbeddedDatabase;
   readonly client: PGlite;
   /** Run a callback with the tenant session variable set, as the request layer does. */
-  readonly asTenant: <T>(organizationId: string, fn: (db: Database) => Promise<T>) => Promise<T>;
+  readonly asTenant: <T>(
+    organizationId: string,
+    fn: (tx: EmbeddedTransaction) => Promise<T>,
+  ) => Promise<T>;
   /** Empty every table, preserving the schema. Use between tests in a shared-instance suite. */
   readonly truncate: () => Promise<void>;
   readonly close: () => Promise<void>;
@@ -81,27 +160,19 @@ export async function createTestDatabase(): Promise<TestDatabase> {
   return {
     db,
     client,
-    asTenant: async (organizationId, fn) => {
+    asTenant: async (organizationId, fn) =>
       /*
-       * `SET ROLE` matters as much as the tenant setting.
+       * A transaction, calling the same `applyTenantScope` the request layer calls.
        *
-       * A superuser bypasses row-level security unconditionally - `FORCE ROW LEVEL SECURITY` only
-       * covers the table *owner*, not a superuser. PGlite connects as `postgres`, which is a
-       * superuser, so without switching role the RLS suite would pass while proving nothing: every
-       * policy would be silently ignored and every query would return every tenant's rows.
-       *
-       * Switching to a non-superuser, non-owner role is also what production must do, so this
-       * mirrors the deployed configuration rather than approximating it.
+       * Previously this duplicated the production statements, which meant the isolation suite
+       * verified a *copy* of the mechanism. The copy and the original could drift, and under KI-049
+       * they would have drifted in the one direction nobody would notice — the tests staying safe
+       * while production did not.
        */
-      await db.execute(sql`SET ROLE ${sql.raw(APP_ROLE)}`);
-      await db.execute(sql`SELECT set_config(${TENANT_SETTING}, ${organizationId}, false)`);
-      try {
-        return await fn(db);
-      } finally {
-        await db.execute(sql`SELECT set_config(${TENANT_SETTING}, '', false)`);
-        await db.execute(sql`RESET ROLE`);
-      }
-    },
+      db.transaction(async (tx) => {
+        await applyTenantScope(tx, organizationId);
+        return fn(tx);
+      }),
     truncate: async () => {
       // RESTART IDENTITY keeps sequences from drifting across tests; TRUNCATE is dramatically
       // cheaper than recreating the instance (measured: ~1.5s per instance vs a few ms here).
@@ -447,6 +518,11 @@ CREATE TABLE outbox_events (
   idempotency_key text,
   created_at timestamptz NOT NULL DEFAULT now(),
   processed_at timestamptz,
+  -- When the drainer last claimed this row. Distinct from created_at and from processed_at: a
+  -- claim that never resulted in a publish must expire, or a drainer that died between claiming
+  -- and publishing would strand the row forever — which looks exactly like a side effect nobody
+  -- ever needed.
+  last_attempted_at timestamptz,
   attempt_count integer NOT NULL DEFAULT 0,
   last_error_code text,
   dead_lettered boolean NOT NULL DEFAULT false
@@ -631,6 +707,32 @@ export async function readSchemaFingerprint(client: PGlite): Promise<string | nu
   const row = await client.query<{ fingerprint: string }>(
     'SELECT fingerprint FROM schema_meta ORDER BY applied_at DESC LIMIT 1',
   );
+
+  return row.rows[0]?.fingerprint ?? null;
+}
+
+/**
+ * The same question, asked through Drizzle rather than through a PGlite client.
+ *
+ * Exists because the deployed path talks to postgres-js and the development path talks to PGlite,
+ * and the fingerprint check has to run on both — it is the thing that decides whether a build may
+ * serve traffic at all (KI-026).
+ *
+ * Returns `null` rather than throwing when the table is absent, because "this database has never had
+ * a schema applied" and "this database has the wrong schema" are different situations and the caller
+ * distinguishes them in its message.
+ */
+export async function readSchemaFingerprintFrom(tx: SqlExecutor): Promise<string | null> {
+  const present = (await tx.execute(
+    sql`SELECT count(*)::int AS count FROM information_schema.tables
+        WHERE table_schema = 'public' AND table_name = 'schema_meta'`,
+  )) as { rows: { count: number }[] };
+
+  if ((present.rows[0]?.count ?? 0) === 0) return null;
+
+  const row = (await tx.execute(
+    sql`SELECT fingerprint FROM schema_meta ORDER BY applied_at DESC LIMIT 1`,
+  )) as { rows: { fingerprint: string }[] };
 
   return row.rows[0]?.fingerprint ?? null;
 }

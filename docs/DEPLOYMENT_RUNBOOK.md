@@ -11,14 +11,13 @@ generating it from a constant would make it look authoritative while being enfor
 
 ## 1. What is decided, and what is not
 
-**Not decided: the hosting provider.** This was deferred to Phase 19 by explicit instruction, and it
-remains open. Nothing in the codebase names a provider — no vendor SDK, no provider-specific
-configuration, no deployment manifest for a particular platform.
+**Decided: Cloudflare.** Workers for the application (via `@opennextjs/cloudflare`), R2 for evidence,
+Queues and Cron Triggers for the outbox, Hyperdrive in front of an external managed PostgreSQL. The
+architecture and the reasoning are in `CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md`.
 
-That is not an omission to be tidied up later. It is the same position taken for authentication:
-provider-neutral interfaces, so choosing costs a configuration change rather than a rewrite. What it
-means for this runbook is that the *steps* below are complete and the *commands* for two of them are
-not, and this document says which.
+**Still open: the accounts.** Provisioning needs a Cloudflare account and a PostgreSQL provider, and
+those are the only two things standing between this and a staging deployment. Every command below is
+written out; none has been run.
 
 **Decided:**
 
@@ -59,17 +58,52 @@ it describes, CI fails. That is how a specification stops being a thing somebody
 
 ## 3. Staging
 
+### Provisioning
+
+Run once per environment, against a real Cloudflare account. **The `--caching-disabled` flag is a
+security decision, not a preference** — see SEC-003b and KI-050.
+
+```
+# Hyperdrive, in front of the managed PostgreSQL.
+wrangler hyperdrive create govintel-staging --caching-disabled --connection-string="postgres://..."
+
+# Evidence. Private; there is deliberately no public bucket.
+wrangler r2 bucket create govintel-evidence
+
+# The outbox queue and its dead-letter queue.
+wrangler queues create govintel-outbox
+wrangler queues create govintel-outbox-dlq
+```
+
+Put the returned Hyperdrive id into both `apps/web/wrangler.toml` and `apps/worker/wrangler.toml`,
+replacing `REPLACE_WITH_HYPERDRIVE_ID`. **The same id in both** — two Hyperdrive configurations over
+one database would be two pools with two independent caches, and the caching decision would then have
+to be right in two places.
+
+### Secrets
+
+```
+wrangler secret put DATABASE_URL   --env staging   # the Hyperdrive connection string
+wrangler secret put SESSION_SECRET --env staging
+```
+
+`APP_VERSION` and `APP_COMMIT` are set by CI at build time, not stored as secrets — they are not
+secret, and a value set by hand is a value that drifts from what is actually deployed.
+
 ### Steps
 
-1. **Provision.** Requires a provider. *(open)*
-2. **Configure.** `APP_ENV=staging`, database URL, session secret, `APP_VERSION`, `APP_COMMIT`.
-3. **Migrate.** Additive migrations only; see `MIGRATION_POLICY.md`. The application refuses to start
-   against a schema whose fingerprint it does not recognise, so a failed migration surfaces at boot
-   rather than at the first query.
-4. **Seed.** `pnpm seed:staging` — see §4 below.
-5. **Verify.** `pnpm test:e2e` against the staging URL, plus `e2e/staging.spec.ts` for deployment
+1. **Migrate.** Additive only; see `MIGRATION_POLICY.md`. The application refuses to start against a
+   schema whose fingerprint it does not recognise, so a failed migration surfaces at boot rather than
+   at the first query.
+2. **Deploy.**
+   ```
+   pnpm --filter=@govintel/web cf:deploy -- --env staging
+   pnpm --filter=@govintel/worker cf:deploy -- --env staging
+   ```
+3. **Seed.** `pnpm seed:staging` — see §4 below.
+4. **Verify.** `pnpm test:e2e` against the staging URL, plus `e2e/staging.spec.ts` for deployment
    identity and the performance smoke.
-6. **Confirm rollback readiness.** §5.
+5. **Confirm rollback readiness.** §5.
 
 ### What "staging green" means
 
@@ -130,7 +164,11 @@ does not block on it — blocking would make the field get ticked rather than th
 
 1. **Approve.** Two roles, both required: engineering and product. §33 keeps approval separate from
    completion, and `signOffStatus` requires every named role rather than any one of them.
-2. **Deploy.** Requires a provider. *(open)*
+2. **Deploy.**
+   ```
+   pnpm --filter=@govintel/web cf:deploy -- --env production
+   pnpm --filter=@govintel/worker cf:deploy -- --env production
+   ```
 3. **Verify.** The ten checks §15.9 names — availability, TLS, security headers, critical journeys,
    authentication, APIs, monitoring, logging, backup/restore, deployment identity.
 4. **Record.** Each check's result, who ran it, when, and the evidence.
@@ -172,12 +210,15 @@ Recording them as targets now would be the fake precision the whole platform ref
 
 | Item | Blocked on |
 |---|---|
-| Staging provisioning and deployment | Hosting provider |
-| Production deployment | Hosting provider |
+| Staging provisioning and deployment | A Cloudflare account |
+| The managed PostgreSQL instance | A database provider account |
+| Production deployment | Both of the above, plus a passing staging gate |
 | The ten §15.9 production checks | A running production deployment |
-| RPO/RTO acceptance | Deployment design, which needs the provider |
+| RPO/RTO acceptance | A restore drill, which needs a real database |
 | Rollback timing | A staging environment to drill in |
 | OIDC provider | Deliberately deferred; local mock in use |
 
-Everything else in Phases 19 and 20 is built, and every part of it that can be verified without a
-provider has been.
+Everything else is built and verified. The Worker bundles and resolves its bindings
+(`wrangler deploy --dry-run`: 349.85 KiB, 72.29 KiB gzipped), the tenant scope is safe under pooling
+with regression tests that fail when it is not, and the Next.js Worker build runs in CI on Linux
+because Windows will not create the symlinks the bundler needs (KI-051).

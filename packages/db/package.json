@@ -10,14 +10,16 @@
     "./rbac": "./src/rbac.ts",
     "./identity": "./src/identity.ts",
     "./authorize": "./src/authorize.ts",
-    "./guest": "./src/guest.ts"
+    "./guest": "./src/guest.ts",
+    "./connect": "./src/connect.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
   },
   "dependencies": {
     "@govintel/shared": "workspace:*",
-    "drizzle-orm": "0.45.2"
+    "drizzle-orm": "0.45.2",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",

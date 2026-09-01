@@ -1,0 +1,21 @@
+{
+  "name": "@govintel/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --build",
+    "cf:deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev"
+  },
+  "dependencies": {
+    "@govintel/db": "workspace:*",
+    "@govintel/resilience": "workspace:*",
+    "@govintel/shared": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260901.1"
+  }
+}

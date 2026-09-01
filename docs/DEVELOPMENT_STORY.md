@@ -2814,3 +2814,169 @@ The Phase-18 gate is a release candidate, and what makes this one a candidate ra
 narrower than the test count: a new page cannot ship without tenant isolation, a mutation cannot report
 success it did not achieve, a committed change cannot lose its consequences, and a schema that has
 drifted from the code cannot be run against.
+
+---
+
+## Entry 023 — Phase 19: the bug that was safe for the wrong reason
+
+Cloudflare was chosen as the hosting platform, and the architecture work found a cross-tenant
+disclosure that had been sitting in the codebase since Phase 3.
+
+It is the most instructive defect in the project so far, because nothing about it was careless.
+
+### The comment that was the finding
+
+`withTenant` set the tenant scope with `SET ROLE` and `set_config(..., false)`, resetting both in a
+`finally`. Beside it:
+
+> *The whole scope is serialised: `SET ROLE` and the tenant setting are connection state, so an
+> interleaved request would run under another tenant's scope. **On a single-connection database that
+> is not a theoretical risk.***
+
+Every word of that is correct. Somebody understood exactly what the risk was, checked whether it
+applied, and correctly concluded that it did not — against PGlite.
+
+The bug is not in the code or the comment. It is that the comment's premise was a property of the
+*development* database, and the sentence documenting the safety was also the sentence documenting the
+condition under which it disappears. Put a connection pooler in front and the third word of that
+comment stops being true.
+
+Worse: `serialised()` was introduced in Phase 0 for an entirely unrelated reason — PGlite has one
+connection and concurrent writes were being lost (KI-013). It was never *intended* as a security
+control. It had quietly become one.
+
+### Why the tests could not have caught it
+
+Every isolation test passes under the broken implementation. They run against PGlite, where a leaked
+session setting has nowhere to leak to: one connection, one request at a time, cleanup always runs.
+
+The suite proved the right property against the one environment in which the bug cannot reproduce.
+That is a more uncomfortable failure than an untested path, because the tests were not missing — they
+were thorough, correct, and structurally incapable of failing.
+
+And behind Hyperdrive the consequence is not an error. A pooled connection returns still carrying an
+organisation; row-level security then applies that organisation **correctly**; every query returns the
+wrong tenant's rows; nothing raises anything.
+
+### The fix, and why `LOCAL` is stronger than a shorter window
+
+One shared `applyTenantScope`, inside a transaction, with `SET LOCAL ROLE` and
+`set_config(..., true)`.
+
+The instinct is to tighten the cleanup. That is the wrong shape of answer: it makes the window
+smaller and leaves a window. `SET LOCAL` is discarded when the transaction ends — commit, rollback, or
+the connection dying — so **there is nothing to clean up.** A guarantee that does not depend on a code
+path running is categorically better than one that does.
+
+Three things came with it, and two were pre-existing problems the fix exposed:
+
+- **The test helper duplicated the production statements.** The isolation suite verified a *copy* of
+  the mechanism, which could drift — and under this bug it would have drifted in the one direction
+  nobody would notice, tests staying safe while production did not. One implementation now.
+- **The callback received the database, not the transaction.** That compiles while letting a caller
+  issue queries outside the scope, under the owner role, seeing everything. It is now typed as the
+  transaction, so the escape does not compile.
+- **`serialised()` no longer means anything about isolation.** It is a PGlite connection concern,
+  documented as such, and the deployed path does not serialise at all.
+
+### Tests that attack the mechanism, not the outcome
+
+The outcome was already correct, so testing it again would have proved nothing. Eleven tests in
+`packages/db/test/tenant-scope.test.ts` go after the mechanism.
+
+Two are deliberately tests *of Postgres*: one shows a session-scoped setting surviving its
+transaction, one shows a transaction-scoped setting not surviving. They establish that the two forms
+genuinely differ, so everything after them is testing a real property rather than a convention.
+
+The load-bearing one asserts the scope leaves no residue **with no cleanup step present**. If it
+passes, there is nothing a pooled connection could carry.
+
+Reverting `applyTenantScope` to the session-scoped form fails four, including *"shows nothing at all
+once the scope has ended"* — which is the disclosure itself, written as an assertion.
+
+One test passes under both, and it is worth saying so rather than rounding up: Postgres rolls back a
+session-scoped `SET` when a transaction aborts, so the old code was genuinely safe on that path. It
+was unsafe on the commit path, which is the ordinary one.
+
+### The same mistake one layer up
+
+Hyperdrive caches query results keyed on the query and its parameters. Under RLS two tenants issue
+byte-identical queries while being entitled to different rows, because the discriminating input is
+`app.current_organization_id` — connection state, not a parameter.
+
+Caching is disabled, recorded in both `wrangler.toml` files beside the reason and in the provisioning
+command, because it is set at Hyperdrive creation rather than in the Worker config. A decision that
+lives away from where it is applied is a decision somebody will re-make by accident.
+
+Both findings are one sentence: **connection-level state is invisible to anything that pools or
+caches above it.**
+
+### What the evaluation actually found
+
+The instruction was to evaluate whether Redis/BullMQ should stay external or move to Cloudflare
+Queues without changing application semantics.
+
+There is no Redis or BullMQ. No dependency, no import, no configuration — checked rather than
+assumed. §46 and §47 are modelled in `packages/resilience` and no worker was built; the threat model
+already said so plainly.
+
+That changes the question from a migration to a greenfield choice, and it makes the answer easy:
+Queues can be adopted without changing semantics because there are none yet. The outbox already
+dictated the shape and no broker could have changed it — commit rows in the domain transaction, drain
+on a schedule, consume idempotently.
+
+Workflows was considered and rejected. Every V1 side effect is a single idempotent action; Workflows
+solves durable multi-step orchestration this system does not have. The condition that would change
+that is recorded rather than left unmentioned.
+
+### Two things the drainer needed that the design did not have
+
+Writing the drainer surfaced a gap in the schema: a claimed row needs a `last_attempted_at`, or a
+drainer that dies between claiming and publishing strands the row forever — which looks exactly like a
+side effect nobody ever needed. Added as an additive column, which is what `MIGRATION_POLICY.md` calls
+the safe kind.
+
+The drainer also claims *before* publishing rather than after. The reverse ordering publishes and then
+records that it did, and a failure in between produces a delivery nobody knows about — which the
+consumer's idempotency absorbs, so the bug would be invisible rather than absent.
+
+### The secret scanner earning its keep
+
+`wrangler.toml` conventionally carries a `localConnectionString` for local development. I wrote one:
+`postgres://postgres:postgres@localhost:5432/govintel`.
+
+The secret scanner failed the gate. It was right to. Those are not real credentials, but a DSN with
+inline credentials committed to a repository is exactly the shape that later gets edited to hold a
+real one — and by then it is in the history. Replaced with an environment variable, which is both
+safer and no harder.
+
+The temptation was to add an ignore comment, and the scanner has that facility. Using it here would
+have been suppressing a true positive because it was inconvenient.
+
+### What could not be verified, and why I did not force it
+
+The OpenNext build gets through `next build`, middleware bundling, static assets and cache assets, and
+fails creating symlinks: `EPERM: operation not permitted`. Confirmed by calling `fs.symlinkSync`
+directly — Windows refuses without Developer Mode or Administrator.
+
+That is an environment constraint, not a defect. Enabling Developer Mode would have made it work and
+is a machine-wide change nobody asked for, so instead the verification moved to CI on `ubuntu-latest`
+as the `cloudflare-build` job. The deployable artefact is now built on every push rather than assumed.
+
+The outbox Worker builds locally — `wrangler deploy --dry-run`, 349.85 KiB, 72.29 KiB gzipped, both
+bindings resolving — so only the Next.js bundle is affected.
+
+### Where Phase 19 stands
+
+1,998 unit tests and 747 E2E tests — 2,745 in total. Format, lint, typecheck, generated docs,
+secret scan, dependency audit and production build all clean.
+
+**The Phase-19 gate is not green, and it must not be marked so.** Staging green means every gate
+passing *against a staging deployment*, and no deployment has happened. What is blocked is only the
+accounts: a Cloudflare account and a PostgreSQL provider. Every command is written out in the runbook;
+none has been run.
+
+Phase 20 is not evaluated. The ten §15.9 production checks remain `NOT_CHECKED`, which by the
+platform's own model makes that gate indeterminate rather than passed — and recording it otherwise in
+the phase that implements the gate would be the most straightforward way imaginable to prove the whole
+project was theatre.

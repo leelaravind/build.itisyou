@@ -2,14 +2,17 @@ import 'server-only';
 
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
-import { sql } from 'drizzle-orm';
+import type { ExtractTablesWithRelations } from 'drizzle-orm';
+import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import * as schema from '@govintel/db/schema';
 import {
-  APP_ROLE,
   SCHEMA_FINGERPRINT,
+  applyTenantScope,
   readSchemaFingerprint,
+  readSchemaFingerprintFrom,
   rebuildSchema,
 } from '@govintel/db/client';
+import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
 import { IS_DEPLOYED } from './config.ts';
 
@@ -28,12 +31,43 @@ import { IS_DEPLOYED } from './config.ts';
  * hot reload; without it each reload would create another PGlite instance and lose all local state.
  */
 
-type DatabaseHandle = ReturnType<typeof drizzle<typeof schema>>;
+/*
+ * Drizzle's common supertype, rather than a union of the two drivers.
+ *
+ * A union looked right and was not: `PgliteDatabase` and `PostgresJsDatabase` differ in their query
+ * result type, so every call site had to narrow one away before it could do anything. `PgDatabase` is
+ * the base both extend, and it carries everything the request layer uses — select, insert, update,
+ * delete, execute and transaction — without knowing which driver is underneath.
+ *
+ * That is the point: the request layer must not be able to tell. If it could, the development and
+ * deployed paths would drift.
+ */
+export type DatabaseHandle = PgDatabase<
+  PgQueryResultHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
+
+/**
+ * The handle a tenant-scoped callback receives.
+ *
+ * Deliberately the *transaction* type rather than the database type. Making it the database type
+ * would compile while letting a caller issue queries outside the scope — under the owner role, with
+ * no tenant setting, seeing everything. The type is the guard.
+ */
+export type TenantScope = Parameters<Parameters<DatabaseHandle['transaction']>[0]>[0];
 
 interface Cache {
   client?: PGlite;
   db?: DatabaseHandle;
   ready?: Promise<DatabaseHandle>;
+  /**
+   * Whether the handle is a real pool.
+   *
+   * Decides whether operations are serialised. PGlite has one connection and needs the mutex;
+   * a pool hands out a connection per transaction and serialising would discard the pool.
+   */
+  pooled?: boolean;
 }
 
 const globalCache = globalThis as unknown as { __govintelDb?: Cache };
@@ -55,11 +89,44 @@ async function initialise(): Promise<DatabaseHandle> {
    * the app would start, serve traffic, and lose everything on the next deploy.
    */
   if (IS_DEPLOYED) {
-    throw new Error(
-      'The embedded development database was reached in a deployed environment. ' +
-        'Deployed environments require a networked Postgres and real migrations (Phase 19).',
-    );
+    /*
+     * Deployed: a networked PostgreSQL, reached through whatever pooler is in front of it.
+     *
+     * On Cloudflare that is Hyperdrive, which presents an ordinary connection string — so nothing
+     * here names Cloudflare, and moving to a different pooler or host is a configuration change.
+     *
+     * There is deliberately no schema bootstrap on this path. `rebuildSchema` destroys data, and the
+     * fingerprint check below refuses to serve rather than repairing: a deployed database whose shape
+     * is not the one this build expects is a migration that has not run, and the correct response is
+     * to stop, not to guess (KI-026).
+     */
+    const connectionString = process.env.DATABASE_URL;
+
+    if (connectionString === undefined || connectionString.trim() === '') {
+      throw new Error(
+        'DATABASE_URL is not set. A deployed environment requires a networked PostgreSQL; ' +
+          'see docs/CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md.',
+      );
+    }
+
+    const { db: pooled } = connect({ connectionString });
+
+    const deployedFingerprint = await readSchemaFingerprintFrom(pooled);
+
+    if (deployedFingerprint !== SCHEMA_FINGERPRINT) {
+      throw new Error(
+        `The database schema does not match this build. Expected ${SCHEMA_FINGERPRINT}, ` +
+          `found ${deployedFingerprint ?? 'no fingerprint at all'}. A migration has not run, or ran ` +
+          'against a different database. Refusing to serve rather than guessing — see ' +
+          'docs/MIGRATION_POLICY.md.',
+      );
+    }
+
+    cache.pooled = true;
+    return pooled;
   }
+
+  cache.pooled = false;
 
   const client = new PGlite(DEV_DATA_DIR);
   const db = drizzle(client, { schema });
@@ -116,9 +183,15 @@ export async function getDatabase(): Promise<DatabaseHandle> {
  * KI-013, logged at Phase 0 as an accepted limitation of PGlite — it just arrived earlier than
  * expected, in the application rather than in the tests.
  *
- * Every database operation therefore queues behind the previous one. That is a real throughput
- * ceiling and it is fine: this path is only ever used in development and test. Deployed environments
- * connect to a networked Postgres with a proper pool, where the queue does not apply.
+ * **This is now a connection-level concern only.** It used to do double duty: PGlite's single
+ * connection *and* tenant isolation, because `SET ROLE` and the tenant setting were session state and
+ * the mutex was what stopped two requests interleaving inside somebody else's scope. That second job
+ * has moved to `applyTenantScope`, which is transaction-local and therefore safe under any pooler
+ * (KI-049).
+ *
+ * Keeping it is still correct here and only here: two concurrent transactions on one PGlite
+ * connection would conflict. `withPooledTenant` — the deployed path — does not serialise, because a
+ * pool hands out a connection per transaction and serialising would throw that away.
  */
 let queue: Promise<unknown> = Promise.resolve();
 
@@ -130,39 +203,43 @@ export function serialised<T>(fn: () => Promise<T>): Promise<T> {
   return result;
 }
 
-/** The database handle, with all access serialised. Use this from request handlers. */
+/**
+ * Whether operations must queue.
+ *
+ * True for PGlite, which has one connection. False for a pool, where serialising would hand back the
+ * throughput the pool exists to provide — and where it would also be *misleading*, because the mutex
+ * used to be part of the tenant isolation story and no longer is (KI-049).
+ */
+function mustSerialise(): boolean {
+  return cache.pooled !== true;
+}
+
+/** The database handle. Serialised on the development path only. Use this from request handlers. */
 export async function withDatabase<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
   const db = await getDatabase();
-  return serialised(() => fn(db));
+  return mustSerialise() ? serialised(() => fn(db)) : fn(db);
 }
 
 /**
  * Run a callback inside a tenant scope.
  *
- * Sets the application role and the tenant session variable, exactly as the isolation tests do.
- * `SET ROLE` is what makes row-level security apply at all — a superuser bypasses every policy
- * unconditionally, which is finding SEC-001 in `docs/SECURITY.md`.
+ * One transaction, with the role and the tenant setting both transaction-local. Everything the
+ * callback does runs on the transaction handle, not on the database handle — a query issued against
+ * `db` here would run outside the scope, under the owner role, and see every tenant's rows.
+ *
+ * The serialisation is PGlite's single connection, not the isolation: see the note above and KI-049.
  */
 export async function withTenant<T>(
   organizationId: string,
-  fn: (db: DatabaseHandle) => Promise<T>,
+  fn: (tx: TenantScope) => Promise<T>,
 ): Promise<T> {
   const db = await getDatabase();
 
-  // The whole scope is serialised: `SET ROLE` and the tenant setting are connection state, so an
-  // interleaved request would run under another tenant's scope. On a single-connection database
-  // that is not a theoretical risk.
-  return serialised(async () => {
-    await db.execute(sql`SET ROLE ${sql.raw(APP_ROLE)}`);
-    await db.execute(
-      sql`SELECT set_config('app.current_organization_id', ${organizationId}, false)`,
-    );
+  const scope = (): Promise<T> =>
+    db.transaction(async (tx) => {
+      await applyTenantScope(tx, organizationId);
+      return fn(tx);
+    });
 
-    try {
-      return await fn(db);
-    } finally {
-      await db.execute(sql`SELECT set_config('app.current_organization_id', '', false)`);
-      await db.execute(sql`RESET ROLE`);
-    }
-  });
+  return mustSerialise() ? serialised(scope) : scope();
 }

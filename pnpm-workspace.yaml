@@ -8,3 +8,9 @@ packages:
 # decision to run third-party code at install time.
 allowBuilds:
   esbuild: true
+  # workerd ships a prebuilt binary fetched by its install script. Without it wrangler cannot run a
+  # Worker locally, which is how the Cloudflare build is verified before it reaches an account.
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@cloudflare/workers-types@5.20260901.1'

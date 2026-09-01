@@ -1,0 +1,106 @@
+# Cloudflare Workers configuration for the Next.js application.
+#
+# Built by `@opennextjs/cloudflare`, which compiles the Next.js server into a Worker. Not Pages:
+# every route in the production build is `ƒ (Dynamic)` and the application uses server actions
+# throughout, so there is no static surface for Pages and the Edge runtime cannot supply the
+# `node:crypto` imports this codebase depends on.
+#
+# See docs/CLOUDFLARE_DEPLOYMENT_ARCHITECTURE.md for why each binding is here.
+#
+# IDs below are placeholders. They are filled by `wrangler hyperdrive create`, `wrangler r2 bucket
+# create` and `wrangler queues create` against a real account — see §8 of the runbook for the exact
+# commands, including the one flag that is a security decision rather than a preference.
+
+name = "govintel-web"
+main = ".open-next/worker.js"
+
+# Pinned rather than floating. A compatibility date is the contract for how the runtime behaves, and
+# letting it drift means the runtime can change under a build that was verified against a different
+# one.
+compatibility_date = "2026-08-01"
+
+# Required. Three modules import `node:crypto` — the schema fingerprint, baseline checksums and
+# correlation ids. Rewriting them to WebCrypto would turn synchronous calls into asynchronous ones
+# through the whole versioning and baseline path for no benefit.
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[observability]
+enabled = true
+
+# ---------------------------------------------------------------------------
+# PostgreSQL, through Hyperdrive
+# ---------------------------------------------------------------------------
+#
+# Hyperdrive pools connections for a runtime that cannot hold a pool itself, and presents an ordinary
+# Postgres connection string — which is why nothing in the application knows Cloudflare is here.
+#
+# **Query caching must be disabled**, and it is not a setting in this file: it is a property of the
+# Hyperdrive configuration, set when it is created.
+#
+#     wrangler hyperdrive create govintel-staging \
+#       --connection-string="postgres://..." \
+#       --caching-disabled
+#
+# The reason is KI-050. Hyperdrive's cache is keyed on the query and its parameters, and under
+# row-level security two tenants issue byte-identical queries while being entitled to different rows
+# — the discriminating input is `app.current_organization_id`, which is connection state rather than
+# a parameter. A cache that cannot see it would serve one tenant's rows to another.
+# Local development uses an environment variable rather than a connection string in this file:
+#
+#   WRANGLER_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgres://...
+#
+# The obvious alternative is `localConnectionString` here. The secret scanner rejected it, and it was
+# right to: a DSN with inline credentials committed to the repository is the exact shape that later
+# gets edited to hold a real one, and by then it is in the history.
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "REPLACE_WITH_HYPERDRIVE_ID"
+
+# ---------------------------------------------------------------------------
+# Evidence storage
+# ---------------------------------------------------------------------------
+#
+# R2 rather than a public bucket. §35 requires randomised keys, no user-controlled object paths,
+# signed download URLs and content-disposition safety; a private bucket with presigned reads gives all
+# four. There is deliberately no public bucket binding — adding one would make every other control
+# decorative.
+[[r2_buckets]]
+binding = "EVIDENCE"
+bucket_name = "govintel-evidence"
+
+# ---------------------------------------------------------------------------
+# Outbox queue — producer side
+# ---------------------------------------------------------------------------
+#
+# The web Worker only ever *writes outbox rows*, inside the transaction carrying the domain change
+# (§47). It does not publish to the queue directly: publishing from a request would reintroduce the
+# race the outbox exists to remove, where the change commits, the publish does not, and nothing fails.
+#
+# The binding is here for the one legitimate case — nudging the drainer after a change, so a side
+# effect does not wait for the next cron tick. The drainer remains the only thing that decides what
+# has actually been published.
+[[queues.producers]]
+binding = "OUTBOX_NUDGE"
+queue = "govintel-outbox"
+
+[env.staging]
+name = "govintel-web-staging"
+
+[env.staging.vars]
+APP_ENV = "staging"
+
+[env.production]
+name = "govintel-web-production"
+
+[env.production.vars]
+APP_ENV = "production"
+
+# Secrets are never in this file. Set with `wrangler secret put`:
+#   DATABASE_URL      — the Hyperdrive connection string
+#   SESSION_SECRET    — guest session signing key
+#   APP_VERSION       — set by CI at build time
+#   APP_COMMIT        — set by CI at build time

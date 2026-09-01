@@ -27,6 +27,21 @@ export default defineConfig({
           // Runs first: pure-Node suites are fast, so a domain regression surfaces in seconds
           // rather than behind the slow jsdom project.
           sequence: { groupOrder: 0 },
+          /*
+           * Hooks get 30s, not the default 10s.
+           *
+           * Several suites build a PGlite instance in `beforeAll`, which is real Postgres and costs
+           * roughly a second and a half on its own (KI-017). Run in parallel across six database
+           * files, that comfortably exceeds ten seconds — and the failure is a hook timeout in
+           * *other* files, which reads as those files being broken rather than as the pool being
+           * busy.
+           *
+           * The previous value was not chosen to match the cost of the operation; it was the default,
+           * and it happened to be enough for five files. Raising it is correcting a limit tuned to a
+           * file count rather than weakening a check: nothing here waits on a condition that might
+           * never arrive, it waits on a database that is definitely being built.
+           */
+          hookTimeout: 30_000,
           include: ['packages/*/test/**/*.test.ts', 'apps/*/test/design/**/*.test.ts'],
           exclude: ['**/node_modules/**', '**/dist/**', '**/.next/**', 'e2e/**'],
         },

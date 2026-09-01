@@ -501,6 +501,8 @@ export const outboxEvents = pgTable(
     idempotencyKey: text('idempotency_key'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     processedAt: timestamp('processed_at', { withTimezone: true }),
+    /** When the drainer last claimed this row. Claims expire so a dead drainer cannot strand one. */
+    lastAttemptedAt: timestamp('last_attempted_at', { withTimezone: true }),
     attemptCount: integer('attempt_count').notNull().default(0),
     lastErrorCode: text('last_error_code'),
     /** Terminal failure: surfaced rather than retried forever (gap-spec §46). */
