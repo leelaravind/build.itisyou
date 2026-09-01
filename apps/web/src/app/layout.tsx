@@ -3,8 +3,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'GovIntel Platform',
-    template: '%s · GovIntel Platform',
+    default: 'build.itisyou',
+    template: '%s · build.itisyou',
   },
   description:
     'Software project intelligence, planning, execution and governance. Deterministic by design.',

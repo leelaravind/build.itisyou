@@ -72,7 +72,7 @@ export function AppShell({
           href="/"
           className="truncate font-sans text-headline-sm text-primary transition-colors hover:text-primary-fixed"
         >
-          GovIntel Platform
+          build.itisyou
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-xs md:flex">

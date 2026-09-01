@@ -26,8 +26,8 @@ export function PublicHeader() {
         {/* The wordmark is hidden below `sm` so the header fits a 320px viewport without the nav
             overflowing (WCAG 1.4.10 Reflow). The icon keeps the link identifiable, and the
             accessible name is preserved for assistive technology. */}
-        <span className="hidden sm:inline">GovIntel Platform</span>
-        <span className="sr-only sm:hidden">GovIntel Platform</span>
+        <span className="hidden sm:inline">build.itisyou</span>
+        <span className="sr-only sm:hidden">build.itisyou</span>
       </Link>
 
       {/*

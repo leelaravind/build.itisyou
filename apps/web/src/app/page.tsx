@@ -28,7 +28,7 @@ export const metadata = {
 
 const PIPELINE_STAGES = [
   { id: 'vision', label: 'Vision Input', icon: 'lightbulb', progress: 100, active: false },
-  { id: 'core', label: 'GovIntel Core', icon: 'memory', progress: 55, active: true },
+  { id: 'core', label: 'Engine Core', icon: 'memory', progress: 55, active: true },
   { id: 'deploy', label: 'Deployment', icon: 'rocket_launch', progress: 20, active: false },
 ] as const;
 
