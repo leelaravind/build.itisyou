@@ -11,6 +11,39 @@ well-tested libraries. What is largely missing is the product on top of them: th
 transitions, no evidence or approval is ever recorded, no audit event is ever written, and there is
 no sign-in. Those are not polish items — they are the difference between a platform and a demo.
 
+## What has changed since this was written
+
+Added 2026-09-02. The register below is the state on 2026-09-01 and is **not** edited in place, so
+that what was found stays readable next to what was done about it. Everything here was measured or
+verified end to end, not judged.
+
+| Finding | State |
+|---|---|
+| The lifecycle never transitions | Closed. 12 states, central validation, 166 golden tests over all 144 ordered pairs |
+| Nothing creates an EVIDENCE or APPROVAL node, so 16 blocking criteria can never pass | Closed. Both are recorded, and artefacts now go to R2 with §35's controls applied to the real bytes |
+| No audit event is ever written | Closed. Written in the same transaction as the change described |
+| There is no sign-in at all | Closed bar the provider account. Five journeys run against a mock issuer in a separate process |
+| 73 rule-emitted gate criteria are computed and discarded | Closed. 51–62 per project now reach the gates, measured; they differ by project type, which was the point |
+| An accepted AI import never reaches the project model | Closed. Claims become intake answers with their provenance intact; the project type is set when there is none |
+| Rate limiting has no test | Closed. 18 tests including a drift guard that reads the call sites out of the source |
+| Every requirement breaks at WORK | Closed. The decomposition is stored with the plan: 21 nodes → 119, measured |
+| Every requirement breaks at TEST | **Open, and now the first broken hop.** See `docs/HANDOFF.md` — it needs one decision about verification methods, stated there rather than guessed at |
+| 139 emitted requirements discarded | Open. Same decision as the TEST hop; they are the same gap seen from two ends |
+| The change surface has no request, approval or apply path | Open. The engine is complete and unused; it needs a table, which is a schema change |
+
+Three defects that were **not** in the register, each found by running something rather than reading it:
+
+- **Every icon on all 50 screens rendered as its own name.** There was no font. The header brand mark
+  read `settings_suggest`. Icons are `aria-hidden`, so axe stepped over them, and the E2E suites
+  address the product by role and text — which stayed correct.
+- **Signing in emptied the product.** The tenant resolver read only the guest cookie, so a signed-in
+  caller resolved to no tenant and row-level security returned nothing.
+- **The evidence page became a wall.** Making the rule criteria satisfiable took it from 17 forms to
+  64 — 504 controls, 731 KB, measured — and Firefox's accessibility-tree walker overflowed its stack
+  on it.
+
+---
+
 ## How to read the counts
 
 | | |
