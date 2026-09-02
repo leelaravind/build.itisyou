@@ -1,0 +1,189 @@
+# HANDOFF
+
+Written 2026-09-02, ~02:15 London, mid-session. Read this first if you are picking the work up.
+
+It exists because the scheduled wake-up that resumes this work is **session-only** — it lives in
+memory and dies with the session. This file does not.
+
+---
+
+## What this is
+
+`build.itisyou` — a software project intelligence, planning, execution and governance platform.
+Two authoritative contracts: `MASTER_IMPLEMENTATION_PLAN.md` and
+`IMPLEMENTATION_GAP_CLOSURE_SPEC.md`. Everything traces to one of them.
+
+The owner's standing instruction is to work the implementation register top-down, autonomously,
+without stopping for progress updates or routine decisions, and **not to deploy production** until
+the V1 gates can genuinely pass. `build.itisyou.app` stays dark; staging is where things are verified.
+
+---
+
+## The register
+
+`docs/V1_GAP_REGISTER.md` — 118 gaps that survived adversarial verification, 29 of them blockers.
+Produced by a 186-agent analysis of both contracts against the implementation, each gap found by one
+agent and then verified by a second prompted to refute it.
+
+Owner's priority order:
+
+1. lifecycle transitions — **done**
+2. evidence and approvals — **done**
+3. audit writes — **done** (landed with the lifecycle, because a transition is what needs one)
+4. authentication and identity — **largely done**, see below
+5. remaining gate-blocking implementations
+6. remaining V1 register items by dependency and risk
+
+---
+
+## What is done and verified on staging
+
+| | |
+|---|---|
+| Lifecycle | 12 states, 12 edges, central validation, 166 golden tests covering all 144 ordered pairs |
+| Evidence and approvals | 17 MANUAL gate criteria are now satisfiable; they were permanently unsatisfiable before |
+| Audit | The first audit events this system has ever written, in the same transaction as the change |
+| Concurrency | `projects.version` increments; `WHERE version = ?` guards transitions |
+| Sessions | gap-spec §6.3's eight controls, idle + absolute timeouts, server-side revocation |
+| OIDC | Provider-neutral, PKCE/state/nonce, 19 attack-case tests against a real generated key pair |
+| CSRF | Explicit origin check; verified live — cross-origin 403, no-origin 403, same-origin 200 |
+| Cookie signing | `SESSION_SECRET` now signs what its comment always claimed it signed |
+
+Roughly 2,230 unit tests. Full E2E runs against the deployed staging environment.
+
+---
+
+## Immediate next tasks
+
+1. **Two CI-only E2E failures from the new surfaces.**
+   - `getByRole('alert')` strict-mode violation in `e2e/lifecycle.spec.ts` — the evidence page
+     renders two alerts. Scope the locator.
+   - **13 axe violations on the plan page**, almost certainly from the new `LifecycleCard` or the
+     evidence page. Fix the markup, not the test. Accessibility is a hard bar here.
+2. Continue the register top-down.
+
+---
+
+## How to build and deploy
+
+**The build does not work on Windows.** The OpenNext bundler creates symlinks and Windows refuses
+them without Developer Mode (KI-051). It runs under WSL against an isolated tree:
+
+```bash
+wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; export CI=true; \
+  export XDG_CONFIG_HOME=/mnt/c/Users/kplee/AppData/Roaming/xdg.config; \
+  export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
+  cd /mnt/e/Project/build && tar --exclude=node_modules --exclude=.git --exclude=.next \
+    --exclude=.open-next --exclude=.pglite --exclude=dist --exclude=coverage \
+    --exclude=test-results --exclude=playwright-report --exclude='.env*' --exclude=.wrangler \
+    --exclude='.claude/skills' -cf - . | (cd /mnt/e/Project/build-wsl && tar -xf -) && \
+  cd /mnt/e/Project/build-wsl && pnpm install --frozen-lockfile && \
+  pnpm --filter=@govintel/web cf:build && cd apps/web && \
+  npx wrangler deploy --env staging --var APP_VERSION:0.1.0-staging.\$SHA --var APP_COMMIT:\$SHA"
+```
+
+Traps, each of which cost real time:
+
+- **`build-wsl` is a separate tree on E:, deliberately.** Running Linux pnpm against the Windows
+  `node_modules` rewrites its links and breaks the Windows checkout. It lives on E: because **C: has
+  only ~13 GB free** and the owner asked that it not be filled.
+- **`opennextjs-cloudflare deploy` does not rebuild.** Syncing source and deploying ships the
+  *previous* bundle, silently and successfully. Always `cf:build` first. This happened: a deploy
+  reported commit `1180375` while serving an older bundle, because `APP_VERSION` is a label passed by
+  hand and not evidence of what is inside.
+- **`ERR_SQLITE_ERROR: disk I/O error`** during the nested pnpm install means the pnpm store index is
+  corrupt: `rm -f /home/kplee/.pnpm-store/v11/index.db*` and retry. It rebuilds.
+- The deploy path needs `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` even though it
+  never connects to it. Give it a **credential-free placeholder**, never a real DSN.
+
+---
+
+## Infrastructure
+
+| Resource | Value |
+|---|---|
+| GitHub | `leelaravind/build.itisyou`, private. CI runs on every push |
+| Cloudflare account | `a0365f6aaae5fe32b3fdb8fa08fd000c`; zone `itisyou.app` active |
+| Staging Worker | `govintel-web-staging` → https://govintel-web-staging.kpleelaaravind.workers.dev |
+| Staging Hyperdrive | `fa38480586e44cebab20fe15ac2121a0`, **caching disabled** |
+| Production Worker | `build-itisyou-web-production`, configured for `build.itisyou.app`, **not deployed** |
+| Production Hyperdrive | `c697deee65094523ac73e77dc94b9fd0`, **caching disabled** |
+| Neon staging | project `tiny-mode-81422275`, branch `staging` |
+| Neon production | project `fragrant-fog-40333847`, branch `production` |
+| Outbox Worker | `govintel-worker-staging`, cron every minute (drain + guest expiry purge) |
+
+**Caching is disabled on both Hyperdrive configs as a security control, not a preference** — see
+SEC-003b and KI-050. Under RLS two tenants issue byte-identical queries.
+
+### Credentials
+
+Live DSNs and the app-role passwords are in this session's scratchpad, which is temporary:
+
+```
+C:\Users\kplee\AppData\Local\Temp\claude\E--Project-build\<session>\scratchpad\
+  staging.dsn  staging-app.dsn  staging-app.pw
+  prod-owner.dsn  prod-app.dsn  prod-app.pw
+```
+
+If they are gone, regenerate: `npx neon connection-string <branch> --project-id <id>` for the owner
+DSN, then `APP_ROLE_PASSWORD=<new> pnpm migrate` to reset the application role's password.
+
+---
+
+## Two things about the database that are easy to get wrong
+
+**The application connects as `govintel_app`, never as the owner.** Neon's `neondb_owner` is not a
+superuser and *does* have `rolbypassrls`, so connecting as it makes every RLS policy inert while
+leaving it visible in the catalogue. `assertRestrictedRole` refuses to serve as a role that can
+bypass, own or disable RLS. A role created through the **Neon API** comes back with `BYPASSRLS`,
+`CREATEDB` and `CREATEROLE` whatever you asked for — it must be created in SQL by the owner, which
+`scripts/migrate.mjs` does.
+
+**Guest sessions own an organisation.** Guest projects used to carry a NULL tenant key, which put
+every guest row outside every RLS policy — unreadable and unwritable under a restricted role, and
+protected by nothing while running as the owner. See KI-063.
+
+### Changing the schema
+
+The fingerprint changes, and the application refuses to serve against a schema it does not recognise.
+Rebuild both databases:
+
+```bash
+# as owner: DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO neondb_owner;
+APP_ROLE_PASSWORD=<pw> DATABASE_URL_UNPOOLED=<owner dsn> pnpm migrate
+APP_ENV=staging DATABASE_URL_UNPOOLED=<app dsn> pnpm verify:isolation   # must be 6/6
+```
+
+---
+
+## Gates
+
+```
+pnpm format:check  pnpm lint  pnpm typecheck  pnpm docs:check
+pnpm test          pnpm scan:secrets  pnpm audit:deps  pnpm build
+pnpm verify:isolation                      # needs APP_ENV=staging and a real pooled Postgres
+E2E_BASE_URL=<staging url> pnpm test:e2e   # the one that counts
+```
+
+CI runs all of them. The isolation gate runs in CI against `postgres:17-alpine`, **as the restricted
+role** — connected as a superuser it would pass for the wrong reason.
+
+---
+
+## House rules that are not negotiable
+
+- Never weaken a valid failing test to make a gate green. Fix the root cause.
+- An unmeasured claim is a hypothesis. Measure it, then say the number.
+- Verify the verifier: plant the defect, watch the test fail, restore.
+- If a document asserts something, check it is still true. Two were found asserting things that were
+  not — a threat model citing tests in a package that does not exist, and a runbook describing a mock
+  OIDC provider that was never built.
+- Do not deploy production. The owner approved it only once the V1 gates can genuinely pass, and they
+  cannot yet.
+
+## The one owner-only action outstanding
+
+Registering a redirect URI with a real OIDC provider, to obtain a `client_id` and `client_secret`.
+Everything else in the sign-in flow is built and tested. Set `OIDC_ISSUER`, `OIDC_CLIENT_ID`,
+`OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and it works; unset, the login page says so and
+guest-first carries the whole product.
