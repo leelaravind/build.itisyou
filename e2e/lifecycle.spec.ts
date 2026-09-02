@@ -50,6 +50,26 @@ async function requireFileStorage(page: Page): Promise<void> {
   }
 }
 
+/**
+ * Open the evidence form for the first criterion that needs one.
+ *
+ * The page renders one form at a time, reached by a link. Every criterion used to carry its own,
+ * which was tolerable at seventeen criteria and became 64 forms and 504 controls once the rules
+ * could add their own — a page nobody reads, and one Firefox's accessibility-tree walker overflowed
+ * its stack on.
+ */
+async function openEvidenceForm(page: Page) {
+  await page
+    .getByRole('link', { name: /record evidence/i })
+    .first()
+    .click();
+
+  return page
+    .locator('form')
+    .filter({ has: page.getByLabel(/what is it/i) })
+    .first();
+}
+
 test.describe('the lifecycle', () => {
   test.beforeEach(({ browserName, baseURL }) => {
     test.skip(webkitOverInsecureOrigin(browserName, baseURL), MOBILE_SAFARI_NOTE);
@@ -155,10 +175,7 @@ test.describe('evidence and approvals', () => {
 
     await expect(page.getByText(/^0 of \d+ recorded/)).toBeVisible();
 
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
+    const form = await openEvidenceForm(page);
     await form.getByLabel(/what is it/i).fill('Rollback rehearsed and timed');
     await form.getByLabel(/or state what was done/i).fill('Rolled back in staging, 13 seconds.');
     await form.getByRole('button', { name: /record it/i }).click();
@@ -173,10 +190,7 @@ test.describe('evidence and approvals', () => {
     const projectId = await startProject(page, 'A CRM for a plumbing firm.');
     await page.goto(`/plan/${projectId}/evidence`);
 
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
+    const form = await openEvidenceForm(page);
     await form.getByLabel(/what is it/i).fill('Nothing behind this');
     await form.getByRole('button', { name: /record it/i }).click();
 
@@ -194,6 +208,11 @@ test.describe('evidence and approvals', () => {
   test('refuses an approval with no reason', async ({ page }) => {
     const projectId = await startProject(page, 'A quoting tool for a roofing company.');
     await page.goto(`/plan/${projectId}/evidence`);
+
+    await page
+      .getByRole('link', { name: /record an approval/i })
+      .first()
+      .click();
 
     const approval = page
       .locator('form')
@@ -215,12 +234,8 @@ test.describe('evidence and approvals', () => {
      */
     const projectId = await startProject(page, 'A payments platform needing a rollback record.');
     await page.goto(`/plan/${projectId}/evidence`);
+    const form = await openEvidenceForm(page);
     await requireFileStorage(page);
-
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
 
     await form.getByLabel(/what is it/i).fill('Rollback rehearsal log');
     await form.getByLabel(/attach the artefact/i).setInputFiles({
@@ -270,12 +285,8 @@ test.describe('evidence and approvals', () => {
      */
     const projectId = await startProject(page, 'A tool someone will try to upload a page to.');
     await page.goto(`/plan/${projectId}/evidence`);
+    const form = await openEvidenceForm(page);
     await requireFileStorage(page);
-
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
 
     await form.getByLabel(/what is it/i).fill('Not really a report');
     await form.getByLabel(/attach the artefact/i).setInputFiles({
@@ -295,12 +306,8 @@ test.describe('evidence and approvals', () => {
       'A project whose evidence is commercially sensitive.',
     );
     await page.goto(`/plan/${projectId}/evidence`);
+    const form = await openEvidenceForm(page);
     await requireFileStorage(page);
-
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
     await form.getByLabel(/what is it/i).fill('Sensitive attachment');
     await form.getByLabel(/attach the artefact/i).setInputFiles({
       name: 'secret.txt',
@@ -337,10 +344,7 @@ test.describe('evidence and approvals', () => {
     const projectId = await startProject(page, 'A logistics tool for a courier firm.');
 
     await page.goto(`/plan/${projectId}/evidence`);
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
+    const form = await openEvidenceForm(page);
     await form.getByLabel(/what is it/i).fill('Survives regeneration');
     await form.getByLabel(/or state what was done/i).fill('Recorded before the plan was rebuilt.');
     await form.getByRole('button', { name: /record it/i }).click();
@@ -359,10 +363,7 @@ test.describe('evidence and approvals', () => {
     const projectId = await startProject(page, 'A tool holding commercially sensitive pricing.');
 
     await page.goto(`/plan/${projectId}/evidence`);
-    const form = page
-      .locator('form')
-      .filter({ has: page.getByLabel(/what is it/i) })
-      .first();
+    const form = await openEvidenceForm(page);
     await form.getByLabel(/what is it/i).fill('Confidential rollback plan');
     await form
       .getByLabel(/or state what was done/i)

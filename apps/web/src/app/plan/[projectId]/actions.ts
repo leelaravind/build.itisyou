@@ -12,6 +12,8 @@ import { generateProject } from '@govintel/twin/generate';
 import { rowsFromGraph } from '@govintel/twin/repository';
 import { withDatabase } from '../../../lib/server/database.ts';
 import { accessibleProject } from '../../../lib/server/project-access.ts';
+import { evaluateForProject } from '../../../lib/server/project-rules.ts';
+import { decompose, mergeIntoGraph } from '@govintel/execution/decompose';
 import { mayOpen } from '../../../lib/server/project-access.ts';
 
 /**
@@ -77,19 +79,56 @@ async function generate(projectId: string): Promise<Outcome> {
       lastUpdatedAt: row.updatedAt.toISOString(),
     }));
 
+    const generatedAt = new Date().toISOString();
+
     const result = generateProject({
       projectId,
       projectName: project.name,
       ...(project.summary === null ? {} : { projectSummary: project.summary }),
       intake,
       // The clock lives here, not in the generator. That separation is what makes the golden-fixture
-      // test possible at all.
-      at: new Date().toISOString(),
+      // test possible at all. Read once and shared with the decomposition, so the two halves of one
+      // plan do not disagree about when it was made.
+      at: generatedAt,
+    });
+
+    /*
+     * The decomposition is part of the plan, and is stored with it.
+     *
+     * It was computed on the work page and thrown away on every render, so the *stored* graph had no
+     * WORK nodes at all — and the traceability chain the contract requires (Requirement →
+     * Architecture → Work → Implementation → Test → Evidence → Release) broke at the third hop for
+     * every real project. "Fully traced: 0" was not a finding about the project; it was a finding
+     * about what had been written down. The Phase-10 gate that verifies the chain passed because it
+     * ran against hand-built fixtures containing the work items the product never persisted.
+     *
+     * The same function, on the same inputs, produces the same result the work page produces — it is
+     * deterministic, which is why storing it changes what is *recorded* rather than what is true.
+     */
+    const { evaluation } = evaluateForProject({
+      projectId,
+      projectType: project.projectType,
+      lifecycleState: project.lifecycleState,
+      intake,
+      graph: result.graph,
+    });
+
+    const teamSize = numberAnswer(intake, 'team.size');
+
+    const decomposition = decompose({
+      projectId,
+      graph: result.graph,
+      emissions: evaluation.emissions,
+      ...(teamSize === undefined ? {} : { teamSize }),
+      at: generatedAt,
     });
 
     // Throws if the graph would violate an invariant, before anything is written. A cycle stored and
     // reported afterwards is a cycle some other request has already planned against.
-    const writable = rowsFromGraph(result.graph, project.organizationId);
+    const writable = rowsFromGraph(
+      mergeIntoGraph(result.graph, decomposition),
+      project.organizationId,
+    );
 
     await withDatabase(async (db) => {
       /*
@@ -112,6 +151,7 @@ async function generate(projectId: string): Promise<Outcome> {
       generatorVersion: result.generatorVersion,
       nodes: writable.nodes.length,
       edges: writable.edges.length,
+      workItems: decomposition.nodes.length,
       assumptions: result.assumptions.length,
       unknowns: result.unknowns.length,
     });
@@ -121,6 +161,12 @@ async function generate(projectId: string): Promise<Outcome> {
     logger.error('failed to generate project plan', { err: toAppError(error), projectId });
     return { kind: 'redirect', to: `/plan/${projectId}?error=failed` };
   }
+}
+
+/** A numeric intake answer, or `undefined`. Mirrors the work page, which asks the same question. */
+function numberAnswer(intake: readonly IntakeField[], fieldId: string): number | undefined {
+  const value = intake.find((field) => field.fieldId === fieldId)?.value;
+  return typeof value === 'number' ? value : undefined;
 }
 
 /** Read the stored graph for a project the caller may open. Returns null when they may not. */

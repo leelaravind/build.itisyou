@@ -199,6 +199,31 @@ test.describe('a well-formed response', () => {
     await expect(page.getByRole('button', { name: /accept these findings/i })).toHaveCount(0);
   });
 
+  test('applies the answers to the project, and says which', async ({ page }) => {
+    /*
+     * The end of the loop, and until now it did not exist.
+     *
+     * Accepting set a status column and wrote nothing else: the user ran the prompt somewhere,
+     * pasted the answer back, watched it validate, pressed accept -- and every open question was
+     * still open. Asserted here through the intake screen, because "did the project change" is the
+     * only question worth asking and the database is not where the user looks.
+     */
+    const projectId = await reachImportScreen(page);
+    await paste(page, goodResponse());
+    await page.getByRole('button', { name: /accept these findings/i }).click();
+
+    const status = page.getByRole('status');
+    await expect(status).toContainText(/applied to your project/i);
+    await expect(status).toContainText(/2 answers were filled in/i);
+
+    // What it declined to apply is stated rather than dropped: those are the engine's to produce.
+    await expect(status).toContainText(/were not applied/i);
+
+    // And the answers are actually there, on the screen the user reads.
+    await page.goto(`/intake/${projectId}`);
+    await expect(page.getByText(/GBP/).first()).toBeVisible();
+  });
+
   test('can be discarded, keeping nothing', async ({ page }) => {
     await reachImportScreen(page);
     await paste(page, goodResponse());

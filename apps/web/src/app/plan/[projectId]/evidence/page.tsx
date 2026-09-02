@@ -50,10 +50,15 @@ export default async function EvidencePage({
   searchParams,
 }: {
   params: Promise<{ projectId: string }>;
-  searchParams: Promise<{ error?: string; recorded?: string; approved?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    recorded?: string;
+    approved?: string;
+    record?: string;
+  }>;
 }) {
   const { projectId } = await params;
-  const { error, recorded, approved } = await searchParams;
+  const { error, recorded, approved, record: recording } = await searchParams;
 
   const status = await evidenceStatus(projectId);
   if (status === null) notFound();
@@ -155,14 +160,39 @@ export default async function EvidencePage({
                     </span>
                   </div>
 
-                  {criterion.satisfied ? null : criterion.evidencePurpose === null ? (
-                    <ApprovalForm projectId={projectId} />
+                  {/*
+                    One form at a time, opened by a link.
+                    
+                    Every criterion used to carry its own form. That was tolerable at seventeen and
+                    became a wall at sixty-four: 64 forms, 504 controls and 731 KB of HTML on one
+                    screen, which is not a page anybody reads — and Firefox's accessibility-tree
+                    walker overflowed its stack on it, which is how the size was noticed.
+                    
+                    A link with a query parameter rather than a disclosure element: `<details>` keeps
+                    every form in the document and only hides it, so the page stays the same size and
+                    stays as hard to navigate with assistive technology. This renders one.
+                  */}
+                  {criterion.satisfied ? null : recording === criterion.key ? (
+                    criterion.evidencePurpose === null ? (
+                      <ApprovalForm projectId={projectId} />
+                    ) : (
+                      <EvidenceForm
+                        projectId={projectId}
+                        purpose={criterion.evidencePurpose}
+                        storageAvailable={status.storageAvailable}
+                      />
+                    )
                   ) : (
-                    <EvidenceForm
-                      projectId={projectId}
-                      purpose={criterion.evidencePurpose}
-                      storageAvailable={status.storageAvailable}
-                    />
+                    <Link
+                      href={`/plan/${projectId}/evidence?record=${encodeURIComponent(criterion.key)}#${criterion.key}`}
+                      id={criterion.key}
+                      className="inline-flex w-fit items-center gap-xs rounded border border-outline-variant px-md py-sm font-sans text-body-sm text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    >
+                      <MaterialIcon name="add" size={16} />
+                      {criterion.evidencePurpose === null
+                        ? 'Record an approval'
+                        : 'Record evidence'}
+                    </Link>
                   )}
                 </li>
               ))}
