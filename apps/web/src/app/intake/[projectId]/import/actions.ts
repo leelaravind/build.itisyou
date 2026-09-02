@@ -8,18 +8,33 @@ import { toAppError } from '@govintel/shared/errors';
 import { aiImports, intakeAnswers, projects } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { validateImport } from '@govintel/interchange/validate';
+import { interchangeResponseSchema } from '@govintel/interchange/schema';
+import {
+  planMaterialisation,
+  stateFor,
+  type Materialisation,
+} from '@govintel/interchange/materialise';
+import { FIELD_DEFINITIONS, findField } from '@govintel/intake/fields';
+import { projectTypeEnum } from '@govintel/db/schema';
 import { currentVersions } from '@govintel/interchange/versions';
 import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
+import { recordAudit } from '../../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../../lib/server/rate-limit.ts';
 import { mayOpen } from '../../../../lib/server/project-access.ts';
 
 /**
- * Store a pasted response and validate it.
+ * Store a pasted response, validate it, and apply it once a person accepts it.
  *
- * Contract: gap-spec §12.3 — the canonical project is not touched. The paste is stored verbatim in
- * `ai_imports`, validated, and the result recorded. Applying anything is a separate, explicit act on
- * a later screen.
+ * Contract: gap-spec §12.3 — submitting does not touch the canonical project. The paste is stored
+ * verbatim in `ai_imports`, validated, and the result recorded. **Accepting is the separate,
+ * explicit act §12.3 requires**, and it is the point at which the project changes.
+ *
+ * That last part is new. Accepting used to set `state = 'ACCEPTED'` and write nothing else, so the
+ * loop was open at the end that matters: the user ran the prompt somewhere, pasted the answer back,
+ * watched it validate, pressed accept, and every open question was still open. `applyResponse` below
+ * closes it — under rules that live in `@govintel/interchange/materialise` because deciding what an
+ * external response may change is worth testing without a database.
  *
  * No `redirect()` inside a `try`: Next implements it by throwing, so a `catch` would swallow the
  * navigation. Same lesson as the intake action.
@@ -169,6 +184,118 @@ export async function rejectImport(formData: FormData): Promise<void> {
   redirect(`/intake/${projectId}/import/${importId}?decided=rejected`);
 }
 
+/**
+ * Apply an accepted response to the project.
+ *
+ * Runs inside the caller's transaction, alongside the state change it belongs to.
+ *
+ * Only claims and the project type are written. Requirements, risks and phases are counted and
+ * reported rather than stored: `generatePlan` deletes and rewrites every twin node it owns, so
+ * requirements written as nodes would disappear the next time somebody rebuilt the plan — which
+ * reads as data loss rather than as design. That is the same reason evidence lives in its own table.
+ */
+async function applyResponse(
+  db: Parameters<Parameters<typeof withDatabase>[0]>[0],
+  input: {
+    project: typeof projects.$inferSelect;
+    importId: string;
+    record: typeof aiImports.$inferSelect;
+  },
+): Promise<Materialisation | undefined> {
+  const parsed = interchangeResponseSchema.safeParse(input.record.response);
+
+  /*
+   * Re-parsed rather than trusted. The row was validated when it arrived, but it has been sitting in
+   * a database since, and the schema it was validated against may have moved. A stored payload is
+   * input like any other.
+   */
+  if (!parsed.success) {
+    logger.warn('accepted import could not be re-parsed; nothing applied', {
+      importId: input.importId,
+    });
+    return undefined;
+  }
+
+  const existing = await db
+    .select({ fieldId: intakeAnswers.fieldId, state: intakeAnswers.state })
+    .from(intakeAnswers)
+    .where(eq(intakeAnswers.projectId, input.project.id));
+
+  const plan = planMaterialisation({
+    response: parsed.data,
+    existing,
+    knownFieldIds: new Set(FIELD_DEFINITIONS.map((field) => field.id)),
+    currentProjectType: input.project.projectType,
+    supportedProjectTypes: new Set(projectTypeEnum.enumValues),
+  });
+
+  for (const answer of plan.answers) {
+    const definition = findField(answer.fieldId);
+    if (definition === undefined) continue;
+
+    const row = {
+      organizationId: input.project.organizationId,
+      projectId: input.project.id,
+      fieldId: answer.fieldId,
+      category: definition.category,
+      value: answer.value,
+      state: stateFor(answer.provenance),
+      provenance: answer.provenance,
+      confidence: answer.confidence,
+      note: answer.note ?? null,
+      updatedAt: new Date(),
+    };
+
+    const [current] = await db
+      .select({ id: intakeAnswers.id })
+      .from(intakeAnswers)
+      .where(
+        and(
+          eq(intakeAnswers.projectId, input.project.id),
+          eq(intakeAnswers.fieldId, answer.fieldId),
+        ),
+      );
+
+    if (current === undefined) await db.insert(intakeAnswers).values(row);
+    else await db.update(intakeAnswers).set(row).where(eq(intakeAnswers.id, current.id));
+  }
+
+  if (plan.projectType !== undefined) {
+    await db
+      .update(projects)
+      .set({
+        projectType: plan.projectType as (typeof projectTypeEnum.enumValues)[number],
+        updatedAt: new Date(),
+      })
+      // Guarded on the type still being UNKNOWN, so a concurrent answer wins rather than being
+      // overwritten by a model.
+      .where(and(eq(projects.id, input.project.id), eq(projects.projectType, 'UNKNOWN')));
+  }
+
+  await recordAudit(db, {
+    organizationId: input.project.organizationId,
+    projectId: input.project.id,
+    action: 'AI_IMPORT_APPLIED',
+    entityType: 'AI_IMPORT',
+    entityId: input.importId,
+    ...(input.project.guestSessionId === null
+      ? {}
+      : { actorGuestSessionId: input.project.guestSessionId }),
+    summary: {
+      /*
+       * Which fields, not what they now say. The values are the user's project data; the audit log
+       * outlives most of it and needs to record that an external response was applied and to what.
+       */
+      fieldsApplied: plan.answers.map((a) => a.fieldId),
+      claimsSkipped: plan.skipped,
+      projectTypeSet: plan.projectType ?? null,
+      notApplied: plan.notApplied,
+    },
+  });
+
+  return plan;
+}
+
 async function decide(
   projectId: string,
   importId: string,
@@ -213,14 +340,37 @@ async function decide(
       }
     }
 
-    await withDatabase((db) =>
-      db
+    /*
+     * The decision and its consequences are one transaction.
+     *
+     * Accepting used to write nothing but the status column: the user copied a prompt out of the
+     * platform, ran it, pasted the answer back, watched it validate, pressed accept -- and every
+     * open question was still open. The loop was open at the end that matters.
+     *
+     * Applying the answers in a separate write would allow the state to say ACCEPTED while nothing
+     * was applied, which is the same failure with an audit trail claiming otherwise.
+     */
+    const applied = await withDatabase(async (db) => {
+      const updated = await db
         .update(aiImports)
         .set({ state: decision, updatedAt: new Date() })
-        .where(and(eq(aiImports.id, importId), eq(aiImports.state, 'VALIDATED'))),
-    );
+        .where(and(eq(aiImports.id, importId), eq(aiImports.state, 'VALIDATED')))
+        .returning({ id: aiImports.id });
 
-    logger.info('ai import decided', { projectId, importId, decision });
+      // Somebody else decided it between the read and the write. Their decision stands.
+      if (updated.length === 0 || decision !== 'ACCEPTED') return undefined;
+
+      return applyResponse(db, { project, importId, record });
+    });
+
+    logger.info('ai import decided', {
+      projectId,
+      importId,
+      decision,
+      answersApplied: applied?.answers.length ?? 0,
+      claimsSkipped: applied?.skipped.length ?? 0,
+    });
+
     return { kind: 'ok', importId };
   } catch (error) {
     logger.error('failed to decide ai import', { err: toAppError(error), importId });

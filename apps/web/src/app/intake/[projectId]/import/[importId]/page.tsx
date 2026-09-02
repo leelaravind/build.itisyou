@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { and, eq } from 'drizzle-orm';
-import { aiImports, projects } from '@govintel/db/schema';
+import { and, desc, eq } from 'drizzle-orm';
+import { aiImports, auditEvents, projects } from '@govintel/db/schema';
 import { findField } from '@govintel/intake/fields';
 import { VALIDATION_STATUSES } from '@govintel/interchange/validate';
 import type {
@@ -112,6 +112,42 @@ function isValidationStatus(value: string): value is ValidationStatus {
   return (VALIDATION_STATUSES as readonly string[]).includes(value);
 }
 
+/**
+ * What accepting this import actually changed, from the audit log.
+ *
+ * The audit event is the record of what happened; deriving it a second time from the current state
+ * would be a different question with a similar-looking answer. Absent for an import that was
+ * rejected, or accepted before this was written.
+ */
+async function appliedSummary(projectId: string, importId: string) {
+  const [event] = await withDatabase((db) =>
+    db
+      .select({ summary: auditEvents.summary })
+      .from(auditEvents)
+      .where(
+        and(
+          eq(auditEvents.projectId, projectId),
+          eq(auditEvents.entityId, importId),
+          eq(auditEvents.action, 'AI_IMPORT_APPLIED'),
+        ),
+      )
+      .orderBy(desc(auditEvents.occurredAt))
+      .limit(1),
+  );
+
+  const summary = event?.summary;
+  if (summary === undefined || summary === null) return undefined;
+
+  const notApplied = (summary.notApplied ?? {}) as Record<string, number>;
+
+  return {
+    fieldsApplied: (summary.fieldsApplied ?? []) as string[],
+    claimsSkipped: (summary.claimsSkipped ?? []) as { fieldId: string; reason: string }[],
+    projectTypeSet: (summary.projectTypeSet ?? null) as string | null,
+    notAppliedTotal: Object.values(notApplied).reduce((sum, n) => sum + n, 0),
+  };
+}
+
 export default async function ImportResultPage({
   params,
   searchParams,
@@ -139,6 +175,8 @@ export default async function ImportResultPage({
 
   const validation = record.validation as unknown as ValidationResult | null;
   if (validation === null) notFound();
+
+  const applied = await appliedSummary(projectId, importId);
 
   // `?? undefined`, not a bare cast: an absent jsonb column reads back as `null`, and the optional
   // property this feeds expects `undefined`. The cast alone typechecked and then threw at runtime on
@@ -211,15 +249,55 @@ export default async function ImportResultPage({
         </section>
 
         {decided !== undefined ? (
-          <p
+          <div
             role="status"
-            className="flex items-center gap-sm rounded border border-outline-variant bg-surface-container-low p-md font-sans text-body-sm text-on-surface"
+            className="flex flex-col gap-xs rounded border border-outline-variant bg-surface-container-low p-md font-sans text-body-sm text-on-surface"
           >
-            <MaterialIcon name={decided === 'accepted' ? 'check_circle' : 'block'} size={18} />
-            {decided === 'accepted'
-              ? 'Accepted. These findings are kept alongside your project and marked as coming from an AI.'
-              : 'Discarded. Nothing from this response was kept.'}
-          </p>
+            <p className="flex items-center gap-sm">
+              <MaterialIcon name={decided === 'accepted' ? 'check_circle' : 'block'} size={18} />
+              {decided === 'accepted'
+                ? 'Accepted and applied to your project.'
+                : 'Discarded. Nothing from this response was kept.'}
+            </p>
+
+            {/*
+              What actually changed, counted.
+              
+              The message used to say the findings were "kept alongside your project", which was true
+              in the sense that the row was still there and false in every sense the user cared
+              about: nothing was applied. Read from the audit event, because that is the record of
+              what happened rather than a second account of it.
+            */}
+            {decided === 'accepted' && applied !== undefined ? (
+              <ul className="flex flex-col gap-xs pl-lg">
+                <li>
+                  {applied.fieldsApplied.length === 0
+                    ? 'No answers changed — every field it spoke to was already answered.'
+                    : `${String(applied.fieldsApplied.length)} ${applied.fieldsApplied.length === 1 ? 'answer was' : 'answers were'} filled in, marked as coming from an AI.`}
+                </li>
+                {applied.projectTypeSet === null ? null : (
+                  <li>
+                    The project type was set to{' '}
+                    {applied.projectTypeSet.toLowerCase().replace(/_/g, ' ')}, which turns on the
+                    rules specific to it.
+                  </li>
+                )}
+                {applied.claimsSkipped.length === 0 ? null : (
+                  <li>
+                    {String(applied.claimsSkipped.length)} left alone, because you had already
+                    answered those.
+                  </li>
+                )}
+                {applied.notAppliedTotal === 0 ? null : (
+                  <li>
+                    {String(applied.notAppliedTotal)} suggested requirements, risks and phases were
+                    not applied: those are produced by the planning engine from your answers, and
+                    would be overwritten the next time the plan is built.
+                  </li>
+                )}
+              </ul>
+            ) : null}
+          </div>
         ) : null}
 
         {error === 'not-valid' ? (

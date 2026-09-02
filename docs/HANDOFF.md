@@ -104,14 +104,14 @@ icon that does not exist fails to compile. `pnpm icons --check` runs inside `doc
 **The build does not work on Windows.** The OpenNext bundler creates symlinks and Windows refuses
 them without Developer Mode (KI-051). It runs under WSL against an isolated tree:
 
-`XDG_CONFIG_HOME` points at `/home/kplee/xdg.config`, which holds a copy of wrangler's credentials
-**and** a copy of `~/.config/pnpm/config.yaml`. Both are needed, for the reason in the traps below —
-one command, sync through deploy:
+`XDG_CONFIG_HOME` points at `/mnt/c/Users/kplee/AppData/Roaming/xdg.config`, which holds wrangler's
+real credentials **and**, now, a copy of `~/.config/pnpm/config.yaml`. Both are needed, for the
+reason in the traps below — one command, sync through deploy:
 
 ```bash
 SHA=$(git rev-parse --short HEAD)
 wsl -e bash -c "export PATH=/home/kplee/.nvm/versions/node/v22.23.2/bin:\$PATH; export CI=true; \
-  export XDG_CONFIG_HOME=/home/kplee/xdg.config; \
+  export XDG_CONFIG_HOME=/mnt/c/Users/kplee/AppData/Roaming/xdg.config; \
   export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
   cd /mnt/e/Project/build && tar --exclude=node_modules --exclude=.git --exclude=.next \
     --exclude=.open-next --exclude=.pglite --exclude=dist --exclude=coverage \
@@ -151,6 +151,10 @@ Traps, each of which cost real time:
   So the fix is not to avoid `XDG_CONFIG_HOME` — the deploy needs it for wrangler's credentials — but
   to make sure whatever it points at contains **both** `.wrangler/` and `pnpm/config.yaml`. Check it
   in one command: `pnpm store path` must print a path under `/home`, never under `/mnt`.
+
+  Copying `.wrangler/` somewhere else does not work — its OAuth token is refreshed in place, so a
+  copy goes stale and wrangler asks for `CLOUDFLARE_API_TOKEN`. Copy the *pnpm config* to where the
+  credentials already are, not the other way round.
 
   Recorded twice before with the wrong cause: first as a corrupt store index to delete, then as
   "never set `XDG_CONFIG_HOME`". Both were places the symptom appeared.

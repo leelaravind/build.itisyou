@@ -9,7 +9,8 @@
     "./prompt": "./src/prompt.ts",
     "./redaction": "./src/redaction.ts",
     "./validate": "./src/validate.ts",
-    "./staging": "./src/staging.ts"
+    "./staging": "./src/staging.ts",
+    "./materialise": "./src/materialise.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
