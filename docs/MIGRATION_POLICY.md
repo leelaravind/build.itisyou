@@ -30,6 +30,24 @@ The sequence for anything destructive is therefore three deployments, not one:
 Each step is separately reversible, which is the whole reason for the shape. A single migration that
 renames a column has one recovery path, and it is a restore.
 
+### What "safe against running code" does not cover here
+
+§1 is true of the database and not currently true of this application. `packages/db` carries a
+SHA-256 fingerprint of the DDL and **refuses to serve against a shape it does not recognise** — an
+exact match, not a compatibility check. So even a purely additive migration is a hard cutover for
+this system: the moment it lands, the running release stops serving until a build that knows the new
+fingerprint is deployed.
+
+That is a deliberate trade and worth stating rather than discovering. The fingerprint turns "the
+database is a different shape" from a silent wrong answer into a refusal, which is the right default
+for a system that has no migrations. Now that written migrations exist, it is also the thing
+preventing the rolling deployment §1 describes.
+
+Closing it properly means the fingerprint check accepting a *set* of known-compatible shapes rather
+than one — the current shape and any it can be migrated from — so a release can serve both across a
+deployment. Until then: **migrate and deploy back to back, and expect a gap**. Build the artefact
+first, so the gap is the length of a deploy rather than the length of a build.
+
 ## 2. Backfill separately
 
 A migration that rewrites a million rows holds locks for as long as it takes, and the deployment that
