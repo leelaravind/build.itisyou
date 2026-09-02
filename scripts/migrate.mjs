@@ -28,6 +28,7 @@
  */
 
 import postgres from 'postgres';
+import { SCHEMA_MIGRATIONS_DDL, pathBetween } from './migrations.mjs';
 import {
   APP_ROLE,
   APPLICATION_ROLE_DDL,
@@ -258,7 +259,63 @@ try {
     process.exit(0);
   }
 
+  /*
+   * A shape somebody has written a migration for.
+   *
+   * The refusal below stays exactly as it was for everything else. What changed is that "I added a
+   * table" now has an answer other than "drop the database and rebuild it" — which was the only
+   * available answer before, and is the outcome the refusal exists to prevent.
+   */
   if (existing !== null) {
+    const steps = pathBetween(existing, SCHEMA_FINGERPRINT);
+
+    if (steps !== null && steps.length > 0) {
+      if (check) {
+        console.log(
+          `
+--check: ${String(steps.length)} written migration(s) would be applied: ` +
+            steps.map((step) => step.id).join(', '),
+        );
+        process.exit(1);
+      }
+
+      console.log(`
+${String(steps.length)} written migration(s) to apply:`);
+      for (const step of steps) console.log(`  ${step.id} — ${step.why}`);
+
+      /*
+       * One transaction for the chain and its bookkeeping.
+       *
+       * Postgres has transactional DDL, so a failure part way leaves the database on the fingerprint
+       * it started from rather than on a shape that is between two known ones — which is precisely
+       * the state nothing knows how to migrate.
+       */
+      await sql.begin(async (tx) => {
+        await tx.unsafe(SCHEMA_MIGRATIONS_DDL);
+
+        for (const step of steps) {
+          await tx.unsafe(step.sql);
+          await tx`
+            INSERT INTO schema_migrations (id, from_fingerprint, to_fingerprint, why, rollback)
+            VALUES (${step.id}, ${step.from}, ${step.to}, ${step.why}, ${step.rollback})
+          `;
+        }
+
+        await tx`INSERT INTO schema_meta (fingerprint) VALUES (${SCHEMA_FINGERPRINT})`;
+      });
+
+      // Privileges do not follow a new table automatically, and a table the application cannot read
+      // is the same outage as a table that is not there.
+      await applyGrants(sql);
+      await setApplicationPassword(sql);
+      await grantMembership(sql);
+
+      console.log(`
+Applied. schema_meta now records ${SCHEMA_FINGERPRINT}.`);
+      await sql.end();
+      process.exit(0);
+    }
+
     /*
      * A schema is here and it is not this one. This is the case the file header refuses.
      *

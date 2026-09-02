@@ -77,6 +77,8 @@ export default tseslint.config(
       // A standalone process the end-to-end suite starts. Not compiled by any build, for the same
       // reason `neon.ts` is not: it belongs to a tool rather than to the product.
       'e2e/support/*.mjs',
+      // Types for a runner that has to work under bare `node`, so the module itself stays plain JS.
+      'scripts/*.d.mts',
     ],
     extends: [tseslint.configs.disableTypeChecked],
   },
@@ -89,6 +91,8 @@ export default tseslint.config(
       // A standalone process the end-to-end suite starts. Not compiled by any build, for the same
       // reason `neon.ts` is not: it belongs to a tool rather than to the product.
       'e2e/support/*.mjs',
+      // Types for a runner that has to work under bare `node`, so the module itself stays plain JS.
+      'scripts/*.d.mts',
     ],
     rules: { 'no-console': 'off' },
   },
