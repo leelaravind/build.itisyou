@@ -48,8 +48,12 @@ Owner's priority order:
 | OIDC | Provider-neutral, PKCE/state/nonce, 19 attack-case tests against a real generated key pair |
 | CSRF | Explicit origin check; verified live — cross-origin 403, no-origin 403, same-origin 200 |
 | Cookie signing | `SESSION_SECRET` now signs what its comment always claimed it signed |
+| Rules → gates | 51–62 rule-emitted criteria per project now reach the gates; before, all 73 were discarded |
+| Evidence artefacts | R2 upload and download, §35's controls applied to the real bytes, hash recorded |
+| Sign-in, end to end | Five journeys against a mock issuer run as a separate process |
+| Rate limiting | Eighteen tests, including a drift guard that reads the call sites out of the source |
 
-Roughly 2,230 unit tests. Full E2E runs against the deployed staging environment.
+Roughly 2,290 unit tests. Full E2E runs against the deployed staging environment.
 
 ---
 
@@ -57,6 +61,23 @@ Roughly 2,230 unit tests. Full E2E runs against the deployed staging environment
 
 Continue the register top-down. The two CI-only failures from the new surfaces are closed: the
 `getByRole('alert')` strict-mode violation and all 13 axe violations on the plan page.
+
+### Three things found after the register was written
+
+None was in it, and each was found by running something rather than by reading anything.
+
+**Signing in emptied the product.** `currentOrganizationId` read only the guest cookie, so a
+signed-in caller resolved to no tenant and row-level security returned nothing — every project,
+answer, twin node and evidence row invisible. Twelve ownership checks separately refused any project
+that had been *claimed*, because claiming sets `guest_session_id` to NULL. And a signed-in user could
+not start a project at all. All three are the same assumption: guest-first written as guest-only.
+Now one rule in `apps/web/src/lib/server/project-access.ts`.
+
+**The rules could not fail a gate.** The evaluator produced 73 gate criteria and every caller threw
+them away, so none of 287 rules could stop a project advancing. `gatesWith()` folds them in;
+`evaluateForProject` is the single place the engine is run.
+
+**No icon was rendering.** See below.
 
 ### The icons were never rendering
 
@@ -229,6 +250,11 @@ role** — connected as a superuser it would pass for the wrong reason.
 ## The one owner-only action outstanding
 
 Registering a redirect URI with a real OIDC provider, to obtain a `client_id` and `client_secret`.
-Everything else in the sign-in flow is built and tested. Set `OIDC_ISSUER`, `OIDC_CLIENT_ID`,
-`OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and it works; unset, the login page says so and
-guest-first carries the whole product.
+Everything else in the sign-in flow is built and **now verified end to end**: five journeys run
+against `e2e/support/mock-oidc.mjs`, a separate process speaking OIDC that the application cannot
+distinguish from a real one. Set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` and
+`OIDC_REDIRECT_URI` and it works; unset, the login page says so and guest-first carries the whole
+product.
+
+That verification is worth more than it looks: the journeys found three defects on their first run,
+each of them fatal to the signed-in experience and none visible to a unit test.
