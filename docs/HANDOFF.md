@@ -83,17 +83,30 @@ icon that does not exist fails to compile. `pnpm icons --check` runs inside `doc
 **The build does not work on Windows.** The OpenNext bundler creates symlinks and Windows refuses
 them without Developer Mode (KI-051). It runs under WSL against an isolated tree:
 
+Sync and build **without** `XDG_CONFIG_HOME`. Setting it here is what produces the SQLite
+"disk I/O error" described in the traps below:
+
 ```bash
 wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; export CI=true; \
-  export XDG_CONFIG_HOME=/mnt/c/Users/kplee/AppData/Roaming/xdg.config; \
   export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
   cd /mnt/e/Project/build && tar --exclude=node_modules --exclude=.git --exclude=.next \
     --exclude=.open-next --exclude=.pglite --exclude=dist --exclude=coverage \
     --exclude=test-results --exclude=playwright-report --exclude='.env*' --exclude=.wrangler \
     --exclude='.claude/skills' -cf - . | (cd /mnt/e/Project/build-wsl && tar -xf -) && \
   cd /mnt/e/Project/build-wsl && pnpm install --frozen-lockfile && \
-  pnpm --filter=@govintel/web cf:build && cd apps/web && \
-  npx wrangler deploy --env staging --var APP_VERSION:0.1.0-staging.\$SHA --var APP_COMMIT:\$SHA"
+  pnpm --filter=@govintel/web cf:build"
+```
+
+Then deploy. This is the one step that **does** need `XDG_CONFIG_HOME`, because that is where
+wrangler finds the Cloudflare credentials stored on the Windows side:
+
+```bash
+SHA=$(git rev-parse --short HEAD)
+wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; \
+  export XDG_CONFIG_HOME=/mnt/c/Users/kplee/AppData/Roaming/xdg.config; \
+  export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
+  cd /mnt/e/Project/build-wsl/apps/web && npx wrangler deploy --env staging \
+    --var APP_VERSION:0.1.0-staging.$SHA --var APP_COMMIT:$SHA"
 ```
 
 Traps, each of which cost real time:
