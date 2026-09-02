@@ -312,6 +312,22 @@ authority, and that is an owner action, not a drill result.
 | Rollback timing | A staging environment to drill in |
 | OIDC provider | **The one owner action.** The flow is implemented and tested — PKCE, state, nonce, discovery, signature/issuer/audience/expiry/nonce validation, sessions with §6.3's controls, guest-to-account conversion, sign-out. There is no mock provider *in the application*, deliberately — a sign-in bypass in the product is one misconfiguration from being reachable in a deployed environment. `e2e/support/mock-oidc.mjs` is a separate process speaking OIDC that the end-to-end suite starts, and five journeys run against it (this row previously claimed a mock existed when none did, and then that none existed at all). What remains is registering a redirect URI with a real provider to obtain a client id and secret; set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and sign-in works. Unset, the login page says so and guest-first carries the whole product. |
 
+### Measured response times, 2026-09-02
+
+Against deployed staging (Worker + Hyperdrive + Neon), three consecutive cold runs:
+
+| Action | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|
+| Generate the plan (rules, decomposition, write ~119 nodes) | 1749 ms | 1609 ms | 1790 ms |
+| Traceability page | 899 ms | 538 ms | 602 ms |
+| Work breakdown page | 888 ms | 727 ms | 917 ms |
+
+Taken because persisting the decomposition made plan generation do more work, and "it feels fine" is
+not evidence. Generation is the slowest thing a user can ask for and it is under two seconds.
+
+No target has been accepted against these, so they are measurements rather than a pass: §51's rule
+about proposed-and-unaccepted applies here too.
+
 ### What staging has already proved
 
 Not "the configuration parses" — the behaviour, end to end, against the real thing:

@@ -205,13 +205,25 @@ test.describe('a project belongs to one guest', () => {
     /*
      * Postgres raises on an invalid uuid literal rather than returning no rows, so an id that is not
      * a uuid used to reach the database and come back a 500. That is a distinguishable answer: it
-     * tells a prober that their id was rejected for its *shape* rather than for who owns it, and it
-     * turns a typo into an error page.
+     * tells a prober their id was rejected for its *shape* rather than for who owns it, and it turns
+     * a typo into an error page.
+     *
+     * 404 for anything that reaches the application. A traversal attempt may not get that far —
+     * Cloudflare's edge refuses `..%2F..%2Fetc%2Fpasswd` with a 400 before the Worker sees it, which
+     * is stronger, so that one is asserted as "refused and revealing nothing" rather than as a
+     * specific code the platform underneath us chooses.
      */
-    for (const id of ['not-a-uuid', '../../etc/passwd', '1 OR 1=1']) {
+    for (const id of ['not-a-uuid', '1 OR 1=1']) {
       const response = await page.goto(`/plan/${encodeURIComponent(id)}/work`);
       expect(response?.status(), id).toBe(404);
     }
+
+    const traversal = await page.goto(`/plan/${encodeURIComponent('../../etc/passwd')}/work`);
+    const status = traversal?.status() ?? 0;
+
+    // Never served, and never a server error — a 500 is the disclosure this is about.
+    expect(status, 'traversal').toBeGreaterThanOrEqual(400);
+    expect(status, 'traversal').toBeLessThan(500);
   });
 });
 
