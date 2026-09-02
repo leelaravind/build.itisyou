@@ -270,14 +270,32 @@ read alike, because the second is the one that gets quietly treated as the first
 
 | Target | Proposed | Basis |
 |---|---|---|
-| RPO — how much data may be lost | 15 minutes | Continuous archiving with a 15-minute cadence. Unverified until a restore is timed |
-| RTO — how long recovery may take | 4 hours | An estimate, not a measurement. Becomes a target when a drill produces a number |
+| RPO — how much data may be lost | 15 minutes | Neon's continuous archiving. Still unverified: a drill restoring to an *earlier* point has not been run, only a restore of the current state |
+| RTO — how long recovery may take | 4 hours | Was an estimate. A drill has now produced a number, below — the estimate was two orders of magnitude pessimistic, which is its own finding |
 
-Both are proposals until somebody with authority accepts them and a drill produces real figures.
-§51's own words: *"Initial V1 proposed targets must be explicitly accepted during deployment design."*
-Neither has been accepted, because deployment design needs the provider that has not been chosen.
+### The drill, 2026-09-02
 
-Recording them as targets now would be the fake precision the whole platform refuses.
+Run against Neon staging (`tiny-mode-81422275`), restoring branch `staging` to a new branch.
+
+| | |
+|---|---|
+| Time from initiating the restore to verified data | **30 seconds** (10:40:23Z → 10:40:53Z) |
+| Rows recovered | 2,557 projects, 28,601 twin nodes, 1,069 intake answers, 85 evidence records, 135 audit events |
+| Row counts against the source | Identical in every table checked |
+| Restricted application role | Present, and still `rolsuper=false`, `rolbypassrls=false`, `rolcreatedb=false`, `rolcreaterole=false` |
+| Row-level security | 12 tables, all `ENABLE`d **and** `FORCE`d, 12 policies — the full posture, not just the data |
+
+The role check is the part worth keeping. A restore that returns the rows but returns the application
+role with different attributes is a silent privilege escalation: the application would come back up,
+serve correctly, and have RLS inert underneath it. Verified rather than assumed.
+
+**What this drill does not cover, and should:** restoring to a point in time *before* a bad write
+(the RPO claim rests on that, and only a current-state restore has been timed); restoring the
+`SESSION_SECRET` and other deploy secrets; and recovering the R2 evidence bucket, which now holds
+artefacts and has no drill at all. Three named gaps rather than an unqualified "recovery works".
+
+Both targets remain **proposed and unaccepted** — §51 requires explicit acceptance by somebody with
+authority, and that is an owner action, not a drill result.
 
 ---
 
@@ -290,9 +308,9 @@ Recording them as targets now would be the fake precision the whole platform ref
 | `SESSION_SECRET` | Generated at deploy time; not sourced from anywhere, so not a blocker |
 | Production deployment | A passing staging gate |
 | The ten §15.9 production checks | A running production deployment |
-| RPO/RTO acceptance | A restore drill, which needs a real database |
+| RPO/RTO acceptance | An owner decision. The drill has been run and timed — see §7 |
 | Rollback timing | A staging environment to drill in |
-| OIDC provider | **The one owner action.** The flow is implemented and tested — PKCE, state, nonce, discovery, signature/issuer/audience/expiry/nonce validation, sessions with §6.3's controls, guest-to-account conversion, sign-out. There is **no local mock provider**, and this row previously claimed there was. What remains is registering a redirect URI with a real provider to obtain a client id and secret; set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and sign-in works. Unset, the login page says so and guest-first carries the whole product. |
+| OIDC provider | **The one owner action.** The flow is implemented and tested — PKCE, state, nonce, discovery, signature/issuer/audience/expiry/nonce validation, sessions with §6.3's controls, guest-to-account conversion, sign-out. There is no mock provider *in the application*, deliberately — a sign-in bypass in the product is one misconfiguration from being reachable in a deployed environment. `e2e/support/mock-oidc.mjs` is a separate process speaking OIDC that the end-to-end suite starts, and five journeys run against it (this row previously claimed a mock existed when none did, and then that none existed at all). What remains is registering a redirect URI with a real provider to obtain a client id and secret; set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and sign-in works. Unset, the login page says so and guest-first carries the whole product. |
 
 ### What staging has already proved
 
