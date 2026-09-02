@@ -29,7 +29,15 @@ import { CONFIDENCE_LEVELS, PROVENANCE_CLASSES } from '@govintel/shared/provenan
 export const FIELD_STATES = [
   /** The user was shown this value and explicitly affirmed it. */
   'CONFIRMED',
-  /** The user supplied it, but has not explicitly confirmed it. */
+  /**
+   * A value exists and is neither confirmed nor assumed.
+   *
+   * Usually the user typed it without explicitly affirming it. Since accepted external responses are
+   * materialised, it is also the state an AI claim lands in — the *provenance* is what distinguishes
+   * them (`USER_PROVIDED` against `EXTERNAL_SOURCE` or `EXTERNAL_AI_INFERENCE`), and provenance is
+   * the field designed to carry that. The state answers how settled a value is; provenance answers
+   * where it came from, and conflating the two is what would let an inference read as a fact.
+   */
   'PROVIDED',
   /** The system assumed it so planning could proceed. Always visible and challengeable. */
   'ASSUMED',
