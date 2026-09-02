@@ -53,6 +53,16 @@ const LIMITS: Readonly<Record<string, number>> = {
   // flood of them costs the provider as well as us.
   'auth-begin': 300,
   'auth-callback': 300,
+  /*
+   * Named by gap-spec §36, and reserved rather than active: neither a search nor an export surface
+   * exists yet, so neither has a call site. They stay because an action that reaches
+   * `checkRateLimit` with no entry here is *allowed*, and the moment those surfaces land is exactly
+   * when nobody will be thinking about this file.
+   *
+   * `rate-limit.test.ts` reads the call sites out of the source and checks each has a ceiling, so
+   * this list cannot fall behind the code. It does not, and cannot, check the reverse — that is what
+   * this comment is for.
+   */
   search: 3_000,
   export: 300,
 };
