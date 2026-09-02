@@ -27,8 +27,26 @@ import { expect, test, type Page } from '@playwright/test';
 
 const NO_PROVIDER = 'Runs against the local mock issuer; deployed environments have no provider.';
 
+const WEBKIT_OVER_HTTP =
+  'WebKit drops the session cookie over plain HTTP, so no session survives the callback (KI-024).';
+
 function deployed(baseURL: string | undefined): boolean {
   return !(baseURL ?? '').startsWith('http://localhost');
+}
+
+/**
+ * WebKit cannot hold a session cookie on an insecure origin.
+ *
+ * The same condition the rest of the suite skips on (KI-024): WebKit treats the cookie as
+ * `SameSite=None`, which requires `Secure`, which `http://` cannot satisfy — so it is dropped
+ * between the callback's redirect and the next request, and the user is never signed in.
+ *
+ * These journeys need both a local mock issuer *and* HTTPS, and nothing provides both at once: the
+ * local server is HTTP, and the deployed one has no mock provider. So on WebKit they cannot run
+ * anywhere, and saying that plainly is better than a guard that quietly never fires.
+ */
+function cannotHoldASession(browserName: string, baseURL: string | undefined): boolean {
+  return browserName === 'webkit' && (baseURL ?? '').startsWith('http://');
 }
 
 /** Sign in through the provider, as `email`. Returns once the application says it worked. */
@@ -46,8 +64,9 @@ async function signIn(page: Page, email: string): Promise<void> {
 }
 
 test.describe('signing in', () => {
-  test.beforeEach(({ baseURL }) => {
+  test.beforeEach(({ browserName, baseURL }) => {
     test.skip(deployed(baseURL), NO_PROVIDER);
+    test.skip(cannotHoldASession(browserName, baseURL), WEBKIT_OVER_HTTP);
   });
 
   test('completes the round trip and leaves the user signed in', async ({ page, baseURL }) => {
@@ -100,8 +119,9 @@ test.describe('signing in', () => {
 });
 
 test.describe('signing up to save work started as a guest', () => {
-  test.beforeEach(({ baseURL }) => {
+  test.beforeEach(({ browserName, baseURL }) => {
     test.skip(deployed(baseURL), NO_PROVIDER);
+    test.skip(cannotHoldASession(browserName, baseURL), WEBKIT_OVER_HTTP);
   });
 
   test('carries the guest’s project onto the new account', async ({ page }) => {
@@ -126,8 +146,9 @@ test.describe('signing up to save work started as a guest', () => {
 });
 
 test.describe('signing out', () => {
-  test.beforeEach(({ baseURL }) => {
+  test.beforeEach(({ browserName, baseURL }) => {
     test.skip(deployed(baseURL), NO_PROVIDER);
+    test.skip(cannotHoldASession(browserName, baseURL), WEBKIT_OVER_HTTP);
   });
 
   test('ends the session rather than only clearing the cookie', async ({ page, context }) => {
@@ -157,8 +178,9 @@ test.describe('signing out', () => {
 });
 
 test.describe('an account is its own tenant', () => {
-  test.beforeEach(({ baseURL }) => {
+  test.beforeEach(({ browserName, baseURL }) => {
     test.skip(deployed(baseURL), NO_PROVIDER);
+    test.skip(cannotHoldASession(browserName, baseURL), WEBKIT_OVER_HTTP);
   });
 
   test('a first sign-in creates an organisation to act in', async ({ page }) => {
