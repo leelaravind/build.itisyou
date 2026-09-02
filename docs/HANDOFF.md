@@ -79,6 +79,28 @@ them away, so none of 287 rules could stop a project advancing. `gatesWith()` fo
 
 **No icon was rendering.** See below.
 
+### The next task, and the decision it needs
+
+The traceability chain now breaks at **TEST**, one hop further along than it did. Measured on a real
+generated project: 21 stored nodes before the decomposition was persisted, 119 after, first broken
+hop moves WORK → TEST.
+
+TEST breaks because emitted tests carry a `verifies` key naming a rule-emitted *requirement*, and
+those are still discarded — all 139 of them. `decompose` never reads `emissions.requirements`.
+
+Materialising them is mechanically easy and has one real decision in it. `checkRequirement` — the
+platform's own standard, which it applies to the user's requirements — wants a **classified**
+verification method (`TEST` | `INSPECTION` | `ANALYSIS` | `DEMONSTRATION`). A rule's
+`emittedRequirements[].verification` is *prose*: "An automated authentication test pack covering
+each of those behaviours." Faithful to map that prose to one acceptance criterion; not faithful to
+infer the classification from it 139 times by keyword.
+
+So the choice is: extend `emittedRequirementSchema` with a required `verificationMethods` field and
+author it across the packs (139 judgements, each small), or accept that materialised requirements
+report `UNVERIFIABLE` on the traceability page until somebody does. The first is right. It was not
+done here rather than guessed at, because a verification method nobody chose is exactly the kind of
+plausible-looking metadata this platform exists to argue against.
+
 ### The icons were never rendering
 
 Worth knowing about because of how long it survived. `MaterialIcon` wrote the icon's *name* into a
