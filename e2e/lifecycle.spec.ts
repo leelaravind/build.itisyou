@@ -186,6 +186,124 @@ test.describe('evidence and approvals', () => {
     await expect(approval.getByLabel(/why you are approving/i)).toHaveAttribute('required', '');
   });
 
+  test('stores an uploaded artefact and serves it back with its hash', async ({ page }) => {
+    /*
+     * Contract: plan §3.2 (object storage, recorded hashes), gap-spec §35.
+     *
+     * The `EVIDENCE` bucket was provisioned and bound with nothing on either side of it since
+     * Phase 19 (KI-061), so evidence could only ever be a note or a link — an attestation. This
+     * journey is the difference: a file goes in, a hash is recorded, and the artefact comes back.
+     */
+    const projectId = await startProject(page, 'A payments platform needing a rollback record.');
+    await page.goto(`/plan/${projectId}/evidence`);
+
+    const form = page
+      .locator('form')
+      .filter({ has: page.getByLabel(/what is it/i) })
+      .first();
+
+    await form.getByLabel(/what is it/i).fill('Rollback rehearsal log');
+    await form.getByLabel(/attach the artefact/i).setInputFiles({
+      name: 'rollback.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('Rolled back in staging. 13 seconds. No data loss.'),
+    });
+    await form.getByRole('button', { name: /record it/i }).click();
+
+    await expect(page.getByRole('status')).toContainText(/evidence recorded/i);
+
+    const download = page.getByRole('link', { name: /download the artefact/i });
+    await expect(download).toBeVisible();
+
+    // The hash is shown next to it, because it is what lets somebody check the file they got is the
+    // file this record describes.
+    await expect(page.getByText(/^sha256 [0-9a-f]{12}/)).toBeVisible();
+
+    const href = await download.getAttribute('href');
+    const response = await page.request.get(href ?? '');
+
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toContain('13 seconds');
+
+    /*
+     * Served as a download, never rendered. `attachment` and `nosniff` together are what stop an
+     * allowlisted file being interpreted as something else by a browser that thinks it knows better.
+     */
+    expect(response.headers()['content-disposition']).toContain('attachment');
+    expect(response.headers()['content-disposition']).toContain('rollback-rehearsal-log.txt');
+    expect(response.headers()['x-content-type-options']).toBe('nosniff');
+
+    // SHA-256 of the uploaded bytes, computed independently of the application.
+    const digest = await page.evaluate(async (text) => {
+      const bytes = new TextEncoder().encode(text);
+      const hash = await crypto.subtle.digest('SHA-256', bytes);
+      return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
+    }, 'Rolled back in staging. 13 seconds. No data loss.');
+
+    expect(response.headers()['x-evidence-sha256']).toBe(digest);
+  });
+
+  test('refuses a file the allowlist does not accept', async ({ page }) => {
+    /*
+     * The control that matters most here. An upload surface that accepts HTML is stored cross-site
+     * scripting on your own origin, and the allowlist is deny-by-default for that reason.
+     */
+    const projectId = await startProject(page, 'A tool someone will try to upload a page to.');
+    await page.goto(`/plan/${projectId}/evidence`);
+
+    const form = page
+      .locator('form')
+      .filter({ has: page.getByLabel(/what is it/i) })
+      .first();
+
+    await form.getByLabel(/what is it/i).fill('Not really a report');
+    await form.getByLabel(/attach the artefact/i).setInputFiles({
+      name: 'report.html',
+      mimeType: 'text/html',
+      buffer: Buffer.from('<script>alert(1)</script>'),
+    });
+    await form.getByRole('button', { name: /record it/i }).click();
+
+    await expect(page.getByRole('alert').first()).toContainText(/not accepted/i);
+    await expect(page.getByRole('link', { name: /download the artefact/i })).toHaveCount(0);
+  });
+
+  test('a second guest cannot download the first guest’s artefact', async ({ page, browser }) => {
+    const projectId = await startProject(
+      page,
+      'A project whose evidence is commercially sensitive.',
+    );
+    await page.goto(`/plan/${projectId}/evidence`);
+
+    const form = page
+      .locator('form')
+      .filter({ has: page.getByLabel(/what is it/i) })
+      .first();
+    await form.getByLabel(/what is it/i).fill('Sensitive attachment');
+    await form.getByLabel(/attach the artefact/i).setInputFiles({
+      name: 'secret.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('Commercially sensitive pricing.'),
+    });
+    await form.getByRole('button', { name: /record it/i }).click();
+
+    const href = await page
+      .getByRole('link', { name: /download the artefact/i })
+      .getAttribute('href');
+
+    const other = await browser.newContext();
+    const otherPage = await other.newPage();
+    await startProject(otherPage, 'An unrelated project.');
+
+    const response = await otherPage.request.get(href ?? '');
+
+    // 404, never 403 — a 403 would confirm the artefact exists.
+    expect(response.status()).toBe(404);
+    expect(await response.text()).not.toContain('sensitive');
+
+    await other.close();
+  });
+
   test('evidence survives regenerating the plan', async ({ page }) => {
     /*
      * The reason evidence lives in its own table rather than as a twin node.

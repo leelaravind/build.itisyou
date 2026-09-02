@@ -97,17 +97,21 @@ wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; export CI=true;
   pnpm --filter=@govintel/web cf:build"
 ```
 
-Then deploy. This is the one step that **does** need `XDG_CONFIG_HOME`, because that is where
-wrangler finds the Cloudflare credentials stored on the Windows side:
+Then deploy. `XDG_CONFIG_HOME` points at `/home/kplee/xdg.config`, which holds a copy of wrangler's
+credentials **and** a copy of `~/.config/pnpm/config.yaml` — both are needed, for the reason in the
+traps below:
 
 ```bash
 SHA=$(git rev-parse --short HEAD)
-wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; \
-  export XDG_CONFIG_HOME=/mnt/c/Users/kplee/AppData/Roaming/xdg.config; \
+wsl -e bash -c "export PATH=/home/kplee/.nvm/versions/node/v22.23.2/bin:\$PATH; \
+  export XDG_CONFIG_HOME=/home/kplee/xdg.config; \
   export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
   cd /mnt/e/Project/build-wsl/apps/web && npx wrangler deploy --env staging \
     --var APP_VERSION:0.1.0-staging.$SHA --var APP_COMMIT:$SHA"
 ```
+
+Use `bash -c`, not `bash -lc`. The login shell fails to start a systemd user session and can hang for
+minutes before doing anything; sourcing nvm by path avoids it entirely.
 
 Traps, each of which cost real time:
 
@@ -118,12 +122,22 @@ Traps, each of which cost real time:
   *previous* bundle, silently and successfully. Always `cf:build` first. This happened: a deploy
   reported commit `1180375` while serving an older bundle, because `APP_VERSION` is a label passed by
   hand and not evidence of what is inside.
-- **`ERR_SQLITE_ERROR: disk I/O error`** during the nested pnpm install is caused by
-  `XDG_CONFIG_HOME` pointing at a path on `/mnt/c`. pnpm keeps a SQLite index under it, and SQLite
-  cannot take file locks over drvfs, so it reports a disk error on a disk with 953 GB free. **Do not
-  set `XDG_CONFIG_HOME` for `pnpm install` or `cf:build`** - only `wrangler deploy` needs it, to read
-  the Cloudflare credentials on the Windows side. This was previously recorded here as a corrupt
-  store index to be deleted; that is the symptom, and deleting it does not help.
+- **`ERR_SQLITE_ERROR: disk I/O error`** during any pnpm install, including the one
+  `opennextjs-cloudflare deploy` runs for itself. **The pnpm store has landed on drvfs**, where
+  SQLite cannot take file locks, so it reports a disk error on a filesystem with 953 GB free.
+
+  The repository's own `.npmrc` sets `store-dir=E:/.pnpm-store/v11` — deliberately, because C: has
+  only ~13 GB free — and under WSL that Windows path is `/mnt/e/...`, which is drvfs. What normally
+  saves you is `~/.config/pnpm/config.yaml` overriding it with `/home/kplee/.pnpm-store` on ext4.
+  Redirect `XDG_CONFIG_HOME` and pnpm stops finding that file, falls back to the repository's value,
+  and fails.
+
+  So the fix is not to avoid `XDG_CONFIG_HOME` — the deploy needs it for wrangler's credentials — but
+  to make sure whatever it points at contains **both** `.wrangler/` and `pnpm/config.yaml`. Check it
+  in one command: `pnpm store path` must print a path under `/home`, never under `/mnt`.
+
+  Recorded twice before with the wrong cause: first as a corrupt store index to delete, then as
+  "never set `XDG_CONFIG_HOME`". Both were places the symptom appeared.
 - The deploy path needs `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` even though it
   never connects to it. Give it a **credential-free placeholder**, never a real DSN.
 

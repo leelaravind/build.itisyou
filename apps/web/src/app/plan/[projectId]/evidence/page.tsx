@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EVIDENCE_TYPES } from '@govintel/governance/evidence';
+import { ALLOWED_MIME_TYPES } from '@govintel/governance/evidence';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { evidenceStatus, recordApproval, recordEvidence } from '../evidence-actions.ts';
@@ -28,7 +29,15 @@ const ERRORS: Record<string, string> = {
   'unknown-type': 'That is not a recognised kind of evidence.',
   'label-required':
     'Give the evidence a name, so somebody reading the gate later knows what it is.',
-  'substance-required': 'Add either a link or a note. Evidence that points at nothing is a claim.',
+  'substance-required': 'Add a file, a link or a note. Evidence that points at nothing is a claim.',
+  'file-type':
+    'That kind of file is not accepted. The list is deliberately short and excludes anything a browser would run — SVG included, which is an image to you and a script to a browser.',
+  'file-mismatch':
+    'The file’s name and its type disagree. That is not a combination that happens by accident.',
+  'file-too-large': 'That file is over the 25 MB limit.',
+  'file-empty': 'That file is empty. It would sit in the list looking exactly like evidence.',
+  'storage-unavailable':
+    'File storage is not configured on this deployment, so nothing was saved. Record a link or a note instead.',
   'unsafe-uri': 'Links must be http or https.',
   'reason-required':
     'An approval needs a reason. A signature with no argument behind it is not one.',
@@ -149,7 +158,11 @@ export default async function EvidencePage({
                   {criterion.satisfied ? null : criterion.evidencePurpose === null ? (
                     <ApprovalForm projectId={projectId} />
                   ) : (
-                    <EvidenceForm projectId={projectId} purpose={criterion.evidencePurpose} />
+                    <EvidenceForm
+                      projectId={projectId}
+                      purpose={criterion.evidencePurpose}
+                      storageAvailable={status.storageAvailable}
+                    />
                   )}
                 </li>
               ))}
@@ -185,6 +198,25 @@ export default async function EvidencePage({
                       {record.uri}
                     </a>
                   )}
+                  {record.storageKey === null ? null : (
+                    <div className="flex flex-wrap items-center gap-sm">
+                      <a
+                        href={`/plan/${projectId}/evidence/${record.id}/download`}
+                        className="inline-flex items-center gap-xs font-sans text-body-sm text-primary underline"
+                      >
+                        <MaterialIcon name="download" size={16} />
+                        Download the artefact
+                      </a>
+                      {/* The hash is shown, not hidden: it is what lets somebody check the file they
+                          downloaded is the one this record describes. Truncated for reading; the
+                          download carries the whole thing in a header. */}
+                      {record.contentHash === null ? null : (
+                        <span className="font-mono text-data-mono-sm text-on-surface-variant">
+                          sha256 {record.contentHash.slice(0, 12)}…
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -202,7 +234,15 @@ export default async function EvidencePage({
   );
 }
 
-function EvidenceForm({ projectId, purpose }: { projectId: string; purpose: string }) {
+function EvidenceForm({
+  projectId,
+  purpose,
+  storageAvailable,
+}: {
+  projectId: string;
+  purpose: string;
+  storageAvailable: boolean;
+}) {
   return (
     <form
       action={recordEvidence}
@@ -254,6 +294,30 @@ function EvidenceForm({ projectId, purpose }: { projectId: string; purpose: stri
           placeholder="https://…"
         />
       </div>
+
+      {!storageAvailable ? null : (
+        <div className="flex flex-col gap-xs">
+          <label htmlFor={`file-${purpose}`} className="font-sans text-body-sm text-on-surface">
+            Or attach the artefact (optional)
+          </label>
+          <input
+            id={`file-${purpose}`}
+            name="file"
+            type="file"
+            /*
+             * `accept` is a convenience for the file picker and nothing more -- the allowlist that
+             * matters is applied on the server against the real bytes, because this attribute is a
+             * suggestion to a dialog the user can ignore.
+             */
+            accept={Object.keys(ALLOWED_MIME_TYPES).join(',')}
+            className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface file:mr-sm file:rounded file:border-0 file:bg-surface-container-high file:px-sm file:py-xs file:font-sans file:text-body-sm file:text-on-surface"
+          />
+          <p className="font-sans text-body-sm text-on-surface-variant">
+            Up to 25 MB. Its hash is recorded, so the record can be told apart later from one whose
+            artefact was swapped.
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-xs">
         <label htmlFor={`note-${purpose}`} className="font-sans text-body-sm text-on-surface">

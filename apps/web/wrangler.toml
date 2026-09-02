@@ -160,6 +160,18 @@ enabled = true
 binding = "HYPERDRIVE"
 id = "c697deee65094523ac73e77dc94b9fd0"
 
+# Evidence storage, production. Same shape as staging and a separate bucket, because staging holds
+# test artefacts and production holds a customer's evidence — one bucket for both would put them in
+# the same blast radius for every operation performed on either.
+#
+# `evidence-storage.ts` treats a missing binding as a refusal the user can read rather than a silent
+# success, so a deployment without this would decline uploads instead of recording rows pointing at
+# objects that were never written. That is safe, but it is not the behaviour anybody wants in
+# production, which is why the binding is here before production is ever deployed.
+[[env.production.r2_buckets]]
+binding = "EVIDENCE"
+bucket_name = "govintel-evidence-production"
+
 # Secrets are never in this file. Set with `wrangler secret put --env staging`:
 #   SESSION_SECRET    — guest session signing key
 #   APP_VERSION       — set by CI at build time
