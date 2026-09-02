@@ -61,7 +61,9 @@ afterEach(() => {
 /** Serve the key set, and nothing else. Any other fetch is a mistake this test wants to see. */
 function stubJwks(): void {
   vi.stubGlobal('fetch', (input: RequestInfo | URL) => {
-    const url = String(input);
+    // `RequestInfo` includes `Request`, which stringifies to "[object Object]" — so read the URL
+    // rather than coercing the argument, or the match below silently never fires.
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     if (url === ENDPOINTS.jwksUri) {
       return Promise.resolve(new Response(JSON.stringify(jwks), { status: 200 }));
     }
