@@ -13,6 +13,8 @@ next-env.d.ts
 # Test / tooling output
 coverage/
 test-results/
+# Playwright output when a second run needs its own directory -- two runs cannot share one.
+test-results-*/
 playwright-report/
 blob-report/
 .playwright/
