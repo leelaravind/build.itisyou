@@ -53,7 +53,16 @@ Owner's priority order:
 | Sign-in, end to end | Five journeys against a mock issuer run as a separate process |
 | Rate limiting | Eighteen tests, including a drift guard that reads the call sites out of the source |
 
-Roughly 2,290 unit tests. Full E2E runs against the deployed staging environment.
+| Recovery | §51 drilled: restore verified in 30s with the restricted role and RLS posture intact |
+| Performance | Measured on staging: plan generation 1.6–1.8s, traceability and work under 1s |
+
+**2,305 unit tests. CI green: 831 E2E passed across all five browsers, 3 flaky, 0 failed.** Staging
+is deployed and verified at `c0f74de`.
+
+A note on running E2E against staging from this machine: four parallel Playwright workers plus a WSL
+build will produce a cluster of Firefox failures that all pass when re-run with `--workers=1`. CI is
+the authoritative signal; a local staging run that shows a spread of unrelated Firefox failures is
+usually saying something about the machine.
 
 ---
 
