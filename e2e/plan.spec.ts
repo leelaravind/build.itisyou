@@ -246,10 +246,28 @@ test.describe('a plan belongs to one project and one guest', () => {
     await attackerPage.goto(`/plan/${attackerId}`);
     await expect(attackerPage.getByRole('button', { name: /build the plan/i })).toBeVisible();
 
-    // Point their own form at the victim's project.
+    /*
+     * Point their own *generate* form at the victim's project.
+     *
+     * Scoped to the form that carries the submit button, not the first matching input on the page.
+     * The plan page grew a lifecycle card with its own hidden `projectId`, and an unscoped
+     * `querySelector` started rewriting that one instead — so the attack was aimed at a form the
+     * test never submitted, generation ran against the attacker's own project, and the test failed
+     * for a reason that had nothing to do with authorisation.
+     *
+     * Worth the care: a security test whose setup silently stops performing the attack still passes
+     * if the assertion is loose enough. This one failed loudly, which is the only reason it was
+     * noticed.
+     */
     await attackerPage.evaluate((id) => {
-      const input = document.querySelector<HTMLInputElement>('input[name="projectId"]');
-      if (input) input.value = id;
+      const button = [...document.querySelectorAll('button')].find((candidate) =>
+        /build the plan/i.test(candidate.textContent ?? ''),
+      );
+      const input = button
+        ?.closest('form')
+        ?.querySelector<HTMLInputElement>('input[name="projectId"]');
+      if (input === null || input === undefined) throw new Error('generate form not found');
+      input.value = id;
     }, victimId);
 
     await attackerPage.getByRole('button', { name: /build the plan/i }).click();

@@ -51,9 +51,21 @@ export function LifecycleCard({
 
       {/*
         The whole path, not just the current step.
+
         A stage means little on its own — "verifying" is only informative next to what came before it
-        and what is still ahead. Rendered as an ordered list so it reads correctly without CSS and to
-        a screen reader, which a row of styled divs would not.
+        and what is still ahead. An ordered list so it reads correctly without CSS and to a screen
+        reader, which a row of styled divs would not.
+
+        ## Two accessibility rules this had to be rewritten for
+
+        The first version faded future stages with `text-on-surface-variant/60`. Against this
+        surface that is roughly 2.6:1 — well under WCAG 2.2 AA's 4.5:1 — and there were eleven of
+        them, which is most of the thirteen axe violations the plan page picked up.
+
+        It also encoded the three states in colour alone, which fails 1.4.1 regardless of contrast.
+        A completed stage now carries a check mark and the current one is announced with
+        `aria-current="step"` as well as being filled, so the distinction survives greyscale, and
+        survives not seeing the page at all.
       */}
       <ol className="flex flex-wrap items-center gap-x-xs gap-y-sm">
         {LIFECYCLE_STATES.map((state, index) => {
@@ -65,18 +77,19 @@ export function LifecycleCard({
               <span
                 aria-current={here ? 'step' : undefined}
                 className={[
-                  'rounded-full px-sm py-[2px] font-sans text-body-sm',
+                  'inline-flex items-center gap-xs rounded-full px-sm py-[2px] font-sans text-body-sm',
                   here
                     ? 'bg-primary text-on-primary'
                     : done
                       ? 'bg-surface-container-high text-on-surface-variant'
-                      : 'text-on-surface-variant/60',
+                      : 'text-on-surface-variant',
                 ].join(' ')}
               >
+                {done ? <MaterialIcon name="check" size={14} aria-hidden /> : null}
                 {humanise(state)}
               </span>
               {index < LIFECYCLE_STATES.length - 1 ? (
-                <span aria-hidden className="text-on-surface-variant/30">
+                <span aria-hidden className="text-on-surface-variant">
                   ·
                 </span>
               ) : null}

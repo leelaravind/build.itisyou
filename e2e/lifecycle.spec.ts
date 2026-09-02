@@ -140,7 +140,14 @@ test.describe('evidence and approvals', () => {
     await form.getByLabel(/what is it/i).fill('Nothing behind this');
     await form.getByRole('button', { name: /record it/i }).click();
 
-    await expect(page.getByRole('alert')).toContainText(/link or a note/i);
+    /*
+     * Filtered rather than assumed to be the only alert.
+     *
+     * `getByRole('alert')` was a strict-mode violation in CI: the page can carry more than one at a
+     * time, and asserting on "the alert" makes the test depend on how many there happen to be
+     * rather than on the one it cares about.
+     */
+    await expect(page.getByRole('alert').filter({ hasText: /link or a note/i })).toBeVisible();
     await expect(page.getByText(/^0 of 17 recorded/)).toBeVisible();
   });
 
