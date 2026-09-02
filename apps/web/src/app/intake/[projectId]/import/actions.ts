@@ -21,7 +21,11 @@ import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { recordAudit } from '../../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../../lib/server/rate-limit.ts';
-import { mayOpen } from '../../../../lib/server/project-access.ts';
+import {
+  accessibleProject,
+  mayOpen,
+  type ProjectAccess,
+} from '../../../../lib/server/project-access.ts';
 
 /**
  * Store a pasted response, validate it, and apply it once a person accepts it.
@@ -154,9 +158,13 @@ async function store(projectId: string, raw: string): Promise<Outcome> {
  * with no stored validation. Untrusted content reaching the project should not depend on any single
  * one of those being correct.
  *
- * Materialisation into the Digital Twin lands in Phase 6, when the canonical entities exist. Until
- * then acceptance records the decision and stops — which is the honest state of the system rather
- * than a stub pretending to apply something.
+ * Accepting applies the response: claims become intake answers, and the project type is set when
+ * there is not one. That happens in the same transaction as the decision, because a state that says
+ * ACCEPTED while nothing was applied is the original defect with an audit trail claiming otherwise.
+ *
+ * Requirements, risks and phases are counted and reported rather than stored — they are the planning
+ * engine's to produce from the answers, and `generatePlan` rewrites every node it owns, so writing
+ * them here would produce items that vanish on the next rebuild.
  */
 export async function acceptImport(formData: FormData): Promise<void> {
   const projectId = readString(formData, 'projectId');
@@ -198,6 +206,7 @@ async function applyResponse(
   db: Parameters<Parameters<typeof withDatabase>[0]>[0],
   input: {
     project: typeof projects.$inferSelect;
+    access: ProjectAccess;
     importId: string;
     record: typeof aiImports.$inferSelect;
   },
@@ -278,9 +287,16 @@ async function applyResponse(
     action: 'AI_IMPORT_APPLIED',
     entityType: 'AI_IMPORT',
     entityId: input.importId,
-    ...(input.project.guestSessionId === null
-      ? {}
-      : { actorGuestSessionId: input.project.guestSessionId }),
+    /*
+     * The actor, in the right column.
+     *
+     * Keyed off the project's guest session, this recorded nothing at all once a project had been
+     * claimed by an account — the change would have been audited with nobody attached to it, which
+     * is most of what an audit row is for.
+     */
+    ...(input.access.userId === null
+      ? { actorGuestSessionId: input.access.guestSessionId ?? '' }
+      : { actorUserId: input.access.userId }),
     summary: {
       /*
        * Which fields, not what they now say. The values are the user's project data; the audit log
@@ -309,13 +325,11 @@ async function decide(
     if (externalAiDisabled())
       return { kind: 'redirect', to: `/intake/${projectId}?error=external-ai-disabled` };
 
-    const [project] = await withDatabase((db) =>
-      db.select().from(projects).where(eq(projects.id, projectId)),
-    );
+    const access = await accessibleProject(projectId);
 
-    if (project === undefined || !(await mayOpen(project))) {
-      return { kind: 'redirect', to: '/start' };
-    }
+    if (access === null) return { kind: 'redirect', to: '/start' };
+
+    const { project } = access;
 
     const [record] = await withDatabase((db) =>
       db
@@ -360,7 +374,7 @@ async function decide(
       // Somebody else decided it between the read and the write. Their decision stands.
       if (updated.length === 0 || decision !== 'ACCEPTED') return undefined;
 
-      return applyResponse(db, { project, importId, record });
+      return applyResponse(db, { project, access, importId, record });
     });
 
     logger.info('ai import decided', {
