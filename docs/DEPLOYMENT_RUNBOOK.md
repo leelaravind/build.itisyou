@@ -294,6 +294,10 @@ serve correctly, and have RLS inert underneath it. Verified rather than assumed.
 `SESSION_SECRET` and other deploy secrets; and recovering the R2 evidence bucket, which now holds
 artefacts and has no drill at all. Three named gaps rather than an unqualified "recovery works".
 
+The drill branch was deleted after the checks above, once nothing referenced it: no repository
+reference, no child branch, and the staging Worker healthy on its own branch throughout. A restored
+copy left lying about is a second, unmonitored copy of the same data.
+
 Both targets remain **proposed and unaccepted** — §51 requires explicit acceptance by somebody with
 authority, and that is an owner action, not a drill result.
 
