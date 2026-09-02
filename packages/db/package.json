@@ -11,6 +11,7 @@
     "./identity": "./src/identity.ts",
     "./authorize": "./src/authorize.ts",
     "./guest": "./src/guest.ts",
+    "./session": "./src/session.ts",
     "./connect": "./src/connect.ts"
   },
   "scripts": {

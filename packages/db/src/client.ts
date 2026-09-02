@@ -129,6 +129,7 @@ export interface TestDatabase {
  * that nobody adds here will show up as state leaking between tests.
  */
 const TRUNCATABLE = [
+  'sessions',
   'evidence',
   'approvals',
   'outbox_events',
@@ -532,6 +533,31 @@ CREATE INDEX audit_events_org_time_idx ON audit_events (organization_id, occurre
 CREATE INDEX audit_events_project_time_idx ON audit_events (project_id, occurred_at);
 CREATE INDEX audit_events_correlation_idx ON audit_events (correlation_id);
 CREATE INDEX audit_events_actor_idx ON audit_events (actor_user_id);
+
+CREATE TABLE sessions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  -- A user may belong to several organisations; the tenant scope needs exactly one. Storing it here
+  -- makes switching organisation an explicit act rather than an ambient guess.
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  last_seen_at timestamptz NOT NULL DEFAULT now(),
+  -- Rolls forward on activity: the idle timeout of gap-spec 6.3.
+  idle_expires_at timestamptz NOT NULL,
+  -- Never rolls forward. Without it an active session lives forever, and "active" is something an
+  -- attacker holding a stolen cookie supplies as easily as the owner.
+  absolute_expires_at timestamptz NOT NULL,
+  revoked_at timestamptz,
+  revoked_reason text,
+  CONSTRAINT sessions_absolute_after_creation CHECK (absolute_expires_at > created_at),
+  -- Rolling the idle window forward is the normal case; without this a long-lived session would
+  -- extend past its absolute limit one request at a time.
+  CONSTRAINT sessions_idle_within_absolute CHECK (idle_expires_at <= absolute_expires_at),
+  CONSTRAINT sessions_revocation_complete CHECK ((revoked_at IS NULL) = (revoked_reason IS NULL))
+);
+
+CREATE INDEX sessions_user_idx ON sessions (user_id);
+CREATE INDEX sessions_idle_expiry_idx ON sessions (idle_expires_at);
 
 CREATE TABLE evidence (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

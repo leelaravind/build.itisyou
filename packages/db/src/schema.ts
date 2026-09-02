@@ -775,6 +775,82 @@ export const twinCalculations = pgTable(
 );
 
 /* -------------------------------------------------------------------------- */
+/* Authenticated sessions                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A signed-in session (gap-spec §6.3).
+ *
+ * Server-side, like the guest session and for the same reason: a cookie is client-controlled, so any
+ * state kept there is state an attacker can edit. The cookie carries a signed opaque id and nothing
+ * else.
+ *
+ * §6.3 requires eight controls to be *defined*. Three of them are columns here because they are
+ * per-session facts rather than policy — idle expiry, absolute expiry, and revocation — and the rest
+ * are in `SESSION_POLICY` beside them. Splitting them that way is deliberate: a timeout that lives
+ * only in a constant cannot be shortened for one compromised session, and an expiry that lives only
+ * in a row cannot be reasoned about before one exists.
+ *
+ * No row-level security. A session is not tenant-owned data; it is the thing that says which tenant
+ * you are, so it is read before any scope exists — exactly like `guest_sessions`.
+ */
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /**
+     * The organisation this session is acting in.
+     *
+     * A user may belong to several (§7.1), and the tenant scope needs exactly one. Storing it on the
+     * session rather than deriving it per request means switching organisation is an explicit act
+     * that creates a new scope, not an ambient guess that could differ between two requests in the
+     * same page load.
+     */
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+    /** Rolls forward on activity. The "idle timeout" of §6.3. */
+    idleExpiresAt: timestamp('idle_expires_at', { withTimezone: true }).notNull(),
+    /**
+     * Never rolls forward. The "absolute timeout" of §6.3.
+     *
+     * Without it an active session lives forever, and "active" is something an attacker holding a
+     * stolen cookie can supply as easily as the owner.
+     */
+    absoluteExpiresAt: timestamp('absolute_expires_at', { withTimezone: true }).notNull(),
+    /** Set on logout or revocation. Retained rather than deleted, so "when did this end" has an answer. */
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    /** `LOGOUT`, `REVOKED`, `SECURITY_EVENT`. Why it ended, kept for the audit trail. */
+    revokedReason: text('revoked_reason'),
+  },
+  (table) => [
+    index('sessions_user_idx').on(table.userId),
+    index('sessions_idle_expiry_idx').on(table.idleExpiresAt),
+    check('sessions_absolute_after_creation', sql`${table.absoluteExpiresAt} > ${table.createdAt}`),
+    /*
+     * Idle expiry can never outlive absolute expiry.
+     *
+     * Rolling the idle window forward is the normal case, and without this constraint a long-lived
+     * session would quietly extend past its absolute limit one request at a time — which is exactly
+     * the failure the absolute limit exists to prevent.
+     */
+    check(
+      'sessions_idle_within_absolute',
+      sql`${table.idleExpiresAt} <= ${table.absoluteExpiresAt}`,
+    ),
+    check(
+      'sessions_revocation_complete',
+      sql`(${table.revokedAt} IS NULL) = (${table.revokedReason} IS NULL)`,
+    ),
+  ],
+);
+
+/* -------------------------------------------------------------------------- */
 /* Evidence and approvals                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -904,6 +980,8 @@ export const approvals = pgTable(
 /* Type exports                                                               */
 /* -------------------------------------------------------------------------- */
 
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;
 export type Evidence = typeof evidence.$inferSelect;
 export type NewEvidence = typeof evidence.$inferInsert;
 export type ApprovalRow = typeof approvals.$inferSelect;
