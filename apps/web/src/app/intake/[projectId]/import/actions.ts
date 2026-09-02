@@ -9,6 +9,7 @@ import { aiImports, intakeAnswers, projects } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { validateImport } from '@govintel/interchange/validate';
 import { currentVersions } from '@govintel/interchange/versions';
+import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
 import { checkRateLimit } from '../../../../lib/server/rate-limit.ts';
@@ -31,11 +32,23 @@ function readString(formData: FormData, key: string): string {
   return typeof value === 'string' ? value : '';
 }
 
+/**
+ * Whether the external-AI workflow is available at all (plan §19).
+ *
+ * Checked on every write path rather than once at the page, because a server action is reachable
+ * without the page that renders it — which is the whole reason authorisation belongs in the action.
+ * A guard that only runs in the UI protects the UI.
+ */
+function externalAiDisabled(): boolean {
+  return EXTERNAL_AI_MODE === 'DISABLED';
+}
+
 export async function submitImport(formData: FormData): Promise<void> {
   const projectId = readString(formData, 'projectId');
   const raw = readString(formData, 'response').trim();
 
   if (projectId.length === 0) redirect('/start');
+  if (externalAiDisabled()) redirect(`/intake/${projectId}?error=external-ai-disabled`);
   if (raw.length === 0) redirect(`/intake/${projectId}/import?error=empty`);
 
   // Gap-spec §36 names AI import validation as a rate-limited action: validation is the most
@@ -164,6 +177,13 @@ async function decide(
   decision: 'ACCEPTED' | 'REJECTED',
 ): Promise<Outcome> {
   try {
+    /*
+     * Refused here as well as at submission. A decision on an import that should never have been
+     * accepted is still a write, and the row can predate the policy being switched off.
+     */
+    if (externalAiDisabled())
+      return { kind: 'redirect', to: `/intake/${projectId}?error=external-ai-disabled` };
+
     const sessionId = await readActiveGuestSessionId();
 
     const [project] = await withDatabase((db) =>

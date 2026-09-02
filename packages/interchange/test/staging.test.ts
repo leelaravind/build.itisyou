@@ -343,6 +343,28 @@ describe('the prompt package', () => {
     assumptions: [{ fieldId: 'budget.currency', label: 'Which currency?', value: 'GBP' }],
   };
 
+  it('redacts the project name, and counts it in the data-leaving summary', () => {
+    /*
+     * The name used to be forwarded raw into the rendered text and omitted from the summary
+     * entirely — so the one field every user fills in, before they have been told anything about
+     * redaction, was the one field that left unexamined.
+     *
+     * The accounting was the worse half. Plan §19 requires a *clear* summary of what leaves the
+     * platform; one that omits a field is not incomplete, it is wrong, because it told the user the
+     * name was not going.
+     */
+    const pkg = buildPromptPackage(
+      {
+        ...input,
+        projectName: 'Reporting tool for Acme Ltd, contact sarah.jones@acme.example',
+      },
+      'prompt-1',
+    );
+
+    expect(pkg.text).not.toContain('sarah.jones@acme.example');
+    expect(pkg.dataLeaving.includedFields).toContain('project.name');
+  });
+
   it('states the schema version the response must use', () => {
     const pkg = buildPromptPackage(input, 'prompt-1');
     expect(pkg.text).toContain(INTERCHANGE_SCHEMA_VERSION);

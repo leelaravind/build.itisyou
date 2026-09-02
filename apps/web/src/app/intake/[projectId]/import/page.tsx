@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import { projects } from '@govintel/db/schema';
+import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
@@ -39,6 +40,20 @@ export default async function ImportPage({
 
   const sessionId = await readActiveGuestSessionId();
   if (project.guestSessionId === null || project.guestSessionId !== sessionId) notFound();
+
+  /*
+   * The external-AI workflow can be switched off, and this half was not honouring it.
+   *
+   * Plan §19 lets an organisation disable the workflow. The *outbound* half checked
+   * (`evaluatePolicy` on the prompt page) and the inbound half did not — so a deployment with
+   * `EXTERNAL_AI_MODE=DISABLED` still accepted a pasted AI response, validated it and stored it.
+   * Half a control is not a control: the setting existed, the screen said it was off, and the data
+   * arrived anyway.
+   *
+   * `notFound` rather than an explanation, matching the ownership check above: a surface that is
+   * switched off should not describe itself.
+   */
+  if (EXTERNAL_AI_MODE === 'DISABLED') notFound();
 
   return (
     <div className="min-h-screen bg-background">

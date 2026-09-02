@@ -60,7 +60,21 @@ export interface PromptPackage {
  * what is going *and* what was taken out.
  */
 export function buildPromptPackage(input: PromptPackageInput, promptId: string): PromptPackage {
+  /*
+   * The project name is redacted like everything else, and it was not.
+   *
+   * It was forwarded raw into the rendered text as `Name: …` and never appeared in the
+   * data-leaving summary — so the one field the user always fills in, before they have been told
+   * anything about redaction, was the one field that left unexamined. It is free text typed on
+   * `/start` in answer to "describe your project", which is exactly where a client name, a product
+   * codename or an internal system name ends up.
+   *
+   * Worse than the leak itself was the accounting: plan §19 requires a *clear* summary of what
+   * leaves the platform, and a summary that omits a field is not merely incomplete, it is wrong. It
+   * told the user the name was not going.
+   */
   const redactableFields = [
+    { fieldId: 'project.name', text: input.projectName },
     { fieldId: 'project.summary', text: input.projectSummary },
     ...input.confirmedFacts.map((f) => ({ fieldId: f.fieldId, text: f.value })),
     ...input.assumptions.map((a) => ({ fieldId: a.fieldId, text: a.value })),
@@ -69,6 +83,7 @@ export function buildPromptPackage(input: PromptPackageInput, promptId: string):
   const { redacted, summary } = summariseDataLeaving(redactableFields);
   const byFieldId = new Map(redacted.map((r) => [r.fieldId, r.text]));
 
+  const safeName = byFieldId.get('project.name') ?? '';
   const safeSummary = byFieldId.get('project.summary') ?? '';
   const safeFacts = input.confirmedFacts.map((f) => ({
     ...f,
@@ -80,7 +95,7 @@ export function buildPromptPackage(input: PromptPackageInput, promptId: string):
   }));
 
   const text = render({
-    projectName: input.projectName,
+    projectName: safeName,
     projectSummary: safeSummary,
     confirmedFacts: safeFacts,
     researchRequests: input.researchRequests,
