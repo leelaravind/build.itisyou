@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { MaterialIcon } from '../ui/MaterialIcon.tsx';
+import { currentUser } from '../../lib/server/auth.ts';
+import { endSession } from '../../app/login/actions.ts';
 
 /**
  * Public header, for logged-out surfaces.
@@ -12,7 +14,8 @@ import { MaterialIcon } from '../ui/MaterialIcon.tsx';
  * action a visitor can actually take. Guest-first (plan §2.3) means the landing page's job is to get
  * someone into the intake flow, not to display navigation they cannot use.
  */
-export function PublicHeader() {
+export async function PublicHeader() {
+  const user = await currentUser();
   return (
     <header
       className="flex h-16 items-center gap-sm border-b border-outline-variant px-sm sm:gap-md sm:px-md lg:px-xl"
@@ -52,12 +55,30 @@ export function PublicHeader() {
           Portfolio
         </Link>
 
-        <Link
-          href="/login"
-          className="inline-flex min-h-11 items-center rounded px-sm font-sans text-label-caps tracking-wider text-on-surface-variant uppercase transition-colors hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-        >
-          Sign in
-        </Link>
+        {user === undefined ? (
+          <Link
+            href="/login"
+            className="inline-flex min-h-11 items-center rounded px-sm font-sans text-label-caps tracking-wider text-on-surface-variant uppercase transition-colors hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            Sign in
+          </Link>
+        ) : (
+          /*
+           * A form rather than a link, because signing out is a state change.
+           *
+           * A GET link would let any page anywhere sign a user out by embedding an image — and it
+           * would let a browser or a link prefetcher do it by accident, which is the version that
+           * happens without an attacker.
+           */
+          <form action={endSession}>
+            <button
+              type="submit"
+              className="inline-flex min-h-11 items-center rounded px-sm font-sans text-label-caps tracking-wider text-on-surface-variant uppercase transition-colors hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              Sign out
+            </button>
+          </form>
+        )}
 
         <Link
           href="/start"

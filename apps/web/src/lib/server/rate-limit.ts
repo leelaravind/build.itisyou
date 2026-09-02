@@ -48,6 +48,11 @@ const LIMITS: Readonly<Record<string, number>> = {
   // evaluates every gate, so it is the most expensive thing an unauthenticated caller can ask for.
   'project-transition': 600,
   'evidence-record': 600,
+  // Auth endpoints, named explicitly by gap-spec §36. Lower than the others: a sign-in does real
+  // work on unauthenticated input — a token exchange against the provider and a JWKS fetch — and a
+  // flood of them costs the provider as well as us.
+  'auth-begin': 300,
+  'auth-callback': 300,
   search: 3_000,
   export: 300,
 };

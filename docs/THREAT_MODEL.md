@@ -41,7 +41,8 @@ a residual risk, and those statements are the part worth arguing with.
 **How we know**
 
 - e2e/guest-intake.spec.ts — a different session cannot open the project
-- packages/auth token tests — three malformed and tampered tokens are rejected
+- apps/web/test/server/signed-cookie.test.ts — a tampered, unsigned or truncated cookie is refused
+- packages/db/test/guest.test.ts — an expired session resolves to nothing
 
 **Residual risk.** A guest who keeps their own cookie retains access for the session lifetime. That is the feature; the limit is the lifetime.
 
@@ -54,12 +55,15 @@ a residual risk, and those statements are the part worth arguing with.
 **Mitigations**
 
 - Authentication is delegated to an OIDC provider; this platform never holds a password.
-- Sessions are rotated on privilege change and invalidated on sign-out.
-- Sign-in attempts are rate-limited (§36).
+- ID tokens are verified for signature, issuer, audience, expiry and nonce together — the four checks whose independent omission are each a published bypass.
+- PKCE (S256), a per-request state and a per-request nonce defend the code exchange, the callback and replay respectively.
+- Sessions are revoked server-side on sign-out, carry an idle and an absolute timeout, and end immediately when the account is locked.
+- Sign-in and callback are rate-limited (§36).
 
 **How we know**
 
-- packages/auth session tests
+- apps/web/test/server/oidc.test.ts — tokens signed by an unpublished key, from another issuer, for another application, expired, replayed, or carrying no nonce are each refused
+- packages/db/test/session.test.ts — the idle window never rolls past the absolute expiry
 - e2e/security-headers.spec.ts
 
 **Residual risk.** A compromised identity provider account compromises this one. That is the trade for not holding passwords, and it is the right trade, but it is not zero.

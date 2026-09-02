@@ -292,7 +292,7 @@ Recording them as targets now would be the fake precision the whole platform ref
 | The ten §15.9 production checks | A running production deployment |
 | RPO/RTO acceptance | A restore drill, which needs a real database |
 | Rollback timing | A staging environment to drill in |
-| OIDC provider | Deliberately deferred; local mock in use |
+| OIDC provider | **The one owner action.** The flow is implemented and tested — PKCE, state, nonce, discovery, signature/issuer/audience/expiry/nonce validation, sessions with §6.3's controls, guest-to-account conversion, sign-out. There is **no local mock provider**, and this row previously claimed there was. What remains is registering a redirect URI with a real provider to obtain a client id and secret; set `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` and `OIDC_REDIRECT_URI` and sign-in works. Unset, the login page says so and guest-first carries the whole product. |
 
 ### What staging has already proved
 
