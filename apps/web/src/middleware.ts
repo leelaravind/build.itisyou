@@ -58,7 +58,67 @@ function buildCsp(nonce: string, isDev: boolean, isSecure: boolean): string {
   ].join('; ');
 }
 
+/** Methods that can change state, and therefore need an origin check. */
+const UNSAFE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+/**
+ * Whether a state-changing request came from this site.
+ *
+ * Contract: plan §18 ("CSRF protection where relevant"), gap-spec §65.
+ *
+ * ## Why this exists alongside SameSite and the CSP
+ *
+ * Three controls, none of which subsumes the others:
+ *
+ * - `SameSite=Lax` on the session cookie stops the cookie being *sent* cross-site — but it is a
+ *   browser default that varies by version, and the guest cookie is deliberately `Lax` rather than
+ *   `Strict` so that returning from an identity provider works at all.
+ * - `form-action 'self'` in the CSP stops a form on *our* pages submitting elsewhere. It says
+ *   nothing about a form on somebody else's page submitting here.
+ * - This check is the one that answers "did this request come from us", explicitly, where it can be
+ *   tested and where its failure is a 403 rather than a silent success.
+ *
+ * Next validates Server Action origins itself, and that is the fourth layer — but it applies only to
+ * Server Actions, and it is configuration this application does not set. A control that exists
+ * because a framework happens to default to it is not a control anybody has decided on.
+ *
+ * ## Why a missing Origin is refused
+ *
+ * Every browser sends `Origin` on a cross-origin POST, and modern browsers send it on same-origin
+ * POSTs too. Treating absence as "probably fine" is how this check gets bypassed by anything that
+ * can suppress the header — which is the population it is defending against.
+ */
+function isSameOrigin(request: NextRequest): boolean {
+  if (!UNSAFE_METHODS.has(request.method)) return true;
+
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+
+  if (origin === null || host === null) return false;
+
+  try {
+    // Compared on host alone. The scheme is settled by HSTS and `upgrade-insecure-requests`, and
+    // including it would reject every request in local HTTP development for no security gain.
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export function middleware(request: NextRequest): NextResponse {
+  /*
+   * The origin check runs before anything else, including the nonce.
+   *
+   * A forged cross-site POST must not reach a route handler or a Server Action at all — refusing it
+   * after the work is done is not refusing it.
+   */
+  if (!isSameOrigin(request)) {
+    return new NextResponse('Cross-site request refused.', {
+      status: 403,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
+
   const nonce = crypto.randomUUID().replaceAll('-', '');
   const isDev = process.env.NODE_ENV === 'development';
 
