@@ -12,6 +12,9 @@
   "scripts": {
     "typecheck": "tsc --build"
   },
+  "devDependencies": {
+    "@govintel/traceability": "workspace:*"
+  },
   "dependencies": {
     "@govintel/shared": "workspace:*",
     "@govintel/intake": "workspace:*",

@@ -6,6 +6,7 @@
   "exports": {
     "./schema": "./src/schema.ts",
     "./catalogue": "./src/catalogue.ts",
+    "./verification": "./src/verification.ts",
     "./evaluate": "./src/evaluate.ts",
     "./precedence": "./src/precedence.ts",
     "./lifecycle": "./src/lifecycle.ts",
@@ -14,6 +15,9 @@
   },
   "scripts": {
     "typecheck": "tsc --build"
+  },
+  "devDependencies": {
+    "@govintel/traceability": "workspace:*"
   },
   "dependencies": {
     "@govintel/shared": "workspace:*",

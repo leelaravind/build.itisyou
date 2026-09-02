@@ -1212,3 +1212,105 @@ describe('the platform holds its own requirements to the standard it applies', (
     }
   });
 });
+
+/* -------------------------------------------------------------------------- */
+/* Hops that are required conditionally                                       */
+/* -------------------------------------------------------------------------- */
+
+describe('a hop that is not required of every requirement', () => {
+  /**
+   * A requirement carrying the given verification methods, with work against it.
+   *
+   * Built to reach the TEST hop and stop there, because that is the hop under test.
+   */
+  function requirementVerifiedBy(methods: readonly string[] | undefined) {
+    const nodes = [
+      node('proj', 'PROJECT'),
+      node('r1', 'REQUIREMENT', {
+        kind: 'CONSTRAINT',
+        priority: 'MUST',
+        ...(methods === undefined ? {} : { verification: methods }),
+        acceptance: [{ id: 'a1', statement: 'It holds.' }],
+        sourceRef: 'rule:X-001',
+      }),
+      node('t1', 'TASK'),
+    ];
+
+    return traceRequirement(graphOf(nodes, [edge('t1', 'r1', 'IMPLEMENTS')]), 'r1');
+  }
+
+  it('does not demand a test of a requirement verified by inspection', () => {
+    /*
+     * The model was asking the wrong question. "Published documentation" is verified by reading it,
+     * and reporting it as untested put a false finding beside every real one — which is how a report
+     * teaches people to skim it.
+     */
+    const trace = requirementVerifiedBy(['INSPECTION']);
+    const test = trace.links.find((link) => link.hop === 'TEST');
+
+    expect(test?.status).toBe('NOT_REQUIRED');
+    expect(test?.detail).toContain('rather than by a test');
+  });
+
+  it('does demand one of a requirement that says it is verified by a test', () => {
+    expect(requirementVerifiedBy(['TEST']).links.find((l) => l.hop === 'TEST')?.status).toBe(
+      'MISSING',
+    );
+  });
+
+  it('demands one when the requirement never said how it is verified', () => {
+    // Silence is not an exemption: a requirement that never stated a method must not escape
+    // verification by having said nothing.
+    expect(requirementVerifiedBy(undefined).links.find((l) => l.hop === 'TEST')?.status).toBe(
+      'MISSING',
+    );
+  });
+});
+
+describe('evidence is required once a test has run', () => {
+  function withTest(attributes: Record<string, unknown>) {
+    const nodes = [
+      node('proj', 'PROJECT'),
+      node('r1', 'REQUIREMENT', {
+        kind: 'CONSTRAINT',
+        priority: 'MUST',
+        verification: ['TEST'],
+        acceptance: [{ id: 'a1', statement: 'It holds.' }],
+        sourceRef: 'rule:X-001',
+      }),
+      node('t1', 'TASK'),
+      node('test1', 'TEST', attributes),
+    ];
+
+    return traceRequirement(
+      graphOf(nodes, [edge('t1', 'r1', 'IMPLEMENTS'), edge('test1', 'r1', 'VERIFIES')]),
+      'r1',
+    );
+  }
+
+  it('is not required of a test that has only been specified', () => {
+    /*
+     * Evidence is what a test *run* leaves behind. Demanding it from a specified test reports a gap
+     * on every requirement in a project that has not started testing — which is every project at
+     * planning time.
+     */
+    const link = withTest({ executed: false }).links.find((l) => l.hop === 'EVIDENCE');
+
+    expect(link?.status).toBe('NOT_REQUIRED');
+    expect(link?.detail).toContain('nothing to have kept evidence of');
+  });
+
+  it('is required the moment one runs', () => {
+    expect(withTest({ executed: true }).links.find((l) => l.hop === 'EVIDENCE')?.status).toBe(
+      'MISSING',
+    );
+  });
+
+  it('reads a recorded outcome as having run, not only the executed flag', () => {
+    // Two representations exist and both are legitimate. Reading only one made a passing test look
+    // unrun, which would have excused it from needing evidence.
+    expect(withTest({ outcome: 'PASSED' }).links.find((l) => l.hop === 'EVIDENCE')?.status).toBe(
+      'MISSING',
+    );
+  });
+});

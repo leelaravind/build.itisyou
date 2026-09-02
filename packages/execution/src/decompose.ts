@@ -24,6 +24,8 @@ import { createNode } from '@govintel/twin/nodes';
 import type { EdgeClass, TwinEdge } from '@govintel/twin/edges';
 import { TwinGraph as Graph } from '@govintel/twin/graph';
 import type { Emissions } from '@govintel/rules/evaluate';
+import { findRule } from '@govintel/rules/catalogue';
+import { classifyRequirement, deriveVerification } from '@govintel/rules/verification';
 import {
   HIERARCHY,
   actualDepth,
@@ -88,7 +90,11 @@ export function decompose(input: DecompositionInput): DecompositionResult {
    * The task count drives the hierarchy depth, so it has to be known before the structure is chosen.
    * Counted from what will actually be created rather than estimated.
    */
-  const taskCount = emissions.tasks.length + requirements.length;
+  /*
+   * Counted from what will actually be created, including a task per rule-emitted requirement —
+   * otherwise the hierarchy is planned for a fraction of the work and comes out too shallow.
+   */
+  const taskCount = emissions.tasks.length + requirements.length + emissions.requirements.length;
 
   const hierarchy = planHierarchy({
     ...(input.teamSize === undefined ? {} : { teamSize: input.teamSize }),
@@ -297,6 +303,85 @@ export function decompose(input: DecompositionInput): DecompositionResult {
     }
   }
 
+  /* -- requirements from rule emissions ------------------------------------ */
+
+  /*
+   * The catalogue's own requirements, made real.
+   *
+   * 139 of them were computed on every evaluation and discarded by every caller, and the cost was
+   * not only the requirements themselves: emitted *tests* carry a `verifies` key naming an emitted
+   * requirement, so with none of them in the graph no test could attach to anything, and the
+   * traceability chain broke at TEST for every project in the product.
+   *
+   * They meet the same standard as the generator's own requirements — a kind, a verification method,
+   * an acceptance criterion, a source — because a platform that applies a rule to the user's
+   * requirements and exempts the ones it writes itself is asserting that its own conclusions need no
+   * justification. The method is derived from the rule's own words rather than assigned
+   * (`@govintel/rules/verification`), and prose that names none is reported here rather than given a
+   * plausible one.
+   */
+  const emittedRequirementIds = new Map<string, string>();
+
+  for (const requirement of emissions.requirements) {
+    const rule = findRule(requirement.ruleId);
+    const derived = deriveVerification(requirement.verification);
+
+    if (derived.ambiguous) {
+      /*
+       * Reported, not defaulted. A requirement with an invented verification method is
+       * indistinguishable afterwards from one that was derived, and `checkRequirement` would report
+       * it as satisfied when nobody had chosen how to satisfy it.
+       */
+      notDecomposed.push(
+        `${requirement.title}: ${requirement.ruleId} does not say how it is verified — "${requirement.verification}" names no method, so somebody has to choose one.`,
+      );
+      continue;
+    }
+
+    const classification = classifyRequirement(rule?.category ?? 'ARCHITECTURE');
+    const requirementId = id('req', requirement.key);
+
+    emittedRequirementIds.set(requirement.key, requirementId);
+
+    nodes.push(
+      createNode({
+        id: requirementId,
+        projectId,
+        class: 'REQUIREMENT',
+        label: requirement.title,
+        description: requirement.description,
+        provenance: {
+          provenance: 'DETERMINISTIC_CALCULATION',
+          confidence: 'HIGH',
+          sourceRef: `rule:${requirement.ruleId}`,
+        },
+        attributes: {
+          priority: requirement.priority,
+          ruleKey: requirement.key,
+          ruleId: requirement.ruleId,
+          kind: classification.kind,
+          ...(classification.qualityAttribute === undefined
+            ? {}
+            : { qualityAttribute: classification.qualityAttribute }),
+          verification: derived.methods,
+          /*
+           * The rule's verification prose *is* the acceptance criterion. It states what must be true
+           * for the requirement to be met, in a sentence a reader can judge — which is exactly what
+           * an acceptance criterion is, and inventing a second one would add nothing but words.
+           */
+          acceptance: [{ id: `${requirement.key}-verified`, statement: requirement.verification }],
+          verificationRationale: derived.reasons.map((reason) => reason.why),
+          sourceRef: `rule:${requirement.ruleId}`,
+        },
+        at,
+      }),
+    );
+
+    // Hung off the project, as the generator's own requirements are.
+    const projectNode = graph.nodesOfClass('PROJECT')[0];
+    if (projectNode !== undefined) link('CONTAINS', projectNode.id, requirementId);
+  }
+
   /* -- tasks from rule emissions ------------------------------------------- */
 
   for (const task of emissions.tasks) {
@@ -341,7 +426,21 @@ export function decompose(input: DecompositionInput): DecompositionResult {
 
   /* -- tasks implementing requirements ------------------------------------- */
 
-  for (const requirement of requirements) {
+  /*
+   * Every requirement, not only the ones that were already in the graph.
+   *
+   * The generator's requirements each got a task and the catalogue's got none, so the moment the
+   * rule-emitted requirements became real the WORK hop broke for all 97 of them — the same gap
+   * moved rather than closed. A requirement the platform imposes needs work doing to satisfy it
+   * exactly as much as one derived from an intake answer, and treating them differently was an
+   * accident of which loop happened to run first.
+   */
+  const allRequirements = [
+    ...requirements,
+    ...nodes.filter((node) => node.class === 'REQUIREMENT'),
+  ];
+
+  for (const requirement of allRequirements) {
     const taskId = id('task', `implement:${shortKey(requirement.id)}`);
     const phaseKey = normalisePhaseKey('build');
 
@@ -409,17 +508,156 @@ export function decompose(input: DecompositionInput): DecompositionResult {
      * arrow in the traceability matrix with no requirement on the other end.
      */
     if (test.verifies !== undefined) {
-      const target = requirements.find(
-        (r) => r.attributes.ruleKey === test.verifies || shortKey(r.id) === test.verifies,
-      );
+      /*
+       * Searched across the requirements this run created as well as the ones already in the graph.
+       *
+       * Looking only at the input graph was why no test ever attached to anything: the requirement a
+       * test verifies is emitted by the same evaluation, so it is never in the graph yet — it is a
+       * few lines above in this very function. That single omission broke the TEST hop of the
+       * traceability chain for every project.
+       */
+      const emittedId = emittedRequirementIds.get(test.verifies);
+
+      const target =
+        emittedId ??
+        requirements.find(
+          (r) => r.attributes.ruleKey === test.verifies || shortKey(r.id) === test.verifies,
+        )?.id;
+
       if (target !== undefined) {
-        link('VERIFIES', testId, target.id, `${test.ruleId} requires this to be verified.`);
+        link('VERIFIES', testId, target, `${test.ruleId} requires this to be verified.`);
       } else {
         notDecomposed.push(
           `${test.title}: it verifies "${test.verifies}", which is not yet a requirement in this project.`,
         );
       }
     }
+  }
+
+  /* -- tests the requirements themselves specify --------------------------- */
+
+  /*
+   * A requirement whose stated method is a test is *specifying* one.
+   *
+   * "A test that startup fails on missing required configuration" is not a description of a test
+   * that exists somewhere; it is the test, written down. The catalogue emits far fewer tests than
+   * requirements, so without this the TEST hop was missing for 77 of the 92 test-verified
+   * requirements — and each of those was reported as untested when the truth is that the test is
+   * specified and has not been run.
+   *
+   * `executed: false`, and the chain reads that as UNVERIFIED rather than LINKED. That is the point:
+   * a specified test nobody has run does not verify anything, and marking it otherwise would be the
+   * one lie that makes the whole report worthless.
+   */
+  const verifiedKeys = new Set(
+    emissions.tests.map((test) => test.verifies).filter((key): key is string => key !== undefined),
+  );
+
+  /*
+   * The generator's own requirements get the same treatment.
+   *
+   * They arrive with acceptance criteria and a verification method already, and none of them had a
+   * test either — so the requirement derived from the user's own accessibility answer was reported
+   * as untested exactly like the rule-emitted ones. Applying this to the catalogue's requirements
+   * and not to the platform's would be the same exemption this file argues against elsewhere.
+   */
+  const alreadyVerified = new Set(
+    graph.nodesOfClass('TEST').flatMap((test) =>
+      graph
+        .edgesFrom(test.id)
+        .filter((e) => e.class === 'VERIFIES')
+        .map((e) => e.to),
+    ),
+  );
+
+  for (const requirement of requirements) {
+    if (alreadyVerified.has(requirement.id)) continue;
+
+    const methods = requirement.attributes.verification;
+    if (!Array.isArray(methods) || !methods.includes('TEST')) continue;
+
+    const criteria = requirement.attributes.acceptance;
+    const statement = Array.isArray(criteria)
+      ? criteria
+          .map((c) =>
+            typeof c === 'object' && c !== null
+              ? ((c as { statement?: string }).statement ?? '')
+              : '',
+          )
+          .filter((text) => text !== '')
+          .join(' ')
+      : '';
+
+    if (statement === '') continue;
+
+    const testId = id('test', `specified:${shortKey(requirement.id)}`);
+
+    nodes.push(
+      createNode({
+        id: testId,
+        projectId,
+        class: 'TEST',
+        label: statement,
+        description:
+          'Specified by the acceptance criteria on the requirement. Not yet written or run.',
+        provenance: {
+          provenance: 'DETERMINISTIC_CALCULATION',
+          confidence: 'HIGH',
+          sourceRef: `requirement:${requirement.id}`,
+        },
+        attributes: { kind: 'SPECIFIED', verifies: shortKey(requirement.id), executed: false },
+        at,
+      }),
+    );
+
+    const projectNodeForTest = graph.nodesOfClass('PROJECT')[0];
+    if (projectNodeForTest !== undefined) link('CONTAINS', projectNodeForTest.id, testId);
+
+    link('VERIFIES', testId, requirement.id, 'The requirement states this is how it is verified.');
+  }
+
+  for (const requirement of emissions.requirements) {
+    if (verifiedKeys.has(requirement.key)) continue;
+
+    const requirementId = emittedRequirementIds.get(requirement.key);
+    if (requirementId === undefined) continue;
+
+    const derived = deriveVerification(requirement.verification);
+    if (!derived.methods.includes('TEST')) continue;
+
+    const testId = id('test', `specified:${requirement.key}`);
+
+    nodes.push(
+      createNode({
+        id: testId,
+        projectId,
+        class: 'TEST',
+        label: requirement.verification,
+        description: `Specified by ${requirement.ruleId}. Not yet written or run.`,
+        provenance: {
+          provenance: 'DETERMINISTIC_CALCULATION',
+          confidence: 'HIGH',
+          sourceRef: `rule:${requirement.ruleId}`,
+        },
+        attributes: {
+          kind: 'SPECIFIED',
+          ruleId: requirement.ruleId,
+          verifies: requirement.key,
+          executed: false,
+        },
+        at,
+      }),
+    );
+
+    const projectNode = graph.nodesOfClass('PROJECT')[0];
+    if (projectNode !== undefined) link('CONTAINS', projectNode.id, testId);
+
+    link(
+      'VERIFIES',
+      testId,
+      requirementId,
+      `${requirement.ruleId} states this is how it is verified.`,
+    );
   }
 
   /* -- dependencies -------------------------------------------------------- */

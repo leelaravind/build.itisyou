@@ -201,7 +201,11 @@ interface RequirementRule {
    * criterion a reader can judge — and the engine's own output has to meet it. A platform that
    * applies a rule to the user's requirements and exempts the ones it writes itself is asserting
    * that its own conclusions need no justification, which is exactly the position it exists to
-   * argue against. `generate.test.ts` checks every rule below against `checkRequirement`.
+   * argue against.
+   *
+   * That check lives in `packages/execution/test/emitted-requirements.test.ts`, which runs
+   * `checkRequirement` over every requirement in a generated graph. This comment previously named
+   * `generate.test.ts`, which has never imported it — the check it described did not exist.
    */
   readonly kind: 'FUNCTIONAL' | 'QUALITY_ATTRIBUTE' | 'CONSTRAINT' | 'REGULATORY' | 'DATA';
   readonly qualityAttribute?:

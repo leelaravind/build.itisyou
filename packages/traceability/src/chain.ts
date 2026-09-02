@@ -58,6 +58,18 @@ export interface Hop {
   readonly direction: 'OUTBOUND' | 'INBOUND';
   /** Whether a project can be releasable without this hop. */
   readonly required: boolean;
+  /**
+   * Whether this hop is required *for a particular requirement*.
+   *
+   * Only the TEST hop uses it, and it matters: a requirement whose stated verification method is an
+   * inspection has no test and is not supposed to have one. Demanding one reported "Published
+   * documentation" as untested, which is not a gap — it is the model asking the wrong question, and
+   * it put a false finding next to every real one.
+   *
+   * Absence of a stated method still requires the hop. A requirement that never said how it is
+   * verified must not be excused from verification by having said nothing.
+   */
+  readonly requiredFor?: (requirement: TwinNode, origin: readonly TwinNode[]) => boolean;
   /** What the absence of this hop actually means, in the project's terms. */
   readonly absenceMeans: string;
 }
@@ -109,6 +121,7 @@ export const CHAIN: readonly Hop[] = [
     via: 'VERIFIES',
     direction: 'INBOUND',
     required: true,
+    requiredFor: (requirement) => verifiedByTest(requirement),
     absenceMeans:
       'Nothing will notice if this stops being true. Work without verification is a claim about a moment in the past, and it decays silently.',
   },
@@ -120,6 +133,15 @@ export const CHAIN: readonly Hop[] = [
     via: 'EVIDENCED_BY',
     direction: 'OUTBOUND',
     required: true,
+    /*
+     * Required once a test has actually run, and not before.
+     *
+     * Evidence is what a test *run* leaves behind. Demanding it from a test that has been specified
+     * and never executed reports a gap on every requirement in a project that has not started
+     * testing yet -- which is every project at planning time, and 98 false findings is how a report
+     * teaches people to ignore it.
+     */
+    requiredFor: (_requirement, origin) => origin.some(hasRun),
     absenceMeans:
       'The test may have passed, but nothing was kept. Anyone asking later how this was satisfied has only the assertion that it was.',
   },
@@ -210,6 +232,45 @@ export interface ChainTrace {
  * task and a test where the test verifies a *different* requirement, and six existence checks would
  * report that as fully traced.
  */
+/**
+ * Whether a test has actually run.
+ *
+ * Two representations exist and both are legitimate: the decomposer writes `executed`, and a test
+ * that has reported writes an `outcome`. Reading only one of them made a passing test look unrun,
+ * which would have excused it from needing evidence — the exact hole this predicate guards.
+ */
+function hasRun(test: TwinNode): boolean {
+  return test.attributes.executed === true || typeof test.attributes.outcome === 'string';
+}
+
+/**
+ * Whether a requirement says it is verified by a test.
+ *
+ * Reads the `verification` attribute the generator and the rule catalogue both write. Unreadable or
+ * absent means yes: silence is not an exemption.
+ */
+function verifiedByTest(requirement: TwinNode): boolean {
+  const methods = requirement.attributes.verification;
+
+  if (!Array.isArray(methods) || methods.length === 0) return true;
+
+  return methods.includes('TEST');
+}
+
+/** Said plainly, because "not required" with no reason reads as the report giving up. */
+function notRequiredBecause(hop: Hop, requirement: TwinNode): string {
+  if (hop.key === 'EVIDENCE') {
+    return 'No test has been run yet, so there is nothing to have kept evidence of. This becomes a gap the moment one runs.';
+  }
+
+  if (hop.key !== 'TEST') return 'Not required for this requirement.';
+
+  const methods = requirement.attributes.verification;
+  const named = Array.isArray(methods) ? methods.join(' and ').toLowerCase() : 'another method';
+
+  return `This requirement is verified by ${named} rather than by a test, so no test is expected. That is a different claim from being untested.`;
+}
+
 export function traceRequirement(graph: TwinGraph, requirementId: string): ChainTrace {
   const requirement = graph.node(requirementId);
 
@@ -241,6 +302,7 @@ export function traceRequirement(graph: TwinGraph, requirementId: string): Chain
 
   for (const hop of CHAIN) {
     const origin = hop.from === 'REQUIREMENT' ? [requirement] : (reachedBy.get(hop.from) ?? []);
+    const required = hop.requiredFor?.(requirement, origin) ?? hop.required;
 
     const reached = step(graph, origin, hop);
     reachedBy.set(hop.key, reached);
@@ -248,12 +310,12 @@ export function traceRequirement(graph: TwinGraph, requirementId: string): Chain
     if (reached.length === 0) {
       links.push({
         hop: hop.key,
-        status: hop.required ? 'MISSING' : 'NOT_REQUIRED',
+        status: required ? 'MISSING' : 'NOT_REQUIRED',
         nodeIds: [],
-        detail: hop.absenceMeans,
+        detail: required ? hop.absenceMeans : notRequiredBecause(hop, requirement),
       });
 
-      if (hop.required && brokeAt === undefined) brokeAt = hop.key;
+      if (required && brokeAt === undefined) brokeAt = hop.key;
       continue;
     }
 
@@ -266,7 +328,7 @@ export function traceRequirement(graph: TwinGraph, requirementId: string): Chain
       detail: detailFor(status, hop, reached),
     });
 
-    if (hop.required && status !== 'LINKED' && brokeAt === undefined) brokeAt = hop.key;
+    if (required && status !== 'LINKED' && brokeAt === undefined) brokeAt = hop.key;
   }
 
   const complete = links.every(
