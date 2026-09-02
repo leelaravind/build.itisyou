@@ -243,6 +243,48 @@ describe('the evidence surface sees what the rules demand', () => {
   });
 });
 
+describe('the derived keys hold up against the whole catalogue', () => {
+  /*
+   * The key is a slug of the first eight words of the criterion, which is what lets two rules
+   * asking for the same thing share one piece of evidence. The same property is a hazard: two
+   * *different* demands whose openings match would collapse into one, and satisfying either would
+   * silently satisfy both. Measured across all 287 rules today — 73 distinct keys, no collisions —
+   * and asserted so that the rule which would break it fails here instead.
+   */
+  const emittedByKey = new Map<string, Set<string>>();
+
+  for (const rule of RULES) {
+    for (const gate of rule.emittedGates) {
+      const key = emittedCriterionKey(gate.criterion);
+      const existing = emittedByKey.get(key) ?? new Set<string>();
+      existing.add(`${gate.gateKey}|${gate.criterion}`);
+      emittedByKey.set(key, existing);
+    }
+  }
+
+  it('gives two different demands two different keys', () => {
+    const collisions = [...emittedByKey.entries()]
+      .filter(([, demands]) => demands.size > 1)
+      .map(([key, demands]) => ({ key, demands: [...demands] }));
+
+    expect(collisions).toEqual([]);
+  });
+
+  it('never collides with a criterion the catalogue already defines', () => {
+    // A collision here would let a rule's evidence silently satisfy a catalogue criterion, or
+    // replace one — including an AUTOMATIC check.
+    const catalogue = new Set(GATES.flatMap((g) => g.criteria.map((c) => c.key)));
+    const clashes = [...emittedByKey.keys()].filter((key) => catalogue.has(key));
+
+    expect(clashes).toEqual([]);
+  });
+
+  it('found something to check', () => {
+    // Guards the two assertions above against an empty map passing them vacuously.
+    expect(emittedByKey.size).toBeGreaterThan(50);
+  });
+});
+
 describe('against the real catalogue', () => {
   it('produces gate criteria for a real project, and they reach the gates', () => {
     const evaluation = evaluateRules(
