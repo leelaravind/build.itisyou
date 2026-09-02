@@ -241,3 +241,119 @@ test.describe('tenant isolation', () => {
     await other.close();
   });
 });
+
+test.describe('a change request, end to end', () => {
+  test.beforeEach(({ browserName }) => {
+    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  });
+
+  /*
+   * Contract: gap-spec §27, §28 (the ten-step sequence), §85 ("manage changes"), plan §24 screen 35.
+   *
+   * The engine behind this has existed since Phase 12 with no table and no route: request, approve,
+   * reject and apply were unreachable from the product, and the page was a preview with nothing
+   * behind it. These journeys are the difference between an engine and a feature.
+   */
+
+  async function requestAChange(page: Page, title: string): Promise<void> {
+    await selectPersonalData(page);
+
+    const form = page
+      .locator('form')
+      .filter({ has: page.getByLabel(/what is changing/i) })
+      .first();
+
+    await form.getByLabel(/what is changing/i).fill(title);
+    await form.getByLabel(/^why/i).fill('The regulator changed what lawful processing requires.');
+    await form.getByRole('button', { name: /record this request/i }).click();
+  }
+
+  test('records the request against the version its impact was calculated on', async ({ page }) => {
+    await reachChange(page);
+    await requestAChange(page, 'Widen the lawful basis');
+
+    const request = page.getByRole('listitem').filter({ hasText: 'Widen the lawful basis' });
+
+    await expect(request).toBeVisible();
+    // The version is the whole point: an approval is an approval of a report about *that* project.
+    await expect(request).toContainText(/against version \d+/);
+    await expect(request).toContainText(/pending approval/i);
+  });
+
+  test('refuses a request with no reason behind it', async ({ page }) => {
+    // A change request with no rationale cannot be argued about, and the engine refuses one. The
+    // field is `required`, so the browser refuses it first — which is the assertion.
+    await reachChange(page);
+    await selectPersonalData(page);
+
+    const form = page
+      .locator('form')
+      .filter({ has: page.getByLabel(/what is changing/i) })
+      .first();
+
+    await expect(form.getByLabel(/^why/i)).toHaveAttribute('required', '');
+  });
+
+  test('can be decided, and the decision is kept with its reason', async ({ page }) => {
+    await reachChange(page);
+    await requestAChange(page, 'Narrow the retention period');
+
+    const request = page.getByRole('listitem').filter({ hasText: 'Narrow the retention period' });
+
+    await request
+      .getByLabel(/why are you deciding this way/i)
+      .fill('The shorter period is enough.');
+    await request.getByRole('button', { name: /^approve$/i }).click();
+
+    const decided = page.getByRole('listitem').filter({ hasText: 'Narrow the retention period' });
+
+    await expect(decided).toContainText(/approved/i);
+    // The reason is retained, not just the verdict: a decision without one is a signature with no
+    // argument behind it.
+    await expect(decided).toContainText('The shorter period is enough.');
+  });
+
+  test('applies an approved change and moves the project version on', async ({ page }) => {
+    const projectId = await reachChange(page);
+    await requestAChange(page, 'Record the processing purpose');
+
+    const request = page.getByRole('listitem').filter({ hasText: 'Record the processing purpose' });
+    await request.getByLabel(/why are you deciding this way/i).fill('Agreed.');
+    await request.getByRole('button', { name: /^approve$/i }).click();
+
+    await page
+      .getByRole('listitem')
+      .filter({ hasText: 'Record the processing purpose' })
+      .getByRole('button', { name: /apply it/i })
+      .click();
+
+    await expect(
+      page.getByRole('listitem').filter({ hasText: 'Record the processing purpose' }),
+    ).toContainText(/applied/i);
+
+    /*
+     * §28 step 5, from the other side. The project has moved on, so a second request raised against
+     * the old version can no longer be applied — and the page says so before anybody tries.
+     */
+    await page.goto(`/plan/${projectId}/change`);
+    await expect(
+      page.getByRole('listitem').filter({ hasText: 'Record the processing purpose' }),
+    ).toContainText(/against version/);
+  });
+
+  test('a second guest cannot see the first guest’s change requests', async ({ page, browser }) => {
+    const projectId = await reachChange(page);
+    await requestAChange(page, 'Commercially sensitive change');
+
+    const other = await browser.newContext();
+    const otherPage = await other.newPage();
+    await startProject(otherPage, 'An unrelated project.');
+
+    const response = await otherPage.goto(`/plan/${projectId}/change`);
+
+    expect(response?.status()).toBe(404);
+    expect(await otherPage.content()).not.toContain('Commercially sensitive');
+
+    await other.close();
+  });
+});

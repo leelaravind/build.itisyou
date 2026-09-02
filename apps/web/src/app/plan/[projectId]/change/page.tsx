@@ -12,6 +12,7 @@ import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { loadPlanRows } from '../actions.ts';
+import { applyChange, changeRequestsFor, decideChange, requestChange } from '../change-actions.ts';
 import type { IconName } from '../../../../components/ui/icon-paths.ts';
 
 /**
@@ -114,6 +115,8 @@ export default async function ChangePage({
 
   const summary = report === undefined ? undefined : summariseImpact(report);
 
+  const requests = await changeRequestsFor(projectId);
+
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
@@ -215,6 +218,105 @@ export default async function ChangePage({
           </>
         )}
 
+        {selected === undefined || summary === undefined ? null : (
+          <section
+            aria-labelledby="request-heading"
+            className="flex flex-col gap-md rounded-lg border border-outline-variant bg-surface-container-low p-lg"
+          >
+            <h2 id="request-heading" className="font-sans text-headline-sm text-on-surface">
+              Request this change
+            </h2>
+            <p className="font-sans text-body-sm text-on-surface-variant">
+              The impact above is recorded with the request, against version {project.version} of
+              this project. If the project moves on before the change is applied, the request is
+              superseded rather than applied — an approval is an approval of the report somebody
+              actually read.
+            </p>
+
+            <form action={requestChange} className="flex flex-col gap-sm">
+              <input type="hidden" name="projectId" value={projectId} />
+              <input type="hidden" name="nodeId" value={selected.id} />
+
+              <div className="flex flex-col gap-xs">
+                <label htmlFor="change-title" className="font-sans text-body-sm text-on-surface">
+                  What is changing?
+                </label>
+                <input
+                  id="change-title"
+                  name="title"
+                  required
+                  className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface"
+                />
+              </div>
+
+              <div className="flex flex-col gap-xs">
+                <label htmlFor="change-kind" className="font-sans text-body-sm text-on-surface">
+                  What kind of change?
+                </label>
+                <select
+                  id="change-kind"
+                  name="kind"
+                  defaultValue="MATERIAL"
+                  className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface"
+                >
+                  <option value="MATERIAL">Material — what it requires, does or costs</option>
+                  <option value="COSMETIC">Cosmetic — wording only, nothing depends on it</option>
+                  <option value="WITHDRAWAL">Withdrawal — it is being removed</option>
+                </select>
+                {/* Cosmetic exists so renaming a requirement does not invalidate its test suite. */}
+                <p className="font-sans text-body-sm text-on-surface-variant">
+                  Cosmetic changes propagate to nothing. Choosing it for a change that is not
+                  cosmetic is how an impact report comes back reassuringly empty.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-xs">
+                <label
+                  htmlFor="change-rationale"
+                  className="font-sans text-body-sm text-on-surface"
+                >
+                  Why?
+                </label>
+                <textarea
+                  id="change-rationale"
+                  name="rationale"
+                  rows={2}
+                  required
+                  className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface"
+                  placeholder="A change request with no reason cannot be argued about."
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="inline-flex w-fit items-center gap-xs rounded bg-primary px-md py-sm font-sans text-body-md text-on-primary hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Record this request
+              </button>
+            </form>
+          </section>
+        )}
+
+        {requests === null || requests.rows.length === 0 ? null : (
+          <section aria-labelledby="requests-heading" className="flex flex-col gap-md">
+            <h2 id="requests-heading" className="font-sans text-headline-sm text-on-surface">
+              Change requests
+            </h2>
+
+            <ul className="flex flex-col gap-md">
+              {requests.rows.map((row) => (
+                <ChangeRequestRow
+                  key={row.id}
+                  projectId={projectId}
+                  row={row}
+                  actor={requests.actor}
+                  projectVersion={requests.projectVersion}
+                />
+              ))}
+            </ul>
+          </section>
+        )}
+
         <div className="flex flex-wrap gap-lg">
           <Link
             href={`/plan/${projectId}`}
@@ -233,6 +335,131 @@ export default async function ChangePage({
         </div>
       </main>
     </div>
+  );
+}
+
+/**
+ * One change request, with whatever it is currently possible to do to it.
+ *
+ * The controls are decided by the request's own state and by who is looking, not by a flag: a
+ * request pending approval offers a decision, an approved one offers apply, and a decided one offers
+ * nothing. Showing a disabled button for something that cannot happen is how people learn to ignore
+ * the state.
+ */
+function ChangeRequestRow({
+  projectId,
+  row,
+  actor,
+  projectVersion,
+}: {
+  readonly projectId: string;
+  readonly row: {
+    id: string;
+    title: string;
+    rationale: string;
+    state: string;
+    baseVersion: number;
+    requestedBy: string;
+    decisionReason: string | null;
+    /** Whether the engine decided this needs somebody else's approval. */
+    requiresApproval: boolean;
+  };
+  readonly actor: string;
+  readonly projectVersion: number;
+}) {
+  const isRequester = row.requestedBy === actor;
+  const stale = row.baseVersion !== projectVersion;
+
+  return (
+    <li className="flex flex-col gap-sm rounded-lg border border-outline-variant bg-surface p-md">
+      <div className="flex flex-wrap items-baseline justify-between gap-sm">
+        <h3 className="font-sans text-title-sm text-on-surface">{row.title}</h3>
+        <span className="font-mono text-data-mono-sm text-on-surface-variant">
+          {row.state.toLowerCase().replace(/_/g, ' ')} · against version {row.baseVersion}
+        </span>
+      </div>
+
+      <p className="font-sans text-body-sm text-on-surface-variant">{row.rationale}</p>
+
+      {row.decisionReason === null ? null : (
+        <p className="font-sans text-body-sm text-on-surface">Decision: {row.decisionReason}</p>
+      )}
+
+      {/*
+        Said before it is tried, not after.
+
+        The project has moved on, so this request describes consequences that were calculated against
+        a project that no longer exists. Applying it is refused, and offering the button anyway would
+        teach somebody that the refusal is arbitrary.
+      */}
+      {stale && row.state !== 'APPLIED' && row.state !== 'SUPERSEDED' ? (
+        <p className="flex items-center gap-xs font-sans text-body-sm text-warning">
+          <MaterialIcon name="warning" size={16} />
+          The project is now at version {projectVersion}. This impact was calculated against version{' '}
+          {row.baseVersion}, so it can no longer be applied.
+        </p>
+      ) : null}
+
+      {row.state === 'PENDING_APPROVAL' ? (
+        isRequester && row.requiresApproval ? (
+          <p className="flex items-center gap-xs font-sans text-body-sm text-on-surface-variant">
+            <MaterialIcon name="lock" size={16} />
+            You asked for this, so you cannot approve it. Self-approval records a decision with
+            nobody independent behind it, which is worse than no approval because the record looks
+            complete.
+          </p>
+        ) : (
+          <form action={decideChange} className="flex flex-col gap-sm">
+            <input type="hidden" name="projectId" value={projectId} />
+            <input type="hidden" name="requestId" value={row.id} />
+
+            <label htmlFor={`reason-${row.id}`} className="font-sans text-body-sm text-on-surface">
+              Why are you deciding this way?
+            </label>
+            <textarea
+              id={`reason-${row.id}`}
+              name="reason"
+              rows={2}
+              required
+              className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface"
+            />
+
+            <div className="flex flex-wrap gap-sm">
+              <button
+                type="submit"
+                name="decision"
+                value="APPROVED"
+                className="inline-flex items-center gap-xs rounded bg-primary px-md py-sm font-sans text-body-sm text-on-primary hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Approve
+              </button>
+              <button
+                type="submit"
+                name="decision"
+                value="REJECTED"
+                className="inline-flex items-center gap-xs rounded border border-outline-variant px-md py-sm font-sans text-body-sm text-on-surface hover:bg-surface-container-high focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Reject
+              </button>
+            </div>
+          </form>
+        )
+      ) : null}
+
+      {row.state === 'APPROVED' && !stale ? (
+        <form action={applyChange}>
+          <input type="hidden" name="projectId" value={projectId} />
+          <input type="hidden" name="requestId" value={row.id} />
+          <button
+            type="submit"
+            className="inline-flex w-fit items-center gap-xs rounded bg-primary px-md py-sm font-sans text-body-sm text-on-primary hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            Apply it
+            <MaterialIcon name="arrow_forward" size={16} />
+          </button>
+        </form>
+      ) : null}
+    </li>
   );
 }
 

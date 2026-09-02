@@ -865,6 +865,67 @@ export const sessions = pgTable(
  * `evidencePurposes()` in `packages/rules`, derived from the criteria themselves, so the set of
  * things a user can record is exactly the set of things a gate looks for.
  */
+/**
+ * Change requests (gap-spec §27, §28; plan §24 screen 35).
+ *
+ * The engine in `packages/change` has modelled all of this since Phase 12 — the state machine, the
+ * deny-by-default impact propagation, the §28 concurrency check — and had no table to run against,
+ * so approve, reject and apply were unreachable by any route in the product.
+ *
+ * `base_version` is the column the whole feature turns on. An approval is an approval of a specific
+ * impact report about a specific version of the project; if the project moves on first, applying
+ * would enact a decision made about a project that no longer exists.
+ */
+export const changeRequests = pgTable(
+  'change_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    title: text('title').notNull(),
+    /** A change request with no reason cannot be argued about. */
+    rationale: text('rationale').notNull(),
+    state: text('state').notNull().default('DRAFT'),
+    /** `ChangedNode[]`. What was asked for is a fact about the request, not something to recompute. */
+    changes: jsonb('changes').$type<unknown[]>().notNull(),
+    /** The impact report the approver saw. An approval is an approval *of that report*. */
+    impact: jsonb('impact').$type<Record<string, unknown>>(),
+    baseVersion: integer('base_version').notNull(),
+    requestedBy: text('requested_by').notNull(),
+    approvedBy: text('approved_by'),
+    decisionReason: text('decision_reason'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('change_requests_project_idx').on(table.projectId, table.createdAt),
+    index('change_requests_org_idx').on(table.organizationId),
+    check(
+      'change_requests_state_check',
+      sql`${table.state} IN ('DRAFT','PENDING_APPROVAL','APPROVED','APPLIED','REJECTED','SUPERSEDED')`,
+    ),
+    /*
+     * Segregation of duties, at the column.
+     *
+     * The application refuses self-approval too. A constraint means it cannot exist even if a code
+     * path forgets to look — and a self-approval is worse than no approval, because the record looks
+     * complete.
+     */
+    check(
+      'change_requests_no_self_approval',
+      sql`${table.approvedBy} IS NULL OR ${table.approvedBy} <> ${table.requestedBy}`,
+    ),
+    check(
+      'change_requests_decision_has_reason',
+      sql`${table.state} NOT IN ('APPROVED','REJECTED') OR ${table.decisionReason} IS NOT NULL`,
+    ),
+  ],
+);
+
 export const evidence = pgTable(
   'evidence',
   {

@@ -130,6 +130,7 @@ export interface TestDatabase {
  */
 const TRUNCATABLE = [
   'sessions',
+  'change_requests',
   'evidence',
   'approvals',
   'outbox_events',
@@ -589,6 +590,42 @@ CREATE TABLE evidence (
 CREATE INDEX evidence_project_purpose_idx ON evidence (project_id, purpose);
 CREATE INDEX evidence_org_idx ON evidence (organization_id);
 
+CREATE TABLE change_requests (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  title text NOT NULL,
+  -- A change request with no reason cannot be argued about, so the model refuses one and so does
+  -- the column.
+  rationale text NOT NULL,
+  state text NOT NULL DEFAULT 'DRAFT',
+  -- ChangedNode[] from packages/change. Stored rather than recomputed: what was asked for is a fact
+  -- about the request, and recalculating it later would answer a different question.
+  changes jsonb NOT NULL,
+  -- The impact report the approver actually saw. Gap-spec 28 step 5 turns on this: an approval is
+  -- an approval *of that report*, and keeping it is what makes the staleness check meaningful.
+  impact jsonb,
+  -- The project version the impact was calculated against. The single most important column here.
+  base_version integer NOT NULL,
+  requested_by text NOT NULL,
+  approved_by text,
+  decision_reason text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT change_requests_state_check
+    CHECK (state IN ('DRAFT','PENDING_APPROVAL','APPROVED','APPLIED','REJECTED','SUPERSEDED')),
+  -- Segregation of duties, at the column. The application refuses it too; a constraint means a
+  -- self-approval cannot exist even if a code path forgets to look.
+  CONSTRAINT change_requests_no_self_approval
+    CHECK (approved_by IS NULL OR approved_by <> requested_by),
+  -- A decision is a decision with a reason. Both states that record one require it.
+  CONSTRAINT change_requests_decision_has_reason
+    CHECK (state NOT IN ('APPROVED','REJECTED') OR decision_reason IS NOT NULL)
+);
+
+CREATE INDEX change_requests_project_idx ON change_requests (project_id, created_at DESC);
+CREATE INDEX change_requests_org_idx ON change_requests (organization_id);
+
 CREATE TABLE approvals (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -734,6 +771,12 @@ CREATE POLICY twin_calculations_tenant_isolation ON twin_calculations
 ALTER TABLE evidence ENABLE ROW LEVEL SECURITY;
 ALTER TABLE evidence FORCE ROW LEVEL SECURITY;
 CREATE POLICY evidence_tenant_isolation ON evidence
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE change_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE change_requests FORCE ROW LEVEL SECURITY;
+CREATE POLICY change_requests_tenant_isolation ON change_requests
   USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
   WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
 

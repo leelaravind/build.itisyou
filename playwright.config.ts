@@ -81,75 +81,77 @@ export default defineConfig({
    * themselves: staging has no provider configured, and pointing a deployed environment at a mock
    * issuer would be the same bad idea wearing different clothes.
    */
-  webServer: process.env.E2E_BASE_URL
-    ? undefined
-    : [
-        {
-          command: 'node e2e/support/mock-oidc.mjs',
-          url: `${MOCK_ISSUER}/health`,
-          reuseExistingServer: false,
-          timeout: 30_000,
-        },
-        {
-          /*
-           * Build, then start. `next start` serves whatever is in `.next`, which is not necessarily
-           * the code on disk — so running the suite without building first tests the previous commit.
-           *
-           * That cost real time a third time: every new route in a freshly written spec returned 404,
-           * which reads exactly like a routing bug and sends you looking for one. `reuseExistingServer`
-           * below already rules out a stale *process*; this rules out a stale *artefact*, which is the
-           * same failure wearing different clothes.
-           *
-           * The build is not skipped in CI. A conditional here would restore the very hole it closes,
-           * and CI's own build step is cheap to repeat next to a phantom debugging session.
-           */
-          command: 'pnpm --filter=@govintel/web build && pnpm --filter=@govintel/web start',
-          /*
-           * Readiness is `/api/health`, not `/`.
-           *
-           * `/` renders without touching the database, so the port accepting connections says nothing
-           * about whether the database is usable. On a fresh checkout the first request that *does*
-           * touch it pays for creating the PGlite instance and building the schema from the DDL —
-           * seconds, not milliseconds (KI-017) — and whichever test happens to run first absorbs that
-           * cost against a 5s `toHaveURL`.
-           *
-           * That is what failed in CI: two `ai-import` tests, on chromium only, asserting they had
-           * navigated to `/intake/{id}` and finding themselves still on `/start`. It looked like
-           * broken project creation and was a cold start. Locally it never appeared, because a
-           * `.pglite` directory from an earlier run was already warm.
-           *
-           * `/api/health` executes `select 1`, so waiting for it to answer means waiting for the
-           * database to exist. Using the health endpoint as the readiness probe is what health
-           * endpoints are for, and it removes the race for every spec at once rather than padding one
-           * timeout at a time.
-           */
-          url: 'http://localhost:3000/api/health',
-          /*
-           * Never reuse an existing server, not even locally.
-           *
-           * `reuseExistingServer: !process.env.CI` is the common default and it cost real time twice
-           * in this project: a server left running from an earlier debugging session kept answering,
-           * so the suite tested code that had already been replaced. Both times the symptom was a
-           * confident, reproducible failure against a fix that was actually correct — the worst kind,
-           * because it sends you looking for a bug that no longer exists.
-           *
-           * Starting a fresh server costs a few seconds. Debugging a phantom failure costs far more.
-           */
-          reuseExistingServer: false,
-          // Generous, because this now covers a production build as well as the server start.
-          timeout: 300_000,
-          /*
-           * The client secret is a literal in a test fixture talking to a process that generated its
-           * own key thirty seconds ago. It authenticates nothing and protects nothing, and writing
-           * it here rather than reading it from the environment keeps it obvious that it is not a
-           * credential. `scan:secrets` allows it for that reason.
-           */
-          env: {
-            OIDC_ISSUER: MOCK_ISSUER,
-            OIDC_CLIENT_ID: 'govintel-e2e',
-            OIDC_CLIENT_SECRET: 'not-a-secret-mock-issuer-only',
-            OIDC_REDIRECT_URI: 'http://localhost:3000/auth/callback',
+  ...(process.env.E2E_BASE_URL !== undefined
+    ? {}
+    : {
+        webServer: [
+          {
+            command: 'node e2e/support/mock-oidc.mjs',
+            url: `${MOCK_ISSUER}/health`,
+            reuseExistingServer: false,
+            timeout: 30_000,
           },
-        },
-      ],
+          {
+            /*
+             * Build, then start. `next start` serves whatever is in `.next`, which is not necessarily
+             * the code on disk — so running the suite without building first tests the previous commit.
+             *
+             * That cost real time a third time: every new route in a freshly written spec returned 404,
+             * which reads exactly like a routing bug and sends you looking for one. `reuseExistingServer`
+             * below already rules out a stale *process*; this rules out a stale *artefact*, which is the
+             * same failure wearing different clothes.
+             *
+             * The build is not skipped in CI. A conditional here would restore the very hole it closes,
+             * and CI's own build step is cheap to repeat next to a phantom debugging session.
+             */
+            command: 'pnpm --filter=@govintel/web build && pnpm --filter=@govintel/web start',
+            /*
+             * Readiness is `/api/health`, not `/`.
+             *
+             * `/` renders without touching the database, so the port accepting connections says nothing
+             * about whether the database is usable. On a fresh checkout the first request that *does*
+             * touch it pays for creating the PGlite instance and building the schema from the DDL —
+             * seconds, not milliseconds (KI-017) — and whichever test happens to run first absorbs that
+             * cost against a 5s `toHaveURL`.
+             *
+             * That is what failed in CI: two `ai-import` tests, on chromium only, asserting they had
+             * navigated to `/intake/{id}` and finding themselves still on `/start`. It looked like
+             * broken project creation and was a cold start. Locally it never appeared, because a
+             * `.pglite` directory from an earlier run was already warm.
+             *
+             * `/api/health` executes `select 1`, so waiting for it to answer means waiting for the
+             * database to exist. Using the health endpoint as the readiness probe is what health
+             * endpoints are for, and it removes the race for every spec at once rather than padding one
+             * timeout at a time.
+             */
+            url: 'http://localhost:3000/api/health',
+            /*
+             * Never reuse an existing server, not even locally.
+             *
+             * `reuseExistingServer: !process.env.CI` is the common default and it cost real time twice
+             * in this project: a server left running from an earlier debugging session kept answering,
+             * so the suite tested code that had already been replaced. Both times the symptom was a
+             * confident, reproducible failure against a fix that was actually correct — the worst kind,
+             * because it sends you looking for a bug that no longer exists.
+             *
+             * Starting a fresh server costs a few seconds. Debugging a phantom failure costs far more.
+             */
+            reuseExistingServer: false,
+            // Generous, because this now covers a production build as well as the server start.
+            timeout: 300_000,
+            /*
+             * The client secret is a literal in a test fixture talking to a process that generated its
+             * own key thirty seconds ago. It authenticates nothing and protects nothing, and writing
+             * it here rather than reading it from the environment keeps it obvious that it is not a
+             * credential. `scan:secrets` allows it for that reason.
+             */
+            env: {
+              OIDC_ISSUER: MOCK_ISSUER,
+              OIDC_CLIENT_ID: 'govintel-e2e',
+              OIDC_CLIENT_SECRET: 'not-a-secret-mock-issuer-only',
+              OIDC_REDIRECT_URI: 'http://localhost:3000/auth/callback',
+            },
+          },
+        ],
+      }),
 });
