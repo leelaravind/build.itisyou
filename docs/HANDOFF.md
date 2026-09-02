@@ -1,6 +1,6 @@
 # HANDOFF
 
-Written 2026-09-02, ~02:15 London, mid-session. Read this first if you are picking the work up.
+Written 2026-09-02, ~02:15 London; updated ~07:40 the same morning. Mid-session. Read this first if you are picking the work up.
 
 It exists because the scheduled wake-up that resumes this work is **session-only** — it lives in
 memory and dies with the session. This file does not.
@@ -55,12 +55,26 @@ Roughly 2,230 unit tests. Full E2E runs against the deployed staging environment
 
 ## Immediate next tasks
 
-1. **Two CI-only E2E failures from the new surfaces.**
-   - `getByRole('alert')` strict-mode violation in `e2e/lifecycle.spec.ts` — the evidence page
-     renders two alerts. Scope the locator.
-   - **13 axe violations on the plan page**, almost certainly from the new `LifecycleCard` or the
-     evidence page. Fix the markup, not the test. Accessibility is a hard bar here.
-2. Continue the register top-down.
+Continue the register top-down. The two CI-only failures from the new surfaces are closed: the
+`getByRole('alert')` strict-mode violation and all 13 axe violations on the plan page.
+
+### The icons were never rendering
+
+Worth knowing about because of how long it survived. `MaterialIcon` wrote the icon's *name* into a
+span and relied on a ligature font to turn it into a glyph. No `@font-face`, no font file, and the
+class was undefined - so every icon on all 50 screens drew its own name in the body font. The header
+brand mark read `settings_suggest`.
+
+Nothing caught it. Icons are `aria-hidden`, so axe steps over them; the E2E suites address the
+product by role and by text, both of which stayed correct. The only symptom that reached a test was
+six pixels of horizontal overflow on `/login` at phone width.
+
+The geometry is now inlined at build time by `scripts/generate-icons.mjs` (`pnpm icons`), from the
+`@material-symbols/svg-400` devDependency, and `MaterialIcon` takes `keyof` the generated set - so an
+icon that does not exist fails to compile. `pnpm icons --check` runs inside `docs:check`.
+
+**There is no web font in this product, deliberately.** Nothing should fetch one; the CSP forbids it
+(KI-007) and plan §19 rules it out.
 
 ---
 
@@ -91,8 +105,12 @@ Traps, each of which cost real time:
   *previous* bundle, silently and successfully. Always `cf:build` first. This happened: a deploy
   reported commit `1180375` while serving an older bundle, because `APP_VERSION` is a label passed by
   hand and not evidence of what is inside.
-- **`ERR_SQLITE_ERROR: disk I/O error`** during the nested pnpm install means the pnpm store index is
-  corrupt: `rm -f /home/kplee/.pnpm-store/v11/index.db*` and retry. It rebuilds.
+- **`ERR_SQLITE_ERROR: disk I/O error`** during the nested pnpm install is caused by
+  `XDG_CONFIG_HOME` pointing at a path on `/mnt/c`. pnpm keeps a SQLite index under it, and SQLite
+  cannot take file locks over drvfs, so it reports a disk error on a disk with 953 GB free. **Do not
+  set `XDG_CONFIG_HOME` for `pnpm install` or `cf:build`** - only `wrangler deploy` needs it, to read
+  the Cloudflare credentials on the Windows side. This was previously recorded here as a corrupt
+  store index to be deleted; that is the symptom, and deleting it does not help.
 - The deploy path needs `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` even though it
   never connects to it. Give it a **credential-free placeholder**, never a real DSN.
 

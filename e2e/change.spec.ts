@@ -212,6 +212,20 @@ test.describe('tenant isolation', () => {
     page,
     browser,
   }) => {
+    /*
+     * The only test in the suite that runs two complete journeys: one to produce a project with a
+     * plan and an impact analysis, and a second to obtain a genuine guest session to attack it from.
+     * Every other test does one, so this one is against the same 30s budget with twice the work, and
+     * under load on Firefox it ran out of it — which is what the CI failure was. Not a slow
+     * assertion: a slow *setup*.
+     *
+     * `test.slow()` triples the budget and changes nothing about what is asserted. It matters that
+     * this is the fix rather than a wider default: a security test that flakes is one people learn
+     * to re-run rather than read, and a global increase would hide the next test that is slow for a
+     * reason.
+     */
+    test.slow();
+
     const projectId = await reachChange(page);
 
     const other = await browser.newContext();
