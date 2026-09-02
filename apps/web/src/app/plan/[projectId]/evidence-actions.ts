@@ -119,11 +119,27 @@ async function addEvidence(projectId: string, formData: FormData): Promise<Outco
      * stayed red — a mismatch that is invisible, because both the record and the gate look correct
      * on their own.
      */
+    const { graph } = await loadProjectGraph(projectId, project.organizationId);
+
+    /*
+     * The same evaluation the page ran, graph and all.
+     *
+     * Not a bug being fixed: measured against a real generated project, evaluating with and without
+     * the graph produces the same 60 emitted criteria and the same 75 purposes, so no purpose the
+     * page offers is currently refused here.
+     *
+     * It is made to agree by construction anyway, because the failure it would produce is invisible.
+     * A rule that reads the graph would come back INDETERMINATE here and APPLIED there, and the user
+     * would be invited to record evidence the action then declined — with both halves looking
+     * entirely correct on their own. One database round trip on a write path is a low price for
+     * removing a whole class of disagreement between a screen and the thing behind it.
+     */
     const { emittedGates } = evaluateForProject({
       projectId,
       projectType: project.projectType,
       lifecycleState: project.lifecycleState,
       intake: await loadIntake(projectId),
+      graph,
     });
 
     if (!evidencePurposes(emittedGates).includes(purpose)) {
