@@ -4,8 +4,7 @@ import { eq } from 'drizzle-orm';
 import { intakeAnswers } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { graphFromRows } from '@govintel/twin/repository';
-import { RULES, RULESET_VERSION } from '@govintel/rules/catalogue';
-import { evaluateRules, summarise } from '@govintel/rules/evaluate';
+import { summarise } from '@govintel/rules/evaluate';
 import { evaluateGates } from '@govintel/rules/gates';
 import { decompose, mergeIntoGraph } from '@govintel/execution/decompose';
 import { findScheduleProblems } from '@govintel/execution/scheduling';
@@ -26,6 +25,7 @@ import {
 } from '@govintel/finance/estimate';
 import { addContingency, createBudget, sizeContingency, totals } from '@govintel/finance/budget';
 import { assessFeasibility, assessHealth, nextAction } from '@govintel/finance/feasibility';
+import { evaluateForProject } from '../../../../lib/server/project-rules.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
@@ -74,19 +74,13 @@ export default async function BudgetPage({ params }: { params: Promise<{ project
     return <NoPlanYet projectId={projectId} name={project.name} />;
   }
 
-  const evaluation = evaluateRules(
-    RULES,
-    {
-      projectId,
-      ...(project.projectType === 'UNKNOWN' ? {} : { projectType: project.projectType }),
-      lifecycleState: project.lifecycleState,
-      methodology: 'AGILE',
-      intake,
-      graph: planGraph,
-      asOf: new Date().toISOString().slice(0, 10),
-    },
-    RULESET_VERSION,
-  );
+  const { evaluation, emittedGates } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake,
+    graph: planGraph,
+  });
 
   const summary = summarise(evaluation);
 
@@ -143,7 +137,7 @@ export default async function BudgetPage({ params }: { params: Promise<{ project
   const budgetTotals = totals(budget);
 
   const scheduleProblems = findScheduleProblems({ graph, resources: [] });
-  const gates = evaluateGates(graph);
+  const gates = evaluateGates(graph, emittedGates);
   const failedGates = gates.filter((g) => g.result === 'FAILED').map((g) => g.key);
 
   const assessmentInput = {

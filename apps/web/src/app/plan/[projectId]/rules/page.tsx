@@ -4,10 +4,11 @@ import { eq } from 'drizzle-orm';
 import { intakeAnswers } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { graphFromRows } from '@govintel/twin/repository';
-import { RULES, RULESET_VERSION } from '@govintel/rules/catalogue';
-import { evaluateRules, summarise, type RuleResult } from '@govintel/rules/evaluate';
+import { summarise, type RuleResult } from '@govintel/rules/evaluate';
 import { evaluateGates } from '@govintel/rules/gates';
 import { findField } from '@govintel/intake/fields';
+import { RULES } from '@govintel/rules/catalogue';
+import { evaluateForProject } from '../../../../lib/server/project-rules.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
@@ -61,32 +62,16 @@ export default async function RulesPage({ params }: { params: Promise<{ projectI
 
   const graph = graphFromRows(projectId, nodes, edges);
 
-  const evaluation = evaluateRules(
-    RULES,
-    {
-      projectId,
-      /*
-       * 'UNKNOWN' is the column default, not a project type.
-       *
-       * Passing it through would make every type-scoped rule evaluate against a type that does not
-       * exist and report NOT_APPLICABLE — so a project that never answered the question would
-       * silently escape every type-specific security obligation. Passing undefined instead makes
-       * those rules INDETERMINATE, which is the truth.
-       */
-      ...(project.projectType === 'UNKNOWN' ? {} : { projectType: project.projectType }),
-      lifecycleState: project.lifecycleState,
-      methodology: 'AGILE',
-      intake,
-      // The date is an input, never read from a clock inside the engine — that separation is what
-      // makes the determinism claim testable.
-      asOf: new Date().toISOString().slice(0, 10),
-      ...(graph.size > 0 ? { graph } : {}),
-    },
-    RULESET_VERSION,
-  );
+  const { evaluation, emittedGates } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake,
+    graph: graph,
+  });
 
   const summary = summarise(evaluation);
-  const gates = graph.size > 0 ? evaluateGates(graph) : [];
+  const gates = graph.size > 0 ? evaluateGates(graph, emittedGates) : [];
 
   const applied = evaluation.results.filter((r) => r.outcome === 'APPLIED');
   const mandatory = applied.filter((r) => r.severity === 'MANDATORY');

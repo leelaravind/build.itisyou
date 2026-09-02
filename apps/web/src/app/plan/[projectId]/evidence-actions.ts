@@ -10,6 +10,7 @@ import { APPROVABLE_SUBJECTS } from '@govintel/governance/approval';
 import { toAppError } from '@govintel/shared/errors';
 import { logger } from '@govintel/shared/logging';
 import { withDatabase } from '../../../lib/server/database.ts';
+import { evaluateForProject, loadIntake } from '../../../lib/server/project-rules.ts';
 import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 import { recordAudit } from '../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
@@ -104,7 +105,14 @@ async function addEvidence(projectId: string, formData: FormData): Promise<Outco
      * stayed red — a mismatch that is invisible, because both the record and the gate look correct
      * on their own.
      */
-    if (!evidencePurposes().includes(purpose)) {
+    const { emittedGates } = evaluateForProject({
+      projectId,
+      projectType: project.projectType,
+      lifecycleState: project.lifecycleState,
+      intake: await loadIntake(projectId),
+    });
+
+    if (!evidencePurposes(emittedGates).includes(purpose)) {
       return { kind: 'refused', reason: 'unknown-purpose' };
     }
 
@@ -286,6 +294,18 @@ export async function evidenceStatus(projectId: string) {
     approvals: decisions,
   } = await loadProjectGraph(projectId, project.organizationId);
 
+  /*
+   * Including what the rules demand, so the evidence page offers the criteria that are actually
+   * blocking this project's gates rather than only the catalogue's fixed seventeen.
+   */
+  const { emittedGates } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake: await loadIntake(projectId),
+    graph,
+  });
+
   const satisfied = new Set(
     graph
       .nodesOfClass('EVIDENCE')
@@ -299,7 +319,7 @@ export async function evidenceStatus(projectId: string) {
     project,
     records,
     approvals: decisions,
-    criteria: manualCriteria().map((criterion) => ({
+    criteria: manualCriteria(emittedGates).map((criterion) => ({
       ...criterion,
       satisfied:
         criterion.evidencePurpose === null ? hasApproval : satisfied.has(criterion.evidencePurpose),

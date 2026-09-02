@@ -16,6 +16,7 @@
 
 import type { TwinGraph } from '@govintel/twin/graph';
 import type { NodeClass } from '@govintel/twin/nodes';
+import { findRule } from './catalogue.ts';
 
 /* -------------------------------------------------------------------------- */
 /* Shape                                                                      */
@@ -874,9 +875,133 @@ function explain(
     )} ${undecided.length === 1 ? 'is' : 'are'} not something the project has enough recorded to answer.`;
 }
 
-/** Evaluate every gate. Order is the catalogue's, which follows the lifecycle. */
-export function evaluateGates(graph: TwinGraph): readonly GateOutcome[] {
-  return GATES.map((gate) => evaluateGate(gate, graph));
+/* -------------------------------------------------------------------------- */
+/* Criteria the rules ask for                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A gate criterion emitted by a rule that applied to this project.
+ *
+ * Structural rather than imported from `./schema.ts` so this module stays the one place that decides
+ * what a criterion is. `ruleId` is added by the evaluator when it collects emissions.
+ */
+export interface EmittedGateCriterion {
+  readonly gateKey: string;
+  readonly criterion: string;
+  readonly blocking: boolean;
+  readonly ruleId: string;
+}
+
+/**
+ * The key and evidence purpose for a rule-emitted criterion.
+ *
+ * Derived from the criterion text rather than from the rule id, because two rules converging on the
+ * same criterion are asking for the same thing and one piece of evidence should satisfy both. The
+ * evaluator already deduplicates on `gateKey:criterion` for exactly that reason.
+ */
+/** The rule's own reasoning, so a blocked gate can say why rather than citing an id. */
+function rationaleFor(ruleId: string): string | undefined {
+  return findRule(ruleId)?.rationale;
+}
+
+export function emittedCriterionKey(criterion: string): string {
+  const slug = criterion
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .split('-')
+    .slice(0, 8)
+    .join('-');
+
+  return `rule-${slug}`;
+}
+
+/**
+ * Turn a rule's demand into a criterion the gate can evaluate.
+ *
+ * MANUAL by construction. A rule emitting "significant decisions are recorded" is asking for an
+ * artefact to exist, not for a property of the graph — if it were checkable from the graph the
+ * catalogue would already check it. So it resolves the same way every other MANUAL criterion does:
+ * an EVIDENCE or APPROVAL node with a matching purpose, which the evidence surface offers because
+ * that surface is built from `manualCriteria()`.
+ *
+ * `rationale` carries the rule's own reasoning through, so a person who cannot pass a gate is told
+ * why the rule wanted it rather than being shown a bare sentence with a rule id next to it.
+ */
+export function criterionFromRule(
+  emitted: EmittedGateCriterion,
+  rationale: string | undefined,
+): GateCriterion {
+  const purpose = emittedCriterionKey(emitted.criterion);
+
+  return {
+    key: purpose,
+    statement: emitted.criterion,
+    kind: 'MANUAL',
+    blocking: emitted.blocking,
+    rationale: rationale ?? `Required by rule ${emitted.ruleId}, which applies to this project.`,
+    evidencePurpose: purpose,
+    check: evidenceFor(purpose),
+  };
+}
+
+/**
+ * The catalogue's gates, extended with the criteria this project's rules asked for.
+ *
+ * ## Why this had to exist
+ *
+ * The rule evaluator produced 73 gate criteria across the catalogue and every one of them was
+ * discarded: `evaluateGates` read the static catalogue and nothing else, so a rule saying "for a
+ * public web application the security gate must also require a documented threat model" had no
+ * effect on the security gate, or on anything. The rules engine could not fail a gate.
+ *
+ * That is the difference between a rule engine and a rule *catalogue*. 287 rules were evaluated,
+ * explained, traced and shown on a page, and none of them could stop a project moving forward.
+ *
+ * A gate a rule attaches to that does not exist is dropped rather than invented — `gateKey` is a
+ * free string in the rule schema, and a typo there should not create a gate nobody defined.
+ */
+export function gatesWith(emitted: readonly EmittedGateCriterion[]): readonly Gate[] {
+  if (emitted.length === 0) return GATES;
+
+  const byGate = new Map<string, EmittedGateCriterion[]>();
+
+  for (const criterion of emitted) {
+    const existing = byGate.get(criterion.gateKey);
+    if (existing === undefined) byGate.set(criterion.gateKey, [criterion]);
+    else existing.push(criterion);
+  }
+
+  return GATES.map((gate) => {
+    const extra = byGate.get(gate.key) ?? [];
+    if (extra.length === 0) return gate;
+
+    /*
+     * A rule restating a criterion the catalogue already has is not an addition. Keeping the
+     * catalogue's version keeps its `check` — which may be AUTOMATIC, and an automatic check is
+     * strictly better than asking somebody to upload a file saying the same thing.
+     */
+    const known = new Set(gate.criteria.map((c) => c.key));
+
+    const added = extra
+      .map((criterion) => criterionFromRule(criterion, rationaleFor(criterion.ruleId)))
+      .filter((criterion) => !known.has(criterion.key));
+
+    return { ...gate, criteria: [...gate.criteria, ...added] };
+  });
+}
+
+/**
+ * Evaluate every gate. Order is the catalogue's, which follows the lifecycle.
+ *
+ * `emitted` is what this project's applied rules asked for. Omitting it evaluates the catalogue
+ * alone, which is what a caller with no evaluation to hand should get — not a quietly weaker gate.
+ */
+export function evaluateGates(
+  graph: TwinGraph,
+  emitted: readonly EmittedGateCriterion[] = [],
+): readonly GateOutcome[] {
+  return gatesWith(emitted).map((gate) => evaluateGate(gate, graph));
 }
 
 /**
@@ -901,8 +1026,10 @@ export interface ManualCriterion {
   readonly evidencePurpose: string | null;
 }
 
-export function manualCriteria(): readonly ManualCriterion[] {
-  return GATES.flatMap((gate) =>
+export function manualCriteria(
+  emitted: readonly EmittedGateCriterion[] = [],
+): readonly ManualCriterion[] {
+  return gatesWith(emitted).flatMap((gate) =>
     gate.criteria
       .filter((criterion) => criterion.kind === 'MANUAL')
       .map((criterion) => ({
@@ -917,11 +1044,11 @@ export function manualCriteria(): readonly ManualCriterion[] {
   );
 }
 
-/** The distinct evidence purposes the catalogue asks for, in catalogue order. */
-export function evidencePurposes(): readonly string[] {
+/** The distinct evidence purposes asked for, in catalogue order, including the rules'. */
+export function evidencePurposes(emitted: readonly EmittedGateCriterion[] = []): readonly string[] {
   return [
     ...new Set(
-      manualCriteria()
+      manualCriteria(emitted)
         .map((criterion) => criterion.evidencePurpose)
         .filter((purpose): purpose is string => purpose !== null),
     ),

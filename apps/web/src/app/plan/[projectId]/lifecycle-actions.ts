@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { projects, twinEdges, twinNodes } from '@govintel/db/schema';
 import { graphFromRows } from '@govintel/twin/repository';
 import { evaluateGates } from '@govintel/rules/gates';
+import { evaluateForProject, loadIntake } from '../../../lib/server/project-rules.ts';
 import {
   evaluateTransition,
   transitionsFrom,
@@ -115,9 +116,27 @@ async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> 
      * correct reading. A project with no plan has not satisfied the planning gate; it has not been
      * assessed against it.
      */
+    /*
+     * The gates include what this project's rules demand, not only the catalogue's own criteria.
+     *
+     * Evaluating the catalogue alone here would let a transition through that the rules forbid --
+     * and this is the one place in the product where a gate result actually stops something, so it
+     * is the place where discarding them mattered most.
+     */
+    const { emittedGates } = evaluateForProject({
+      projectId,
+      projectType: project.projectType,
+      lifecycleState: project.lifecycleState,
+      intake: await loadIntake(projectId),
+      graph,
+    });
+
     const gates: readonly GateReadiness[] =
       graph.size > 0
-        ? evaluateGates(graph).map((outcome) => ({ key: outcome.key, result: outcome.result }))
+        ? evaluateGates(graph, emittedGates).map((outcome) => ({
+            key: outcome.key,
+            result: outcome.result,
+          }))
         : [];
 
     /*
@@ -236,9 +255,21 @@ export async function availableTransitions(projectId: string) {
   ]);
 
   const graph = graphFromRows(projectId, nodes, edges);
+
+  const { emittedGates } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake: await loadIntake(projectId),
+    graph,
+  });
+
   const gates: readonly GateReadiness[] =
     graph.size > 0
-      ? evaluateGates(graph).map((outcome) => ({ key: outcome.key, result: outcome.result }))
+      ? evaluateGates(graph, emittedGates).map((outcome) => ({
+          key: outcome.key,
+          result: outcome.result,
+        }))
       : [];
 
   return {

@@ -103,17 +103,38 @@ test.describe('evidence and approvals', () => {
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
-    // Seventeen MANUAL criteria in the catalogue. Asserted as a count so a criterion that stops being
-    // offered is caught — that is exactly how all seventeen came to be unsatisfiable.
-    await expect(page.getByText(/of 17 recorded/)).toBeVisible();
+    /*
+     * The count used to be hardcoded at seventeen — the catalogue's own MANUAL criteria — and that
+     * became wrong the moment the rules could add their own. A project's criteria now depend on the
+     * rules that applied to it, so a fixed number would only ever be right for one project.
+     *
+     * What is asserted instead is the invariant the number was standing in for: the header agrees
+     * with the page beneath it, the catalogue's criteria are all still offered, and none of them
+     * silently stopped being asked for. That is what let all seventeen become unsatisfiable.
+     */
+    const offered = await page.getByRole('heading', { level: 3 }).count();
+    expect(offered).toBeGreaterThanOrEqual(17);
+
+    await expect(page.getByText(new RegExp(`of ${String(offered)} recorded`))).toBeVisible();
     await expect(page.getByText(/block a gate until recorded/)).toBeVisible();
+
+    // A named criterion from each end of the catalogue, so "the count is large" cannot pass for
+    // "the right things are listed".
+    await expect(
+      page.getByRole('heading', {
+        name: /Someone with the authority to commit has approved the plan/i,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Security is part of the architecture/i }),
+    ).toBeVisible();
   });
 
   test('records evidence and stops asking for it', async ({ page }) => {
     const projectId = await startProject(page, 'A scheduling tool for a dental practice.');
     await page.goto(`/plan/${projectId}/evidence`);
 
-    await expect(page.getByText(/^0 of 17 recorded/)).toBeVisible();
+    await expect(page.getByText(/^0 of \d+ recorded/)).toBeVisible();
 
     const form = page
       .locator('form')
@@ -124,7 +145,7 @@ test.describe('evidence and approvals', () => {
     await form.getByRole('button', { name: /record it/i }).click();
 
     await expect(page.getByRole('status')).toContainText(/evidence recorded/i);
-    await expect(page.getByText(/^1 of 17 recorded/)).toBeVisible();
+    await expect(page.getByText(/^1 of \d+ recorded/)).toBeVisible();
   });
 
   test('refuses evidence that points at nothing', async ({ page }) => {
@@ -148,7 +169,7 @@ test.describe('evidence and approvals', () => {
      * rather than on the one it cares about.
      */
     await expect(page.getByRole('alert').filter({ hasText: /link or a note/i })).toBeVisible();
-    await expect(page.getByText(/^0 of 17 recorded/)).toBeVisible();
+    await expect(page.getByText(/^0 of \d+ recorded/)).toBeVisible();
   });
 
   test('refuses an approval with no reason', async ({ page }) => {
@@ -183,14 +204,14 @@ test.describe('evidence and approvals', () => {
     await form.getByLabel(/what is it/i).fill('Survives regeneration');
     await form.getByLabel(/or state what was done/i).fill('Recorded before the plan was rebuilt.');
     await form.getByRole('button', { name: /record it/i }).click();
-    await expect(page.getByText(/^1 of 17 recorded/)).toBeVisible();
+    await expect(page.getByText(/^1 of \d+ recorded/)).toBeVisible();
 
     await page.goto(`/plan/${projectId}`);
     await page.getByRole('button', { name: /build the plan/i }).click();
     await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
 
     await page.goto(`/plan/${projectId}/evidence`);
-    await expect(page.getByText(/^1 of 17 recorded/)).toBeVisible();
+    await expect(page.getByText(/^1 of \d+ recorded/)).toBeVisible();
     await expect(page.getByText('Survives regeneration')).toBeVisible();
   });
 

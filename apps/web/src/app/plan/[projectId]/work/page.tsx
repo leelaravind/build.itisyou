@@ -4,11 +4,10 @@ import { eq } from 'drizzle-orm';
 import { intakeAnswers } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { graphFromRows } from '@govintel/twin/repository';
-import { RULES, RULESET_VERSION } from '@govintel/rules/catalogue';
-import { evaluateRules } from '@govintel/rules/evaluate';
 import { decompose, mergeIntoGraph } from '@govintel/execution/decompose';
 import { buildBoard, buildToday, summariseProject } from '@govintel/execution/board';
 import { summariseCapacity } from '@govintel/execution/scheduling';
+import { evaluateForProject } from '../../../../lib/server/project-rules.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
@@ -56,19 +55,13 @@ export default async function WorkPage({ params }: { params: Promise<{ projectId
     return <NoPlanYet projectId={projectId} name={project.name} />;
   }
 
-  const evaluation = evaluateRules(
-    RULES,
-    {
-      projectId,
-      ...(project.projectType === 'UNKNOWN' ? {} : { projectType: project.projectType }),
-      lifecycleState: project.lifecycleState,
-      methodology: 'AGILE',
-      intake,
-      graph: planGraph,
-      asOf: new Date().toISOString().slice(0, 10),
-    },
-    RULESET_VERSION,
-  );
+  const { evaluation } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake,
+    graph: planGraph,
+  });
 
   const teamSize = numberAnswer(intake, 'team.size');
 

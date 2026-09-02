@@ -4,11 +4,10 @@ import { eq } from 'drizzle-orm';
 import { intakeAnswers } from '@govintel/db/schema';
 import type { IntakeField } from '@govintel/intake/schema';
 import { graphFromRows } from '@govintel/twin/repository';
-import { RULES, RULESET_VERSION } from '@govintel/rules/catalogue';
-import { evaluateRules } from '@govintel/rules/evaluate';
 import { decompose, mergeIntoGraph } from '@govintel/execution/decompose';
 import { analyseImpact, summariseImpact, type ImpactedNode } from '@govintel/change/impact';
 import { STALENESS_MEANING, type Staleness } from '@govintel/change/propagation';
+import { evaluateForProject } from '../../../../lib/server/project-rules.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { withDatabase } from '../../../../lib/server/database.ts';
@@ -68,19 +67,13 @@ export default async function ChangePage({
     lastUpdatedAt: row.updatedAt.toISOString(),
   }));
 
-  const evaluation = evaluateRules(
-    RULES,
-    {
-      projectId,
-      ...(project.projectType === 'UNKNOWN' ? {} : { projectType: project.projectType }),
-      lifecycleState: project.lifecycleState,
-      methodology: 'AGILE',
-      intake,
-      graph: planGraph,
-      asOf: new Date().toISOString().slice(0, 10),
-    },
-    RULESET_VERSION,
-  );
+  const { evaluation } = evaluateForProject({
+    projectId,
+    projectType: project.projectType,
+    lifecycleState: project.lifecycleState,
+    intake,
+    graph: planGraph,
+  });
 
   const graph =
     planGraph.size === 0
