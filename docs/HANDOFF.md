@@ -104,35 +104,30 @@ icon that does not exist fails to compile. `pnpm icons --check` runs inside `doc
 **The build does not work on Windows.** The OpenNext bundler creates symlinks and Windows refuses
 them without Developer Mode (KI-051). It runs under WSL against an isolated tree:
 
-Sync and build **without** `XDG_CONFIG_HOME`. Setting it here is what produces the SQLite
-"disk I/O error" described in the traps below:
+`XDG_CONFIG_HOME` points at `/home/kplee/xdg.config`, which holds a copy of wrangler's credentials
+**and** a copy of `~/.config/pnpm/config.yaml`. Both are needed, for the reason in the traps below —
+one command, sync through deploy:
 
 ```bash
-wsl -e bash -lc "export NVM_DIR=\$HOME/.nvm; . \$NVM_DIR/nvm.sh; export CI=true; \
+SHA=$(git rev-parse --short HEAD)
+wsl -e bash -c "export PATH=/home/kplee/.nvm/versions/node/v22.23.2/bin:\$PATH; export CI=true; \
+  export XDG_CONFIG_HOME=/home/kplee/xdg.config; \
   export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
   cd /mnt/e/Project/build && tar --exclude=node_modules --exclude=.git --exclude=.next \
     --exclude=.open-next --exclude=.pglite --exclude=dist --exclude=coverage \
     --exclude=test-results --exclude=playwright-report --exclude='.env*' --exclude=.wrangler \
     --exclude='.claude/skills' -cf - . | (cd /mnt/e/Project/build-wsl && tar -xf -) && \
   cd /mnt/e/Project/build-wsl && pnpm install --frozen-lockfile && \
-  pnpm --filter=@govintel/web cf:build"
-```
-
-Then deploy. `XDG_CONFIG_HOME` points at `/home/kplee/xdg.config`, which holds a copy of wrangler's
-credentials **and** a copy of `~/.config/pnpm/config.yaml` — both are needed, for the reason in the
-traps below:
-
-```bash
-SHA=$(git rev-parse --short HEAD)
-wsl -e bash -c "export PATH=/home/kplee/.nvm/versions/node/v22.23.2/bin:\$PATH; \
-  export XDG_CONFIG_HOME=/home/kplee/xdg.config; \
-  export CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE='postgres://127.0.0.1:5432/unused-local-emulation-only'; \
-  cd /mnt/e/Project/build-wsl/apps/web && npx wrangler deploy --env staging \
+  pnpm --filter=@govintel/web cf:build && \
+  cd apps/web && npx wrangler deploy --env staging \
     --var APP_VERSION:0.1.0-staging.$SHA --var APP_COMMIT:$SHA"
 ```
 
 Use `bash -c`, not `bash -lc`. The login shell fails to start a systemd user session and can hang for
-minutes before doing anything; sourcing nvm by path avoids it entirely.
+minutes before doing anything; putting node on `PATH` directly avoids it.
+
+Budget roughly 20 minutes. Most of it is the OpenNext bundler writing thousands of small files
+across drvfs.
 
 Traps, each of which cost real time:
 
