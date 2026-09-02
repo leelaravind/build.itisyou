@@ -8,8 +8,8 @@ import type { IntakeField } from '@govintel/intake/schema';
 import { buildPromptPackage } from '@govintel/interchange/prompt';
 import { evaluatePolicy } from '@govintel/interchange/redaction';
 import { withDatabase } from '../../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
 import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
+import { mayOpen } from '../../../../lib/server/project-access.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { CopyBlock } from '../../../../components/intake/CopyBlock.tsx';
@@ -36,8 +36,7 @@ export default async function PromptPage({ params }: { params: Promise<{ project
 
   if (project === undefined) notFound();
 
-  const sessionId = await readActiveGuestSessionId();
-  if (project.guestSessionId === null || project.guestSessionId !== sessionId) notFound();
+  if (!(await mayOpen(project))) notFound();
 
   const rows = await withDatabase((db) =>
     db.select().from(intakeAnswers).where(eq(intakeAnswers.projectId, projectId)),

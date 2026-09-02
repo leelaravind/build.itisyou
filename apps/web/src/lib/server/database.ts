@@ -20,9 +20,10 @@ import { connect } from '@govintel/db/connect';
 import { logger } from '@govintel/shared/logging';
 import { cookies } from 'next/headers';
 import { findActiveGuestSession } from '@govintel/db/guest';
+import { findActiveSession } from '@govintel/db/session';
 import { IS_DEPLOYED } from './config.ts';
 import { resolveConnectionString } from './connection-string.ts';
-import { GUEST_COOKIE } from './guest-cookie.ts';
+import { GUEST_COOKIE, SESSION_COOKIE } from './guest-cookie.ts';
 import { unsign } from './signed-cookie.ts';
 
 /**
@@ -376,6 +377,30 @@ export async function withUnscoped<T>(fn: (db: DatabaseHandle) => Promise<T>): P
  */
 async function currentOrganizationId(): Promise<string | undefined> {
   const store = await cookies();
+
+  /*
+   * The signed-in session first.
+   *
+   * This function used to read the guest cookie and nothing else, while its own comment claimed
+   * that "guest and signed in are the same shape here" -- there was no signed-in branch at all. So a
+   * signed-in caller resolved to no tenant, RLS returned nothing, and **every** tenant-owned table
+   * was empty for them: their projects, their intake answers, their twin, their evidence. Signing in
+   * emptied the product.
+   *
+   * It failed closed, which is why nothing looked broken from a security standpoint and why no unit
+   * test caught it. The end-to-end sign-in journey caught it on its first run.
+   *
+   * The signed-in session wins over a guest cookie that may still be sitting in the browser from
+   * before the conversion: somebody who has signed in is acting as their account.
+   */
+  const userSessionId = unsign(store.get(SESSION_COOKIE)?.value);
+
+  if (userSessionId !== undefined && userSessionId !== '') {
+    const session = await withUnscoped((db) => findActiveSession(db, userSessionId));
+
+    if (session !== undefined) return session.organizationId;
+  }
+
   const sessionId = unsign(store.get(GUEST_COOKIE)?.value);
 
   if (sessionId === undefined || sessionId === '') return undefined;

@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { projects } from '@govintel/db/schema';
 import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
+import { mayOpen } from '../../../../lib/server/project-access.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { submitImport } from './actions.ts';
@@ -38,8 +38,7 @@ export default async function ImportPage({
 
   if (project === undefined) notFound();
 
-  const sessionId = await readActiveGuestSessionId();
-  if (project.guestSessionId === null || project.guestSessionId !== sessionId) notFound();
+  if (!(await mayOpen(project))) notFound();
 
   /*
    * The external-AI workflow can be switched off, and this half was not honouring it.

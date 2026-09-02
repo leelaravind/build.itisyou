@@ -1,15 +1,21 @@
 import 'server-only';
 
 /**
- * The guest session cookie, on its own.
+ * The session cookie names, on their own.
  *
  * Extracted from `session.ts` so that `database.ts` can resolve the caller's tenant without
  * importing it. The alternative was a cycle — `database.ts` needing the cookie name, `session.ts`
  * needing a database handle — and an import cycle between the session layer and the database layer
  * is the kind that works until the day module evaluation order changes.
+ *
+ * `SESSION_COOKIE` is here for exactly the same reason, one layer up: `auth.ts` imports
+ * `database.ts`, so `database.ts` cannot import the name back from `auth.ts`.
  */
 
 export const GUEST_COOKIE = 'govintel_guest';
+
+/** The signed-in session cookie. */
+export const SESSION_COOKIE = 'govintel_session';
 
 /**
  * Cookie attributes.

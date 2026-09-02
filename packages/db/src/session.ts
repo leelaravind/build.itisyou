@@ -121,6 +121,29 @@ export async function createSession(db: Database, input: CreateSessionInput): Pr
  * The roll-forward is a write on a read path, which is unusual and is the point of an idle timeout —
  * the window has to move when the user is active or it is an absolute timeout wearing a second name.
  */
+/**
+ * The session behind an id, if it is still valid. Read-only.
+ *
+ * `touchSession` answers the same question but also extends the idle window, which makes it a write.
+ * Resolving the caller's tenant happens on nearly every request and must not turn every read into a
+ * write — and extending a session as a side effect of an authorisation check would mean a request
+ * that is refused still keeps the session alive.
+ */
+export async function findActiveSession(
+  db: Database,
+  sessionId: string,
+  now: Date = new Date(),
+): Promise<Session | undefined> {
+  const [session] = await db.select().from(sessions).where(eq(sessions.id, sessionId)).limit(1);
+
+  if (session === undefined) return undefined;
+  if (session.revokedAt !== null) return undefined;
+  if (session.absoluteExpiresAt <= now) return undefined;
+  if (session.idleExpiresAt <= now) return undefined;
+
+  return session;
+}
+
 export async function touchSession(
   db: Database,
   sessionId: string,

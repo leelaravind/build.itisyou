@@ -6,7 +6,7 @@ import { analyseMissing, completionPercent, nextQuestion } from '@govintel/intak
 import { FIELD_DEFINITIONS } from '@govintel/intake/fields';
 import type { IntakeField } from '@govintel/intake/schema';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
+import { mayOpen } from '../../../lib/server/project-access.ts';
 import { PublicHeader } from '../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon.tsx';
 import { QuestionCard } from '../../../components/intake/QuestionCard.tsx';
@@ -39,8 +39,7 @@ export default async function IntakePage({ params }: { params: Promise<{ project
   // learns nothing about which exist.
   if (project === undefined) notFound();
 
-  const sessionId = await readActiveGuestSessionId();
-  if (project.guestSessionId === null || project.guestSessionId !== sessionId) notFound();
+  if (!(await mayOpen(project))) notFound();
 
   const rows = await withDatabase((db) =>
     db.select().from(intakeAnswers).where(eq(intakeAnswers.projectId, projectId)),

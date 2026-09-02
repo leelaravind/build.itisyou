@@ -1,9 +1,8 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { approvals, evidence, projects } from '@govintel/db/schema';
+import { approvals, evidence } from '@govintel/db/schema';
 import { evidencePurposes, manualCriteria } from '@govintel/rules/gates';
 import { EVIDENCE_TYPES, checkUpload, type UploadRefusal } from '@govintel/governance/evidence';
 import { APPROVABLE_SUBJECTS } from '@govintel/governance/approval';
@@ -11,13 +10,13 @@ import { toAppError } from '@govintel/shared/errors';
 import { logger } from '@govintel/shared/logging';
 import { withDatabase } from '../../../lib/server/database.ts';
 import { evaluateForProject, loadIntake } from '../../../lib/server/project-rules.ts';
+import { accessibleProject, type ProjectAccess } from '../../../lib/server/project-access.ts';
 import {
   evidenceBucket,
   hashBytes,
   storeArtefact,
   type StoredArtefact,
 } from '../../../lib/server/evidence-storage.ts';
-import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 import { recordAudit } from '../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
 import { loadProjectGraph } from '../../../lib/server/project-graph.ts';
@@ -35,17 +34,12 @@ import { loadProjectGraph } from '../../../lib/server/project-graph.ts';
  * and nothing in the product created either. Eight of eleven gates could never pass, which meant the
  * lifecycle could never advance past `PLANNING`, which meant the gates were decoration.
  *
- * ## Files are deliberately not here yet
+ * ## Files
  *
- * §35 requires randomised keys, no user-controlled paths, signed downloads and content-disposition
- * safety for uploads. That is a whole surface with its own failure modes, and the R2 bucket exists
- * but nothing reads or writes it (KI-061).
- *
- * A link or an attestation satisfies the same criteria and is honest about what it is: §32 grades
- * evidence by type, and `MANUAL_ATTESTATION` is the weakest grade rather than an absent one. The
- * projection reflects that — an attestation carries `MEDIUM` confidence, an artefact with a content
- * hash carries `HIGH`. Shipping the upload path badly would be worse than shipping the grading
- * honestly.
+ * An artefact can now be attached (`evidence-storage.ts`), checked against §35's controls before
+ * anything is written and hashed from the bytes actually stored. A link or an attestation remains
+ * valid and is graded honestly rather than equally: §32 grades evidence by type, so an attestation
+ * carries `MEDIUM` confidence where an artefact with a content hash carries `HIGH`.
  */
 
 function readString(formData: FormData, key: string): string {
@@ -55,17 +49,31 @@ function readString(formData: FormData, key: string): string {
 
 type Outcome = { kind: 'ok' } | { kind: 'refused'; reason: string };
 
-/** The project, if the caller owns it and it is open to change. */
+/**
+ * The project, if the caller may open it and it is open to change.
+ *
+ * `sessionId` is the *actor* — the signed-in user when there is one. Evidence records who collected
+ * it, and after a guest signs in that is the account rather than the session they arrived in.
+ */
 async function ownedProject(projectId: string) {
-  const sessionId = await readActiveGuestSessionId();
+  const access = await accessibleProject(projectId);
 
-  const [project] = await withDatabase((db) =>
-    db.select().from(projects).where(eq(projects.id, projectId)),
-  );
+  if (access === null) return null;
 
-  if (project?.guestSessionId == null || project.guestSessionId !== sessionId) return null;
+  return { project: access.project, sessionId: access.actor, access };
+}
 
-  return { project, sessionId };
+/**
+ * Which audit column the actor belongs in.
+ *
+ * `actor_guest_session_id` and `actor_user_id` are separate columns with separate foreign keys, so
+ * putting a user id in the guest column would fail the constraint — and if it did not, it would
+ * quietly attribute an account's actions to a session that never took them.
+ */
+function actorOf(access: ProjectAccess): { actorUserId: string } | { actorGuestSessionId: string } {
+  return access.userId === null
+    ? { actorGuestSessionId: access.guestSessionId ?? '' }
+    : { actorUserId: access.userId };
 }
 
 export async function recordEvidence(formData: FormData): Promise<void> {
@@ -216,7 +224,7 @@ async function addEvidence(projectId: string, formData: FormData): Promise<Outco
         action: 'EVIDENCE_RECORDED',
         entityType: 'EVIDENCE',
         ...(row === undefined ? {} : { entityId: row.id }),
-        actorGuestSessionId: sessionId,
+        ...actorOf(owned.access),
         summary: {
           purpose,
           type,
@@ -349,7 +357,7 @@ async function addApproval(projectId: string, formData: FormData): Promise<Outco
         action: 'APPROVAL_GRANTED',
         entityType: 'APPROVAL',
         ...(row === undefined ? {} : { entityId: row.id }),
-        actorGuestSessionId: sessionId,
+        ...actorOf(owned.access),
         reason: comment,
         summary: {
           subjectType,

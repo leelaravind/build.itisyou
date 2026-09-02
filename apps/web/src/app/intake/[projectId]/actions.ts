@@ -9,8 +9,8 @@ import { intakeAnswers, projects } from '@govintel/db/schema';
 import { answerField, type AnswerMode } from '@govintel/intake/schema';
 import { findField } from '@govintel/intake/fields';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
+import { mayOpen } from '../../../lib/server/project-access.ts';
 
 /**
  * Record an answer to one intake question.
@@ -94,15 +94,13 @@ async function record(input: {
   }
 
   try {
-    const sessionId = await readActiveGuestSessionId();
-
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, input.projectId)),
     );
 
     // Ownership before anything else. Same outcome as the page's 404: a caller probing project ids
     // must not be able to tell which exist.
-    if (project?.guestSessionId == null || project.guestSessionId !== sessionId) {
+    if (project === undefined || !(await mayOpen(project))) {
       logger.warn('rejected intake write for unowned project', { projectId: input.projectId });
       return { kind: 'redirect', to: '/start' };
     }

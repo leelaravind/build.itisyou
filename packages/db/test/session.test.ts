@@ -4,6 +4,7 @@ import { organizations, sessions, users } from '../src/schema.ts';
 import {
   SESSION_POLICY,
   createSession,
+  findActiveSession,
   purgeEndedSessions,
   revokeAllForUser,
   revokeSession,
@@ -212,6 +213,79 @@ describe('unknown sessions', () => {
     // A forged or stale cookie is the ordinary case, not an exception. Throwing here would turn
     // every expired tab into a 500.
     expect(await touchSession(database.db, '33333333-3333-4333-8333-333333333333')).toBeUndefined();
+  });
+});
+
+describe('reading a session without touching it', () => {
+  /*
+   * `findActiveSession` resolves the caller's tenant on nearly every request, which is why it must
+   * not write. It is also the only thing standing between a revoked session and a scoped database
+   * handle, so every reason `touchSession` refuses, this must refuse too.
+   */
+  it('returns a live session', async () => {
+    const session = await createSession(database.db, {
+      userId: USER,
+      organizationId: ORG,
+      now: START,
+    });
+
+    expect((await findActiveSession(database.db, session.id, at(1)))?.id).toBe(session.id);
+  });
+
+  it('does not extend the idle window', async () => {
+    const session = await createSession(database.db, {
+      userId: USER,
+      organizationId: ORG,
+      now: START,
+    });
+
+    const found = await findActiveSession(database.db, session.id, at(5));
+
+    // The whole reason it exists next to `touchSession`: a read that renews is a write, and an
+    // authorisation check that renews keeps a session alive on requests it refused.
+    expect(found?.idleExpiresAt.getTime()).toBe(session.idleExpiresAt.getTime());
+    expect(found?.lastSeenAt.getTime()).toBe(session.lastSeenAt.getTime());
+  });
+
+  it('refuses a revoked session', async () => {
+    const session = await createSession(database.db, {
+      userId: USER,
+      organizationId: ORG,
+      now: START,
+    });
+    await revokeSession(database.db, session.id, 'LOGOUT', at(1));
+
+    expect(await findActiveSession(database.db, session.id, at(2))).toBeUndefined();
+  });
+
+  it('refuses a session past its idle window', async () => {
+    const session = await createSession(database.db, {
+      userId: USER,
+      organizationId: ORG,
+      now: START,
+    });
+
+    expect(
+      await findActiveSession(database.db, session.id, at(SESSION_POLICY.idleMinutes + 1)),
+    ).toBeUndefined();
+  });
+
+  it('refuses a session past its absolute window', async () => {
+    const session = await createSession(database.db, {
+      userId: USER,
+      organizationId: ORG,
+      now: START,
+    });
+
+    expect(
+      await findActiveSession(database.db, session.id, at(SESSION_POLICY.absoluteHours * 60 + 1)),
+    ).toBeUndefined();
+  });
+
+  it('refuses an id that was never a session', async () => {
+    expect(
+      await findActiveSession(database.db, '33333333-3333-4333-8333-333333333333', START),
+    ).toBeUndefined();
   });
 });
 

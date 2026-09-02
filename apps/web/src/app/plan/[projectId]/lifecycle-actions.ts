@@ -17,9 +17,9 @@ import type { Approval } from '@govintel/governance/approval';
 import { toAppError } from '@govintel/shared/errors';
 import { logger } from '@govintel/shared/logging';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
 import { recordAudit } from '../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
+import { accessibleProject, mayOpen } from '../../../lib/server/project-access.ts';
 
 /**
  * Moving a project through its lifecycle.
@@ -85,18 +85,16 @@ type Outcome = { kind: 'ok' } | { kind: 'refused'; refusal: string };
 
 async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> {
   try {
-    const sessionId = await readActiveGuestSessionId();
-
-    const [project] = await withDatabase((db) =>
-      db.select().from(projects).where(eq(projects.id, projectId)),
-    );
-
-    // Ownership before anything else, and the same silent redirect the other actions use: a caller
+    // Ownership before anything else, and the same silent refusal the other actions use: a caller
     // probing project ids must not be able to tell which exist.
-    if (project?.guestSessionId == null || project.guestSessionId !== sessionId) {
+    const access = await accessibleProject(projectId);
+
+    if (access === null) {
       logger.warn('rejected transition for unowned project', { projectId });
       return { kind: 'refused', refusal: 'NOT_FOUND' };
     }
+
+    const { project } = access;
 
     if (project.archivedAt !== null && to !== 'COMPLETED') {
       // Gap-spec §71: an archive is read-only by default. Restoring it is the one thing it accepts.
@@ -198,7 +196,14 @@ async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> 
         action: 'PROJECT_LIFECYCLE_TRANSITIONED',
         entityType: 'PROJECT',
         entityId: projectId,
-        actorGuestSessionId: sessionId,
+        /*
+         * Separate columns with separate foreign keys. A signed-in user's id in the guest column
+         * would fail the constraint, and if it did not it would attribute an account's action to a
+         * session that never took it.
+         */
+        ...(access.userId === null
+          ? { actorGuestSessionId: access.guestSessionId ?? '' }
+          : { actorUserId: access.userId }),
         summary: {
           from: project.lifecycleState,
           to,
@@ -241,13 +246,11 @@ async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> 
  * and "why can I not advance" is the question this product exists to answer.
  */
 export async function availableTransitions(projectId: string) {
-  const sessionId = await readActiveGuestSessionId();
-
   const [project] = await withDatabase((db) =>
     db.select().from(projects).where(eq(projects.id, projectId)),
   );
 
-  if (project?.guestSessionId == null || project.guestSessionId !== sessionId) return null;
+  if (project === undefined || !(await mayOpen(project))) return null;
 
   const [nodes, edges] = await Promise.all([
     withDatabase((db) => db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId))),

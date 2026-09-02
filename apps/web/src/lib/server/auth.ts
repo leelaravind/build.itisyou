@@ -10,7 +10,7 @@ import { createSession, revokeSession, touchSession } from '@govintel/db/session
 import { logger } from '@govintel/shared/logging';
 import { withUnscoped } from './database.ts';
 import { sign, unsign } from './signed-cookie.ts';
-import { guestCookieOptions } from './guest-cookie.ts';
+import { SESSION_COOKIE, guestCookieOptions } from './guest-cookie.ts';
 import { recordAudit } from './audit.ts';
 import type { CallbackRefusal, VerifiedIdentity } from './oidc.ts';
 
@@ -25,7 +25,7 @@ import type { CallbackRefusal, VerifiedIdentity } from './oidc.ts';
  * session, and `guest.ts` moves a guest's work onto their new account.
  */
 
-export const SESSION_COOKIE = 'govintel_session';
+export { SESSION_COOKIE } from './guest-cookie.ts';
 
 /** Where the three OIDC secrets live between the redirect out and the callback back. */
 export const OIDC_STATE_COOKIE = 'govintel_oidc';

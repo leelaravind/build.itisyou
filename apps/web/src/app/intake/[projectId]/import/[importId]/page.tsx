@@ -12,7 +12,7 @@ import type {
 import { previewImport } from '@govintel/interchange/staging';
 import type { InterchangeResponse } from '@govintel/interchange/schema';
 import { withDatabase } from '../../../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../../../lib/server/session.ts';
+import { mayOpen } from '../../../../../lib/server/project-access.ts';
 import { PublicHeader } from '../../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../../components/ui/MaterialIcon.tsx';
 import { acceptImport, rejectImport } from '../actions.ts';
@@ -127,8 +127,7 @@ export default async function ImportResultPage({
   );
   if (project === undefined) notFound();
 
-  const sessionId = await readActiveGuestSessionId();
-  if (project.guestSessionId === null || project.guestSessionId !== sessionId) notFound();
+  if (!(await mayOpen(project))) notFound();
 
   const [record] = await withDatabase((db) =>
     db

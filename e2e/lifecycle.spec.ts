@@ -31,6 +31,25 @@ async function startProject(page: Page, idea: string): Promise<string> {
   return projectId;
 }
 
+/**
+ * Skip when the deployment cannot store files.
+ *
+ * The evidence page only offers an upload when an object store is bound, which is the honest
+ * behaviour — offering one that always refuses makes the refusal read as being about the user's
+ * file. Locally and in CI the application runs under `next start` with no R2 binding, so these
+ * journeys have nothing to exercise; against staging they run for real.
+ *
+ * Detected from the page rather than from an environment variable, so the test skips exactly when
+ * the feature is absent rather than when somebody remembered to set a flag.
+ */
+async function requireFileStorage(page: Page): Promise<void> {
+  const attach = page.getByLabel(/attach the artefact/i).first();
+
+  if ((await attach.count()) === 0) {
+    test.skip(true, 'No object store bound; the evidence page correctly offers no upload.');
+  }
+}
+
 test.describe('the lifecycle', () => {
   test.beforeEach(({ browserName, baseURL }) => {
     test.skip(webkitOverInsecureOrigin(browserName, baseURL), MOBILE_SAFARI_NOTE);
@@ -196,6 +215,7 @@ test.describe('evidence and approvals', () => {
      */
     const projectId = await startProject(page, 'A payments platform needing a rollback record.');
     await page.goto(`/plan/${projectId}/evidence`);
+    await requireFileStorage(page);
 
     const form = page
       .locator('form')
@@ -250,6 +270,7 @@ test.describe('evidence and approvals', () => {
      */
     const projectId = await startProject(page, 'A tool someone will try to upload a page to.');
     await page.goto(`/plan/${projectId}/evidence`);
+    await requireFileStorage(page);
 
     const form = page
       .locator('form')
@@ -274,6 +295,7 @@ test.describe('evidence and approvals', () => {
       'A project whose evidence is commercially sensitive.',
     );
     await page.goto(`/plan/${projectId}/evidence`);
+    await requireFileStorage(page);
 
     const form = page
       .locator('form')

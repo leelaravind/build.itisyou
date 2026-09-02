@@ -69,11 +69,27 @@ export default tseslint.config(
   // that tool and imported by nothing. Adding it to a project to satisfy the linter would put a file
   // the build never compiles into the build's view of the world.
   {
-    files: ['**/*.config.{js,mjs,cjs}', '*.config.ts', 'neon.ts', 'scripts/**/*.{mjs,js}'],
+    files: [
+      '**/*.config.{js,mjs,cjs}',
+      '*.config.ts',
+      'neon.ts',
+      'scripts/**/*.{mjs,js}',
+      // A standalone process the end-to-end suite starts. Not compiled by any build, for the same
+      // reason `neon.ts` is not: it belongs to a tool rather than to the product.
+      'e2e/support/*.mjs',
+    ],
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
-    files: ['**/*.config.{js,mjs,cjs}', '*.config.ts', 'neon.ts', 'scripts/**/*.{mjs,js}'],
+    files: [
+      '**/*.config.{js,mjs,cjs}',
+      '*.config.ts',
+      'neon.ts',
+      'scripts/**/*.{mjs,js}',
+      // A standalone process the end-to-end suite starts. Not compiled by any build, for the same
+      // reason `neon.ts` is not: it belongs to a tool rather than to the product.
+      'e2e/support/*.mjs',
+    ],
     rules: { 'no-console': 'off' },
   },
 

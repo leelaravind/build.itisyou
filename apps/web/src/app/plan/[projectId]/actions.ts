@@ -11,7 +11,8 @@ import type { IntakeField } from '@govintel/intake/schema';
 import { generateProject } from '@govintel/twin/generate';
 import { rowsFromGraph } from '@govintel/twin/repository';
 import { withDatabase } from '../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../lib/server/session.ts';
+import { accessibleProject } from '../../../lib/server/project-access.ts';
+import { mayOpen } from '../../../lib/server/project-access.ts';
 
 /**
  * Generate the project plan.
@@ -47,13 +48,11 @@ export async function generatePlan(formData: FormData): Promise<void> {
 
 async function generate(projectId: string): Promise<Outcome> {
   try {
-    const sessionId = await readActiveGuestSessionId();
-
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),
     );
 
-    if (project?.guestSessionId == null || project.guestSessionId !== sessionId) {
+    if (project === undefined || !(await mayOpen(project))) {
       logger.warn('rejected plan generation for unowned project', { projectId });
       return { kind: 'redirect', to: '/start' };
     }
@@ -124,15 +123,13 @@ async function generate(projectId: string): Promise<Outcome> {
   }
 }
 
-/** Read the stored graph for a project the caller owns. Returns null when they do not. */
+/** Read the stored graph for a project the caller may open. Returns null when they may not. */
 export async function loadPlanRows(projectId: string) {
-  const sessionId = await readActiveGuestSessionId();
+  const access = await accessibleProject(projectId);
 
-  const [project] = await withDatabase((db) =>
-    db.select().from(projects).where(eq(projects.id, projectId)),
-  );
+  if (access === null) return null;
 
-  if (project?.guestSessionId == null || project.guestSessionId !== sessionId) return null;
+  const { project } = access;
 
   const nodes = await withDatabase((db) =>
     db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId)),

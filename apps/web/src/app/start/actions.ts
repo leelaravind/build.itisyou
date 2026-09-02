@@ -6,6 +6,7 @@ import { toAppError } from '@govintel/shared/errors';
 import { projects } from '@govintel/db/schema';
 import { withDatabase } from '../../lib/server/database.ts';
 import { ensureGuestSession } from '../../lib/server/session.ts';
+import { currentUser } from '../../lib/server/auth.ts';
 import { checkRateLimit } from '../../lib/server/rate-limit.ts';
 import { GUEST_TTL_HOURS } from '../../lib/server/config.ts';
 
@@ -47,26 +48,45 @@ export async function startProject(formData: FormData): Promise<void> {
 /** Create the session and project, returning where to go next. Never redirects from inside. */
 async function create(idea: string): Promise<string> {
   try {
-    const session = await ensureGuestSession(GUEST_TTL_HOURS);
-
     /*
-     * The project carries the guest session's own organisation as its tenant.
+     * A signed-in user's project belongs to their account, not to a guest session.
      *
-     * It used to carry only `guestSessionId`, leaving `organization_id` NULL — which put the row
-     * outside every row-level security policy, since they all compare against
-     * `app.current_organization_id` and that is never equal to NULL. Guest projects were therefore
-     * unprotected by RLS entirely, and this insert failed outright the moment the application
-     * stopped connecting as a role that could bypass it.
+     * Starting one used to create a guest session unconditionally and file the project under *that*
+     * organisation — so a signed-in user's new project landed in a tenant they were not scoped to.
+     * Since the request is scoped to their account, the insert was refused by row-level security
+     * and starting a project simply failed. It is the mirror of the same assumption that made
+     * signing in empty the product: guest-first was written as guest-only.
      *
-     * `guestSessionId` is still set, and still means "unclaimed". The two columns answer different
-     * questions now: which tenant owns this, and is that tenant a guest's.
+     * `guestSessionId` is left null, which is what "claimed" means everywhere else.
      */
+    const user = await currentUser();
+
+    const owner =
+      user === undefined
+        ? await (async () => {
+            const session = await ensureGuestSession(GUEST_TTL_HOURS);
+            /*
+             * The project carries the guest session's own organisation as its tenant.
+             *
+             * It used to carry only `guestSessionId`, leaving `organization_id` NULL — which put the
+             * row outside every row-level security policy, since they all compare against
+             * `app.current_organization_id` and that is never equal to NULL. Guest projects were
+             * therefore unprotected by RLS entirely, and this insert failed outright the moment the
+             * application stopped connecting as a role that could bypass it.
+             *
+             * `guestSessionId` is still set, and still means "unclaimed". The two columns answer
+             * different questions: which tenant owns this, and whether that tenant is a guest's.
+             */
+            return { organizationId: session.organizationId, guestSessionId: session.id };
+          })()
+        : { organizationId: user.organizationId, guestSessionId: null };
+
     const [project] = await withDatabase((db) =>
       db
         .insert(projects)
         .values({
-          organizationId: session.organizationId,
-          guestSessionId: session.id,
+          organizationId: owner.organizationId,
+          guestSessionId: owner.guestSessionId,
           name: deriveName(idea),
           summary: idea.slice(0, 2000),
         })
@@ -75,7 +95,10 @@ async function create(idea: string): Promise<string> {
 
     if (project === undefined) throw new Error('project insert returned no row');
 
-    logger.info('guest project created', { projectId: project.id, guestSessionId: session.id });
+    logger.info('project created', {
+      projectId: project.id,
+      signedIn: user !== undefined,
+    });
     return `/intake/${project.id}`;
   } catch (error) {
     // The idea text is the user's own content and must not reach the log verbatim — it is exactly

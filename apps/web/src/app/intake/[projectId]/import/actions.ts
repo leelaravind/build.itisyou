@@ -11,8 +11,8 @@ import { validateImport } from '@govintel/interchange/validate';
 import { currentVersions } from '@govintel/interchange/versions';
 import { EXTERNAL_AI_MODE } from '../../../../lib/server/config.ts';
 import { withDatabase } from '../../../../lib/server/database.ts';
-import { readActiveGuestSessionId } from '../../../../lib/server/session.ts';
 import { checkRateLimit } from '../../../../lib/server/rate-limit.ts';
+import { mayOpen } from '../../../../lib/server/project-access.ts';
 
 /**
  * Store a pasted response and validate it.
@@ -67,13 +67,11 @@ export async function submitImport(formData: FormData): Promise<void> {
 
 async function store(projectId: string, raw: string): Promise<Outcome> {
   try {
-    const sessionId = await readActiveGuestSessionId();
-
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),
     );
 
-    if (project?.guestSessionId == null || project.guestSessionId !== sessionId) {
+    if (project === undefined || !(await mayOpen(project))) {
       logger.warn('rejected import for unowned project', { projectId });
       return { kind: 'redirect', to: '/start' };
     }
@@ -184,13 +182,11 @@ async function decide(
     if (externalAiDisabled())
       return { kind: 'redirect', to: `/intake/${projectId}?error=external-ai-disabled` };
 
-    const sessionId = await readActiveGuestSessionId();
-
     const [project] = await withDatabase((db) =>
       db.select().from(projects).where(eq(projects.id, projectId)),
     );
 
-    if (project?.guestSessionId == null || project.guestSessionId !== sessionId) {
+    if (project === undefined || !(await mayOpen(project))) {
       return { kind: 'redirect', to: '/start' };
     }
 
