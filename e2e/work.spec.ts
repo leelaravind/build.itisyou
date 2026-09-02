@@ -200,6 +200,19 @@ test.describe('a project belongs to one guest', () => {
     const response = await page.goto('/plan/99999999-9999-4999-8999-999999999999/work');
     expect(response?.status()).toBe(404);
   });
+
+  test('a malformed project id is too', async ({ page }) => {
+    /*
+     * Postgres raises on an invalid uuid literal rather than returning no rows, so an id that is not
+     * a uuid used to reach the database and come back a 500. That is a distinguishable answer: it
+     * tells a prober that their id was rejected for its *shape* rather than for who owns it, and it
+     * turns a typo into an error page.
+     */
+    for (const id of ['not-a-uuid', '../../etc/passwd', '1 OR 1=1']) {
+      const response = await page.goto(`/plan/${encodeURIComponent(id)}/work`);
+      expect(response?.status(), id).toBe(404);
+    }
+  });
 });
 
 test.describe('accessibility of the work page', () => {
