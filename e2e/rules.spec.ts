@@ -102,8 +102,19 @@ test.describe('the findings page', () => {
 
   test('the answer link goes back to intake', async ({ page }) => {
     const projectId = await reachRules(page);
-    await page.getByRole('link', { name: /answer these/i }).click();
-    await expect(page).toHaveURL(new RegExp(`/intake/${projectId}$`));
+
+    /*
+     * The wait is started before the click, not after it.
+     *
+     * `click()` then `toHaveURL()` leaves a gap in which a client-side navigation can complete and
+     * be missed, or — on Firefox, which is where this failed three times in CI and never locally —
+     * the click can land before hydration and the assertion begins against a page that is still the
+     * old one. Same assertion, no race: `waitForURL` throws if the navigation does not happen.
+     */
+    await Promise.all([
+      page.waitForURL(new RegExp(`/intake/${projectId}$`)),
+      page.getByRole('link', { name: /answer these/i }).click(),
+    ]);
   });
 
   test('every finding names the rule that produced it', async ({ page }) => {
