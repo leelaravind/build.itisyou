@@ -1,6 +1,7 @@
 import { cn } from './cn.ts';
 import { MaterialIcon } from './MaterialIcon.tsx';
 import { TONE_CLASSES, type StatusTone } from './status.ts';
+import type { IconName } from './icon-paths.ts';
 
 /**
  * Stat tile — the KPI row that opens roughly a dozen of the designed screens.
@@ -39,7 +40,7 @@ interface StatTileProps {
     readonly direction: 'up' | 'down';
     readonly tone: StatusTone;
   };
-  readonly icon?: string;
+  readonly icon?: IconName;
   readonly className?: string;
 }
 

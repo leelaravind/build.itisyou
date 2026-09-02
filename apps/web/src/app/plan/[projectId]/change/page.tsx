@@ -13,6 +13,7 @@ import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { withDatabase } from '../../../../lib/server/database.ts';
 import { loadPlanRows } from '../actions.ts';
+import type { IconName } from '../../../../components/ui/icon-paths.ts';
 
 /**
  * Change impact preview.
@@ -283,7 +284,7 @@ function toneClasses(state: Staleness): string {
   return 'border-outline-variant bg-surface-container-low';
 }
 
-function toneIcon(state: Staleness): string {
+function toneIcon(state: Staleness): IconName {
   if (state === 'INVALIDATED') return 'cancel';
   if (state === 'REVALIDATION_REQUIRED') return 'warning';
   return 'schedule';

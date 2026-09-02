@@ -6,6 +6,7 @@ import { evaluateReadiness, type GateOutcome } from '@govintel/release/readiness
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { loadPlanRows } from '../actions.ts';
+import type { IconName } from '../../../../components/ui/icon-paths.ts';
 
 /**
  * Release readiness.
@@ -205,7 +206,7 @@ function toneClasses(result: string): string {
   return 'border-outline-variant bg-surface-container-low';
 }
 
-function toneIcon(result: string): string {
+function toneIcon(result: string): IconName {
   if (result === 'PASSED') return 'check_circle';
   if (result === 'FAILED') return 'cancel';
   return 'help';

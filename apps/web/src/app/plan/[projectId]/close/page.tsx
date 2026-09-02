@@ -10,6 +10,7 @@ import {
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { loadPlanRows } from '../actions.ts';
+import type { IconName } from '../../../../components/ui/icon-paths.ts';
 
 /**
  * Closure.
@@ -179,7 +180,7 @@ function toneClasses(result: string): string {
   return 'border-outline-variant bg-surface-container-low';
 }
 
-function toneIcon(result: string): string {
+function toneIcon(result: string): IconName {
   if (result === 'MET') return 'check_circle';
   if (result === 'NOT_MET') return 'cancel';
   if (result === 'EXCEPTED') return 'gpp_maybe';

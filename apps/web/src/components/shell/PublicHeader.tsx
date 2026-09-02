@@ -25,7 +25,7 @@ export async function PublicHeader() {
         href="/"
         className="flex min-h-11 shrink-0 items-center gap-sm font-sans text-headline-sm text-primary transition-colors hover:text-primary-fixed"
       >
-        <MaterialIcon name="settings_suggest" size={26} />
+        <MaterialIcon name="hub" size={26} />
         {/* The wordmark is hidden below `sm` so the header fits a 320px viewport without the nav
             overflowing (WCAG 1.4.10 Reflow). The icon keeps the link identifiable, and the
             accessible name is preserved for assistive technology. */}

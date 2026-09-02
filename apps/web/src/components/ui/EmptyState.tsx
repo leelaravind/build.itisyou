@@ -1,5 +1,6 @@
 import { cn } from './cn.ts';
 import { MaterialIcon } from './MaterialIcon.tsx';
+import type { IconName } from './icon-paths.ts';
 
 /**
  * Empty state.
@@ -28,7 +29,7 @@ export type EmptyStateVariant =
   | 'error';
 
 const VARIANTS: Readonly<
-  Record<EmptyStateVariant, { icon: string; tone: string; defaultTitle: string }>
+  Record<EmptyStateVariant, { icon: IconName; tone: string; defaultTitle: string }>
 > = {
   empty: {
     icon: 'inbox',

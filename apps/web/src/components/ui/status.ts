@@ -1,3 +1,4 @@
+import type { IconName } from './icon-paths.ts';
 /**
  * Status vocabulary and its visual encoding.
  *
@@ -47,7 +48,7 @@ export interface StatusDescriptor {
   /** Uppercase label, rendered in mono per DESIGN.md. Never omitted. */
   readonly label: string;
   /** Material Symbols name. Never omitted - this is the non-colour channel. */
-  readonly icon: string;
+  readonly icon: IconName;
   readonly tone: StatusTone;
   /** Screen-reader text where the label alone would be ambiguous out of context. */
   readonly description: string;

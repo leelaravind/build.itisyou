@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { cn } from '../ui/cn.ts';
 import { MaterialIcon } from '../ui/MaterialIcon.tsx';
+import type { IconName } from '../ui/icon-paths.ts';
 import {
   PRIMARY_NAV,
   activeItemId,
@@ -170,7 +171,7 @@ function ShellIconButton({
   label,
   className,
 }: {
-  readonly icon: string;
+  readonly icon: IconName;
   readonly label: string;
   readonly className?: string;
 }) {

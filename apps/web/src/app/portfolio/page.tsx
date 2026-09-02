@@ -58,23 +58,27 @@ export default function PortfolioPage() {
           </h2>
 
           <ul className="flex flex-col gap-sm">
-            {[
-              {
-                icon: 'priority_high',
-                title: 'The project that needs attention, named',
-                body: 'Ordered by how much attention each needs rather than alphabetically, because nobody has time to open eleven projects. Archived ones go last regardless of how badly they ended.',
-              },
-              {
-                icon: 'group',
-                title: 'Who is committed to more than one project',
-                body: 'The one calculation that is invisible from inside a single project: each one sees a person at 60% and believes it has 60% of them.',
-              },
-              {
-                icon: 'lock',
-                title: 'Only the projects you can open',
-                body: 'A total that includes a project you cannot open tells you it exists. The page says your view is partial without saying how much is missing, because a count is the thing the permission was withholding.',
-              },
-            ].map((item) => (
+            {(
+              [
+                {
+                  icon: 'priority_high',
+                  title: 'The project that needs attention, named',
+                  body: 'Ordered by how much attention each needs rather than alphabetically, because nobody has time to open eleven projects. Archived ones go last regardless of how badly they ended.',
+                },
+                {
+                  icon: 'group',
+                  title: 'Who is committed to more than one project',
+                  body: 'The one calculation that is invisible from inside a single project: each one sees a person at 60% and believes it has 60% of them.',
+                },
+                {
+                  icon: 'lock',
+                  title: 'Only the projects you can open',
+                  body: 'A total that includes a project you cannot open tells you it exists. The page says your view is partial without saying how much is missing, because a count is the thing the permission was withholding.',
+                },
+                // `as const` so the icon names keep their literal types and are checked against the
+                // icons that exist, rather than widening to `string` and skipping the check.
+              ] as const
+            ).map((item) => (
               <li
                 key={item.title}
                 className="flex items-start gap-md rounded border border-outline-variant bg-surface-container-low p-md"

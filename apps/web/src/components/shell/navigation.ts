@@ -1,3 +1,4 @@
+import type { IconName } from '../ui/icon-paths.ts';
 /**
  * Navigation model.
  *
@@ -27,7 +28,7 @@
 export interface NavItem {
   readonly id: string;
   readonly label: string;
-  readonly icon: string;
+  readonly icon: IconName;
   /** Route template; `:id` is replaced with the active project id. */
   readonly href: string;
   /**
@@ -57,7 +58,7 @@ export const PRIMARY_NAV: readonly NavItem[] = [
     href: '/p/:id/documents',
     modes: ALL,
   },
-  { id: 'insights', label: 'Insights', icon: 'insights', href: '/p/:id/health', modes: PRO_UP },
+  { id: 'insights', label: 'Insights', icon: 'monitoring', href: '/p/:id/health', modes: PRO_UP },
 ];
 
 export interface NavSection {

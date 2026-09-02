@@ -1,5 +1,6 @@
 import { cn } from './cn.ts';
 import { EmptyState, type EmptyStateVariant } from './EmptyState.tsx';
+import { MaterialIcon } from './MaterialIcon.tsx';
 
 /**
  * Data table.
@@ -113,13 +114,18 @@ export function DataTable<Row>({
                       className="inline-flex items-center gap-xs uppercase transition-colors hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     >
                       {column.header}
-                      <span aria-hidden className="material-symbols-outlined text-[14px]">
-                        {isSorted
-                          ? sortDirection === 'ascending'
-                            ? 'arrow_upward'
-                            : 'arrow_downward'
-                          : 'unfold_more'}
-                      </span>
+                      {/* The last place that hand-rolled the icon span, and so the last place that
+                          rendered `unfold_more` as a word in the header of every sortable table. */}
+                      <MaterialIcon
+                        name={
+                          isSorted
+                            ? sortDirection === 'ascending'
+                              ? 'arrow_upward'
+                              : 'arrow_downward'
+                            : 'unfold_more'
+                        }
+                        size={14}
+                      />
                     </button>
                   ) : (
                     column.header

@@ -16,6 +16,7 @@ import { readActiveGuestSessionId } from '../../../../../lib/server/session.ts';
 import { PublicHeader } from '../../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../../components/ui/MaterialIcon.tsx';
 import { acceptImport, rejectImport } from '../actions.ts';
+import type { IconName } from '../../../../../components/ui/icon-paths.ts';
 
 /**
  * Validation result and preview — locked screens 9 and 10.
@@ -36,7 +37,7 @@ interface StatusCopy {
   readonly headline: string;
   readonly detail: string;
   readonly tone: 'good' | 'warn' | 'bad';
-  readonly icon: string;
+  readonly icon: IconName;
 }
 
 const STATUS_COPY: Record<ValidationStatus, StatusCopy> = {

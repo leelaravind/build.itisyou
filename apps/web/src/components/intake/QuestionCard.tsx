@@ -125,7 +125,7 @@ export function QuestionCard({ projectId, definition, existing }: QuestionCardPr
                 formNoValidate
                 className="inline-flex items-center gap-sm rounded border border-outline-variant px-md py-sm font-sans text-body-sm text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                <MaterialIcon name="auto_fix_high" size={16} />
+                <MaterialIcon name="wand_stars" size={16} />
                 Use the recommended default
                 <span className="font-mono text-data-mono-sm text-on-surface">
                   ({displayValue(definition.recommendedDefault)})

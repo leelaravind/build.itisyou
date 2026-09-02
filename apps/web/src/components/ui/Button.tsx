@@ -1,5 +1,6 @@
 import { cn } from './cn.ts';
 import { MaterialIcon } from './MaterialIcon.tsx';
+import type { IconName } from './icon-paths.ts';
 
 /**
  * Button.
@@ -33,7 +34,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;
   readonly size?: ButtonSize;
   /** Material Symbols name rendered before the label. */
-  readonly icon?: string;
+  readonly icon?: IconName;
   readonly loading?: boolean;
   /**
    * Required when the button has no visible text. An icon-only button with no accessible name is

@@ -28,7 +28,8 @@
     "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "clean": "node scripts/clean.mjs",
     "docs:permissions": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs",
-    "docs:check": "node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check && node --experimental-strip-types scripts/generate-governance-docs.mjs --check && node --experimental-strip-types scripts/generate-responsive-docs.mjs --check",
+    "icons": "node scripts/generate-icons.mjs",
+    "docs:check": "node scripts/generate-icons.mjs --check && node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check && node --experimental-strip-types scripts/generate-governance-docs.mjs --check && node --experimental-strip-types scripts/generate-responsive-docs.mjs --check",
     "docs:twin": "node --experimental-strip-types scripts/generate-twin-schema.mjs",
     "docs:rules": "node --experimental-strip-types scripts/generate-rule-docs.mjs",
     "docs:calc": "node --experimental-strip-types scripts/generate-calculation-docs.mjs",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
     "@eslint/js": "10.0.1",
+    "@material-symbols/svg-400": "0.47.0",
     "@opennextjs/cloudflare": "^1.20.4",
     "@playwright/test": "1.62.1",
     "@testing-library/jest-dom": "7.0.1",

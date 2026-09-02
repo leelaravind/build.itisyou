@@ -30,6 +30,7 @@ import { withDatabase } from '../../../../lib/server/database.ts';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { loadPlanRows } from '../actions.ts';
+import type { IconName } from '../../../../components/ui/icon-paths.ts';
 
 /**
  * Money, feasibility and health.
@@ -413,7 +414,7 @@ function toneClasses(status: string): string {
   return 'border-warning/40 bg-warning/10';
 }
 
-function toneIcon(status: string): string {
+function toneIcon(status: string): IconName {
   if (status === 'FEASIBLE' || status === 'HEALTHY') return 'check_circle';
   if (status === 'UNREALISTIC' || status === 'CRITICAL') return 'cancel';
   if (status === 'UNKNOWN') return 'help';
