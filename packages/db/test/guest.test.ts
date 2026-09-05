@@ -431,6 +431,108 @@ describe('expiry sweep', () => {
 
   it('is a no-op when nothing has expired', async () => {
     const result = await purgeExpiredGuestSessions(database.db, new Date('2026-01-01T00:00:00Z'));
-    expect(result).toEqual({ sessionsDeleted: 0, projectsDeleted: 0 });
+    expect(result).toEqual({ sessionsDeleted: 0, projectsDeleted: 0, auditEventsDeleted: 0 });
+  });
+
+  /*
+   * The case the original sweep could not do, and the reason it would have stopped doing anything at
+   * all. `audit_events.project_id` is ON DELETE RESTRICT, so a guest project that produced one audit
+   * event could not be deleted — and every expired session is deleted in a single transaction, so
+   * one such project fails the whole batch, every minute, for as long as the row exists.
+   *
+   * The fixture is what any guest who did more than look produces: recording evidence, advancing the
+   * lifecycle, importing an AI response and raising a change request all write one of these.
+   */
+  it('deletes a guest project that produced audit events, and the events with it', async () => {
+    const now = new Date('2026-01-01T00:00:00Z');
+    const session = await createGuestSession(database.db, { now, ttlHours: 1 });
+
+    const [project] = await database.db
+      .insert(projects)
+      .values({
+        name: 'abandoned',
+        organizationId: session.organizationId,
+        guestSessionId: session.id,
+      })
+      .returning();
+
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, project_id, action, entity_type, correlation_id)
+      VALUES (${session.organizationId}, ${project?.id ?? null}, 'EVIDENCE_RECORDED', 'evidence', gen_random_uuid())
+    `);
+
+    const result = await purgeExpiredGuestSessions(
+      database.db,
+      new Date(now.getTime() + 2 * 3_600_000),
+    );
+
+    expect(result).toEqual({ sessionsDeleted: 1, projectsDeleted: 1, auditEventsDeleted: 1 });
+
+    const events = await database.db.execute<{ count: string }>(
+      sql`SELECT count(*)::text AS count FROM audit_events`,
+    );
+    expect(events.rows[0]?.count, 'the guest’s audit events outlived the guest').toBe('0');
+  });
+
+  it('leaves another tenant’s audit events alone', async () => {
+    // The sweep deletes by organisation, and a guest owns one of its own. Anything that widened that
+    // scope would be deleting another tenant's audit trail — the one table where that is
+    // unrecoverable by design.
+    const now = new Date('2026-01-01T00:00:00Z');
+    const session = await createGuestSession(database.db, { now, ttlHours: 1 });
+
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+      VALUES (${ORG}, 'PROJECT_CREATED', 'project', gen_random_uuid())
+    `);
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+      VALUES (${session.organizationId}, 'PROJECT_CREATED', 'project', gen_random_uuid())
+    `);
+
+    const result = await purgeExpiredGuestSessions(
+      database.db,
+      new Date(now.getTime() + 2 * 3_600_000),
+    );
+
+    expect(result.auditEventsDeleted).toBe(1);
+
+    const remaining = await database.db.execute<{ organization_id: string }>(
+      sql`SELECT organization_id FROM audit_events`,
+    );
+    expect(remaining.rows.map((row) => row.organization_id)).toEqual([ORG]);
+  });
+
+  it('removes the organisation the guest session owned', async () => {
+    // Left behind it is an empty tenant outliving the data it existed to scope, one row per
+    // abandoned guest. On staging there were 2,135 guest sessions after four days.
+    const now = new Date('2026-01-01T00:00:00Z');
+    const session = await createGuestSession(database.db, { now, ttlHours: 1 });
+
+    await purgeExpiredGuestSessions(database.db, new Date(now.getTime() + 2 * 3_600_000));
+
+    const orgs = await database.db.execute<{ id: string }>(
+      sql`SELECT id::text AS id FROM organizations`,
+    );
+    expect(orgs.rows.map((row) => row.id)).not.toContain(session.organizationId);
+  });
+
+  it('does not leave the audit-retention permission behind it', async () => {
+    /*
+     * The sweep takes a narrow permission with `SET LOCAL`, which ends with its transaction. If it
+     * ever became a connection-scoped `SET`, the next request on that pooled connection could delete
+     * audit events without asking and without anything in its code to suggest it could.
+     */
+    const now = new Date('2026-01-01T00:00:00Z');
+    const session = await createGuestSession(database.db, { now, ttlHours: 1 });
+    await purgeExpiredGuestSessions(database.db, new Date(now.getTime() + 2 * 3_600_000));
+
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+      VALUES (${ORG}, 'PROJECT_CREATED', 'project', gen_random_uuid())
+    `);
+
+    await expect(database.db.execute(sql`DELETE FROM audit_events`)).rejects.toThrow();
+    expect(session.organizationId).toBeDefined();
   });
 });

@@ -16,10 +16,11 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { and, eq, inArray, isNull, lt } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lt, sql } from 'drizzle-orm';
 import { AppError } from '@govintel/shared/errors';
 import type { Database } from './client.ts';
 import {
+  auditEvents,
   guestSessions,
   organizations,
   projects,
@@ -199,20 +200,65 @@ export async function convertGuestSession(
  * Gap-spec §5.3 requires automatic expiry; §38 requires a stated retention policy. Converted
  * sessions are kept: their `convertedToUserId` is the audit link explaining where a project came
  * from, and deleting it would sever the provenance of every project created through the guest flow.
+ *
+ * ## The audit events go too, and that is the whole reason this function changed
+ *
+ * `audit_events.project_id` is ON DELETE RESTRICT, so a project that produced even one audit event
+ * could not be deleted. A guest who records evidence, advances the lifecycle, imports an AI response
+ * or raises a change request produces one — and this sweep deletes every expired session in a single
+ * transaction, so one such project would have failed the whole batch. Every minute. Forever, since
+ * the offending row never goes away on its own.
+ *
+ * The symptom would have been a log line (`guest session purge failed`) and guest data quietly
+ * retained past its stated 72 hours, which is the failure §5.2 exists to prevent and the least
+ * visible way to have it.
+ *
+ * Deleting them is also the right answer rather than merely the available one. §40 permits append,
+ * query and retention, and forbids updating an event or deleting an individual one; a retention
+ * sweep removing a whole expired tenant is exactly the case it allows. Keeping the events while
+ * deleting the project would keep a record of what a guest did — with its safe before/after summary
+ * — in a table nobody can delete, which is storing guest data permanently by another route.
+ *
+ * Scoped by organisation rather than by project, because a guest session owns an organisation of its
+ * own (KI-063) and an event may be organisation-scoped with no project. Both are the same guest.
  */
 export async function purgeExpiredGuestSessions(
   db: Database,
   now: Date = new Date(),
-): Promise<{ readonly sessionsDeleted: number; readonly projectsDeleted: number }> {
+): Promise<{
+  readonly sessionsDeleted: number;
+  readonly projectsDeleted: number;
+  readonly auditEventsDeleted: number;
+}> {
   return db.transaction(async (tx) => {
     const expired = await tx
-      .select({ id: guestSessions.id })
+      .select({ id: guestSessions.id, organizationId: guestSessions.organizationId })
       .from(guestSessions)
       .where(and(lt(guestSessions.expiresAt, now), isNull(guestSessions.convertedAt)));
 
-    if (expired.length === 0) return { sessionsDeleted: 0, projectsDeleted: 0 };
+    if (expired.length === 0) {
+      return { sessionsDeleted: 0, projectsDeleted: 0, auditEventsDeleted: 0 };
+    }
 
     const ids = expired.map((row) => row.id);
+    // Not null: a guest session owns an organisation from the moment it is created (KI-063), which is
+    // what puts guest rows inside a row-level-security policy at all.
+    const organizationIds = expired.map((row) => row.organizationId);
+
+    /*
+     * `SET LOCAL`, not `SET`.
+     *
+     * The permission has to end with the transaction. A connection-scoped setting would survive into
+     * whatever runs next on the same pooled connection, which is how a narrow exception becomes an
+     * ambient one — and the next thing to run would be something that has no business deleting audit
+     * events and no idea it now can.
+     */
+    await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
+
+    const deletedAudit = await tx
+      .delete(auditEvents)
+      .where(inArray(auditEvents.organizationId, organizationIds))
+      .returning({ id: auditEvents.id });
 
     // `inArray` rather than a hand-written `= ANY(...)`: Drizzle binds a JS array as one parameter,
     // which Postgres reads as a malformed array literal.
@@ -226,9 +272,19 @@ export async function purgeExpiredGuestSessions(
       .where(inArray(guestSessions.id, ids))
       .returning({ id: guestSessions.id });
 
+    /*
+     * The organisation last, once nothing points at it.
+     *
+     * Left behind it is an empty tenant that outlives the data it existed to scope — one row per
+     * abandoned guest, accumulating for as long as the product runs, each one still carrying the
+     * tenant key of something that has been deleted.
+     */
+    await tx.delete(organizations).where(inArray(organizations.id, organizationIds));
+
     return {
       sessionsDeleted: deletedSessions.length,
       projectsDeleted: deletedProjects.length,
+      auditEventsDeleted: deletedAudit.length,
     };
   });
 }

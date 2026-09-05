@@ -87,11 +87,38 @@ browser workers plus the Next server plus PGlite on a four-vCPU box. Workers dro
 that reason and the 30s timeout stays, because a test that reports "too slow" cannot say whether the
 subject or the machine was slow, and moving the timeout would remove the only place that shows.
 
-**Staging is behind.** `change_requests` is a new table, and by §1 of `MIGRATION_POLICY.md` its
-migration is written rather than guessed — but the fingerprint check is an exact match, so applying
-it stops the running release serving until a build that knows the new fingerprint is deployed. Apply
-and deploy together, or staging is down in between. The dry run at `7a07f39a` says one migration
-applies.
+**Staging is behind, and now it matters.** Two written migrations are pending — `001-change-requests`
+and `002-audit-retention-path` — and the fingerprint check is an exact match, so applying them stops
+the running release serving until a build that knows the new fingerprint is deployed. Apply and
+deploy together, or staging is down in between. `pnpm migrate --check` against the staging owner DSN
+says which steps it would take.
+
+The second migration is time-sensitive rather than tidy. Until it is deployed, staging's guest purge
+will fail on the first expired guest project that produced an audit event — measured, 126 of them
+were queued and the first expired at **2026-09-05T08:08:57Z**. From that minute on, nothing expires:
+the sweep is one transaction, so one undeletable project fails the whole batch, and the row does not
+go away. Expect `guest session purge failed` once a minute in the Worker logs and a rising count from
+
+```sql
+SELECT count(*) FROM guest_sessions WHERE expires_at < now() AND converted_at IS NULL;
+```
+
+which was 0 while the sweep was working.
+
+### Guest retention, and the shape of how it was found
+
+`docs/DATA_RETENTION_POLICY.md` is new — §38 mandated it and it did not exist. It was written by
+reading what the code actually enforces rather than by choosing periods, and writing it is what found
+KI-065: the guest sweep could not delete a project that had produced an audit event, so it was about
+half an hour from stopping permanently. Three of §38's twelve categories are enforced by something
+that runs, four by cascade, and the rest are named absences — including that **nothing in the product
+deletes a project on request**, which is recorded rather than improvised because it collides with §40
+(events cannot be deleted individually) and with `REGULATORY` evidence retention.
+
+Backup expiry is 6 hours, read from the Neon API on both projects. That is the honest bound on
+"deleted": within six hours a restore brings it back, after six hours nothing does. It is also the
+ceiling on point-in-time recovery, which the runbook's proposed 15-minute RPO sits inside and a fault
+noticed a day later does not.
 
 ### Where the chain breaks now
 

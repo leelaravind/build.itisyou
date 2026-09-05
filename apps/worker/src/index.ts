@@ -150,16 +150,26 @@ export default {
  *
  * Deletion rather than soft-deletion, deliberately. A retention rule that hides rows instead of
  * removing them satisfies the letter of "expire" while leaving the data exactly where it was, which
- * is the failure mode §5.2 is written against. The cascades do the rest: removing a session removes
- * its organisation, and removing the organisation removes everything scoped to it.
+ * is the failure mode §5.2 is written against.
+ *
+ * This comment used to say "the cascades do the rest: removing a session removes its organisation".
+ * They do not, and the cascade runs the other way — `guest_sessions.organization_id` is ON DELETE
+ * CASCADE, so deleting the *organisation* deletes the session. The sweep now removes each of them by
+ * name, in an order that leaves nothing pointing at anything, and the audit events with them: those
+ * are ON DELETE RESTRICT and were quietly making the whole sweep impossible.
  */
 async function purge(db: PooledDatabase): Promise<void> {
-  const { sessionsDeleted, projectsDeleted } = await purgeExpiredGuestSessions(db);
+  const { sessionsDeleted, projectsDeleted, auditEventsDeleted } =
+    await purgeExpiredGuestSessions(db);
 
   // Logged only when something happened. A line every minute saying "deleted nothing" is a line
   // nobody reads, and it would bury the one that matters.
   if (sessionsDeleted > 0 || projectsDeleted > 0) {
-    logger.info('expired guest data purged', { sessionsDeleted, projectsDeleted });
+    logger.info('expired guest data purged', {
+      sessionsDeleted,
+      projectsDeleted,
+      auditEventsDeleted,
+    });
   }
 }
 

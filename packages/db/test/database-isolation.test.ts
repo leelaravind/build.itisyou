@@ -393,6 +393,58 @@ describe('audit immutability', () => {
     await expectRejectedBecause(database.db.execute(sql`DELETE FROM audit_events`), /append-only/);
   });
 
+  /*
+   * §40 permits append, query and **retention**, and forbids updating an event or deleting an
+   * individual one. The trigger used to refuse all four, which is not the same thing — and it made
+   * §5.3's guest expiry impossible, because `audit_events.project_id` is ON DELETE RESTRICT and the
+   * sweep deletes every expired session in one transaction. One audited guest project would have
+   * stopped the purge for all of them, permanently.
+   *
+   * These three cases are the boundary of the exception: it covers deletion, only inside a
+   * transaction that asked for it, and only for as long as that transaction lasts.
+   */
+  it('permits a retention sweep that has said so to delete', async () => {
+    await database.db.transaction(async (tx) => {
+      await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
+      await tx.execute(sql`DELETE FROM audit_events`);
+    });
+
+    const result = await database.db.execute<{ count: string }>(
+      sql`SELECT count(*)::text AS count FROM audit_events`,
+    );
+    expect(result.rows[0]?.count).toBe('0');
+  });
+
+  it('still refuses an update, retention flag or not', async () => {
+    // There is no reading of §40 under which rewriting an event is retention. The flag must not
+    // become a general "let me edit the audit log" switch, which is what it would be if the trigger
+    // checked the setting before checking the operation.
+    await expectRejectedBecause(
+      database.db.transaction(async (tx) => {
+        await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
+        await tx.execute(sql`UPDATE audit_events SET action = 'TAMPERED'`);
+      }),
+      /append-only/,
+    );
+  });
+
+  it('does not let the permission outlive the transaction that took it', async () => {
+    /*
+     * `SET LOCAL` is what makes this true, and the reason it is worth a test: a connection-scoped
+     * `SET` would leave the next request on a pooled connection able to delete audit events, having
+     * never asked and with nothing in its code to suggest it could.
+     */
+    await database.db.transaction(async (tx) => {
+      await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
+      await tx.execute(sql`
+        INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+        VALUES (${ORG_A}, 'SECOND', 'project', gen_random_uuid())
+      `);
+    });
+
+    await expectRejectedBecause(database.db.execute(sql`DELETE FROM audit_events`), /append-only/);
+  });
+
   it('leaves the record intact after a rejected tamper attempt', async () => {
     await expect(
       database.db.execute(sql`UPDATE audit_events SET action = 'TAMPERED'`),

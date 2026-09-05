@@ -29,6 +29,8 @@ verified end to end, not judged.
 | Every requirement breaks at WORK | Closed. The decomposition is stored with the plan: 21 nodes → 119, measured |
 | Every requirement breaks at TEST | Closed for half of them, and TEST is still the only place anything breaks. On the fixture project: 79 requirements, **38 trace end to end**, 41 break at TEST, 0 not assessable — measured on the page, not asserted |
 | 139 emitted requirements discarded | Closed. `decompose` reads `emissions.requirements`, and the verification method each one is checked against is derived from what its rule already says rather than guessed at by keyword |
+| Guest expiry runs, but could not have kept running | Closed. An audited guest project could not be deleted at all, and one of them would have stopped the whole sweep permanently — 126 were queued on staging, the first expiring within the hour (KI-065) |
+| §38's mandated `docs/DATA_RETENTION_POLICY.md` does not exist | Closed, and it says what is true rather than what would look complete: three of the twelve categories are enforced by something that runs, four by cascade, and the rest are named absences. Backup expiry is 6 hours, read from the Neon API |
 | The change surface has no request, approval or apply path | Closed. Raised, decided and applied through the product, with the segregation-of-duties rule carried as a CHECK constraint as well as in code |
 
 Four defects that were **not** in the register, each found by running something rather than reading it:

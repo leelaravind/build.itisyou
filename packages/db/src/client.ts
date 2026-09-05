@@ -685,9 +685,34 @@ CREATE INDEX outbox_correlation_idx ON outbox_events (correlation_id);
 -- Enforced by trigger, not by convention. An audit trail that the application
 -- can edit is not an audit trail, and "we never call UPDATE on it" is a promise
 -- rather than a control.
+--
+-- §40 permits three things: append, query, and *retention*. It forbids updating
+-- an event and deleting an individual one. This trigger used to forbid all four,
+-- which is stricter than the contract and looked like the safe direction to err
+-- in. It was not, and the cost was measurable: audit_events.project_id is
+-- ON DELETE RESTRICT, so a guest project that had produced a single audit event
+-- could never be deleted -- and §5.3's expiry sweep deletes every expired
+-- session in one transaction, so one audited project would have stopped the
+-- purge for all of them, permanently, logging a foreign-key violation once a
+-- minute. Measured on staging: 126 guest sessions owned audited projects, the
+-- first expiring at 2026-09-05T08:08:57Z.
+--
+-- So retention gets the narrow path the contract already gives it. Deletion is
+-- permitted only inside a transaction that has said so, and SET LOCAL means
+-- the permission dies with the transaction rather than living on a connection
+-- that gets reused. UPDATE is refused unconditionally: there is no reading of
+-- §40 under which rewriting an event is retention.
+--
+-- This is a guard against the ordinary path, not against a determined caller --
+-- anything that can execute SQL can set the flag. That is true of every
+-- trigger-based control here and is worth saying rather than implying otherwise.
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION audit_events_immutable() RETURNS trigger AS $$
 BEGIN
+  IF TG_OP = 'DELETE' AND current_setting('govintel.audit_retention', true) = 'on' THEN
+    RETURN OLD;
+  END IF;
+
   RAISE EXCEPTION 'audit_events is append-only: % is not permitted', TG_OP
     USING ERRCODE = 'insufficient_privilege';
 END;

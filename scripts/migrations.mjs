@@ -84,6 +84,35 @@ CREATE POLICY change_requests_tenant_isolation ON change_requests
   WITH CHECK (organization_id::text = current_setting('app.current_organization_id', true));
 `,
   },
+  {
+    id: '002-audit-retention-path',
+    from: '6c7aaf28d6e3c642e10ed889c03af2d4',
+    to: '0433d7ed47c7dcf46326073dc75fae97',
+    why:
+      'Gives §40 retention the path it always permitted. audit_events.project_id is ON DELETE ' +
+      'RESTRICT and the immutability trigger refused every delete, so a guest project that had ' +
+      'produced one audit event could never be deleted -- and §5.3 expiry deletes every expired ' +
+      'session in a single transaction, so one such project would have stopped the purge for all of ' +
+      'them, permanently. Measured on staging before the fix: 126 guest sessions owned audited ' +
+      'projects, the first expiring 2026-09-05T08:08:57Z.',
+    rollback:
+      'Re-create audit_events_immutable() with an unconditional RAISE -- the body this replaces, ' +
+      'which is in git at 47a676e. Additive in the sense that matters: the previous release never ' +
+      'sets govintel.audit_retention, so it behaves identically against either version of the ' +
+      'function, and rolling back only removes a permission nothing older uses.',
+    sql: `
+CREATE OR REPLACE FUNCTION audit_events_immutable() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'DELETE' AND current_setting('govintel.audit_retention', true) = 'on' THEN
+    RETURN OLD;
+  END IF;
+
+  RAISE EXCEPTION 'audit_events is append-only: % is not permitted', TG_OP
+    USING ERRCODE = 'insufficient_privilege';
+END;
+$$ LANGUAGE plpgsql;
+`,
+  },
 ];
 
 /** Bookkeeping, so a migration cannot be applied twice and the history is readable in the database. */

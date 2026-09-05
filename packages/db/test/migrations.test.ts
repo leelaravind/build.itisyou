@@ -108,7 +108,57 @@ beforeAll(async () => {
 
   await fromMigration.exec(SCHEMA_MIGRATIONS_DDL);
   await fromMigration.exec(migration.sql);
+
+  /*
+   * The same trick for 002, which replaces a function rather than adding a table: put the previous
+   * body back, then let the migration replace it. Applying it to a database that already has the new
+   * function would be a no-op that passes without testing anything.
+   */
+  await fromMigration.exec(PREVIOUS_AUDIT_TRIGGER);
+
+  const retention = MIGRATIONS.find((entry) => entry.id === '002-audit-retention-path');
+  if (retention === undefined) throw new Error('002-audit-retention-path is missing');
+
+  await fromMigration.exec(retention.sql);
 });
+
+/**
+ * The body 002 replaces, as it stood at 47a676e.
+ *
+ * Copied here deliberately rather than imported: it is a past revision of a source file, and the
+ * point of the exercise is to reconstruct the shape the migration was written against.
+ */
+const PREVIOUS_AUDIT_TRIGGER = `
+CREATE OR REPLACE FUNCTION audit_events_immutable() RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'audit_events is append-only: % is not permitted', TG_OP
+    USING ERRCODE = 'insufficient_privilege';
+END;
+$$ LANGUAGE plpgsql;
+`;
+
+/** Whether a delete of every audit event succeeds, optionally taking the retention permission first. */
+async function deleteAuditEvents(client: PGlite, withRetention: boolean): Promise<boolean> {
+  try {
+    await client.exec('BEGIN');
+    if (withRetention) await client.exec(`SET LOCAL govintel.audit_retention = 'on'`);
+    await client.exec('DELETE FROM audit_events');
+    await client.exec('COMMIT');
+    return true;
+  } catch {
+    await client.exec('ROLLBACK');
+    return false;
+  }
+}
+
+async function seedAuditEvent(client: PGlite): Promise<void> {
+  await client.exec(`
+    INSERT INTO organizations (name, slug) VALUES ('Acme', 'acme-' || gen_random_uuid())
+    ON CONFLICT DO NOTHING;
+    INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+    SELECT id, 'PROJECT_CREATED', 'project', gen_random_uuid() FROM organizations LIMIT 1;
+  `);
+}
 
 afterAll(async () => {
   await fromDdl.close();
@@ -137,6 +187,31 @@ describe('the migration produces the schema it claims to', () => {
 
   it('creates the same policies', async () => {
     expect(await policiesOf(fromMigration, TABLE)).toEqual(await policiesOf(fromDdl, TABLE));
+  });
+});
+
+describe('002 gives retention the path §40 always allowed', () => {
+  /*
+   * Behaviour rather than text. Comparing the function source against the DDL's copy would pass on
+   * two identically-wrong bodies, and the thing that matters is not what the function says — it is
+   * that a retention sweep can delete and nothing else can.
+   */
+  it('permits a delete inside a transaction that asked for it', async () => {
+    await seedAuditEvent(fromMigration);
+    expect(await deleteAuditEvents(fromMigration, true)).toBe(true);
+  });
+
+  it('still refuses a delete that did not', async () => {
+    await seedAuditEvent(fromMigration);
+    expect(await deleteAuditEvents(fromMigration, false)).toBe(false);
+  });
+
+  it('produces the same behaviour as the DDL it claims to match', async () => {
+    // The fingerprint the migration writes asserts exactly this: that the migrated database is the
+    // one the DDL describes. Here that claim is about a function body, so it is checked by using it.
+    await seedAuditEvent(fromDdl);
+    expect(await deleteAuditEvents(fromDdl, false)).toBe(false);
+    expect(await deleteAuditEvents(fromDdl, true)).toBe(true);
   });
 });
 
