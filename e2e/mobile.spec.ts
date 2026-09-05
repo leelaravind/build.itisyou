@@ -212,6 +212,13 @@ test.describe('dense representations get a different shape, not a smaller one', 
     await buildPlan(page, projectId);
     await page.goto(`/plan/${projectId}/trace`);
 
+    /*
+     * The chain itself is on the requirement's own page — the index carries one row per requirement
+     * and would otherwise be 3,239 elements on a phone. So this follows the same route a reader does.
+     */
+    await page.locator('section[aria-labelledby="chains-heading"] a').first().click();
+    await page.waitForURL(/[/]trace[/].+/);
+
     const body = await page.locator('main').innerText();
 
     /*
@@ -220,6 +227,9 @@ test.describe('dense representations get a different shape, not a smaller one', 
      * at 393px without a horizontal scroll.
      */
     expect(body).toMatch(/(work|test|evidence)\s+(linked|missing|unverified|stale|not required)/i);
+
+    // The new surface gets the same §3.3 check as the rest of them, on the page it now lives on.
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(1);
   });
 
   test('the work board becomes stacked lists with their status named', async ({ page }) => {

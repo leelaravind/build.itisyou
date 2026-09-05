@@ -153,16 +153,111 @@ test.describe('the traceability surface', () => {
     expect(Number(count)).toBeGreaterThan(0);
   });
 
-  test('shows each chain hop by name with a status word', async ({ page }) => {
+  test('names every requirement and says where its chain stops', async ({ page }) => {
     await reachTrace(page);
 
-    // Colour alone would fail WCAG 2.2 §1.4.1, and on this page the status is the entire content of
-    // the badge — an unreadable badge is not degraded, it is empty.
-    const chains = page.getByRole('heading', { name: /every chain/i });
-    await expect(chains).toBeVisible();
+    // Colour alone would fail WCAG 2.2 §1.4.1, and on this row the status word is the entire
+    // content — an unreadable row is not degraded, it is empty.
+    await expect(page.getByRole('heading', { name: /every requirement/i })).toBeVisible();
+    await expect(
+      page.getByText(/complete|breaks at (Design|Work|Test|Evidence)/i).first(),
+    ).toBeVisible();
+  });
 
-    await expect(page.getByText(/Work (linked|missing)/i).first()).toBeVisible();
-    await expect(page.getByText(/Test (linked|missing|unverified)/i).first()).toBeVisible();
+  test('shows each chain hop by name with a status word, on the requirement’s own page', async ({
+    page,
+  }) => {
+    await reachTrace(page);
+
+    /*
+     * The hops moved off the index deliberately. Rendering all 79 chains there put 3,239 elements and
+     * 1.28 MB on one page, and Firefox's accessibility-tree walker took longer than the test timeout
+     * building an aria snapshot of it — so the axe check below used to fail in CI for reasons that
+     * had nothing to do with accessibility.
+     *
+     * They are not hidden, they are somewhere. This asserts that the somewhere is reachable by
+     * following a link from the index, which is the only version of "moved" worth having.
+     */
+    await page.getByRole('heading', { name: /every requirement/i }).scrollIntoViewIfNeeded();
+    await page.locator('section[aria-labelledby="chains-heading"] a').first().click();
+
+    await page.waitForURL(/[/]trace[/].+/);
+    await expect(page.getByRole('heading', { name: /the chain/i })).toBeVisible();
+
+    await expect(page.getByText(/Work\s+(linked|missing)/i).first()).toBeVisible();
+    await expect(page.getByText(/Test\s+(linked|missing|unverified)/i).first()).toBeVisible();
+
+    /*
+     * What the status *means*, which the index never had room for. On the index this was a `title`
+     * tooltip — available to a mouse and to nothing else — and a status word with no explanation is
+     * a verdict the reader cannot argue with.
+     *
+     * Matched against the model's own sentences for a missing hop, so a page that renders the status
+     * word and drops the reason fails here rather than looking fine.
+     */
+    const body = await page.locator('main').innerText();
+    expect(body).toMatch(
+      /nobody is doing anything about this|nothing will notice if this stops being true|nothing was kept/i,
+    );
+  });
+
+  test('the requirement’s own page has no detectable accessibility violations', async ({
+    page,
+  }) => {
+    await reachTrace(page);
+
+    await page.locator('section[aria-labelledby="chains-heading"] a').first().click();
+    await page.waitForURL(/[/]trace[/].+/);
+    await expect(page.getByRole('heading', { name: /the chain/i })).toBeVisible();
+
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
+  test('an id that names no requirement is a 404, not an empty chain', async ({ page }) => {
+    const projectId = await reachTrace(page);
+
+    /*
+     * An empty chain reads as a requirement nobody has done anything about. Answering a wrong id
+     * with one would be the module's original defect wearing a different hat: confident, plausible,
+     * and about nothing.
+     */
+    const response = await page.goto(`/plan/${projectId}/trace/req/no-such-requirement`);
+
+    expect(response?.status()).toBe(404);
+  });
+
+  test('does not put every chain back on one page', async ({ page }) => {
+    await reachTrace(page);
+
+    /*
+     * A drift guard, not a style preference. This page rendered every chain inline until the rules'
+     * emitted requirements were materialised and it became 3,239 elements — 41 per requirement — at
+     * which point the accessibility check began timing out rather than failing, which is a much
+     * harder failure to read.
+     *
+     * The budget is per requirement, because the honest reason the page got big is that the project
+     * got bigger. Fifteen elements per requirement is roughly double what a row costs today and a
+     * third of what a chain costs, so it catches the chains coming back without objecting to a row
+     * gaining a word.
+     */
+    const requirements = Number(
+      await page
+        .locator('dt', { hasText: /^Requirements$/ })
+        .locator('xpath=following-sibling::dd[1]')
+        .innerText(),
+    );
+
+    const elements = await page.evaluate(() => document.querySelectorAll('*').length);
+
+    expect(requirements).toBeGreaterThan(0);
+    expect(
+      elements,
+      `${String(elements)} elements for ${String(requirements)} requirements`,
+    ).toBeLessThan(200 + 15 * requirements);
   });
 
   test('gives every gap an id to go and look at', async ({ page }) => {
@@ -170,13 +265,23 @@ test.describe('the traceability surface', () => {
 
     // A finding with nothing checkable behind it is an assertion, and an engine whose assertions
     // cannot be checked stops being believed the first time somebody disagrees with one.
-    const gaps = page
-      .getByRole('listitem')
-      .filter({ hasText: /has no work|verifies nothing|reach/i });
+    const gaps = page.locator('section[aria-labelledby="blocking-heading"] li');
 
-    if ((await gaps.count()) > 0) {
-      await expect(gaps.first()).toContainText(/[a-z]+:[a-z0-9-]+/i);
+    const count = await gaps.count();
+
+    // Not a guard around the loop. This fixture answers the two questions that generate requirements
+    // and generates no work for most of them, so it has blocking gaps by construction — and a run
+    // where it does not is either a broken fixture or a product that has changed underneath this
+    // test, both of which are worth stopping for rather than skipping past.
+    expect(count, 'the fixture project should have blocking gaps to show').toBeGreaterThan(0);
+
+    for (let index = 0; index < count; index += 1) {
+      await expect(gaps.nth(index)).toContainText(/[a-z0-9-]+:[a-z0-9-]+/i);
     }
+
+    // And the id is a way to go and look, not a string to read out. Every blocking gap here is about
+    // one requirement, so it links to that requirement's chain.
+    await expect(gaps.first().getByRole('link')).toHaveAttribute('href', /[/]trace[/]/);
   });
 
   test('states why each gap matters, not only that it exists', async ({ page }) => {

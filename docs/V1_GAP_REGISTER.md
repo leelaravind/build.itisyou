@@ -27,11 +27,11 @@ verified end to end, not judged.
 | An accepted AI import never reaches the project model | Closed. Claims become intake answers with their provenance intact; the project type is set when there is none |
 | Rate limiting has no test | Closed. 18 tests including a drift guard that reads the call sites out of the source |
 | Every requirement breaks at WORK | Closed. The decomposition is stored with the plan: 21 nodes → 119, measured |
-| Every requirement breaks at TEST | **Open, and now the first broken hop.** See `docs/HANDOFF.md` — it needs one decision about verification methods, stated there rather than guessed at |
-| 139 emitted requirements discarded | Open. Same decision as the TEST hop; they are the same gap seen from two ends |
-| The change surface has no request, approval or apply path | Open. The engine is complete and unused; it needs a table, which is a schema change |
+| Every requirement breaks at TEST | Closed for half of them, and TEST is still the only place anything breaks. On the fixture project: 79 requirements, **38 trace end to end**, 41 break at TEST, 0 not assessable — measured on the page, not asserted |
+| 139 emitted requirements discarded | Closed. `decompose` reads `emissions.requirements`, and the verification method each one is checked against is derived from what its rule already says rather than guessed at by keyword |
+| The change surface has no request, approval or apply path | Closed. Raised, decided and applied through the product, with the segregation-of-duties rule carried as a CHECK constraint as well as in code |
 
-Three defects that were **not** in the register, each found by running something rather than reading it:
+Four defects that were **not** in the register, each found by running something rather than reading it:
 
 - **Every icon on all 50 screens rendered as its own name.** There was no font. The header brand mark
   read `settings_suggest`. Icons are `aria-hidden`, so axe stepped over them, and the E2E suites
@@ -41,6 +41,12 @@ Three defects that were **not** in the register, each found by running something
 - **The evidence page became a wall.** Making the rule criteria satisfiable took it from 17 forms to
   64 — 504 controls, 731 KB, measured — and Firefox's accessibility-tree walker overflowed its stack
   on it.
+- **Then the traceability page became the same wall**, for the same reason and one closure later.
+  Materialising the emitted requirements took it to 3,239 elements and 1.28 MB — 553 list items in
+  "Every chain" alone, and 117 non-blocking gap cards carrying three distinct sentences between them.
+  Firefox took longer than the test timeout building an aria snapshot of it, so the accessibility
+  check *timed out* rather than failing, which is a much harder failure to read. The chains moved to
+  a page each: 572 elements, 269 KB, and a drift guard that fails if they come back.
 
 ---
 

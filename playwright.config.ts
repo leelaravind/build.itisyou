@@ -36,8 +36,19 @@ export default defineConfig({
    * than as backpressure from the database.
    *
    * Four is enough to overlap browser startup, which is where the real wall-clock goes.
+   *
+   * Three in CI, for the same reason one step further along. A GitHub runner has four vCPUs, and four
+   * browser workers plus the Next server plus PGlite inside it means nothing on the machine has a
+   * core to itself. That is what the timeouts at `48be180` were: two accessibility tests that take
+   * around 9s here failed by exceeding 30s there, three times each, on pages measured at 258 and 572
+   * elements — sizes that take axe about two seconds. A test can only report "too slow"; it cannot
+   * say whether the subject or the machine was the slow one, so the machine is given room and the
+   * timeout left where it is.
+   *
+   * Wall-clock comes back from sharding the job instead, which buys parallelism across runners that
+   * do have their own cores.
    */
-  workers: 4,
+  workers: process.env.CI ? 3 : 4,
   reporter: process.env.CI
     ? [['github'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/e2e.json' }]]
     : [['list'], ['html', { open: 'never' }]],

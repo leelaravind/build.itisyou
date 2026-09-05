@@ -83,10 +83,25 @@ jobs:
       - name: Dependency vulnerability scan
         run: pnpm audit --audit-level=moderate
 
+  # Sharded, because the suite outgrew one runner.
+  #
+  # 1,265 tests across five browsers stopped fitting in the 30-minute cap: the run at bf291a5 was
+  # killed with tests still queued, having spent about eleven minutes on setup before the first one
+  # started. A larger timeout would have hidden that — the cap is what makes a suite that has quietly
+  # grown by half visible — so the work is split instead and the cap stays where it is.
+  #
+  # Four shards, not more. Every shard pays the setup cost again, and at four the setup is already
+  # about half of each job, so the next one buys less wall-clock than it costs in runner minutes.
   e2e:
-    name: End-to-end and accessibility
+    name: End-to-end and accessibility (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      # A failure in one shard says nothing about the others, and cancelling them throws away the
+      # evidence of whether the failure is local to one spec or general.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
 
@@ -105,16 +120,16 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
 
-      - name: Build
-        run: pnpm build
-
+      # No separate build step. `playwright.config.ts` builds before it starts the server — on
+      # purpose, so a spec can never run against a stale artefact — and the `verify` job already
+      # builds independently. Building here as well cost every shard a full Next build for nothing.
       - name: Run E2E suite
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --shard=${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report/
           retention-days: 14
 

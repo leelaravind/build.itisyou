@@ -1,6 +1,6 @@
 # HANDOFF
 
-Written 2026-09-02, ~02:15 London; updated ~07:40 the same morning. Mid-session. Read this first if you are picking the work up.
+Written 2026-09-02, ~02:15 London; updated 2026-09-05. Mid-session. Read this first if you are picking the work up.
 
 It exists because the scheduled wake-up that resumes this work is **session-only** — it lives in
 memory and dies with the session. This file does not.
@@ -56,8 +56,14 @@ Owner's priority order:
 | Recovery | §51 drilled: restore verified in 30s with the restricted role and RLS posture intact |
 | Performance | Measured on staging: plan generation 1.6–1.8s, traceability and work under 1s |
 
-**2,305 unit tests. CI green: 831 E2E passed across all five browsers, 3 flaky, 0 failed.** Staging
-is deployed and verified at `c0f74de`.
+**2,364 unit tests pass.** Staging is deployed and verified at `c0f74de` and is now four commits
+behind — see below.
+
+**CI is not green at HEAD, and the reason is not a broken test.** The E2E suite reached 1,265 tests
+across five browsers and stopped fitting the 30-minute job cap; the run at `bf291a5` was killed with
+tests still queued. The last fully green run was `ad34814`, and the suite has grown by half since.
+The job is now four shards at three workers each, and the trace page — one of the two things timing
+out — is a fifth of the size it was.
 
 A note on running E2E against staging from this machine: four parallel Playwright workers plus a WSL
 build will produce a cluster of Firefox failures that all pass when re-run with `--workers=1`. CI is
@@ -68,8 +74,42 @@ usually saying something about the machine.
 
 ## Immediate next tasks
 
-Continue the register top-down. The two CI-only failures from the new surfaces are closed: the
-`getByRole('alert')` strict-mode violation and all 13 axe violations on the plan page.
+**CI is the thing to watch.** The run at `bf291a5` was killed at the 30-minute cap with tests still
+queued — 1,265 of them across five browsers, after about eleven minutes of setup. The E2E job is now
+four shards with the duplicate build removed, and the cap deliberately left where it is: the cap is
+what made a suite that had quietly grown by half visible at all. Confirm a shard finishes well inside
+it rather than assuming four shards is enough.
+
+Two accessibility tests were also failing by *timing out* rather than by finding a violation — one on
+a page that was genuinely too big (the traceability index, fixed below) and one on a page measured at
+258 elements, which axe checks in about two seconds. The second is the runner, not the page: four
+browser workers plus the Next server plus PGlite on a four-vCPU box. Workers drop to three in CI for
+that reason and the 30s timeout stays, because a test that reports "too slow" cannot say whether the
+subject or the machine was slow, and moving the timeout would remove the only place that shows.
+
+**Staging is behind.** `change_requests` is a new table, and by §1 of `MIGRATION_POLICY.md` its
+migration is written rather than guessed — but the fingerprint check is an exact match, so applying
+it stops the running release serving until a build that knows the new fingerprint is deployed. Apply
+and deploy together, or staging is down in between. The dry run at `7a07f39a` says one migration
+applies.
+
+### Where the chain breaks now
+
+Measured on a generated project (GP practice, personal data, users sign in), on the page rather than
+in a fixture:
+
+| | |
+|---|---|
+| Requirements | 79 |
+| Trace end to end | 38 |
+| Break at TEST | 41 |
+| Not assessable | 0 |
+
+TEST is still the only hop anything breaks at, and it is no longer every requirement. The decision
+the previous handoff asked for — whether to author a classified verification method across the packs
+or leave 139 requirements reporting `UNVERIFIABLE` — was answered by a third option that is better
+than both: the method is *derived* from what each rule already says. Nothing was authored by hand and
+nothing was guessed at by keyword. "Not assessable: 0" is that decision, measured.
 
 ### Three things found after the register was written
 
@@ -88,27 +128,23 @@ them away, so none of 287 rules could stop a project advancing. `gatesWith()` fo
 
 **No icon was rendering.** See below.
 
-### The next task, and the decision it needs
+### The wall moves one page along each time something is closed
 
-The traceability chain now breaks at **TEST**, one hop further along than it did. Measured on a real
-generated project: 21 stored nodes before the decomposition was persisted, 119 after, first broken
-hop moves WORK → TEST.
+Twice now, closing a gap has made a page too big to read: the evidence page when the rule criteria
+became satisfiable (17 forms to 64), and the traceability page when the emitted requirements were
+materialised (3,239 elements, 1.28 MB, 553 list items in "Every chain"). Both were found the same
+way — Firefox's accessibility-tree walker on a page that large, which on the traceability page
+*timed out* rather than failing, and a test that times out says nothing about why.
 
-TEST breaks because emitted tests carry a `verifies` key naming a rule-emitted *requirement*, and
-those are still discarded — all 139 of them. `decompose` never reads `emissions.requirements`.
+Both fixes are the same shape and neither is a disclosure widget: a `<details>` keeps every element
+in the document and only hides it, so the page stays the same size and just as hard to navigate with
+a screen reader. The detail goes on its own page — one form per criterion, one chain per requirement
+(`/plan/[id]/trace/[...requirementId]`) — and the index keeps only what a reader must act on.
 
-Materialising them is mechanically easy and has one real decision in it. `checkRequirement` — the
-platform's own standard, which it applies to the user's requirements — wants a **classified**
-verification method (`TEST` | `INSPECTION` | `ANALYSIS` | `DEMONSTRATION`). A rule's
-`emittedRequirements[].verification` is *prose*: "An automated authentication test pack covering
-each of those behaviours." Faithful to map that prose to one acceptance criterion; not faithful to
-infer the classification from it 139 times by keyword.
-
-So the choice is: extend `emittedRequirementSchema` with a required `verificationMethods` field and
-author it across the packs (139 judgements, each small), or accept that materialised requirements
-report `UNVERIFIABLE` on the traceability page until somebody does. The first is right. It was not
-done here rather than guessed at, because a verification method nobody chose is exactly the kind of
-plausible-looking metadata this platform exists to argue against.
+The traceability index is now 572 elements and 269 KB, and `trace.spec.ts` carries a drift guard with
+a per-requirement element budget, so putting the chains back fails a test rather than a browser. It
+is worth expecting the same thing again at the next closure: the pattern is that a page which was
+honest at 20 rows is a wall at 800, and nothing about the code changes in between.
 
 ### The icons were never rendering
 
