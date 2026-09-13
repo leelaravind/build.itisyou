@@ -16,7 +16,12 @@ product has been done or is in `COMPLETION_REGISTER.md` with a next step.
 | Where to store | Never in the repository. From `apps/web`: `npx wrangler secret put OIDC_CLIENT_SECRET --env staging`, and the same for `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_REDIRECT_URI` (secrets are fine for all four; they are read from the environment). Repeat with `--env production`. |
 | Verify | `/login` offers "Continue to your identity provider"; sign in; you land on `/portfolio` signed in with a "Sign out" button; a guest project started beforehand appears in "Your projects". Then run `pnpm test:e2e e2e/auth.spec.ts` locally — it still uses the mock and must stay green. |
 
-## 2. Decide the database plan for production — capacity risk
+## 2. Decide the database plan for production — capacity risk, no longer a blocker
+
+On 2026-09-13 the owner said to bypass Neon. The product runs locally on its embedded database with
+no Neon at all: the full Chromium suite passes, sign-in 8/8 (`e2e/local-final-chromium.json`).
+Production can start on the Free project that is already provisioned. This decision is a risk to
+revisit before real traffic, not a gate.
 
 | | |
 |---|---|

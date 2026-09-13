@@ -87,6 +87,13 @@ export function decompose(input: DecompositionInput): DecompositionResult {
   const requirements = graph.nodesOfClass('REQUIREMENT');
 
   /*
+   * Looked up once. Requirements and tests hang off the project, and fetching it again for each one
+   * copied every node in the plan per item — at gap-spec §63's Large size, a quarter of what was left
+   * of `decompose` once the phase ordering stopped being quadratic (FR-020).
+   */
+  const projectNode = graph.nodesOfClass('PROJECT')[0];
+
+  /*
    * The task count drives the hierarchy depth, so it has to be known before the structure is chosen.
    * Counted from what will actually be created rather than estimated.
    */
@@ -294,7 +301,7 @@ export function decompose(input: DecompositionInput): DecompositionResult {
       const above = parentLevel(level);
       const parent =
         above === undefined || above === 'PROJECT'
-          ? graph.nodesOfClass('PROJECT')[0]?.id
+          ? projectNode?.id
           : above === 'PHASE'
             ? (phaseByKey.get(phaseKey)?.id ?? phaseByKey.get(defaultPhaseKey)?.id)
             : containerId(above, phaseKey, group);
@@ -378,7 +385,6 @@ export function decompose(input: DecompositionInput): DecompositionResult {
     );
 
     // Hung off the project, as the generator's own requirements are.
-    const projectNode = graph.nodesOfClass('PROJECT')[0];
     if (projectNode !== undefined) link('CONTAINS', projectNode.id, requirementId);
   }
 
@@ -496,8 +502,7 @@ export function decompose(input: DecompositionInput): DecompositionResult {
 
     // Tests hang off the project rather than a phase: a test written during build is run at
     // verification and again at every release, so tying it to one phase would misrepresent it.
-    const project = graph.nodesOfClass('PROJECT')[0];
-    if (project !== undefined) link('CONTAINS', project.id, testId);
+    if (projectNode !== undefined) link('CONTAINS', projectNode.id, testId);
 
     /*
      * The verification edge, where the rule said what the test is for.
@@ -610,8 +615,7 @@ export function decompose(input: DecompositionInput): DecompositionResult {
       }),
     );
 
-    const projectNodeForTest = graph.nodesOfClass('PROJECT')[0];
-    if (projectNodeForTest !== undefined) link('CONTAINS', projectNodeForTest.id, testId);
+    if (projectNode !== undefined) link('CONTAINS', projectNode.id, testId);
 
     link('VERIFIES', testId, requirement.id, 'The requirement states this is how it is verified.');
   }
@@ -649,7 +653,6 @@ export function decompose(input: DecompositionInput): DecompositionResult {
       }),
     );
 
-    const projectNode = graph.nodesOfClass('PROJECT')[0];
     if (projectNode !== undefined) link('CONTAINS', projectNode.id, testId);
 
     link(
@@ -843,26 +846,100 @@ function collapseSingletons(
 /**
  * Phase keys in dependency order.
  *
- * Uses the graph's own topological sort so the ordering matches what the plan says rather than the
- * order phases happen to be stored in.
+ * The graph's own topological order — Kahn's algorithm over `DEPENDS_ON`, always taking the smallest
+ * ready id — so the ordering matches what the plan says rather than the order phases happen to be
+ * stored in.
+ *
+ * Computed here rather than by calling `graph.topologicalOrder`, which re-sorts every ready node
+ * after each one it takes. The graph is the whole plan and almost all of it starts out ready, so at
+ * gap-spec §63's Large size that re-sort was 95% of `decompose` (FR-020). A heap hands out the same
+ * smallest id each time without it, so the order — and the fallback when there is a cycle — is
+ * unchanged. The fix belongs in `TwinGraph.topologicalOrder`; once it is made there, this should call
+ * it again rather than keep a second copy of the ordering.
  */
 function orderedPhaseKeys(
   graph: TwinGraph,
   phases: readonly TwinNode[],
   phaseKeyOf: (node: TwinNode) => string,
 ): readonly string[] {
-  const order = graph.topologicalOrder('DEPENDS_ON');
-  if (!order.ok) return phases.map(phaseKeyOf);
+  const indegree = new Map<string, number>();
+  for (const node of graph.nodes) indegree.set(node.id, 0);
+
+  for (const edge of graph.edges) {
+    if (edge.class !== 'DEPENDS_ON') continue;
+    indegree.set(edge.to, (indegree.get(edge.to) ?? 0) + 1);
+  }
+
+  // Sorted, as the graph's sort starts; an array in ascending order is already a valid min-heap.
+  const ready = [...indegree.entries()]
+    .filter(([, degree]) => degree === 0)
+    .map(([nodeId]) => nodeId)
+    .sort();
 
   const byId = new Map(phases.map((p) => [p.id, p]));
   const keys: string[] = [];
+  let taken = 0;
 
-  for (const nodeId of order.order) {
+  for (let nodeId = popSmallest(ready); nodeId !== undefined; nodeId = popSmallest(ready)) {
+    taken += 1;
     const phase = byId.get(nodeId);
     if (phase !== undefined) keys.push(phaseKeyOf(phase));
+
+    for (const edge of graph.edgesFrom(nodeId, 'DEPENDS_ON')) {
+      const remaining = (indegree.get(edge.to) ?? 0) - 1;
+      indegree.set(edge.to, remaining);
+      if (remaining === 0) pushReady(ready, edge.to);
+    }
   }
 
-  return keys;
+  // A node on a cycle never becomes ready. The graph's sort gives no order at all then, and neither
+  // does this: the phases stay in the order they are stored.
+  return taken === graph.size ? keys : phases.map(phaseKeyOf);
+}
+
+/*
+ * A binary min-heap of ids, compared with `<` — the same UTF-16 code-unit order `sort()` uses for
+ * strings, so it ranks ids exactly as the graph's topological sort does.
+ */
+
+function pushReady(heap: string[], nodeId: string): void {
+  let at = heap.length;
+  heap.push(nodeId);
+
+  while (at > 0) {
+    const up = (at - 1) >> 1;
+    const parent = heap[up];
+    if (parent === undefined || parent <= nodeId) break;
+    heap[at] = parent;
+    at = up;
+  }
+
+  heap[at] = nodeId;
+}
+
+function popSmallest(heap: string[]): string | undefined {
+  const smallest = heap[0];
+  const last = heap.pop();
+  if (last === undefined || heap.length === 0) return smallest;
+
+  // The last leaf fills the hole the smallest left at the root, sinking below any smaller child.
+  let at = 0;
+  let child = 1;
+
+  while (child < heap.length) {
+    const left = heap[child];
+    const right = heap[child + 1];
+    if (left !== undefined && right !== undefined && right < left) child += 1;
+
+    const smaller = heap[child];
+    if (smaller === undefined || last <= smaller) break;
+    heap[at] = smaller;
+    at = child;
+    child = 2 * at + 1;
+  }
+
+  heap[at] = last;
+  return smallest;
 }
 
 /**

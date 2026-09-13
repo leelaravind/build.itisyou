@@ -1,15 +1,15 @@
 # node --experimental-strip-types scripts/evidence/profile-large.mjs
-# commit 22b146e556633f4b5abb719411373b38ddbcd328 (dirty)
-# started 2026-09-13T14:08:41.714Z
+# commit 79a3c70049ab4d5797cad73cf6504649f3cad49a (dirty)
+# started 2026-09-13T15:18:16.371Z
 
-graph construction                     11 ms
-rule evaluation (evaluateRules)        12 ms
-decompose                            3327 ms
-mergeIntoGraph                         23 ms
-buildToday                             32 ms
-buildBoard                             13 ms
+graph construction                     14 ms
+rule evaluation (evaluateRules)        13 ms
+decompose                              37 ms
+mergeIntoGraph                         18 ms
+buildToday                             14 ms
+buildBoard                              6 ms
 summariseProject                        1 ms
-summariseCapacity                       2 ms
-total (pure steps)                   3421 ms
+summariseCapacity                       1 ms
+total (pure steps)                    104 ms
 
-# exit 0 after 3724 ms
+# exit 0 after 385 ms

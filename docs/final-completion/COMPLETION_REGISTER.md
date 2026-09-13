@@ -48,7 +48,7 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 |---|---|---|---|---|---|
 | W-ID-2 | P1 | Identity | No identity provider client exists for staging or production | — | BLOCKED_EXTERNAL — see `OWNER_ACTIONS.md` item 1 |
 | W-CI-1 | P1 | CI | GitHub no longer starts Actions jobs for this private repository (payment / spending limit) from `5093b06`; the last verdict is green at `949a76e` | — | BLOCKED_EXTERNAL — `OWNER_ACTIONS.md` item 3. Meanwhile every CI gate is run locally and recorded |
-| W-OPS-5 | P1 | Capacity | Production on Neon's free plan has 100 CU-hours/month (suspends until month end when exceeded) and a 512 MiB branch cap (writes fail when reached — staging hit it, FR-017); there is no alert | W-OPS-1 | Owner decision on plan (OWNER_ACTIONS item 2); meanwhile the schedule budget holds scheduled work to a fifth |
+| W-OPS-5 | P1 | Capacity | Production on Neon's free plan has 100 CU-hours/month (suspends until month end when exceeded) and a 512 MiB branch cap (writes fail when reached — staging hit it, FR-017); there is no alert | W-OPS-1 | Not a blocker since 2026-09-13: the owner said to bypass Neon. The product runs locally without it, and production starts on the provisioned Free project; revisit the plan (OWNER_ACTIONS item 2) before real traffic |
 
 ## Open — P2
 
