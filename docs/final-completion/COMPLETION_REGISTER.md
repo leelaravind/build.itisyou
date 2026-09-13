@@ -38,6 +38,7 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-TEST-1 | P1 | Test coverage | WebKit and iOS Safari skipped every journey even over HTTPS; the skip is now keyed on the insecure origin | DONE | FR-012, staging browser matrix |
 | W-TEST-2 | P1 | Test coverage | Evidence-upload journeys skipped themselves on staging, where R2 is bound, because the test counted the form before it rendered | DONE | FR-018, `json/gates/e2e-staging-5093b06-upload.json` (27/27, 0 skipped) |
 | W-OPS-6 | P1 | Capacity | E2E traffic filled the staging branch to Neon's 512 MiB cap; staging moved to a fresh project and its guest TTL is 6 hours | DONE | FR-017, `staging2-migrate`, `staging2-isolation` |
+| W-RULE-1 | P2 | Rules | Methodology was hard-coded to AGILE at four call sites. Rule input now reads the intake answer `team.methodology` (a select field) through `methodologyFromAnswer`; every surface builds its rule input in `lib/server/project-rules.ts` | DONE (register entry corrected at the end of the pass; the code landed in `949a76e`) | `packages/rules/test/methodology-answer.test.ts` (4), unit run at `a3778c9` |
 
 ## Open — P0 and P1, in execution order
 
@@ -55,8 +56,6 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-ID-3 | Identity | Returning user's guest work is kept apart, not merged (KI-066) | A SECURITY DEFINER transfer function owned by the migration role, audited, re-keying project rows between two organisations the caller owns |
 | W-GOV-1 | Approvals | `recordApproval` records the requester as approver with role fixed to PROJECT_OWNER — no segregation of duties for approvals (change requests do have it) | Accepted for V1 with the reason stated: every V1 organisation has exactly one member (no invites — W-ORG-2), so self-approval is the only approval possible. The segregation rule becomes required the day a second member can join |
 | W-BUD-1 | Budget / resources | Assumed day rate and UNKNOWN complexity (both stated on the page), `resources: []`. The currency default is now disclosed when no currency was given | Intake fields for rate and people; pass them to finance and capacity engines |
-| W-RULE-1 | Rules | Methodology fixed to AGILE at four call sites | Read methodology from intake; `rules/methodology` already implements the variants |
-| W-UI-3 | UI | `navigation.ts` lists 19 routes that do not exist (used only by the design reference now) | Map to real routes or remove, with the AppShell sidebar |
 | W-TRACE-1 | Traceability | About half the requirements on the fixture still break at TEST | Honest as reported; closes when test cases are authored per requirement |
 | W-PERF-1 | Performance | §63 medium/large fixtures and a p95 measurement do not exist | Generate fixtures in `fixtures/`, measure plan/trace/budget server time on staging |
 
@@ -69,6 +68,7 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-EXP-1 | Project export | DEFERRED (register marked it not required for V1) |
 | W-MOB-1 | Distinct mobile screens 59–64 | DEFERRED — every page reflows to 320 px and passes the reflow test; distinct screens are not built |
 | W-ORG-2 | Multi-member organisations, invites | DEFERRED — one owner per organisation in V1 |
+| W-UI-3 | `navigation.ts` lists 19 routes that do not exist; reachable only on `/design/reference`, which production 404s and no journey links to | OPEN, P3 — reclassified from P2; map to the real `/plan/[id]/*` routes when AppShell is adopted, or delete with W-DEAD-1 |
 | W-DEAD-1 | 31 modules with no direct production caller | OPEN, P3 — listed in the inventory; delete or wire per module |
 
 ## How this register is kept
