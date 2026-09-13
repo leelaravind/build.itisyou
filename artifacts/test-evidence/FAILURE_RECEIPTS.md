@@ -25,7 +25,7 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-017 | Final staging E2E run | Operations (database storage cap) | Staging moved to a fresh database; staging guest TTL shortened |
 | FR-018 | Reading the staging re-run's skips | Test coverage (evidence upload) | Fixed — the test waits for the form; 27/27 on staging |
 | FR-019 | §63 Large project on staging | Baseline (dangling edges after filtering records) | Fixed and re-verified on staging at `a2afc66` |
-| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | OPEN — W-PERF-3 |
+| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | Partly fixed (quadratic scan removed; about 2× faster on staging); OPEN — W-PERF-3 |
 
 ---
 
@@ -451,3 +451,22 @@ it a few times slower than a laptop gives the 9–10 s measured on staging.
 generated or the twin changes, and store it with the twin version, instead of on every page view.
 Then find what in `decompose` grows faster than linearly: 5,000 tasks taking 3.3 s suggests a scan
 per task.
+
+**Partly fixed at `329fae5`.** The hotspot was `decompose.ts`: it built each node's children by
+filtering every edge in the plan for every node, so the work grew with nodes × edges. The children
+are now indexed once, in edge order, so the output is identical and the 122 execution tests (golden
+fixtures) pass unchanged. `decompose` on the Large plan locally went from 3,327 ms to about 940 ms.
+
+On staging, with a freshly seeded Large project (`performance/perf-large.json`):
+- Work: p50 9.2 s → 4.5 s.
+- Budget: p50 9.6 s → 5.8 s.
+- Change: p50 9.1 s → 4.6 s.
+
+That improvement comes in a run where the pages this change does not touch were about 40% slower
+than the previous run, so the like-for-like gain is larger. Nothing crashed; post-deploy checks 9/9.
+
+**Still OPEN (W-PERF-3).** Those three pages are still 3–4 times over the 1.5 s budget, and Project
+Home and Plan are over it too. Next step: `decompose` still takes about a second, so find the
+remaining per-item scan (likely `collapseSingletons`, which rescans every edge once per container
+it collapses). Then compute the decomposition once per twin version instead of on every request.
+

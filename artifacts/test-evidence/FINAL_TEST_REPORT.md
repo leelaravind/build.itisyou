@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T14:09:19.927Z at `22b146e` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T14:23:09.463Z at `329fae5` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -29,14 +29,14 @@ Generated 2026-09-13T14:09:19.927Z at `22b146e` by `scripts/evidence/final-repor
 | E2E | Local critical journeys (PGlite, Chromium) | **PASSED** | 77 passed, 0 failed, 0 flaky, 3 skipped (artifacts/test-evidence/e2e/local-batch7-chromium.json) |
 | E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS |
 | E2E | Staging, Firefox and mobile Chrome | **PASSED** | 516 passed, 0 failed, 0 flaky, 30 skipped (artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json) |
-| Performance | Large project (§63) on staging — every project page renders | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a2afc66, 292 s |
+| Performance | Large project (§63) on staging — every project page renders | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s |
 | CI | GitHub Actions at the latest recorded run | **BLOCKED** | run 34758533871 at a3778c9: failure — no job started (GitHub Actions billing / spending limit; owner action). Last run that executed: run 34752927029 at 949a76e: success |
 | Database | Schema applied to staging by the migration tool | **PASSED** | node --experimental-strip-types scripts/migrate.mjs — exit 0 at fc830b8, 2 s |
-| Deployment | Staging web Worker deployed | **PASSED** | wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-fix.sh — exit 0 at a2afc66, 431 s |
+| Deployment | Staging web Worker deployed | **PASSED** | wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-perf.sh — exit 0 at 329fae5, 415 s |
 | Deployment | Staging cron Worker deployed with the budgeted schedule | **PASSED** | cd apps/worker && npx wrangler deploy --env staging — exit 0 at efdb739, 28 s |
-| Deployment | Staging health, version and database reachability | **PASSED** | node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a2afc66 — exit 0 at a2afc66, 3 s |
+| Deployment | Staging health, version and database reachability | **PASSED** | node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 329fae5 — exit 0 at 329fae5, 3 s |
 | Rollback | Staging rollback drill (roll back, verify, roll forward) | **PASSED** | bash /e/Project/.claude-scratch/tmp/rollback-drill.sh — exit 0 at b3829d0, 21 s |
-| Performance | Latency smoke against staging | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a2afc66, 292 s |
+| Performance | Latency smoke against staging | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s |
 | Recovery | Point-in-time database restore drill (restored copy verified as the restricted role) | **PASSED** | pnpm verify:isolation — exit 0 at 949a76e, 3 s |
 | Security | Static application security testing (SAST, Semgrep public rulesets) | **PASSED** | E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --config p/typescript --config p/javascript --config p/nodejs --metrics=off --jobs 2 --exclude node_modules --exclude dist --exclude .next --exclude test --exclude e2e --exclude artifacts --json --output artifacts/test-evidence/security/semgrep.json apps packages scripts — exit 0 at a3778c9, 556 s |
 | Identity | Sign-in against a real identity provider | **BLOCKED** | No OIDC client exists for any environment (OWNER_ACTIONS.md item 1). Verified against a local mock issuer only |
@@ -345,9 +345,11 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | static-typecheck-final | local | PASSED | 57d8754 (dirty) | 11 s |
 | staging-deploy-web-a2afc66 | staging-cloudflare-neon | PASSED | a2afc66 | 431 s |
 | staging-health-a2afc66 | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 3 s |
-| staging-perf-large | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 292 s |
-| unit-final | local | PASSED | 548bca7 (dirty) | 48 s |
 | profile-large-work-page | local | PASSED | 22b146e (dirty) | 4 s |
+| unit-final | local | PASSED | 0b85bd1 (dirty) | 47 s |
+| staging-deploy-web-329fae5 | staging-cloudflare-neon | PASSED | 329fae5 | 415 s |
+| staging-health-329fae5 | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 3 s |
+| staging-perf-large | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 223 s |
 
 ## Failures found, and what happened to them
 
@@ -374,7 +376,7 @@ Full receipts: `artifacts/test-evidence/FAILURE_RECEIPTS.md`.
 | FR-017 | Final staging E2E run | Operations (database storage cap) | Staging moved to a fresh database; staging guest TTL shortened |
 | FR-018 | Reading the staging re-run's skips | Test coverage (evidence upload) | Fixed — the test waits for the form; 27/27 on staging |
 | FR-019 | §63 Large project on staging | Baseline (dangling edges after filtering records) | Fixed and re-verified on staging at `a2afc66` |
-| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | OPEN — W-PERF-3 |
+| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | Partly fixed (quadratic scan removed; about 2× faster on staging); OPEN — W-PERF-3 |
 
 ## Not connected, deliberately
 

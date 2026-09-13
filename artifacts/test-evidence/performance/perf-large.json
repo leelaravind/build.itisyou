@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T14:02:11.150Z",
+  "generatedAt": "2026-09-13T14:22:38.380Z",
   "base": "https://govintel-web-staging.kpleelaaravind.workers.dev",
   "fixture": {
     "people": 100,
@@ -13,7 +13,7 @@
   "seed": {
     "role": "govintel_app",
     "rlsScoped": true,
-    "ms": 4720
+    "ms": 3710
   },
   "samplesPerRoute": 6,
   "budgetP95Ms": 1500,
@@ -25,8 +25,8 @@
       ],
       "errorBoundary": false,
       "bytes": 72002,
-      "p50": 2051,
-      "p95": 2271
+      "p50": 3206,
+      "p95": 3554
     },
     {
       "route": "/plan/:id",
@@ -35,8 +35,8 @@
       ],
       "errorBoundary": false,
       "bytes": 870551,
-      "p50": 2359,
-      "p95": 2464
+      "p50": 3468,
+      "p95": 3719
     },
     {
       "route": "/plan/:id/trace",
@@ -45,8 +45,8 @@
       ],
       "errorBoundary": false,
       "bytes": 841300,
-      "p50": 960,
-      "p95": 1005
+      "p50": 1313,
+      "p95": 1465
     },
     {
       "route": "/plan/:id/rules",
@@ -55,8 +55,8 @@
       ],
       "errorBoundary": false,
       "bytes": 335481,
-      "p50": 1231,
-      "p95": 1359
+      "p50": 1677,
+      "p95": 1743
     },
     {
       "route": "/plan/:id/work",
@@ -65,8 +65,8 @@
       ],
       "errorBoundary": false,
       "bytes": 60804,
-      "p50": 9186,
-      "p95": 9435
+      "p50": 4504,
+      "p95": 4744
     },
     {
       "route": "/plan/:id/budget",
@@ -75,8 +75,8 @@
       ],
       "errorBoundary": false,
       "bytes": 92570,
-      "p50": 9646,
-      "p95": 10304
+      "p50": 5838,
+      "p95": 7455
     },
     {
       "route": "/plan/:id/evidence",
@@ -85,8 +85,8 @@
       ],
       "errorBoundary": false,
       "bytes": 332753,
-      "p50": 1056,
-      "p95": 4503
+      "p50": 1308,
+      "p95": 1381
     },
     {
       "route": "/plan/:id/change",
@@ -95,8 +95,8 @@
       ],
       "errorBoundary": false,
       "bytes": 1068764,
-      "p50": 9139,
-      "p95": 9582
+      "p50": 4574,
+      "p95": 5824
     },
     {
       "route": "/plan/:id/baseline",
@@ -105,8 +105,8 @@
       ],
       "errorBoundary": false,
       "bytes": 45301,
-      "p50": 1334,
-      "p95": 1432
+      "p50": 1914,
+      "p95": 1995
     },
     {
       "route": "/plan/:id/release",
@@ -115,8 +115,8 @@
       ],
       "errorBoundary": false,
       "bytes": 209600,
-      "p50": 927,
-      "p95": 3732
+      "p50": 1428,
+      "p95": 1507
     },
     {
       "route": "/plan/:id/close",
@@ -125,19 +125,19 @@
       ],
       "errorBoundary": false,
       "bytes": 66332,
-      "p50": 893,
-      "p95": 4996
+      "p50": 1260,
+      "p95": 1378
     }
   ],
   "crashed": [],
   "overBudget": [
     "/p/:id",
     "/plan/:id",
+    "/plan/:id/rules",
     "/plan/:id/work",
     "/plan/:id/budget",
-    "/plan/:id/evidence",
     "/plan/:id/change",
-    "/plan/:id/release",
-    "/plan/:id/close"
+    "/plan/:id/baseline",
+    "/plan/:id/release"
   ]
 }

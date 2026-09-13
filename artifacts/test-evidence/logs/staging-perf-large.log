@@ -1,20 +1,20 @@
 # node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev
-# commit a2afc662d28723cc35737e086bc9f4cfff52e388 (dirty)
-# started 2026-09-13T13:57:19.022Z
+# commit 329fae530f3616c29689d14c660219cb20ec018e (dirty)
+# started 2026-09-13T14:18:55.166Z
 
-project 7829d75f-40f7-438b-9408-fc9d8c97822f
-seeded 12106 nodes, 23105 edges as govintel_app in 4720 ms
-/p/:id                   status 200 p50 2051 ms p95 2271 ms 70 KiB
-/plan/:id                status 200 p50 2359 ms p95 2464 ms 850 KiB
-/plan/:id/trace          status 200 p50 960 ms p95 1005 ms 822 KiB
-/plan/:id/rules          status 200 p50 1231 ms p95 1359 ms 328 KiB
-/plan/:id/work           status 200 p50 9186 ms p95 9435 ms 59 KiB
-/plan/:id/budget         status 200 p50 9646 ms p95 10304 ms 90 KiB
-/plan/:id/evidence       status 200 p50 1056 ms p95 4503 ms 325 KiB
-/plan/:id/change         status 200 p50 9139 ms p95 9582 ms 1044 KiB
-/plan/:id/baseline       status 200 p50 1334 ms p95 1432 ms 44 KiB
-/plan/:id/release        status 200 p50 927 ms p95 3732 ms 205 KiB
-/plan/:id/close          status 200 p50 893 ms p95 4996 ms 65 KiB
-crashed: 0 of 11; over the 1500 ms p95 budget: /p/:id, /plan/:id, /plan/:id/work, /plan/:id/budget, /plan/:id/evidence, /plan/:id/change, /plan/:id/release, /plan/:id/close
+project 339dc00d-23e8-4c1d-bd6f-aab241ec2cd9
+seeded 12106 nodes, 23105 edges as govintel_app in 3710 ms
+/p/:id                   status 200 p50 3206 ms p95 3554 ms 70 KiB
+/plan/:id                status 200 p50 3468 ms p95 3719 ms 850 KiB
+/plan/:id/trace          status 200 p50 1313 ms p95 1465 ms 822 KiB
+/plan/:id/rules          status 200 p50 1677 ms p95 1743 ms 328 KiB
+/plan/:id/work           status 200 p50 4504 ms p95 4744 ms 59 KiB
+/plan/:id/budget         status 200 p50 5838 ms p95 7455 ms 90 KiB
+/plan/:id/evidence       status 200 p50 1308 ms p95 1381 ms 325 KiB
+/plan/:id/change         status 200 p50 4574 ms p95 5824 ms 1044 KiB
+/plan/:id/baseline       status 200 p50 1914 ms p95 1995 ms 44 KiB
+/plan/:id/release        status 200 p50 1428 ms p95 1507 ms 205 KiB
+/plan/:id/close          status 200 p50 1260 ms p95 1378 ms 65 KiB
+crashed: 0 of 11; over the 1500 ms p95 budget: /p/:id, /plan/:id, /plan/:id/rules, /plan/:id/work, /plan/:id/budget, /plan/:id/change, /plan/:id/baseline, /plan/:id/release
 
-# exit 0 after 292168 ms
+# exit 0 after 223251 ms

@@ -1,0 +1,16 @@
+{
+  "id": "staging-deploy-web-329fae5",
+  "category": "deployment",
+  "environment": "staging-cloudflare-neon",
+  "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-perf.sh",
+  "commit": "329fae530f3616c29689d14c660219cb20ec018e",
+  "dirty": false,
+  "startedAt": "2026-09-13T14:11:32.693Z",
+  "finishedAt": "2026-09-13T14:18:27.739Z",
+  "durationMs": 415046,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/staging-deploy-web-329fae5.log"
+}

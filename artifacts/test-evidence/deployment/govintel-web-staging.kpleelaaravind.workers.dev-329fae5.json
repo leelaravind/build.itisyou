@@ -1,0 +1,52 @@
+{
+  "base": "https://govintel-web-staging.kpleelaaravind.workers.dev",
+  "expected": "329fae5",
+  "checkedAt": "2026-09-13T14:18:54.859Z",
+  "checks": [
+    {
+      "name": "served over TLS",
+      "ok": true,
+      "detail": "https://govintel-web-staging.kpleelaaravind.workers.dev"
+    },
+    {
+      "name": "health endpoint answers 200",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "database reachable (NORMAL mode)",
+      "ok": true,
+      "detail": "{\"status\":\"ok\",\"mode\":\"NORMAL\",\"version\":\"0.1.0-staging.329fae5\",\"commit\":\"329fae5\",\"environment\":\"staging\"}"
+    },
+    {
+      "name": "serves the expected commit",
+      "ok": true,
+      "detail": "commit 329fae5, expected 329fae5"
+    },
+    {
+      "name": "HSTS present",
+      "ok": true,
+      "detail": "max-age=63072000; includeSubDomains; preload"
+    },
+    {
+      "name": "CSP uses a nonce and no unsafe-inline scripts",
+      "ok": true,
+      "detail": "default-src 'self'; script-src 'self' 'nonce-06c6dd6caf20428097b3be0216333f48'; style-src 'self' 'unsafe-inline'; img-sr"
+    },
+    {
+      "name": "framing refused",
+      "ok": true,
+      "detail": "DENY"
+    },
+    {
+      "name": "nosniff",
+      "ok": true,
+      "detail": "nosniff"
+    },
+    {
+      "name": "an unknown project is 404, never 403",
+      "ok": true,
+      "detail": "status 404"
+    }
+  ]
+}
