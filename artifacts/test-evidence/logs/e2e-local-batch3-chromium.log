@@ -1,0 +1,198 @@
+# npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts e2e/project-home.spec.ts e2e/accessibility.spec.ts --project=chromium --reporter=line,json
+# commit efdb73928e2db2c855667e70107d8da9ca51821b (dirty)
+# started 2026-09-13T09:25:15.969Z
+
+[WebServer] (node:22936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:23468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:23468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:16928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:2652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:9728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:3348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:13180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:16700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:18620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 82 tests using 4 workers
+
+(node:10716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:18188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:19300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/82] [chromium] › e2e\accessibility.spec.ts:26:5 › axe — no violations › design reference has no WCAG 2.2 A/AA violations
+[2/82] [chromium] › e2e\accessibility.spec.ts:43:5 › axe — no violations › design reference passes best-practice checks
+[3/82] [chromium] › e2e\accessibility.spec.ts:43:5 › axe — no violations › landing passes best-practice checks
+[4/82] [chromium] › e2e\accessibility.spec.ts:26:5 › axe — no violations › landing has no WCAG 2.2 A/AA violations
+[5/82] [chromium] › e2e\accessibility.spec.ts:66:3 › landmarks and document structure › the shell exposes exactly one main landmark
+[6/82] [chromium] › e2e\accessibility.spec.ts:71:3 › landmarks and document structure › navigation landmarks are individually named
+[7/82] [chromium] › e2e\accessibility.spec.ts:86:3 › landmarks and document structure › the page has exactly one h1
+[8/82] [chromium] › e2e\accessibility.spec.ts:91:3 › landmarks and document structure › heading levels do not skip
+[9/82] [chromium] › e2e\accessibility.spec.ts:106:3 › landmarks and document structure › the document declares a language
+[10/82] [chromium] › e2e\accessibility.spec.ts:111:3 › landmarks and document structure › the page has a non-empty title
+[11/82] [chromium] › e2e\accessibility.spec.ts:118:3 › keyboard operability › a skip link is the first thing a keyboard user reaches
+[12/82] [chromium] › e2e\accessibility.spec.ts:133:3 › keyboard operability › the skip link becomes visible when focused
+[13/82] [chromium] › e2e\accessibility.spec.ts:141:3 › keyboard operability › every interactive control is reachable by keyboard
+[14/82] [chromium] › e2e\accessibility.spec.ts:169:3 › keyboard operability › focus is visible on every focused control
+[15/82] [chromium] › e2e\accessibility.spec.ts:189:3 › keyboard operability › icon-only controls carry accessible names
+[16/82] [chromium] › e2e\accessibility.spec.ts:206:3 › status is never conveyed by colour alone › every gate state renders a text label
+[17/82] [chromium] › e2e\accessibility.spec.ts:216:3 › status is never conveyed by colour alone › every gate state renders an icon alongside its label
+[18/82] [chromium] › e2e\accessibility.spec.ts:224:3 › status is never conveyed by colour alone › an uncertain figure is shown as a range, not a false midpoint
+[19/82] [chromium] › e2e\accessibility.spec.ts:233:3 › status is never conveyed by colour alone › an unknown figure is labelled unknown rather than shown as zero
+[20/82] [chromium] › e2e\accessibility.spec.ts:240:3 › reflow and zoom › content reflows at 320px without horizontal scrolling
+[21/82] [chromium] › e2e\accessibility.spec.ts:262:3 › reflow and zoom › has no axe violations at mobile width
+[22/82] [chromium] › e2e\accessibility.spec.ts:277:3 › reflow and zoom › respects prefers-reduced-motion
+[23/82] [chromium] › e2e\auth.spec.ts:72:3 › signing in › completes the round trip and leaves the user signed in
+[24/82] [chromium] › e2e\auth.spec.ts:80:3 › signing in › sends state and a PKCE challenge to the provider
+[25/82] [chromium] › e2e\auth.spec.ts:105:3 › signing in › refuses a callback carrying a state we never issued
+[WebServer] {"timestamp":"2026-09-13T09:25:46.593Z","level":"warn","message":"oidc callback refused","correlationId":"edd5d28b-7bf1-4a28-94c6-4ec4f22379ec","context":{"refusal":"STATE_MISMATCH"}}
+
+[26/82] [chromium] › e2e\auth.spec.ts:127:3 › signing up to save work started as a guest › carries the guest’s project onto the new account
+[27/82] [chromium] › e2e\auth.spec.ts:152:3 › signing up to save work started as a guest › tells a returning user their guest work was kept apart, and keeps it reachable
+[28/82] [chromium] › e2e\auth.spec.ts:189:3 › signing out › ends the session rather than only clearing the cookie
+[29/82] [chromium] › e2e\auth.spec.ts:221:3 › an account is its own tenant › a first sign-in creates an organisation to act in
+[30/82] [chromium] › e2e\auth.spec.ts:237:3 › an account is its own tenant › one account cannot open another account’s project
+[31/82] [chromium] › e2e\isolation.spec.ts:73:3 › every project surface isolates by tenant › the route list was discovered, not empty
+[32/82] [chromium] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[33/82] [chromium] › e2e\isolation.spec.ts:111:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[34/82] [chromium] › e2e\isolation.spec.ts:126:3 › every project surface isolates by tenant › no surface is reachable with no session at all
+[35/82] [chromium] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[36/82] [chromium] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[37/82] [chromium] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[38/82] [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[39/82] [chromium] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[40/82] [chromium] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[WebServer] (node:18620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[41/82] [chromium] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[42/82] [chromium] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[43/82] [chromium] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[44/82] [chromium] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[45/82] [chromium] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[46/82] [chromium] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[47/82] [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[48/82] [chromium] › e2e\plan.spec.ts:53:3 › before a plan exists › offers to build one
+[49/82] [chromium] › e2e\plan.spec.ts:61:3 › before a plan exists › states that no AI is involved
+[50/82] [chromium] › e2e\plan.spec.ts:70:3 › before a plan exists › is reachable before the intake is finished
+[51/82] [chromium] › e2e\plan.spec.ts:91:3 › a generated plan › contains phases
+[52/82] [chromium] › e2e\plan.spec.ts:96:3 › a generated plan › gives every item its provenance, beside the item
+[53/82] [chromium] › e2e\plan.spec.ts:111:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[54/82] [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › states what it had to assume
+[55/82] [chromium] › e2e\plan.spec.ts:141:3 › a generated plan › says what the assumption costs, not only that one was made
+[56/82] [chromium] › e2e\plan.spec.ts:150:3 › a generated plan › lists what it does not know rather than filling the gap
+[57/82] [chromium] › e2e\plan.spec.ts:155:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[58/82] [chromium] › e2e\plan.spec.ts:175:3 › a generated plan › produces a different plan for a different project type
+[59/82] [chromium] › e2e\plan.spec.ts:190:3 › a generated plan › works without client JavaScript
+[60/82] [chromium] › e2e\plan.spec.ts:208:3 › a plan belongs to one project and one guest › another guest cannot open it
+[61/82] [chromium] › e2e\plan.spec.ts:220:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[62/82] [chromium] › e2e\plan.spec.ts:225:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[63/82] [chromium] › e2e\plan.spec.ts:285:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[64/82] [chromium] › e2e\plan.spec.ts:300:3 › accessibility of the plan › has no axe violations before generation
+[WebServer] {"timestamp":"2026-09-13T09:26:20.233Z","level":"warn","message":"rejected plan generation for unowned project","correlationId":"b2bdec65-3953-44d7-bc6b-477dc5e66f3b","context":{"projectId":"3de69901-ff8a-4fe9-8bda-81030b94adbd"}}
+
+[65/82] [chromium] › e2e\plan.spec.ts:317:3 › accessibility of the plan › has no axe violations once generated
+[66/82] [chromium] › e2e\portfolio.spec.ts:36:3 › the portfolio surface › is reachable without an account
+[67/82] [chromium] › e2e\portfolio.spec.ts:42:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[68/82] [chromium] › e2e\portfolio.spec.ts:60:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[69/82] [chromium] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › never lists another guest’s project
+[70/82] [chromium] › e2e\portfolio.spec.ts:81:3 › the portfolio surface › explains that it names a project rather than averaging health
+[71/82] [chromium] › e2e\portfolio.spec.ts:98:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[72/82] [chromium] › e2e\portfolio.spec.ts:115:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[73/82] [chromium] › e2e\portfolio.spec.ts:126:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[74/82] [chromium] › e2e\portfolio.spec.ts:136:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[75/82] [chromium] › e2e\portfolio.spec.ts:149:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[76/82] [chromium] › e2e\portfolio.spec.ts:159:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+[77/82] [chromium] › e2e\project-home.spec.ts:36:3 › project home › answers the five questions for a project that has just started
+[78/82] [chromium] › e2e\project-home.spec.ts:62:3 › project home › names the gates that block it once there is a plan
+[79/82] [chromium] › e2e\project-home.spec.ts:75:3 › project home › links only to sections that exist
+[80/82] [chromium] › e2e\project-home.spec.ts:91:3 › project home › is a 404 for another guest, never a 403
+[81/82] [chromium] › e2e\project-home.spec.ts:100:3 › project home › is a 404 for an id that is not a project
+[82/82] [chromium] › e2e\project-home.spec.ts:105:3 › project home › has no detectable accessibility violations
+  3 skipped
+  79 passed (1.2m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 73506 ms

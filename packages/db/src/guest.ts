@@ -16,9 +16,9 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { and, eq, inArray, isNull, lt, sql } from 'drizzle-orm';
+import { and, eq, isNull, lt, sql } from 'drizzle-orm';
 import { AppError } from '@govintel/shared/errors';
-import type { Database } from './client.ts';
+import { applyTenantScope, type Database } from './client.ts';
 import {
   auditEvents,
   guestSessions,
@@ -229,64 +229,82 @@ export async function purgeExpiredGuestSessions(
   readonly sessionsDeleted: number;
   readonly projectsDeleted: number;
   readonly auditEventsDeleted: number;
+  /** Sessions whose deletion failed. Each fails alone; the rest of the sweep still runs. */
+  readonly sessionsFailed: number;
 }> {
-  return db.transaction(async (tx) => {
-    const expired = await tx
-      .select({ id: guestSessions.id, organizationId: guestSessions.organizationId })
-      .from(guestSessions)
-      .where(and(lt(guestSessions.expiresAt, now), isNull(guestSessions.convertedAt)));
+  const expired = await db
+    .select({ id: guestSessions.id, organizationId: guestSessions.organizationId })
+    .from(guestSessions)
+    .where(and(lt(guestSessions.expiresAt, now), isNull(guestSessions.convertedAt)));
 
-    if (expired.length === 0) {
-      return { sessionsDeleted: 0, projectsDeleted: 0, auditEventsDeleted: 0 };
+  let sessionsDeleted = 0;
+  let projectsDeleted = 0;
+  let auditEventsDeleted = 0;
+  let sessionsFailed = 0;
+
+  /*
+   * One transaction per guest, each inside that guest's own tenant scope.
+   *
+   * ## Why scoped
+   *
+   * The Worker connects as the restricted role, and every table holding a guest's work — projects,
+   * the twin, evidence, audit events — forces row-level security. The sweep used to run all of this
+   * *unscoped*, and unscoped, those tables are empty: the deletes of `audit_events` and `projects`
+   * matched nothing. Deleting the organisation then cascaded into projects (referential actions are
+   * not subject to row security), met the audit events it could not see through `ON DELETE
+   * RESTRICT`, and failed. The suite never saw it because PGlite runs its tests as a superuser, for
+   * whom row-level security does not exist.
+   *
+   * `applyTenantScope` is the same call the request layer makes, so the sweep deletes exactly what
+   * that guest could have read and nothing another tenant owns — the policy does the scoping, not a
+   * `WHERE` clause somebody could widen.
+   *
+   * ## Why one transaction each
+   *
+   * A single transaction meant a single undeletable guest failed the sweep for everyone, on every
+   * run, for as long as the row existed. Now it fails alone, is counted, and is retried next time.
+   */
+  for (const session of expired) {
+    try {
+      const counts = await db.transaction(async (tx) => {
+        await applyTenantScope(tx, session.organizationId);
+
+        /*
+         * `SET LOCAL`, not `SET`: the permission ends with the transaction. A connection-scoped
+         * setting would survive into whatever runs next on the same pooled connection.
+         */
+        await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
+
+        const deletedAudit = await tx
+          .delete(auditEvents)
+          .where(eq(auditEvents.organizationId, session.organizationId))
+          .returning({ id: auditEvents.id });
+
+        const deletedProjects = await tx
+          .delete(projects)
+          .where(eq(projects.guestSessionId, session.id))
+          .returning({ id: projects.id });
+
+        await tx.delete(guestSessions).where(eq(guestSessions.id, session.id));
+
+        /*
+         * The organisation last, once nothing points at it. Left behind it is an empty tenant that
+         * outlives the data it existed to scope, still carrying the key of something deleted.
+         */
+        await tx.delete(organizations).where(eq(organizations.id, session.organizationId));
+
+        return { audit: deletedAudit.length, projects: deletedProjects.length };
+      });
+
+      sessionsDeleted += 1;
+      projectsDeleted += counts.projects;
+      auditEventsDeleted += counts.audit;
+    } catch {
+      sessionsFailed += 1;
     }
+  }
 
-    const ids = expired.map((row) => row.id);
-    // Not null: a guest session owns an organisation from the moment it is created (KI-063), which is
-    // what puts guest rows inside a row-level-security policy at all.
-    const organizationIds = expired.map((row) => row.organizationId);
-
-    /*
-     * `SET LOCAL`, not `SET`.
-     *
-     * The permission has to end with the transaction. A connection-scoped setting would survive into
-     * whatever runs next on the same pooled connection, which is how a narrow exception becomes an
-     * ambient one — and the next thing to run would be something that has no business deleting audit
-     * events and no idea it now can.
-     */
-    await tx.execute(sql`SET LOCAL govintel.audit_retention = 'on'`);
-
-    const deletedAudit = await tx
-      .delete(auditEvents)
-      .where(inArray(auditEvents.organizationId, organizationIds))
-      .returning({ id: auditEvents.id });
-
-    // `inArray` rather than a hand-written `= ANY(...)`: Drizzle binds a JS array as one parameter,
-    // which Postgres reads as a malformed array literal.
-    const deletedProjects = await tx
-      .delete(projects)
-      .where(inArray(projects.guestSessionId, ids))
-      .returning({ id: projects.id });
-
-    const deletedSessions = await tx
-      .delete(guestSessions)
-      .where(inArray(guestSessions.id, ids))
-      .returning({ id: guestSessions.id });
-
-    /*
-     * The organisation last, once nothing points at it.
-     *
-     * Left behind it is an empty tenant that outlives the data it existed to scope — one row per
-     * abandoned guest, accumulating for as long as the product runs, each one still carrying the
-     * tenant key of something that has been deleted.
-     */
-    await tx.delete(organizations).where(inArray(organizations.id, organizationIds));
-
-    return {
-      sessionsDeleted: deletedSessions.length,
-      projectsDeleted: deletedProjects.length,
-      auditEventsDeleted: deletedAudit.length,
-    };
-  });
+  return { sessionsDeleted, projectsDeleted, auditEventsDeleted, sessionsFailed };
 }
 
 /** Refresh the activity timestamp. Does not extend expiry — a guest project is time-boxed. */

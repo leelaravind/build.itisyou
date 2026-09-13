@@ -1,0 +1,16 @@
+{
+  "id": "staging-migrate",
+  "category": "database",
+  "environment": "staging",
+  "command": "pnpm migrate",
+  "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+  "dirty": false,
+  "startedAt": "2026-09-13T08:54:57.125Z",
+  "finishedAt": "2026-09-13T08:55:01.763Z",
+  "durationMs": 4638,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-migrate.log"
+}

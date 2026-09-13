@@ -1,0 +1,14 @@
+# pnpm migrate
+# commit efdb73928e2db2c855667e70107d8da9ca51821b
+# started 2026-09-13T08:54:57.125Z
+
+$ node --experimental-strip-types scripts/migrate.mjs
+expected  0433d7ed47c7dcf46326073dc75fae97
+found     nothing — the database has no schema_meta
+
+Empty database. Creating the schema.
+Applied. schema_meta now records 0433d7ed47c7dcf46326073dc75fae97.
+govintel_app can log in. Verified from pg_roles: no superuser, bypassrls, createdb or createrole.
+Granted govintel_app to the connecting role; either arrangement will work.
+
+# exit 0 after 4638 ms

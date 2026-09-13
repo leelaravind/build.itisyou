@@ -3,12 +3,11 @@ import 'server-only';
 import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { eq } from 'drizzle-orm';
-import { memberships, organizations, users } from '@govintel/db/schema';
-import { resolveIdentity } from '@govintel/db/identity';
-import { convertGuestSession } from '@govintel/db/guest';
+import { users } from '@govintel/db/schema';
+import { establishAccount } from '@govintel/db/sign-in';
 import { createSession, revokeSession, touchSession } from '@govintel/db/session';
 import { logger } from '@govintel/shared/logging';
-import { withUnscoped } from './database.ts';
+import { withTenant, withUnscoped, type DatabaseHandle } from './database.ts';
 import { sign, unsign } from './signed-cookie.ts';
 import { SESSION_COOKIE, guestCookieOptions } from './guest-cookie.ts';
 import { recordAudit } from './audit.ts';
@@ -105,75 +104,62 @@ export type SignInResult =
 /**
  * Turn a verified identity into a signed-in session, carrying the guest's work across.
  *
- * The order matters and is not obvious: the user and their organisation must exist before the guest
- * conversion, because the conversion reassigns projects *to* that organisation — and the session is
- * created last, so a failure anywhere leaves the caller a guest rather than signed in to an account
- * whose work did not arrive.
+ * The account half — identity, organisation, the guest's work — is `establishAccount`, which does
+ * each step inside the tenant scope row-level security requires. It used to be done here through the
+ * unscoped handle, which works as the superuser the local journeys run as and fails as the role
+ * production connects as: the first real sign-in would have thrown on its membership insert. See
+ * `packages/db/src/sign-in.ts`.
+ *
+ * The session is created last, so a failure anywhere leaves the caller a guest rather than signed in
+ * to an account whose work did not arrive.
  */
 export async function completeSignIn(
   identity: VerifiedIdentity,
   guestSessionId: string | undefined,
 ): Promise<SignInResult> {
   try {
-    const outcome = await withUnscoped(async (db) => {
-      const { user, created } = await resolveIdentity(db, identity);
+    const account = await withUnscoped((db) => establishAccount(db, identity, guestSessionId));
 
-      const organizationId = await ensureOrganization(db, user.id, identity, created);
+    // `sessions` is not tenant data: it is the record that says which tenant a caller is.
+    const session = await withUnscoped((db) =>
+      createSession(db, { userId: account.userId, organizationId: account.organizationId }),
+    );
 
-      /*
-       * Carry the guest's work over (§5.4).
-       *
-       * Best effort by design: a guest session that has expired or was already converted must not
-       * stop somebody signing in. `convertGuestSession` is idempotent for the replayed case, and the
-       * failure mode worth avoiding here is refusing a valid login because of a stale cookie.
-       */
-      let claimed = 0;
-
-      if (guestSessionId !== undefined) {
-        try {
-          const result = await convertGuestSession(db, {
-            guestSessionId,
-            userId: user.id,
-            organizationId,
-          });
-          claimed = result.projects.length;
-        } catch (error) {
-          logger.warn('guest conversion skipped during sign-in', {
-            err: String(error),
-            userId: user.id,
-          });
-        }
-      }
-
-      const session = await createSession(db, { userId: user.id, organizationId });
-
-      await recordAudit(db, {
-        organizationId,
-        action: created ? 'USER_REGISTERED' : 'USER_SIGNED_IN',
+    // The audit trail is tenant data, so it is written inside the tenant it belongs to.
+    await withTenant(account.organizationId, (tx) =>
+      recordAudit(tx as unknown as DatabaseHandle, {
+        organizationId: account.organizationId,
+        action: account.created ? 'USER_REGISTERED' : 'USER_SIGNED_IN',
         entityType: 'USER',
-        entityId: user.id,
-        actorUserId: user.id,
+        entityId: account.userId,
+        actorUserId: account.userId,
         summary: {
           issuer: identity.issuer,
           // The subject is the identity key, not a secret, and without it an audit entry cannot be
           // matched to a provider's own logs during an incident.
           subject: identity.subject,
-          projectsClaimed: claimed,
-          firstSignIn: created,
+          projectsClaimed: account.projectsClaimed,
+          guest: account.guest,
+          firstSignIn: account.created,
         },
-      });
-
-      return { session, claimed };
-    });
+      }),
+    );
 
     const store = await cookies();
-    const seconds = Math.floor((outcome.session.absoluteExpiresAt.getTime() - Date.now()) / 1000);
+    const seconds = Math.floor((session.absoluteExpiresAt.getTime() - Date.now()) / 1000);
 
-    store.set(SESSION_COOKIE, sign(outcome.session.id), sessionCookieOptions(seconds));
+    store.set(SESSION_COOKIE, sign(session.id), sessionCookieOptions(seconds));
 
-    logger.info('signed in', { projectsClaimed: outcome.claimed });
+    logger.info('signed in', { projectsClaimed: account.projectsClaimed, guest: account.guest });
 
-    return { ok: true, redirectTo: '/portfolio' };
+    /*
+     * A returning user's guest work is not merged into their account yet (see sign-in.ts). Say so on
+     * the page they land on, rather than letting it drop out of view without a word.
+     */
+    return {
+      ok: true,
+      redirectTo: account.guest === 'KEPT_SEPARATE' ? '/portfolio?guest=kept' : '/portfolio',
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
 
@@ -184,44 +170,6 @@ export async function completeSignIn(
     logger.error('sign-in failed', { err: String(error) });
     return { ok: false, refusal: 'FAILED' };
   }
-}
-
-/**
- * The organisation a newly signed-in user acts in.
- *
- * A first sign-in creates one, because a user with no tenant can reach nothing — every table in the
- * product is scoped by organisation, so "signed in with no organisation" is a state where the
- * application correctly shows an empty screen and the person cannot tell why.
- */
-async function ensureOrganization(
-  db: Parameters<Parameters<typeof withUnscoped>[0]>[0],
-  userId: string,
-  identity: VerifiedIdentity,
-  created: boolean,
-): Promise<string> {
-  if (!created) {
-    const [existing] = await db
-      .select({ organizationId: memberships.organizationId })
-      .from(memberships)
-      .where(eq(memberships.userId, userId))
-      .limit(1);
-
-    if (existing !== undefined) return existing.organizationId;
-  }
-
-  const name = identity.displayName ?? identity.email ?? 'My organisation';
-
-  const [organization] = await db
-    .insert(organizations)
-    .values({ name, slug: `org-${userId}` })
-    .returning({ id: organizations.id });
-
-  if (organization === undefined) throw new Error('could not create an organisation');
-
-  // OWNER, because they created it. §7.2's roles are about who else joins later.
-  await db.insert(memberships).values({ organizationId: organization.id, userId, role: 'OWNER' });
-
-  return organization.id;
 }
 
 /**

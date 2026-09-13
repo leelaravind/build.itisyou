@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 import { logger } from '@govintel/shared/logging';
 import { toAppError } from '@govintel/shared/errors';
@@ -12,6 +12,7 @@ import { generateProject } from '@govintel/twin/generate';
 import { rowsFromGraph } from '@govintel/twin/repository';
 import { withDatabase } from '../../../lib/server/database.ts';
 import { accessibleProject } from '../../../lib/server/project-access.ts';
+import { loadProjectRows } from '../../../lib/server/project-graph.ts';
 import { evaluateForProject } from '../../../lib/server/project-rules.ts';
 import { decompose, mergeIntoGraph } from '@govintel/execution/decompose';
 import { mayOpen } from '../../../lib/server/project-access.ts';
@@ -169,24 +170,17 @@ function numberAnswer(intake: readonly IntakeField[], fieldId: string): number |
   return typeof value === 'number' ? value : undefined;
 }
 
-/** Read the stored graph for a project the caller may open. Returns null when they may not. */
+/**
+ * Read the graph rows for a project the caller may open — the stored twin plus the evidence and
+ * approval projection. Returns null when they may not.
+ */
 export async function loadPlanRows(projectId: string) {
   const access = await accessibleProject(projectId);
 
   if (access === null) return null;
 
   const { project } = access;
+  const rows = await loadProjectRows(projectId, project.organizationId);
 
-  const nodes = await withDatabase((db) =>
-    db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId)),
-  );
-
-  const edges = await withDatabase((db) =>
-    db
-      .select()
-      .from(twinEdges)
-      .where(and(eq(twinEdges.projectId, projectId))),
-  );
-
-  return { project, nodes, edges };
+  return { project, ...rows };
 }

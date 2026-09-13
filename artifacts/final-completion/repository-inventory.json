@@ -1,0 +1,1409 @@
+{
+  "generatedAt": "2026-09-13T09:17:11.683Z",
+  "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+  "routes": [
+    {
+      "route": "/api/health",
+      "kind": "route",
+      "file": "apps/web/src/app/api/health/route.ts",
+      "lines": 91,
+      "readsDatabase": true
+    },
+    {
+      "route": "/auth/callback",
+      "kind": "route",
+      "file": "apps/web/src/app/auth/callback/route.ts",
+      "lines": 133,
+      "readsDatabase": false
+    },
+    {
+      "route": "/",
+      "kind": "error",
+      "file": "apps/web/src/app/error.tsx",
+      "lines": 59,
+      "readsDatabase": false
+    },
+    {
+      "route": "/",
+      "kind": "global-error",
+      "file": "apps/web/src/app/global-error.tsx",
+      "lines": 58,
+      "readsDatabase": false
+    },
+    {
+      "route": "/how-it-works",
+      "kind": "page",
+      "file": "apps/web/src/app/how-it-works/page.tsx",
+      "lines": 88,
+      "readsDatabase": false
+    },
+    {
+      "route": "/intake/[projectId]/import",
+      "kind": "page",
+      "file": "apps/web/src/app/intake/[projectId]/import/page.tsx",
+      "lines": 143,
+      "readsDatabase": true
+    },
+    {
+      "route": "/intake/[projectId]/import/[importId]",
+      "kind": "page",
+      "file": "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx",
+      "lines": 509,
+      "readsDatabase": true
+    },
+    {
+      "route": "/intake/[projectId]",
+      "kind": "loading",
+      "file": "apps/web/src/app/intake/[projectId]/loading.tsx",
+      "lines": 10,
+      "readsDatabase": false
+    },
+    {
+      "route": "/intake/[projectId]",
+      "kind": "page",
+      "file": "apps/web/src/app/intake/[projectId]/page.tsx",
+      "lines": 281,
+      "readsDatabase": true
+    },
+    {
+      "route": "/intake/[projectId]/prompt",
+      "kind": "page",
+      "file": "apps/web/src/app/intake/[projectId]/prompt/page.tsx",
+      "lines": 272,
+      "readsDatabase": true
+    },
+    {
+      "route": "/",
+      "kind": "layout",
+      "file": "apps/web/src/app/layout.tsx",
+      "lines": 44,
+      "readsDatabase": false
+    },
+    {
+      "route": "/login",
+      "kind": "page",
+      "file": "apps/web/src/app/login/page.tsx",
+      "lines": 119,
+      "readsDatabase": false
+    },
+    {
+      "route": "/",
+      "kind": "not-found",
+      "file": "apps/web/src/app/not-found.tsx",
+      "lines": 48,
+      "readsDatabase": false
+    },
+    {
+      "route": "/p/[projectId]",
+      "kind": "page",
+      "file": "apps/web/src/app/p/[projectId]/page.tsx",
+      "lines": 83,
+      "readsDatabase": false
+    },
+    {
+      "route": "/",
+      "kind": "page",
+      "file": "apps/web/src/app/page.tsx",
+      "lines": 169,
+      "readsDatabase": false
+    },
+    {
+      "route": "/plan/[projectId]/baseline",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/baseline/page.tsx",
+      "lines": 220,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/budget",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+      "lines": 458,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/change",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/change/page.tsx",
+      "lines": 512,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/close",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/close/page.tsx",
+      "lines": 189,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/evidence",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/evidence/page.tsx",
+      "lines": 412,
+      "readsDatabase": false
+    },
+    {
+      "route": "/plan/[projectId]/evidence/[evidenceId]/download",
+      "kind": "route",
+      "file": "apps/web/src/app/plan/[projectId]/evidence/[evidenceId]/download/route.ts",
+      "lines": 105,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]",
+      "kind": "loading",
+      "file": "apps/web/src/app/plan/[projectId]/loading.tsx",
+      "lines": 10,
+      "readsDatabase": false
+    },
+    {
+      "route": "/plan/[projectId]",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/page.tsx",
+      "lines": 382,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/release",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/release/page.tsx",
+      "lines": 214,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/rules",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+      "lines": 335,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/trace",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/trace/page.tsx",
+      "lines": 388,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/trace/[...requirementId]",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/trace/[...requirementId]/page.tsx",
+      "lines": 279,
+      "readsDatabase": true
+    },
+    {
+      "route": "/plan/[projectId]/work",
+      "kind": "page",
+      "file": "apps/web/src/app/plan/[projectId]/work/page.tsx",
+      "lines": 361,
+      "readsDatabase": true
+    },
+    {
+      "route": "/portfolio",
+      "kind": "page",
+      "file": "apps/web/src/app/portfolio/page.tsx",
+      "lines": 246,
+      "readsDatabase": true
+    },
+    {
+      "route": "/start",
+      "kind": "page",
+      "file": "apps/web/src/app/start/page.tsx",
+      "lines": 129,
+      "readsDatabase": false
+    }
+  ],
+  "serverActions": [
+    {
+      "file": "apps/web/src/app/intake/[projectId]/actions.ts",
+      "exports": [
+        "answerQuestion"
+      ],
+      "writesAudit": false,
+      "checksVersion": false
+    },
+    {
+      "file": "apps/web/src/app/intake/[projectId]/import/actions.ts",
+      "exports": [
+        "submitImport",
+        "acceptImport",
+        "rejectImport"
+      ],
+      "writesAudit": true,
+      "checksVersion": false
+    },
+    {
+      "file": "apps/web/src/app/login/actions.ts",
+      "exports": [
+        "beginSignIn",
+        "endSession"
+      ],
+      "writesAudit": false,
+      "checksVersion": false
+    },
+    {
+      "file": "apps/web/src/app/plan/[projectId]/actions.ts",
+      "exports": [
+        "generatePlan",
+        "loadPlanRows"
+      ],
+      "writesAudit": false,
+      "checksVersion": false
+    },
+    {
+      "file": "apps/web/src/app/plan/[projectId]/change-actions.ts",
+      "exports": [
+        "requestChange",
+        "decideChange",
+        "applyChange",
+        "changeRequestsFor"
+      ],
+      "writesAudit": true,
+      "checksVersion": true
+    },
+    {
+      "file": "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+      "exports": [
+        "recordEvidence",
+        "recordApproval",
+        "evidenceStatus"
+      ],
+      "writesAudit": true,
+      "checksVersion": false
+    },
+    {
+      "file": "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+      "exports": [
+        "transitionProject",
+        "availableTransitions"
+      ],
+      "writesAudit": true,
+      "checksVersion": true
+    },
+    {
+      "file": "apps/web/src/app/start/actions.ts",
+      "exports": [
+        "startProject"
+      ],
+      "writesAudit": false,
+      "checksVersion": false
+    }
+  ],
+  "packages": [
+    {
+      "name": "@govintel/change",
+      "dir": "packages/change",
+      "modules": [
+        {
+          "specifier": "@govintel/change/propagation",
+          "file": "packages/change/src/propagation.ts",
+          "lines": 269,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/change/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/change/impact",
+          "file": "packages/change/src/impact.ts",
+          "lines": 344,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/change/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change-actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/change/request",
+          "file": "packages/change/src/request.ts",
+          "lines": 405,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/change-actions.ts"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/completion",
+      "dir": "packages/completion",
+      "modules": [
+        {
+          "specifier": "@govintel/completion/retrospective",
+          "file": "packages/completion/src/retrospective.ts",
+          "lines": 279,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/completion/closure",
+          "file": "packages/completion/src/closure.ts",
+          "lines": 444,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/close/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/completion/archive",
+          "file": "packages/completion/src/archive.ts",
+          "lines": 226,
+          "productionCallers": []
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/db",
+      "dir": "packages/db",
+      "modules": [
+        {
+          "specifier": "@govintel/db/schema",
+          "file": "packages/db/src/schema.ts",
+          "lines": 1078,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/page.tsx",
+            "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx",
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change-actions.ts",
+            "apps/web/src/app/plan/[projectId]/evidence/[evidenceId]/download/route.ts",
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/app/plan/[projectId]/work/page.tsx",
+            "apps/web/src/app/portfolio/page.tsx",
+            "apps/web/src/app/start/actions.ts",
+            "apps/web/src/lib/server/audit.ts",
+            "apps/web/src/lib/server/auth.ts",
+            "apps/web/src/lib/server/database.ts",
+            "apps/web/src/lib/server/project-access.ts",
+            "apps/web/src/lib/server/project-graph.ts",
+            "apps/web/src/lib/server/project-rules.ts",
+            "apps/worker/src/drain.ts",
+            "apps/worker/src/index.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/db/client",
+          "file": "packages/db/src/client.ts",
+          "lines": 1037,
+          "productionCallers": [
+            "apps/web/src/lib/server/database.ts",
+            "apps/worker/src/drain.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/db/tenancy",
+          "file": "packages/db/src/tenancy.ts",
+          "lines": 200,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/db/rbac",
+          "file": "packages/db/src/rbac.ts",
+          "lines": 322,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/db/identity",
+          "file": "packages/db/src/identity.ts",
+          "lines": 246,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/db/authorize",
+          "file": "packages/db/src/authorize.ts",
+          "lines": 291,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/db/guest",
+          "file": "packages/db/src/guest.ts",
+          "lines": 318,
+          "productionCallers": [
+            "apps/web/src/lib/server/database.ts",
+            "apps/web/src/lib/server/session.ts",
+            "apps/worker/src/index.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/db/session",
+          "file": "packages/db/src/session.ts",
+          "lines": 233,
+          "productionCallers": [
+            "apps/web/src/lib/server/auth.ts",
+            "apps/web/src/lib/server/database.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/db/connect",
+          "file": "packages/db/src/connect.ts",
+          "lines": 86,
+          "productionCallers": [
+            "apps/web/src/lib/server/database.ts",
+            "apps/worker/src/index.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/db/sign-in",
+          "file": "packages/db/src/sign-in.ts",
+          "lines": 185,
+          "productionCallers": [
+            "apps/web/src/lib/server/auth.ts"
+          ]
+        }
+      ],
+      "testFiles": 13
+    },
+    {
+      "name": "@govintel/design",
+      "dir": "packages/design",
+      "modules": [
+        {
+          "specifier": "@govintel/design/responsive",
+          "file": "packages/design/src/responsive.ts",
+          "lines": 337,
+          "productionCallers": []
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/discovery",
+      "dir": "packages/discovery",
+      "modules": [
+        {
+          "specifier": "@govintel/discovery/search",
+          "file": "packages/discovery/src/search.ts",
+          "lines": 265,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/discovery/palette",
+          "file": "packages/discovery/src/palette.ts",
+          "lines": 312,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/discovery/notifications",
+          "file": "packages/discovery/src/notifications.ts",
+          "lines": 317,
+          "productionCallers": []
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/execution",
+      "dir": "packages/execution",
+      "modules": [
+        {
+          "specifier": "@govintel/execution/hierarchy",
+          "file": "packages/execution/src/hierarchy.ts",
+          "lines": 297,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/execution/decompose",
+          "file": "packages/execution/src/decompose.ts",
+          "lines": 919,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change/page.tsx",
+            "apps/web/src/app/plan/[projectId]/work/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/execution/scheduling",
+          "file": "packages/execution/src/scheduling.ts",
+          "lines": 513,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/work/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/execution/board",
+          "file": "packages/execution/src/board.ts",
+          "lines": 323,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/work/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 3
+    },
+    {
+      "name": "@govintel/finance",
+      "dir": "packages/finance",
+      "modules": [
+        {
+          "specifier": "@govintel/finance/money",
+          "file": "packages/finance/src/money.ts",
+          "lines": 347,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/finance/estimate",
+          "file": "packages/finance/src/estimate.ts",
+          "lines": 417,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/finance/budget",
+          "file": "packages/finance/src/budget.ts",
+          "lines": 488,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/finance/feasibility",
+          "file": "packages/finance/src/feasibility.ts",
+          "lines": 890,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/governance",
+      "dir": "packages/governance",
+      "modules": [
+        {
+          "specifier": "@govintel/governance/baseline",
+          "file": "packages/governance/src/baseline.ts",
+          "lines": 317,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/baseline/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/governance/evidence",
+          "file": "packages/governance/src/evidence.ts",
+          "lines": 328,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/evidence/page.tsx",
+            "apps/web/src/app/plan/[projectId]/evidence/[evidenceId]/download/route.ts",
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/governance/approval",
+          "file": "packages/governance/src/approval.ts",
+          "lines": 381,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/governance/document",
+          "file": "packages/governance/src/document.ts",
+          "lines": 380,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/governance/audit",
+          "file": "packages/governance/src/audit.ts",
+          "lines": 355,
+          "productionCallers": [
+            "apps/web/src/lib/server/audit.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/governance/lifecycle",
+          "file": "packages/governance/src/lifecycle.ts",
+          "lines": 319,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+            "apps/web/src/components/lifecycle/LifecycleCard.tsx"
+          ]
+        }
+      ],
+      "testFiles": 3
+    },
+    {
+      "name": "@govintel/intake",
+      "dir": "packages/intake",
+      "modules": [
+        {
+          "specifier": "@govintel/intake/schema",
+          "file": "packages/intake/src/schema.ts",
+          "lines": 334,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/intake/[projectId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx",
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change/page.tsx",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/app/plan/[projectId]/work/page.tsx",
+            "apps/web/src/components/intake/QuestionCard.tsx",
+            "apps/web/src/lib/server/project-rules.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/intake/fields",
+          "file": "packages/intake/src/fields.ts",
+          "lines": 418,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/components/intake/QuestionCard.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/intake/missing",
+          "file": "packages/intake/src/missing.ts",
+          "lines": 224,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/page.tsx",
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/interchange",
+      "dir": "packages/interchange",
+      "modules": [
+        {
+          "specifier": "@govintel/interchange/versions",
+          "file": "packages/interchange/src/versions.ts",
+          "lines": 72,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/import/actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/schema",
+          "file": "packages/interchange/src/schema.ts",
+          "lines": 228,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/prompt",
+          "file": "packages/interchange/src/prompt.ts",
+          "lines": 278,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/redaction",
+          "file": "packages/interchange/src/redaction.ts",
+          "lines": 235,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/prompt/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/validate",
+          "file": "packages/interchange/src/validate.ts",
+          "lines": 803,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/staging",
+          "file": "packages/interchange/src/staging.ts",
+          "lines": 272,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/interchange/materialise",
+          "file": "packages/interchange/src/materialise.ts",
+          "lines": 180,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/import/actions.ts"
+          ]
+        }
+      ],
+      "testFiles": 3
+    },
+    {
+      "name": "@govintel/organization",
+      "dir": "packages/organization",
+      "modules": [
+        {
+          "specifier": "@govintel/organization/membership",
+          "file": "packages/organization/src/membership.ts",
+          "lines": 323,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/organization/portfolio",
+          "file": "packages/organization/src/portfolio.ts",
+          "lines": 325,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/organization/integrations",
+          "file": "packages/organization/src/integrations.ts",
+          "lines": 211,
+          "productionCallers": [
+            "apps/web/src/app/portfolio/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/release",
+      "dir": "packages/release",
+      "modules": [
+        {
+          "specifier": "@govintel/release/testing",
+          "file": "packages/release/src/testing.ts",
+          "lines": 478,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/release/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/release/security",
+          "file": "packages/release/src/security.ts",
+          "lines": 472,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/release/deployment",
+          "file": "packages/release/src/deployment.ts",
+          "lines": 301,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/release/operations",
+          "file": "packages/release/src/operations.ts",
+          "lines": 250,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/release/readiness",
+          "file": "packages/release/src/readiness.ts",
+          "lines": 497,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/release/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/resilience",
+      "dir": "packages/resilience",
+      "modules": [
+        {
+          "specifier": "@govintel/resilience/jobs",
+          "file": "packages/resilience/src/jobs.ts",
+          "lines": 316,
+          "productionCallers": [
+            "apps/worker/src/drain.ts",
+            "apps/worker/src/index.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/resilience/outbox",
+          "file": "packages/resilience/src/outbox.ts",
+          "lines": 237,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/resilience/degraded",
+          "file": "packages/resilience/src/degraded.ts",
+          "lines": 313,
+          "productionCallers": [
+            "apps/web/src/app/api/health/route.ts"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/rules",
+      "dir": "packages/rules",
+      "modules": [
+        {
+          "specifier": "@govintel/rules/schema",
+          "file": "packages/rules/src/schema.ts",
+          "lines": 440,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/rules/catalogue",
+          "file": "packages/rules/src/catalogue.ts",
+          "lines": 285,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/lib/server/project-rules.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/rules/verification",
+          "file": "packages/rules/src/verification.ts",
+          "lines": 321,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/rules/evaluate",
+          "file": "packages/rules/src/evaluate.ts",
+          "lines": 596,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/lib/server/project-rules.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/rules/precedence",
+          "file": "packages/rules/src/precedence.ts",
+          "lines": 220,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/rules/lifecycle",
+          "file": "packages/rules/src/lifecycle.ts",
+          "lines": 404,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/rules/gates",
+          "file": "packages/rules/src/gates.ts",
+          "lines": 1061,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/lib/server/project-rules.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/rules/methodology",
+          "file": "packages/rules/src/methodology.ts",
+          "lines": 283,
+          "productionCallers": []
+        }
+      ],
+      "testFiles": 5
+    },
+    {
+      "name": "@govintel/shared",
+      "dir": "packages/shared",
+      "modules": [
+        {
+          "specifier": "@govintel/shared/errors",
+          "file": "packages/shared/src/errors.ts",
+          "lines": 186,
+          "productionCallers": [
+            "apps/web/src/app/intake/[projectId]/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/change-actions.ts",
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+            "apps/web/src/app/start/actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/shared/correlation",
+          "file": "packages/shared/src/correlation.ts",
+          "lines": 71,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/shared/logging",
+          "file": "packages/shared/src/logging.ts",
+          "lines": 175,
+          "productionCallers": [
+            "apps/web/src/app/auth/callback/route.ts",
+            "apps/web/src/app/intake/[projectId]/actions.ts",
+            "apps/web/src/app/intake/[projectId]/import/actions.ts",
+            "apps/web/src/app/login/actions.ts",
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/change-actions.ts",
+            "apps/web/src/app/plan/[projectId]/evidence/[evidenceId]/download/route.ts",
+            "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
+            "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
+            "apps/web/src/app/start/actions.ts",
+            "apps/web/src/lib/server/audit.ts",
+            "apps/web/src/lib/server/auth.ts",
+            "apps/web/src/lib/server/database.ts",
+            "apps/web/src/lib/server/evidence-storage.ts",
+            "apps/web/src/lib/server/rate-limit.ts",
+            "apps/worker/src/index.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/shared/provenance",
+          "file": "packages/shared/src/provenance.ts",
+          "lines": 108,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/shared/result",
+          "file": "packages/shared/src/result.ts",
+          "lines": 62,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/shared/roles",
+          "file": "packages/shared/src/roles.ts",
+          "lines": 38,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/shared/env",
+          "file": "packages/shared/src/env.ts",
+          "lines": 151,
+          "productionCallers": [
+            "apps/web/src/lib/server/config.ts",
+            "apps/web/src/lib/server/signed-cookie.ts"
+          ]
+        }
+      ],
+      "testFiles": 6
+    },
+    {
+      "name": "@govintel/traceability",
+      "dir": "packages/traceability",
+      "modules": [
+        {
+          "specifier": "@govintel/traceability/requirements",
+          "file": "packages/traceability/src/requirements.ts",
+          "lines": 407,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/traceability/architecture",
+          "file": "packages/traceability/src/architecture.ts",
+          "lines": 359,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/traceability/chain",
+          "file": "packages/traceability/src/chain.ts",
+          "lines": 513,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/trace/page.tsx",
+            "apps/web/src/app/plan/[projectId]/trace/[...requirementId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/traceability/gaps",
+          "file": "packages/traceability/src/gaps.ts",
+          "lines": 348,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/close/page.tsx",
+            "apps/web/src/app/plan/[projectId]/trace/page.tsx",
+            "apps/web/src/app/plan/[projectId]/trace/[...requirementId]/page.tsx"
+          ]
+        }
+      ],
+      "testFiles": 1
+    },
+    {
+      "name": "@govintel/twin",
+      "dir": "packages/twin",
+      "modules": [
+        {
+          "specifier": "@govintel/twin/nodes",
+          "file": "packages/twin/src/nodes.ts",
+          "lines": 286,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/twin/edges",
+          "file": "packages/twin/src/edges.ts",
+          "lines": 497,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/twin/graph",
+          "file": "packages/twin/src/graph.ts",
+          "lines": 357,
+          "productionCallers": [
+            "apps/web/src/lib/server/project-graph.ts",
+            "apps/web/src/lib/server/project-rules.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/twin/invariants",
+          "file": "packages/twin/src/invariants.ts",
+          "lines": 406,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/page.tsx"
+          ]
+        },
+        {
+          "specifier": "@govintel/twin/versioning",
+          "file": "packages/twin/src/versioning.ts",
+          "lines": 405,
+          "productionCallers": []
+        },
+        {
+          "specifier": "@govintel/twin/generate",
+          "file": "packages/twin/src/generate.ts",
+          "lines": 874,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/actions.ts"
+          ]
+        },
+        {
+          "specifier": "@govintel/twin/repository",
+          "file": "packages/twin/src/repository.ts",
+          "lines": 272,
+          "productionCallers": [
+            "apps/web/src/app/plan/[projectId]/actions.ts",
+            "apps/web/src/app/plan/[projectId]/baseline/page.tsx",
+            "apps/web/src/app/plan/[projectId]/budget/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change/page.tsx",
+            "apps/web/src/app/plan/[projectId]/change-actions.ts",
+            "apps/web/src/app/plan/[projectId]/close/page.tsx",
+            "apps/web/src/app/plan/[projectId]/page.tsx",
+            "apps/web/src/app/plan/[projectId]/release/page.tsx",
+            "apps/web/src/app/plan/[projectId]/rules/page.tsx",
+            "apps/web/src/app/plan/[projectId]/trace/page.tsx",
+            "apps/web/src/app/plan/[projectId]/trace/[...requirementId]/page.tsx",
+            "apps/web/src/app/plan/[projectId]/work/page.tsx",
+            "apps/web/src/lib/server/project-graph.ts"
+          ]
+        }
+      ],
+      "testFiles": 5
+    }
+  ],
+  "tests": {
+    "unitAndIntegrationFiles": 62,
+    "unitAndIntegration": [
+      "apps/web/test/client/data-table.test.tsx",
+      "apps/web/test/client/empty-state.test.tsx",
+      "apps/web/test/client/material-icon.test.tsx",
+      "apps/web/test/client/navigation.test.ts",
+      "apps/web/test/client/status-chip.test.tsx",
+      "apps/web/test/design/contrast.test.ts",
+      "apps/web/test/design/token-usage.test.ts",
+      "apps/web/test/design/utility-collisions.test.ts",
+      "apps/web/test/server/evidence-storage.test.ts",
+      "apps/web/test/server/oidc.test.ts",
+      "apps/web/test/server/rate-limit.test.ts",
+      "apps/web/test/server/signed-cookie.test.ts",
+      "apps/worker/test/drain.test.ts",
+      "apps/worker/test/schedule.test.ts",
+      "packages/change/test/change.test.ts",
+      "packages/completion/test/completion.test.ts",
+      "packages/db/test/authorize.test.ts",
+      "packages/db/test/database-isolation.test.ts",
+      "packages/db/test/guest.test.ts",
+      "packages/db/test/migrations.test.ts",
+      "packages/db/test/rbac.test.ts",
+      "packages/db/test/role-safety.test.ts",
+      "packages/db/test/rows-of.test.ts",
+      "packages/db/test/schema-drift.test.ts",
+      "packages/db/test/session.test.ts",
+      "packages/db/test/sign-in.test.ts",
+      "packages/db/test/tenancy.test.ts",
+      "packages/db/test/tenant-scope.test.ts",
+      "packages/db/test/twin-persistence.test.ts",
+      "packages/design/test/responsive.test.ts",
+      "packages/discovery/test/discovery.test.ts",
+      "packages/execution/test/decompose.test.ts",
+      "packages/execution/test/emitted-requirements.test.ts",
+      "packages/execution/test/execution.test.ts",
+      "packages/finance/test/calculation.test.ts",
+      "packages/governance/test/approval-record.test.ts",
+      "packages/governance/test/governance.test.ts",
+      "packages/governance/test/lifecycle.test.ts",
+      "packages/intake/test/intake.test.ts",
+      "packages/interchange/test/materialise.test.ts",
+      "packages/interchange/test/staging.test.ts",
+      "packages/interchange/test/validate.test.ts",
+      "packages/organization/test/organization.test.ts",
+      "packages/release/test/readiness.test.ts",
+      "packages/resilience/test/resilience.test.ts",
+      "packages/rules/test/emitted-gates.test.ts",
+      "packages/rules/test/evaluate.test.ts",
+      "packages/rules/test/gates.test.ts",
+      "packages/rules/test/lifecycle.test.ts",
+      "packages/rules/test/verification.test.ts",
+      "packages/shared/test/correlation.test.ts",
+      "packages/shared/test/env.test.ts",
+      "packages/shared/test/errors.test.ts",
+      "packages/shared/test/logging.test.ts",
+      "packages/shared/test/provenance.test.ts",
+      "packages/shared/test/result.test.ts",
+      "packages/traceability/test/traceability.test.ts",
+      "packages/twin/test/generate.test.ts",
+      "packages/twin/test/graph.test.ts",
+      "packages/twin/test/invariants.test.ts",
+      "packages/twin/test/repository.test.ts",
+      "packages/twin/test/versioning.test.ts"
+    ],
+    "e2eSpecs": [
+      {
+        "file": "e2e/accessibility.spec.ts",
+        "tests": 20
+      },
+      {
+        "file": "e2e/ai-import.spec.ts",
+        "tests": 24
+      },
+      {
+        "file": "e2e/auth.spec.ts",
+        "tests": 7
+      },
+      {
+        "file": "e2e/baseline.spec.ts",
+        "tests": 9
+      },
+      {
+        "file": "e2e/budget.spec.ts",
+        "tests": 12
+      },
+      {
+        "file": "e2e/change.spec.ts",
+        "tests": 13
+      },
+      {
+        "file": "e2e/close.spec.ts",
+        "tests": 9
+      },
+      {
+        "file": "e2e/csrf.spec.ts",
+        "tests": 6
+      },
+      {
+        "file": "e2e/guest-intake.spec.ts",
+        "tests": 19
+      },
+      {
+        "file": "e2e/isolation.spec.ts",
+        "tests": 4
+      },
+      {
+        "file": "e2e/lifecycle.spec.ts",
+        "tests": 13
+      },
+      {
+        "file": "e2e/mobile.spec.ts",
+        "tests": 8
+      },
+      {
+        "file": "e2e/plan.spec.ts",
+        "tests": 19
+      },
+      {
+        "file": "e2e/portfolio.spec.ts",
+        "tests": 9
+      },
+      {
+        "file": "e2e/release.spec.ts",
+        "tests": 9
+      },
+      {
+        "file": "e2e/rules.spec.ts",
+        "tests": 17
+      },
+      {
+        "file": "e2e/security-headers.spec.ts",
+        "tests": 14
+      },
+      {
+        "file": "e2e/staging.spec.ts",
+        "tests": 7
+      },
+      {
+        "file": "e2e/trace.spec.ts",
+        "tests": 13
+      },
+      {
+        "file": "e2e/work.spec.ts",
+        "tests": 19
+      }
+    ],
+    "e2eTestDeclarations": 251
+  },
+  "database": {
+    "tables": [
+      "users",
+      "organizations",
+      "memberships",
+      "guest_sessions",
+      "projects",
+      "project_members",
+      "intake_answers",
+      "ai_imports",
+      "twin_nodes",
+      "twin_edges",
+      "twin_changes",
+      "twin_baselines",
+      "twin_calculations",
+      "audit_events",
+      "sessions",
+      "evidence",
+      "change_requests",
+      "approvals",
+      "outbox_events",
+      "schema_meta"
+    ],
+    "rlsForced": [
+      "projects",
+      "project_members",
+      "memberships",
+      "audit_events",
+      "twin_nodes",
+      "twin_edges",
+      "twin_changes",
+      "twin_baselines",
+      "twin_calculations",
+      "evidence",
+      "change_requests",
+      "approvals",
+      "outbox_events"
+    ],
+    "withoutRls": [
+      "users",
+      "organizations",
+      "guest_sessions",
+      "intake_answers",
+      "ai_imports",
+      "sessions",
+      "schema_meta"
+    ],
+    "migrations": [
+      "001-change-requests",
+      "002-audit-retention-path"
+    ]
+  },
+  "cloudflare": [
+    {
+      "file": "apps/web/wrangler.toml",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "crons": [],
+      "hyperdrive": [
+        "fa38480586e44cebab20fe15ac2121a0",
+        "c697deee65094523ac73e77dc94b9fd0"
+      ],
+      "r2": [
+        "govintel-evidence-staging",
+        "govintel-evidence-production"
+      ],
+      "queues": [
+        "govintel-outbox-staging"
+      ],
+      "routes": [
+        "build.itisyou.app"
+      ]
+    },
+    {
+      "file": "apps/worker/wrangler.toml",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "crons": [
+        "\"17 */3 * * *\""
+      ],
+      "hyperdrive": [
+        "fa38480586e44cebab20fe15ac2121a0"
+      ],
+      "r2": [],
+      "queues": [
+        "govintel-outbox-staging",
+        "govintel-outbox-staging",
+        "govintel-outbox-dlq-staging"
+      ],
+      "routes": []
+    }
+  ],
+  "ci": [
+    ".github/workflows/ci.yml"
+  ],
+  "markers": [],
+  "deadNavigation": [
+    "/p/:id/roadmap",
+    "/p/:id/board",
+    "/p/:id/gates",
+    "/p/:id/documents",
+    "/p/:id/health",
+    "/p/:id/today",
+    "/p/:id/roadmap",
+    "/p/:id/team",
+    "/p/:id/risks",
+    "/p/:id/gates",
+    "/p/:id/health",
+    "/p/:id/requirements",
+    "/p/:id/architecture",
+    "/p/:id/traceability",
+    "/p/:id/export",
+    "/p/:id/archive",
+    "/p/:id/settings",
+    "/org/:id",
+    "/projects",
+    "/org/:id/resources",
+    "/org/:id/members",
+    "/org/:id/integrations"
+  ],
+  "modulesWithoutProductionCallers": [
+    "@govintel/completion/retrospective",
+    "@govintel/completion/archive",
+    "@govintel/db/tenancy",
+    "@govintel/db/rbac",
+    "@govintel/db/identity",
+    "@govintel/db/authorize",
+    "@govintel/design/responsive",
+    "@govintel/discovery/search",
+    "@govintel/discovery/palette",
+    "@govintel/discovery/notifications",
+    "@govintel/execution/hierarchy",
+    "@govintel/governance/document",
+    "@govintel/organization/membership",
+    "@govintel/organization/portfolio",
+    "@govintel/release/security",
+    "@govintel/release/deployment",
+    "@govintel/release/operations",
+    "@govintel/resilience/outbox",
+    "@govintel/rules/schema",
+    "@govintel/rules/verification",
+    "@govintel/rules/precedence",
+    "@govintel/rules/lifecycle",
+    "@govintel/rules/methodology",
+    "@govintel/shared/correlation",
+    "@govintel/shared/provenance",
+    "@govintel/shared/result",
+    "@govintel/shared/roles",
+    "@govintel/traceability/requirements",
+    "@govintel/traceability/architecture",
+    "@govintel/twin/edges",
+    "@govintel/twin/versioning"
+  ]
+}

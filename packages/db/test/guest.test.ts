@@ -431,7 +431,12 @@ describe('expiry sweep', () => {
 
   it('is a no-op when nothing has expired', async () => {
     const result = await purgeExpiredGuestSessions(database.db, new Date('2026-01-01T00:00:00Z'));
-    expect(result).toEqual({ sessionsDeleted: 0, projectsDeleted: 0, auditEventsDeleted: 0 });
+    expect(result).toEqual({
+      sessionsDeleted: 0,
+      projectsDeleted: 0,
+      auditEventsDeleted: 0,
+      sessionsFailed: 0,
+    });
   });
 
   /*
@@ -466,7 +471,12 @@ describe('expiry sweep', () => {
       new Date(now.getTime() + 2 * 3_600_000),
     );
 
-    expect(result).toEqual({ sessionsDeleted: 1, projectsDeleted: 1, auditEventsDeleted: 1 });
+    expect(result).toEqual({
+      sessionsDeleted: 1,
+      projectsDeleted: 1,
+      auditEventsDeleted: 1,
+      sessionsFailed: 0,
+    });
 
     const events = await database.db.execute<{ count: string }>(
       sql`SELECT count(*)::text AS count FROM audit_events`,
@@ -534,5 +544,101 @@ describe('expiry sweep', () => {
 
     await expect(database.db.execute(sql`DELETE FROM audit_events`)).rejects.toThrow();
     expect(session.organizationId).toBeDefined();
+  });
+});
+
+/**
+ * The sweep as it runs in production: connected as the restricted role, under forced RLS.
+ *
+ * Every test above runs as PGlite's superuser, for whom row-level security does not exist — which is
+ * how a sweep that could see none of the rows it was deleting passed them all. These connect as
+ * `govintel_app` for the whole sweep, the way the Worker does through Hyperdrive.
+ */
+describe('expiry sweep as the restricted role', () => {
+  async function asApplicationRole<T>(fn: () => Promise<T>): Promise<T> {
+    await database.client.exec('SET ROLE govintel_app');
+    try {
+      return await fn();
+    } finally {
+      await database.client.exec('RESET ROLE');
+    }
+  }
+
+  async function expiredGuestWithAuditedProject(now: Date) {
+    const session = await createGuestSession(database.db, { now, ttlHours: 1 });
+    const [project] = await database.db
+      .insert(projects)
+      .values({
+        name: 'abandoned',
+        organizationId: session.organizationId,
+        guestSessionId: session.id,
+      })
+      .returning();
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, project_id, action, entity_type, correlation_id)
+      VALUES (${session.organizationId}, ${project?.id ?? null}, 'EVIDENCE_RECORDED', 'evidence', gen_random_uuid())
+    `);
+    return { session, project };
+  }
+
+  it('deletes an audited guest project and its events under row-level security', async () => {
+    const now = new Date('2026-01-01T00:00:00Z');
+    const { session } = await expiredGuestWithAuditedProject(now);
+
+    const result = await asApplicationRole(() =>
+      purgeExpiredGuestSessions(database.db, new Date(now.getTime() + 2 * 3_600_000)),
+    );
+
+    expect(result).toEqual({
+      sessionsDeleted: 1,
+      projectsDeleted: 1,
+      auditEventsDeleted: 1,
+      sessionsFailed: 0,
+    });
+    const left = await database.db.execute<{ count: string }>(
+      sql`SELECT count(*)::text AS count FROM projects WHERE organization_id = ${session.organizationId}`,
+    );
+    expect(left.rows[0]?.count).toBe('0');
+  });
+
+  it('lets one undeletable guest fail alone rather than stopping the sweep', async () => {
+    const now = new Date('2026-01-01T00:00:00Z');
+    const stuck = await expiredGuestWithAuditedProject(now);
+    const fine = await expiredGuestWithAuditedProject(now);
+
+    // An event owned by another tenant that references the stuck guest's project: invisible inside
+    // the guest's scope, so the project cannot be deleted past its ON DELETE RESTRICT.
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, project_id, action, entity_type, correlation_id)
+      VALUES (${ORG}, ${stuck.project?.id ?? null}, 'PROJECT_VIEWED', 'project', gen_random_uuid())
+    `);
+
+    const result = await asApplicationRole(() =>
+      purgeExpiredGuestSessions(database.db, new Date(now.getTime() + 2 * 3_600_000)),
+    );
+
+    expect(result.sessionsDeleted).toBe(1);
+    expect(result.sessionsFailed).toBe(1);
+    const sessions = await database.db.select({ id: guestSessions.id }).from(guestSessions);
+    expect(sessions.map((row) => row.id)).toEqual([stuck.session.id]);
+    expect(sessions.map((row) => row.id)).not.toContain(fine.session.id);
+  });
+
+  it('never deletes another tenant’s audit events while scoped to a guest', async () => {
+    const now = new Date('2026-01-01T00:00:00Z');
+    await expiredGuestWithAuditedProject(now);
+    await database.db.execute(sql`
+      INSERT INTO audit_events (organization_id, action, entity_type, correlation_id)
+      VALUES (${ORG}, 'PROJECT_CREATED', 'project', gen_random_uuid())
+    `);
+
+    await asApplicationRole(() =>
+      purgeExpiredGuestSessions(database.db, new Date(now.getTime() + 2 * 3_600_000)),
+    );
+
+    const remaining = await database.db.execute<{ organization_id: string }>(
+      sql`SELECT organization_id FROM audit_events`,
+    );
+    expect(remaining.rows.map((row) => row.organization_id)).toEqual([ORG]);
   });
 });

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 /**
@@ -17,6 +17,17 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+async function startProject(page: Page, idea: string): Promise<string> {
+  await page.goto('/start');
+  await page.getByLabel(/describe your project/i).fill(idea);
+  await page.getByRole('button', { name: /continue/i }).click();
+  await expect(page).toHaveURL(/\/intake\/[0-9a-f-]{36}/);
+
+  const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
+  expect(projectId).not.toBe('');
+  return projectId;
+}
+
 test.describe('the portfolio surface', () => {
   test.beforeEach(({ browserName }) => {
     test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
@@ -33,11 +44,38 @@ test.describe('the portfolio surface', () => {
 
     /*
      * The same honesty rule every surface in this platform follows: an empty view and a view of
-     * nothing must not render alike. Here the difference is "you are a guest" versus "your
-     * organisation has no projects", and they need different responses.
+     * nothing must not render alike. A visitor with no project is told they are a guest, what a
+     * guest project is, and how to start one — not shown an empty list.
+     *
+     * This used to assert "nothing to roll up as a guest", which the page said to everyone, signed
+     * in or not, because it listed no projects at all. It now lists the caller's projects, so the
+     * empty state is the guest-with-nothing case rather than every case.
      */
-    await expect(page.getByRole('status')).toContainText(/nothing to roll up as a guest/i);
-    await expect(page.getByRole('status')).toContainText(/not the same as an organisation/i);
+    await expect(page.getByRole('heading', { name: /your guest project/i })).toBeVisible();
+    const empty = page.getByRole('status').filter({ hasText: /no project yet/i });
+    await expect(empty).toContainText(/guest session/i);
+    await expect(empty.getByRole('link', { name: /start a project/i })).toBeVisible();
+  });
+
+  test('lists the guest’s own project and links to its plan', async ({ page }) => {
+    const projectId = await startProject(page, 'A volunteer rota for a food bank.');
+
+    await page.goto('/portfolio');
+
+    const link = page.getByRole('link', { name: /volunteer rota for a food bank/i });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', `/plan/${projectId}`);
+  });
+
+  test('never lists another guest’s project', async ({ page, browser }) => {
+    await startProject(page, 'A private project nobody else should see.');
+
+    const stranger = await browser.newContext();
+    const other = await stranger.newPage();
+    await other.goto('/portfolio');
+
+    await expect(other.getByText(/private project nobody else should see/i)).toHaveCount(0);
+    await stranger.close();
   });
 
   test('explains that it names a project rather than averaging health', async ({ page }) => {

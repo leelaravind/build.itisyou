@@ -1,0 +1,486 @@
+# npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts --project=chromium --reporter=line,json
+# commit efdb73928e2db2c855667e70107d8da9ca51821b (dirty)
+# started 2026-09-13T09:16:09.141Z
+
+[WebServer] (node:20060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:11756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:12260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:12260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:7208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[WebServer] (node:2052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:3544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:19244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:11852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:24496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] {"timestamp":"2026-09-13T09:17:14.840Z","level":"warn","message":"the development database was built from a different schema; rebuilding it","correlationId":"9277b8cd-1f2b-437e-a01f-33143f56892a","context":{"expected":"0433d7ed47c7dcf46326073dc75fae97","found":"6c7aaf28d6e3c642e10ed889c03af2d4","dataDir":".pglite"}}
+
+
+Running 51 tests using 4 workers
+
+(node:19136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:10856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:25124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:13344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/51] [chromium] › e2e\auth.spec.ts:72:3 › signing in › completes the round trip and leaves the user signed in
+[2/51] [chromium] › e2e\auth.spec.ts:80:3 › signing in › sends state and a PKCE challenge to the provider
+[3/51] [chromium] › e2e\auth.spec.ts:127:3 › signing up to save work started as a guest › carries the guest’s project onto the new account
+[4/51] [chromium] › e2e\auth.spec.ts:105:3 › signing in › refuses a callback carrying a state we never issued
+[WebServer] {"timestamp":"2026-09-13T09:17:19.983Z","level":"warn","message":"oidc callback refused","correlationId":"6df8dafe-3004-4f95-acf3-9b3a87326ea0","context":{"refusal":"STATE_MISMATCH"}}
+
+[5/51] [chromium] › e2e\auth.spec.ts:154:3 › signing out › ends the session rather than only clearing the cookie
+[6/51] [chromium] › e2e\auth.spec.ts:186:3 › an account is its own tenant › a first sign-in creates an organisation to act in
+[7/51] [chromium] › e2e\auth.spec.ts:202:3 › an account is its own tenant › one account cannot open another account’s project
+[8/51] [chromium] › e2e\isolation.spec.ts:73:3 › every project surface isolates by tenant › the route list was discovered, not empty
+[9/51] [chromium] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[10/51] [chromium] › e2e\isolation.spec.ts:111:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[11/51] [chromium] › e2e\isolation.spec.ts:126:3 › every project surface isolates by tenant › no surface is reachable with no session at all
+  1) [chromium] › e2e\isolation.spec.ts:126:3 › every project surface isolates by tenant › no surface is reachable with no session at all 
+
+    Error: /plan/{id} with no session
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      134 |     for (const route of ROUTES) {
+      135 |       const response = await page.goto(`/plan/${someId}${route}`);
+    > 136 |       expect(response?.status(), `/plan/{id}${route} with no session`).toBe(404);
+          |                                                                        ^
+      137 |     }
+      138 |
+      139 |     await anonymous.close();
+        at E:\Project\build\e2e\isolation.spec.ts:136:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-b94bf-able-with-no-session-at-all-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\isolation-every-project-su-b94bf-able-with-no-session-at-all-chromium\error-context.md
+
+
+(node:18904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+  2) [chromium] › e2e\isolation.spec.ts:111:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one 
+
+    Error: /plan/{unknown}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      120 |     for (const route of ROUTES) {
+      121 |       const response = await page.goto(`/plan/${unknown}${route}`);
+    > 122 |       expect(response?.status(), `/plan/{unknown}${route}`).toBe(404);
+          |                                                             ^
+      123 |     }
+      124 |   });
+      125 |
+        at E:\Project\build\e2e\isolation.spec.ts:122:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-68076-shable-from-a-forbidden-one-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-68076-shable-from-a-forbidden-one-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\isolation-every-project-su-68076-shable-from-a-forbidden-one-chromium\error-context.md
+
+
+[12/51] [chromium] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+(node:24704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+  3) [chromium] › e2e\auth.spec.ts:202:3 › an account is its own tenant › one account cannot open another account’s project 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      221 |     const response = await otherPage.goto(`/plan/${projectId}`);
+      222 |
+    > 223 |     expect(response?.status()).toBe(404);
+          |                                ^
+      224 |     expect(await otherPage.content()).not.toContain('Commercially sensitive');
+      225 |
+      226 |     await other.close();
+        at E:\Project\build\e2e\auth.spec.ts:223:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\auth-an-account-is-its-own-57caf-n-another-account’s-project-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\auth-an-account-is-its-own-57caf-n-another-account’s-project-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\auth-an-account-is-its-own-57caf-n-another-account’s-project-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\auth-an-account-is-its-own-57caf-n-another-account’s-project-chromium\error-context.md
+
+
+[13/51] [chromium] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[14/51] [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+(node:14568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+  4) [chromium] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface 
+
+    Error: /plan/{id}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      103 |        * somebody reaches for the "obviously correct" status code.
+      104 |        */
+    > 105 |       expect(response?.status(), `/plan/{id}${route}`).toBe(404);
+          |                                                        ^
+      106 |     }
+      107 |
+      108 |     await other.close();
+        at E:\Project\build\e2e\isolation.spec.ts:105:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-6d73d-on-every-discovered-surface-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-6d73d-on-every-discovered-surface-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\isolation-every-project-su-6d73d-on-every-discovered-surface-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\isolation-every-project-su-6d73d-on-every-discovered-surface-chromium\error-context.md
+
+
+[15/51] [chromium] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[16/51] [chromium] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+(node:16336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[17/51] [chromium] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[18/51] [chromium] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[WebServer] (node:24496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[19/51] [chromium] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[20/51] [chromium] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[21/51] [chromium] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[22/51] [chromium] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[23/51] [chromium] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[24/51] [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[25/51] [chromium] › e2e\plan.spec.ts:53:3 › before a plan exists › offers to build one
+[26/51] [chromium] › e2e\plan.spec.ts:61:3 › before a plan exists › states that no AI is involved
+[27/51] [chromium] › e2e\plan.spec.ts:70:3 › before a plan exists › is reachable before the intake is finished
+[28/51] [chromium] › e2e\plan.spec.ts:91:3 › a generated plan › contains phases
+  5) [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      379 |     // 404, never 403: a 403 confirms the project exists and belongs to somebody else, and existence
+      380 |     // is itself tenant data.
+    > 381 |     expect(response?.status()).toBe(404);
+          |                                ^
+      382 |     await expect(otherPage.getByText('Confidential rollback plan')).toHaveCount(0);
+      383 |
+      384 |     await other.close();
+        at E:\Project\build\e2e\lifecycle.spec.ts:381:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\lifecycle-evidence-and-app-059fd--the-first-guest’s-evidence-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\lifecycle-evidence-and-app-059fd--the-first-guest’s-evidence-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\lifecycle-evidence-and-app-059fd--the-first-guest’s-evidence-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\lifecycle-evidence-and-app-059fd--the-first-guest’s-evidence-chromium\error-context.md
+
+
+(node:13840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[29/51] [chromium] › e2e\plan.spec.ts:96:3 › a generated plan › gives every item its provenance, beside the item
+[30/51] [chromium] › e2e\plan.spec.ts:111:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[31/51] [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › states what it had to assume
+[32/51] [chromium] › e2e\plan.spec.ts:141:3 › a generated plan › says what the assumption costs, not only that one was made
+[33/51] [chromium] › e2e\plan.spec.ts:150:3 › a generated plan › lists what it does not know rather than filling the gap
+[34/51] [chromium] › e2e\plan.spec.ts:155:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[35/51] [chromium] › e2e\plan.spec.ts:175:3 › a generated plan › produces a different plan for a different project type
+[36/51] [chromium] › e2e\plan.spec.ts:190:3 › a generated plan › works without client JavaScript
+[37/51] [chromium] › e2e\plan.spec.ts:208:3 › a plan belongs to one project and one guest › another guest cannot open it
+[38/51] [chromium] › e2e\plan.spec.ts:220:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+  6) [chromium] › e2e\plan.spec.ts:220:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      220 |   test('an unknown project id is indistinguishable from a forbidden one', async ({ page }) => {
+      221 |     const response = await page.goto('/plan/99999999-9999-4999-8999-999999999999');
+    > 222 |     expect(response?.status()).toBe(404);
+          |                                ^
+      223 |   });
+      224 |
+      225 |   test('another guest cannot trigger generation for a project they do not own', async ({
+        at E:\Project\build\e2e\plan.spec.ts:222:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-6b3a4-shable-from-a-forbidden-one-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-6b3a4-shable-from-a-forbidden-one-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-plan-belongs-to-one-6b3a4-shable-from-a-forbidden-one-chromium\error-context.md
+
+
+(node:9580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[39/51] [chromium] › e2e\plan.spec.ts:225:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+  7) [chromium] › e2e\plan.spec.ts:208:3 › a plan belongs to one project and one guest › another guest cannot open it 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 200
+
+      214 |
+      215 |     // 404, never 403 — a 403 confirms the project exists.
+    > 216 |     expect(response?.status()).toBe(404);
+          |                                ^
+      217 |     await other.close();
+      218 |   });
+      219 |
+        at E:\Project\build\e2e\plan.spec.ts:216:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\error-context.md
+
+
+(node:7704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[40/51] [chromium] › e2e\plan.spec.ts:285:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[41/51] [chromium] › e2e\plan.spec.ts:300:3 › accessibility of the plan › has no axe violations before generation
+[WebServer] {"timestamp":"2026-09-13T09:17:59.784Z","level":"warn","message":"rejected plan generation for unowned project","correlationId":"ec2a32b9-0806-40d5-95e3-e93eb466d467","context":{"projectId":"1c1a1244-f61a-4109-b3cf-cc8fdbc3c1b4"}}
+
+[42/51] [chromium] › e2e\plan.spec.ts:317:3 › accessibility of the plan › has no axe violations once generated
+  8) [chromium] › e2e\plan.spec.ts:190:3 › a generated plan › works without client JavaScript ──────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      42 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      43 |
+    > 44 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      45 |   return projectId;
+      46 | }
+      47 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:44:82)
+        at E:\Project\build\e2e\plan.spec.ts:196:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-works-without-client-JavaScript-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-works-without-client-JavaScript-chromium\error-context.md
+
+
+(node:19200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[43/51] [chromium] › e2e\portfolio.spec.ts:31:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[44/51] [chromium] › e2e\portfolio.spec.ts:43:3 › the portfolio surface › explains that it names a project rather than averaging health
+[45/51] [chromium] › e2e\portfolio.spec.ts:25:3 › the portfolio surface › is reachable without an account
+[46/51] [chromium] › e2e\portfolio.spec.ts:60:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[47/51] [chromium] › e2e\portfolio.spec.ts:77:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[48/51] [chromium] › e2e\portfolio.spec.ts:88:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[49/51] [chromium] › e2e\portfolio.spec.ts:98:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[50/51] [chromium] › e2e\portfolio.spec.ts:111:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[51/51] [chromium] › e2e\portfolio.spec.ts:121:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+  9) [chromium] › e2e\portfolio.spec.ts:31:3 › the portfolio surface › says why it is empty rather than showing an empty table 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('status')
+    Expected pattern: /nothing to roll up as a guest/i
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('status')
+
+
+      37 |      * organisation has no projects", and they need different responses.
+      38 |      */
+    > 39 |     await expect(page.getByRole('status')).toContainText(/nothing to roll up as a guest/i);
+         |                                            ^
+      40 |     await expect(page.getByRole('status')).toContainText(/not the same as an organisation/i);
+      41 |   });
+      42 |
+        at E:\Project\build\e2e\portfolio.spec.ts:39:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\portfolio-the-portfolio-su-dfddc-than-showing-an-empty-table-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\portfolio-the-portfolio-su-dfddc-than-showing-an-empty-table-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\portfolio-the-portfolio-su-dfddc-than-showing-an-empty-table-chromium\error-context.md
+
+
+  9 failed
+    [chromium] › e2e\auth.spec.ts:202:3 › an account is its own tenant › one account cannot open another account’s project 
+    [chromium] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface 
+    [chromium] › e2e\isolation.spec.ts:111:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one 
+    [chromium] › e2e\isolation.spec.ts:126:3 › every project surface isolates by tenant › no surface is reachable with no session at all 
+    [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence 
+    [chromium] › e2e\plan.spec.ts:190:3 › a generated plan › works without client JavaScript ───────
+    [chromium] › e2e\plan.spec.ts:208:3 › a plan belongs to one project and one guest › another guest cannot open it 
+    [chromium] › e2e\plan.spec.ts:220:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one 
+    [chromium] › e2e\portfolio.spec.ts:31:3 › the portfolio surface › says why it is empty rather than showing an empty table 
+  3 skipped
+  39 passed (1.8m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 1 after 120261 ms

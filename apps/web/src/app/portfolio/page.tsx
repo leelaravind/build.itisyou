@@ -1,7 +1,15 @@
 import Link from 'next/link';
+import { desc } from 'drizzle-orm';
+import { projects } from '@govintel/db/schema';
 import { INTEGRATIONS, STATE_MEANING, offersConnect } from '@govintel/organization/integrations';
 import { PublicHeader } from '../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../components/ui/MaterialIcon.tsx';
+import { EmptyState } from '../../components/ui/EmptyState.tsx';
+import { withDatabase } from '../../lib/server/database.ts';
+import { currentUser } from '../../lib/server/auth.ts';
+
+/** Enough to find a project by; the portfolio is a way in, not a report. */
+const PROJECT_LIMIT = 100;
 
 /**
  * The portfolio, and the integrations boundary.
@@ -18,7 +26,35 @@ import { MaterialIcon } from '../../components/ui/MaterialIcon.tsx';
 
 export const metadata = { title: 'Portfolio' };
 
-export default function PortfolioPage() {
+export default async function PortfolioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ guest?: string }>;
+}) {
+  const [{ guest }, user] = await Promise.all([searchParams, currentUser()]);
+
+  /*
+   * The caller's projects, and only theirs: `withDatabase` scopes to the caller's tenant — the
+   * account's organisation when signed in, the guest session's own organisation otherwise — so
+   * row-level security is what limits this list, not a WHERE clause.
+   *
+   * This page is where a sign-in lands. It used to list nothing and tell every visitor, signed in or
+   * not, that there was "nothing to roll up as a guest" — so the first thing an account holder saw
+   * after signing in was a page that could not show them their own work.
+   */
+  const rows = await withDatabase((db) =>
+    db
+      .select({
+        id: projects.id,
+        name: projects.name,
+        lifecycleState: projects.lifecycleState,
+        updatedAt: projects.updatedAt,
+      })
+      .from(projects)
+      .orderBy(desc(projects.updatedAt))
+      .limit(PROJECT_LIMIT),
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
@@ -35,21 +71,69 @@ export default function PortfolioPage() {
           </p>
         </header>
 
-        <section
-          className="flex flex-col gap-md rounded-lg border border-outline-variant bg-surface-container-low p-lg"
-          role="status"
-        >
-          <h2 className="font-sans text-headline-sm text-on-surface">
-            Nothing to roll up as a guest
-          </h2>
-          <p className="font-sans text-body-sm text-on-surface-variant">
-            You have one project, and it is only visible to this browser session. A portfolio needs
-            an organisation, and organisations need accounts.
-          </p>
-          <p className="font-sans text-body-sm text-on-surface-variant">
-            This is not the same as an organisation with nothing in it — the two look identical on a
-            screen and mean opposite things, so the page says which one you are looking at.
-          </p>
+        {guest === 'kept' ? (
+          <section
+            role="status"
+            className="flex flex-col gap-xs rounded-lg border border-outline-variant bg-surface-container-low p-lg"
+          >
+            <h2 className="font-sans text-headline-sm text-on-surface">
+              Your guest project was not moved into this account
+            </h2>
+            <p className="font-sans text-body-sm text-on-surface-variant">
+              You already had an account, and work started as a guest is not merged into an existing
+              one yet. Nothing was deleted: it is still reachable in this browser as a guest until
+              the guest session expires. Sign out to go back to it.
+            </p>
+          </section>
+        ) : null}
+
+        <section className="flex flex-col gap-md" aria-labelledby="projects-heading">
+          <div className="flex flex-col gap-xs">
+            <h2 id="projects-heading" className="font-sans text-headline-sm text-on-surface">
+              {user === undefined ? 'Your guest project' : 'Your projects'}
+            </h2>
+            <p className="font-sans text-body-sm text-on-surface-variant">
+              {user === undefined
+                ? 'Only this browser can see it, and only until the guest session expires. Signing in keeps it.'
+                : 'Every project in your organisation that you can open, most recently changed first.'}
+            </p>
+          </div>
+
+          {rows.length === 0 ? (
+            <EmptyState
+              title={user === undefined ? 'No project yet' : 'No projects in this organisation yet'}
+              description={
+                user === undefined
+                  ? 'Start one and it will appear here for as long as this guest session lasts.'
+                  : 'An organisation with nothing in it — not a view that failed to load.'
+              }
+              action={
+                <Link
+                  href="/start"
+                  className="inline-flex min-h-11 items-center rounded bg-primary px-md font-sans text-body-sm text-on-primary"
+                >
+                  Start a project
+                </Link>
+              }
+            />
+          ) : (
+            <ul className="flex flex-col gap-sm">
+              {rows.map((row) => (
+                <li key={row.id}>
+                  <Link
+                    href={`/plan/${row.id}`}
+                    className="flex min-h-11 flex-wrap items-center justify-between gap-sm rounded border border-outline-variant bg-surface-container-low p-md hover:bg-surface-container"
+                  >
+                    <span className="font-sans text-body-md text-on-surface">{row.name}</span>
+                    <span className="font-mono text-data-mono-sm text-on-surface-variant">
+                      {row.lifecycleState.toLowerCase().replace(/_/g, ' ')} · updated{' '}
+                      {row.updatedAt.toISOString().slice(0, 10)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="flex flex-col gap-md" aria-labelledby="what-heading">

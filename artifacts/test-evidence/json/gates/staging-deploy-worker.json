@@ -1,0 +1,16 @@
+{
+  "id": "staging-deploy-worker",
+  "category": "deployment",
+  "environment": "staging",
+  "command": "cd apps/worker && npx wrangler deploy --env staging",
+  "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+  "dirty": true,
+  "startedAt": "2026-09-13T09:15:15.581Z",
+  "finishedAt": "2026-09-13T09:15:43.334Z",
+  "durationMs": 27753,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-deploy-worker.log"
+}

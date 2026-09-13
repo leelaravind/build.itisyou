@@ -1,0 +1,16 @@
+{
+  "id": "e2e-local-batch2-chromium",
+  "category": "e2e",
+  "environment": "local-pglite",
+  "command": "npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts --project=chromium --reporter=line,json",
+  "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+  "dirty": true,
+  "startedAt": "2026-09-13T09:16:09.141Z",
+  "finishedAt": "2026-09-13T09:18:09.402Z",
+  "durationMs": 120261,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-local-batch2-chromium.log"
+}

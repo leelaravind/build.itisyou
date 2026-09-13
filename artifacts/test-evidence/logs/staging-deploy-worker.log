@@ -1,0 +1,29 @@
+# cd apps/worker && npx wrangler deploy --env staging
+# commit efdb73928e2db2c855667e70107d8da9ca51821b (dirty)
+# started 2026-09-13T09:15:15.581Z
+
+
+ ⛅️ wrangler 4.127.1 (update available 4.131.1)
+───────────────────────────────────────────────
+Total Upload: 1187.07 KiB / gzip: 241.56 KiB
+Worker Startup Time: 38 ms
+Your Worker has access to the following bindings:
+Binding                                                  Resource                  
+env.OUTBOX_QUEUE (inherited)                             Queue                     
+env.HYPERDRIVE (fa38480586e44cebab20fe15ac2121a0)        Hyperdrive Config         
+env.APP_ENV ("staging")                                  Environment Variable      
+
+Uploaded govintel-worker-staging (9.19 sec)
+Deployed govintel-worker-staging triggers (11.92 sec)
+  https://govintel-worker-staging.kpleelaaravind.workers.dev
+  schedule: 17 */3 * * *
+  Producer for govintel-outbox-staging
+  Consumer for govintel-outbox-staging
+Current Version ID: 8e8973cc-de89-434a-afb7-ab7ace89f398
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 27753 ms

@@ -18,7 +18,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 const ROUTES = [
   { path: '/', name: 'landing' },
-  { path: '/p/proj_demo', name: 'project home' },
+  { path: '/design/reference', name: 'design reference' },
 ];
 
 test.describe('axe — no violations', () => {
@@ -63,8 +63,8 @@ test.describe('axe — no violations', () => {
 });
 
 test.describe('landmarks and document structure', () => {
-  test('project home exposes exactly one main landmark', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+  test('the shell exposes exactly one main landmark', async ({ page }) => {
+    await page.goto('/design/reference');
     await expect(page.getByRole('main')).toHaveCount(1);
   });
 
@@ -77,19 +77,19 @@ test.describe('landmarks and document structure', () => {
     const width = testInfo.project.use.viewport?.width ?? 1280;
     test.skip(width < 1024, 'Mobile navigation is implemented in Phase 16');
 
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Secondary' })).toBeVisible();
   });
 
   test('the page has exactly one h1', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     await expect(page.locator('h1')).toHaveCount(1);
   });
 
   test('heading levels do not skip', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     const levels = await page
       .locator('h1, h2, h3, h4, h5, h6')
@@ -104,12 +104,12 @@ test.describe('landmarks and document structure', () => {
   });
 
   test('the document declares a language', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 
   test('the page has a non-empty title', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     expect((await page.title()).length).toBeGreaterThan(0);
   });
 });
@@ -124,7 +124,7 @@ test.describe('keyboard operability', () => {
     // and correctly ordered, which Chromium and Firefox both confirm here.
     test.skip(browserName === 'webkit', 'WebKit omits links from the default Tab order');
 
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     await page.keyboard.press('Tab');
 
     await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
@@ -132,7 +132,7 @@ test.describe('keyboard operability', () => {
 
   test('the skip link becomes visible when focused', async ({ page }) => {
     // A skip link that stays visually hidden while focused is useless to sighted keyboard users.
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     await page.keyboard.press('Tab');
 
     await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeVisible();
@@ -148,7 +148,7 @@ test.describe('keyboard operability', () => {
     const width = testInfo.project.use.viewport?.width ?? 1280;
     test.skip(width < 1024, 'Mobile navigation is implemented in Phase 16');
 
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     const interactive = await page.locator('a[href], button:not([disabled])').count();
     const reached = new Set<string>();
@@ -168,7 +168,7 @@ test.describe('keyboard operability', () => {
 
   test('focus is visible on every focused control', async ({ page }) => {
     // WCAG 2.2 Focus Appearance. An invisible focus ring fails keyboard users outright.
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     for (let i = 0; i < 6; i += 1) {
       await page.keyboard.press('Tab');
@@ -188,7 +188,7 @@ test.describe('keyboard operability', () => {
 
   test('icon-only controls carry accessible names', async ({ page }, testInfo) => {
     // The most common serious defect in dashboard UIs.
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     // Search and Notifications are present at every width; Settings and Help hide below `sm` to
     // satisfy Reflow, and remain reachable from the sidebar.
@@ -206,7 +206,7 @@ test.describe('status is never conveyed by colour alone', () => {
   test('every gate state renders a text label', async ({ page }) => {
     // WCAG 1.4.1. Two of these six states had no colour defined anywhere in the handoff (KI-005),
     // which is precisely why the text channel has to carry the meaning.
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     for (const label of ['PASS', 'FAIL', 'BLOCKED', 'EXCEPTION', 'READY', 'NOT READY']) {
       await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
@@ -214,7 +214,7 @@ test.describe('status is never conveyed by colour alone', () => {
   });
 
   test('every gate state renders an icon alongside its label', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     for (const icon of ['check_circle', 'cancel', 'block', 'gpp_maybe', 'pending']) {
       await expect(page.locator(`[data-icon="${icon}"]`).first()).toBeAttached();
@@ -223,7 +223,7 @@ test.describe('status is never conveyed by colour alone', () => {
 
   test('an uncertain figure is shown as a range, not a false midpoint', async ({ page }) => {
     // Plan section 12.3 forbids fake precision.
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     await expect(page.getByText('£120k')).toBeVisible();
     await expect(page.getByText('£165k')).toBeVisible();
@@ -231,7 +231,7 @@ test.describe('status is never conveyed by colour alone', () => {
   });
 
   test('an unknown figure is labelled unknown rather than shown as zero', async ({ page }) => {
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
     await expect(page.getByText('Unknown')).toBeVisible();
   });
 });
@@ -240,7 +240,7 @@ test.describe('reflow and zoom', () => {
   test('content reflows at 320px without horizontal scrolling', async ({ page }) => {
     // WCAG 1.4.10 Reflow. Plan section 25 requires 200% zoom / reflow on critical flows.
     await page.setViewportSize({ width: 320, height: 800 });
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     // Naming the offending elements makes a failure diagnosable from CI output alone, rather than
     // just asserting "something overflows somewhere".
@@ -265,7 +265,7 @@ test.describe('reflow and zoom', () => {
     test.slow();
 
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -276,7 +276,7 @@ test.describe('reflow and zoom', () => {
 
   test('respects prefers-reduced-motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/p/proj_demo');
+    await page.goto('/design/reference');
 
     // Compare numerically: the 0.01ms override computes to "1e-05s", so a string comparison
     // against "0.01ms" fails even though the rule is working correctly.

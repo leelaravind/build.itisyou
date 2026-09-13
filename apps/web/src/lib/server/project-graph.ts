@@ -39,10 +39,27 @@ export interface ProjectGraph {
   readonly approvals: readonly ApprovalRow[];
 }
 
-export async function loadProjectGraph(
+export interface ProjectRows {
+  /** The stored twin nodes **and** the evidence and approval projection. */
+  readonly nodes: readonly NodeRow[];
+  readonly edges: readonly (typeof twinEdges.$inferSelect)[];
+  readonly evidence: readonly Evidence[];
+  readonly approvals: readonly ApprovalRow[];
+}
+
+/**
+ * The rows a project graph is built from, with evidence and approvals already projected in.
+ *
+ * Every page reads its graph through this — through `loadPlanRows` or `loadProjectGraph` — and that
+ * is the point. Eleven surfaces used to build their graph from the raw twin rows, so a gate that the
+ * evidence page showed as satisfied was unsatisfied on the plan page, the rules page, the release
+ * page, the closure page and, decisively, in the lifecycle transition itself: evidence recorded
+ * through the product could never move a project forward.
+ */
+export async function loadProjectRows(
   projectId: string,
   organizationId: string,
-): Promise<ProjectGraph> {
+): Promise<ProjectRows> {
   const [nodes, edges, evidenceRows, approvalRows] = await Promise.all([
     withDatabase((db) => db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId))),
     withDatabase((db) => db.select().from(twinEdges).where(eq(twinEdges.projectId, projectId))),
@@ -56,9 +73,23 @@ export async function loadProjectGraph(
   ];
 
   return {
-    graph: graphFromRows(projectId, [...nodes, ...projected], edges),
+    nodes: [...nodes, ...projected],
+    edges,
     evidence: evidenceRows,
     approvals: approvalRows,
+  };
+}
+
+export async function loadProjectGraph(
+  projectId: string,
+  organizationId: string,
+): Promise<ProjectGraph> {
+  const rows = await loadProjectRows(projectId, organizationId);
+
+  return {
+    graph: graphFromRows(projectId, rows.nodes, rows.edges),
+    evidence: rows.evidence,
+    approvals: rows.approvals,
   };
 }
 

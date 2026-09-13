@@ -7,6 +7,7 @@ import type { ExtractTablesWithRelations } from 'drizzle-orm';
 import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import * as schema from '@govintel/db/schema';
 import {
+  APP_ROLE,
   SCHEMA_FINGERPRINT,
   applyTenantScope,
   readSchemaFingerprint,
@@ -432,9 +433,35 @@ async function currentOrganizationId(): Promise<string | undefined> {
 export async function withDatabase<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
   const organizationId = await currentOrganizationId();
 
-  if (organizationId === undefined) return withUnscoped(fn);
+  if (organizationId === undefined) return withNoTenant(fn);
 
   return withTenant(organizationId, (tx) => fn(tx as unknown as DatabaseHandle));
+}
+
+/**
+ * A caller with no tenant at all: the restricted role, and no tenant setting.
+ *
+ * This used to hand over the unscoped handle and rely on row-level security to return nothing. That
+ * holds only when the connection is the restricted role, which deployed ones are and the embedded
+ * development database is not — it connects as a superuser, for whom RLS does not exist. So locally a
+ * visitor with no session who opened `/portfolio` was shown **every guest's project in the
+ * database**, and the only thing standing between that and production was which role happened to
+ * connect. A control that depends on the environment to be true is not one the tests can check.
+ *
+ * Now the role is set explicitly, the same way a tenant scope sets it, and with no tenant named every
+ * policy compares against NULL and returns nothing — in development exactly as in production.
+ */
+async function withNoTenant<T>(fn: (db: DatabaseHandle) => Promise<T>): Promise<T> {
+  const scope = (db: DatabaseHandle): Promise<T> =>
+    db.transaction(async (tx) => {
+      await tx.execute(sql`SET LOCAL ROLE ${sql.raw(APP_ROLE)}`);
+      return fn(tx);
+    });
+
+  if (IS_DEPLOYED) return usingConnection(scope);
+
+  const db = await getDatabase();
+  return serialised(() => scope(db));
 }
 
 /**

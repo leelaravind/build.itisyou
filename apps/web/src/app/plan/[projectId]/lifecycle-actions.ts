@@ -3,8 +3,7 @@
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { projects, twinEdges, twinNodes } from '@govintel/db/schema';
-import { graphFromRows } from '@govintel/twin/repository';
+import { projects } from '@govintel/db/schema';
 import { evaluateGates } from '@govintel/rules/gates';
 import { evaluateForProject, loadIntake } from '../../../lib/server/project-rules.ts';
 import {
@@ -13,13 +12,14 @@ import {
   type GateReadiness,
   type LifecycleState,
 } from '@govintel/governance/lifecycle';
-import type { Approval } from '@govintel/governance/approval';
+import { approvalFromRecord, type Approval } from '@govintel/governance/approval';
 import { toAppError } from '@govintel/shared/errors';
 import { logger } from '@govintel/shared/logging';
 import { withDatabase } from '../../../lib/server/database.ts';
 import { recordAudit } from '../../../lib/server/audit.ts';
 import { checkRateLimit } from '../../../lib/server/rate-limit.ts';
 import { accessibleProject, mayOpen } from '../../../lib/server/project-access.ts';
+import { loadProjectGraph } from '../../../lib/server/project-graph.ts';
 
 /**
  * Moving a project through its lifecycle.
@@ -101,12 +101,13 @@ async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> 
       return { kind: 'refused', refusal: 'ARCHIVED' };
     }
 
-    const [nodes, edges] = await Promise.all([
-      withDatabase((db) => db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId))),
-      withDatabase((db) => db.select().from(twinEdges).where(eq(twinEdges.projectId, projectId))),
-    ]);
-
-    const graph = graphFromRows(projectId, nodes, edges);
+    /*
+     * Through the projection, not the raw twin rows: evidence and approvals recorded in the product
+     * are what satisfy the MANUAL criteria, and a transition that could not see them could never
+     * pass the gates they exist for.
+     */
+    const projectGraph = await loadProjectGraph(projectId, project.organizationId);
+    const { graph } = projectGraph;
 
     /*
      * An empty graph produces no gate outcomes at all, which is different from producing failing
@@ -138,14 +139,17 @@ async function attempt(projectId: string, to: LifecycleState): Promise<Outcome> 
         : [];
 
     /*
-     * Approvals are empty because there is nowhere to store one yet.
+     * The approvals recorded for this project.
      *
-     * That is not a shortcut — it is the honest current state, and it has the correct consequence:
-     * the two transitions that require an approval (`PLANNED → APPROVED` and `RELEASE_READY → LIVE`)
-     * refuse with `APPROVAL_MISSING` rather than passing unchecked. When the approvals table lands,
-     * this is the line that changes and nothing else here does.
+     * This was a literal `[]` with a comment saying it would change "when the approvals table lands".
+     * The table landed and the line did not, so `PLANNED → APPROVED` and `RELEASE_READY → LIVE` were
+     * refused with APPROVAL_MISSING for every project, forever, however many approvals it had.
+     * Staleness is still judged by the lifecycle against the current version (§33).
      */
-    const approvals: readonly Approval[] = [];
+    const approvals: readonly Approval[] = projectGraph.approvals.flatMap((row) => {
+      const approval = approvalFromRecord(row);
+      return approval === undefined ? [] : [approval];
+    });
 
     const verdict = evaluateTransition(project.lifecycleState, to, {
       gates,
@@ -252,12 +256,12 @@ export async function availableTransitions(projectId: string) {
 
   if (project === undefined || !(await mayOpen(project))) return null;
 
-  const [nodes, edges] = await Promise.all([
-    withDatabase((db) => db.select().from(twinNodes).where(eq(twinNodes.projectId, projectId))),
-    withDatabase((db) => db.select().from(twinEdges).where(eq(twinEdges.projectId, projectId))),
-  ]);
-
-  const graph = graphFromRows(projectId, nodes, edges);
+  const projectGraph = await loadProjectGraph(projectId, project.organizationId);
+  const { graph } = projectGraph;
+  const approvals = projectGraph.approvals.flatMap((row) => {
+    const approval = approvalFromRecord(row);
+    return approval === undefined ? [] : [approval];
+  });
 
   const { emittedGates } = evaluateForProject({
     projectId,
@@ -282,7 +286,7 @@ export async function availableTransitions(projectId: string) {
       why: transition.why,
       verdict: evaluateTransition(project.lifecycleState, transition.to, {
         gates,
-        approvals: [],
+        approvals,
         subjectVersion: project.version,
       }),
     })),

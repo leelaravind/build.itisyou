@@ -328,3 +328,53 @@ export function signOffStatus(
         : `Waiting on ${missing.join(' and ')}. ${requirement.why}`,
   };
 }
+
+/* -------------------------------------------------------------------------- */
+/* From storage                                                               */
+/* -------------------------------------------------------------------------- */
+
+/** The stored shape of an approval: the `approvals` table's columns, structurally. */
+export interface ApprovalRecord {
+  readonly id: string;
+  readonly projectId: string;
+  readonly subjectType: string;
+  readonly subjectId: string;
+  readonly subjectVersion: number;
+  readonly requestedBy: string;
+  readonly requestedAt: Date;
+  readonly approverRole: string;
+  readonly state: string;
+  readonly approverUser: string | null;
+  readonly decidedAt: Date | null;
+  readonly comment: string | null;
+}
+
+const SUBJECTS: ReadonlySet<string> = new Set<string>(APPROVABLE_SUBJECTS);
+const STATES: ReadonlySet<string> = new Set<string>(APPROVAL_STATES);
+
+/**
+ * A stored approval as the domain object the lifecycle evaluates.
+ *
+ * Returns `undefined` for a row whose subject or state this build does not recognise, rather than
+ * casting it into a type it does not satisfy. An approval nobody can interpret must not satisfy a
+ * transition — and it must not be silently re-read as some other kind either.
+ */
+export function approvalFromRecord(record: ApprovalRecord): Approval | undefined {
+  if (!SUBJECTS.has(record.subjectType) || !STATES.has(record.state)) return undefined;
+
+  return {
+    id: record.id,
+    projectId: record.projectId,
+    subjectType: record.subjectType as ApprovableSubject,
+    subjectId: record.subjectId,
+    subjectVersion: record.subjectVersion,
+    requestedBy: record.requestedBy,
+    requestedAt: record.requestedAt.toISOString(),
+    approverRole: record.approverRole,
+    state: record.state as ApprovalState,
+    ...(record.approverUser === null ? {} : { approverUser: record.approverUser }),
+    ...(record.decidedAt === null ? {} : { decidedAt: record.decidedAt.toISOString() }),
+    ...(record.comment === null ? {} : { comment: record.comment }),
+    evidence: [],
+  };
+}

@@ -137,9 +137,44 @@ test.describe('signing up to save work started as a guest', () => {
     const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
     expect(projectId).not.toBe('');
 
-    await signIn(page, 'converts@example.test');
+    /*
+     * A new identity every run. This used a fixed address, so on any database that outlived one run
+     * the second run was a *returning* user signing in — a different journey with a different
+     * outcome — and the test only exercised sign-up on a fresh database.
+     */
+    await signIn(page, `converts-${crypto.randomUUID()}@example.test`);
 
     // The project keeps the same link — §5.4 is explicit that it is the same project, not a copy.
+    await page.goto(`/plan/${projectId}`);
+    await expect(page.getByRole('region', { name: /where this project is/i })).toBeVisible();
+  });
+
+  test('tells a returning user their guest work was kept apart, and keeps it reachable', async ({
+    page,
+  }) => {
+    /*
+     * A returning user already has an organisation, and guest work is not merged into an existing
+     * one yet (packages/db/src/sign-in.ts). The contract that holds meanwhile: nothing is lost,
+     * nothing is hidden without a word, and the guest can still reach it.
+     */
+    const email = `returning-${crypto.randomUUID()}@example.test`;
+    await signIn(page, email);
+    await page.getByRole('button', { name: /sign out/i }).click();
+    await expect(page.getByRole('link', { name: /^sign in$/i }).first()).toBeVisible();
+
+    await page.goto('/start');
+    await page.getByLabel(/describe your project/i).fill('Guest work begun by a returning user.');
+    await page.getByRole('button', { name: /continue/i }).click();
+    await expect(page).toHaveURL(/\/intake\/[0-9a-f-]{36}/);
+    const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
+
+    await signIn(page, email);
+    await expect(page).toHaveURL(/\/portfolio\?guest=kept/);
+    await expect(
+      page.getByRole('status').filter({ hasText: /not moved into this account/i }),
+    ).toBeVisible();
+
+    await page.getByRole('button', { name: /sign out/i }).click();
     await page.goto(`/plan/${projectId}`);
     await expect(page.getByRole('region', { name: /where this project is/i })).toBeVisible();
   });

@@ -131,8 +131,14 @@ export default {
  * are ON DELETE RESTRICT and were quietly making the whole sweep impossible.
  */
 async function purge(db: PooledDatabase): Promise<void> {
-  const { sessionsDeleted, projectsDeleted, auditEventsDeleted } =
+  const { sessionsDeleted, projectsDeleted, auditEventsDeleted, sessionsFailed } =
     await purgeExpiredGuestSessions(db);
+
+  // Each guest is deleted in its own transaction, so one that cannot be deleted no longer stops the
+  // rest — but it must still be seen, or guest data outlives its stated expiry in silence.
+  if (sessionsFailed > 0) {
+    logger.error('expired guest sessions could not be purged', { sessionsFailed });
+  }
 
   // Logged only when something happened. A line every minute saying "deleted nothing" is a line
   // nobody reads, and it would bury the one that matters.

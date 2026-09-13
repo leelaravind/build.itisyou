@@ -12,7 +12,8 @@
     "./authorize": "./src/authorize.ts",
     "./guest": "./src/guest.ts",
     "./session": "./src/session.ts",
-    "./connect": "./src/connect.ts"
+    "./connect": "./src/connect.ts",
+    "./sign-in": "./src/sign-in.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
