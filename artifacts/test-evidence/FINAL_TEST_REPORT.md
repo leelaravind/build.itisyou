@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T14:23:09.463Z at `329fae5` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T14:27:12.146Z at `a378dc8` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -27,7 +27,7 @@ Generated 2026-09-13T14:23:09.463Z at `329fae5` by `scripts/evidence/final-repor
 | Security | CSRF origin checks | **PASSED** | 12 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
 | Accessibility | axe WCAG 2.2 AA, landmarks, keyboard, reflow | **PASSED** | 42 passed, 0 failed, 2 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
 | E2E | Local critical journeys (PGlite, Chromium) | **PASSED** | 77 passed, 0 failed, 0 flaky, 3 skipped (artifacts/test-evidence/e2e/local-batch7-chromium.json) |
-| E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS |
+| E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json, artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS |
 | E2E | Staging, Firefox and mobile Chrome | **PASSED** | 516 passed, 0 failed, 0 flaky, 30 skipped (artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json) |
 | Performance | Large project (§63) on staging — every project page renders | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s |
 | CI | GitHub Actions at the latest recorded run | **BLOCKED** | run 34758533871 at a3778c9: failure — no job started (GitHub Actions billing / spending limit; owner action). Last run that executed: run 34752927029 at 949a76e: success |
@@ -142,6 +142,14 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | Project | Passed | Failed | Flaky | Skipped |
 |---|---|---|---|---|
 | chromium | 77 | 0 | 0 | 3 |
+
+### artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json
+
+57 passed · 0 failed · 0 flaky · 0 skipped · 208 s
+
+| Project | Passed | Failed | Flaky | Skipped |
+|---|---|---|---|---|
+| chromium | 57 | 0 | 0 | 0 |
 
 ### artifacts/test-evidence/e2e/staging-5093b06-rerun.json
 
@@ -350,6 +358,7 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | staging-deploy-web-329fae5 | staging-cloudflare-neon | PASSED | 329fae5 | 415 s |
 | staging-health-329fae5 | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 3 s |
 | staging-perf-large | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 223 s |
+| e2e-staging-329fae5-work-budget-change | staging-cloudflare-neon | PASSED | a378dc8 | 210 s |
 
 ## Failures found, and what happened to them
 

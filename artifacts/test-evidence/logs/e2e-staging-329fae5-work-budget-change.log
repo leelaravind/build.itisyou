@@ -1,0 +1,80 @@
+# npx playwright test e2e/work.spec.ts e2e/budget.spec.ts e2e/change.spec.ts e2e/baseline.spec.ts --project=chromium --workers=2 --reporter=line,json --output=test-results-staging
+# commit a378dc87dc18404a002af26b8d19e9018c8e680f
+# started 2026-09-13T14:23:33.718Z
+
+
+Running 57 tests using 2 workers
+
+(node:7080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:20744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/57] [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[2/57] [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[3/57] [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[4/57] [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[5/57] [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[6/57] [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[7/57] [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[8/57] [chromium] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[9/57] [chromium] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[10/57] [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[11/57] [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[12/57] [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[13/57] [chromium] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[14/57] [chromium] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[15/57] [chromium] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[16/57] [chromium] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[17/57] [chromium] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[18/57] [chromium] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[19/57] [chromium] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[20/57] [chromium] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[21/57] [chromium] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[22/57] [chromium] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[23/57] [chromium] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[24/57] [chromium] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[25/57] [chromium] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[26/57] [chromium] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[27/57] [chromium] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[28/57] [chromium] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[29/57] [chromium] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[30/57] [chromium] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[31/57] [chromium] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[32/57] [chromium] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[33/57] [chromium] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[34/57] [chromium] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[35/57] [chromium] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[36/57] [chromium] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[37/57] [chromium] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[38/57] [chromium] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[39/57] [chromium] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[40/57] [chromium] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[41/57] [chromium] › e2e\work.spec.ts:66:3 › before a plan exists › says there is nothing to break down yet
+[42/57] [chromium] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[43/57] [chromium] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[44/57] [chromium] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[45/57] [chromium] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[46/57] [chromium] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[47/57] [chromium] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[48/57] [chromium] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[49/57] [chromium] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[50/57] [chromium] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[51/57] [chromium] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[52/57] [chromium] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[53/57] [chromium] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[54/57] [chromium] › e2e\work.spec.ts:209:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[55/57] [chromium] › e2e\work.spec.ts:214:3 › a project belongs to one guest › a malformed project id is too
+[56/57] [chromium] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[57/57] [chromium] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+  57 passed (3.5m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 209618 ms

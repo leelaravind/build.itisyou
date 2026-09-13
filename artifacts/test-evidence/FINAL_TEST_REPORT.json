@@ -1,7 +1,7 @@
 {
   "product": "build.itisyou",
-  "commit": "329fae5",
-  "generatedAt": "2026-09-13T14:23:09.463Z",
+  "commit": "a378dc8",
+  "generatedAt": "2026-09-13T14:27:12.146Z",
   "verdict": "NOT RELEASE-READY — no recorded failure, but required checks are blocked or not checked",
   "tally": {
     "PASSED": 24,
@@ -15,7 +15,7 @@
       "total": 2458
     },
     "e2e": {
-      "passed": 3843,
+      "passed": 3900,
       "failed": 462,
       "flaky": 0,
       "skipped": 664
@@ -111,7 +111,7 @@
       "area": "E2E",
       "name": "Staging release suite (Cloudflare + Neon)",
       "status": "PASSED",
-      "detail": "392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS"
+      "detail": "392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json, artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS"
     },
     {
       "area": "E2E",
@@ -2441,6 +2441,109 @@
         "rules.spec.ts › works without client JavaScript [chromium]": "expected"
       },
       "total": 80
+    },
+    {
+      "file": "artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json",
+      "startTime": "2026-09-13T14:23:35.694Z",
+      "durationMs": 207589,
+      "expected": 57,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "matrix": {
+        "chromium": {
+          "expected": 57,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        }
+      },
+      "bySpec": {
+        "baseline.spec.ts": {
+          "expected": 12,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "budget.spec.ts": {
+          "expected": 13,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "change.spec.ts": {
+          "expected": 15,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "work.spec.ts": {
+          "expected": 17,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        }
+      },
+      "outcomes": {
+        "baseline.spec.ts › shows the verification result rather than only computing it [chromium]": "expected",
+        "baseline.spec.ts › shows the checksum itself, so it can be compared [chromium]": "expected",
+        "baseline.spec.ts › says what the baseline captured [chromium]": "expected",
+        "baseline.spec.ts › reports variance as named items, never as a percentage [chromium]": "expected",
+        "baseline.spec.ts › explains that a baseline is never edited [chromium]": "expected",
+        "baseline.spec.ts › says a release baseline needs an approval [chromium]": "expected",
+        "baseline.spec.ts › has no detectable accessibility violations [chromium]": "expected",
+        "baseline.spec.ts › refuses rather than showing an empty baseline that verifies [chromium]": "expected",
+        "baseline.spec.ts › a second guest cannot read the first guest’s baseline [chromium]": "expected",
+        "baseline.spec.ts › stores a baseline with its reason and shows it as recorded [chromium]": "expected",
+        "baseline.spec.ts › numbers the next baseline after the last one [chromium]": "expected",
+        "baseline.spec.ts › will not record a baseline without a reason [chromium]": "expected",
+        "budget.spec.ts › says there is nothing to cost yet rather than showing zero [chromium]": "expected",
+        "budget.spec.ts › presents effort as a range, never as one number [chromium]": "expected",
+        "budget.spec.ts › states its confidence and why the range is wide [chromium]": "expected",
+        "budget.spec.ts › shows what the estimate assumed [chromium]": "expected",
+        "budget.spec.ts › names every component of the contingency [chromium]": "expected",
+        "budget.spec.ts › says the currency is assumed when nobody stated one [chromium]": "expected",
+        "budget.spec.ts › says plainly that no budget was recorded rather than reporting healthy [chromium]": "expected",
+        "budget.spec.ts › reports feasibility as dimensions with causes, never as a score [chromium]": "expected",
+        "budget.spec.ts › reports health without an unexplained number out of a hundred [chromium]": "expected",
+        "budget.spec.ts › shows no score and no delivery date anywhere on the page [chromium]": "expected",
+        "budget.spec.ts › states each verdict in words, not by colour alone [chromium]": "expected",
+        "budget.spec.ts › has no detectable accessibility violations [chromium]": "expected",
+        "budget.spec.ts › a second guest cannot read the first guest’s money [chromium]": "expected",
+        "change.spec.ts › offers something to change [chromium]": "expected",
+        "change.spec.ts › reports impact that actually reached something [chromium]": "expected",
+        "change.spec.ts › shows the path that reached each item, with its reasoning [chromium]": "expected",
+        "change.spec.ts › states each verdict in words and explains what it means [chromium]": "expected",
+        "change.spec.ts › shows no proportion of the project [chromium]": "expected",
+        "change.spec.ts › says nothing is affected as a real answer when nothing is [chromium]": "expected",
+        "change.spec.ts › has no detectable accessibility violations [chromium]": "expected",
+        "change.spec.ts › a second guest cannot read the first guest’s impact analysis [chromium]": "expected",
+        "change.spec.ts › records the request against the version its impact was calculated on [chromium]": "expected",
+        "change.spec.ts › refuses a request with no reason behind it [chromium]": "expected",
+        "change.spec.ts › can be decided, and the decision is kept with its reason [chromium]": "expected",
+        "change.spec.ts › applies an approved change and moves the project version on [chromium]": "expected",
+        "change.spec.ts › says what happened after each step [chromium]": "expected",
+        "change.spec.ts › never echoes an unrecognised outcome code from the address bar [chromium]": "expected",
+        "change.spec.ts › a second guest cannot see the first guest’s change requests [chromium]": "expected",
+        "work.spec.ts › says there is nothing to break down yet [chromium]": "expected",
+        "work.spec.ts › comes before the board [chromium]": "expected",
+        "work.spec.ts › gives a reason for every item [chromium]": "expected",
+        "work.spec.ts › is capped rather than showing everything [chromium]": "expected",
+        "work.spec.ts › says it leaves out work that cannot be started [chromium]": "expected",
+        "work.spec.ts › shows review as its own column [chromium]": "expected",
+        "work.spec.ts › has a column for every status [chromium]": "expected",
+        "work.spec.ts › shows what each task exists for [chromium]": "expected",
+        "work.spec.ts › states what the completion figure does not mean [chromium]": "expected",
+        "work.spec.ts › surfaces work that is finished but not delivered [chromium]": "expected",
+        "work.spec.ts › explains how the structure was chosen [chromium]": "expected",
+        "work.spec.ts › names the hierarchy it actually used [chromium]": "expected",
+        "work.spec.ts › another guest cannot see its work [chromium]": "expected",
+        "work.spec.ts › an unknown project id is indistinguishable from a forbidden one [chromium]": "expected",
+        "work.spec.ts › a malformed project id is too [chromium]": "expected",
+        "work.spec.ts › has no axe violations [chromium]": "expected",
+        "work.spec.ts › works without client JavaScript [chromium]": "expected"
+      },
+      "total": 57
     },
     {
       "file": "artifacts/test-evidence/e2e/staging-5093b06-rerun.json",
@@ -9154,6 +9257,22 @@
       "result": "PASSED",
       "platform": "win32 x64 node v22.23.2",
       "log": "artifacts/test-evidence/logs/staging-perf-large.log"
+    },
+    {
+      "id": "e2e-staging-329fae5-work-budget-change",
+      "category": "e2e",
+      "environment": "staging-cloudflare-neon",
+      "command": "npx playwright test e2e/work.spec.ts e2e/budget.spec.ts e2e/change.spec.ts e2e/baseline.spec.ts --project=chromium --workers=2 --reporter=line,json --output=test-results-staging",
+      "commit": "a378dc87dc18404a002af26b8d19e9018c8e680f",
+      "dirty": false,
+      "startedAt": "2026-09-13T14:23:33.718Z",
+      "finishedAt": "2026-09-13T14:27:03.336Z",
+      "durationMs": 209618,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/e2e-staging-329fae5-work-budget-change.log"
     }
   ],
   "receipts": [

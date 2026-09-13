@@ -470,3 +470,7 @@ Home and Plan are over it too. Next step: `decompose` still takes about a second
 remaining per-item scan (likely `collapseSingletons`, which rescans every edge once per container
 it collapses). Then compute the decomposition once per twin version instead of on every request.
 
+**Regression at `329fae5` on staging.** The Work, Budget, Change and Baseline specs in Chromium:
+**57 passed, 0 failed** (`e2e/staging-329fae5-work-budget-change.json`). Those specs include tenant
+isolation, the 404 rule and axe.
+

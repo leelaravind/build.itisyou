@@ -1,0 +1,16 @@
+{
+  "id": "e2e-staging-329fae5-work-budget-change",
+  "category": "e2e",
+  "environment": "staging-cloudflare-neon",
+  "command": "npx playwright test e2e/work.spec.ts e2e/budget.spec.ts e2e/change.spec.ts e2e/baseline.spec.ts --project=chromium --workers=2 --reporter=line,json --output=test-results-staging",
+  "commit": "a378dc87dc18404a002af26b8d19e9018c8e680f",
+  "dirty": false,
+  "startedAt": "2026-09-13T14:23:33.718Z",
+  "finishedAt": "2026-09-13T14:27:03.336Z",
+  "durationMs": 209618,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-staging-329fae5-work-budget-change.log"
+}
