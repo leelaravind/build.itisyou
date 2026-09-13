@@ -41,6 +41,7 @@ node scripts/evidence/run-gate.mjs --id <slug> --category <static|unit|e2e|secur
 node scripts/evidence/inventory.mjs          # repository inventory JSON
 node scripts/evidence/deploy-check.mjs <url> <commit>   # TLS, health, DB, commit, headers, 404 rule
 node scripts/evidence/perf-smoke.mjs <url>   # latency, sequential and 20-way concurrent
+APP_DSN_FILE=<f> OWNER_DSN_FILE=<f> node scripts/evidence/perf-large.mjs <url>   # §63 Large project seeded as govintel_app, every page timed
 node scripts/evidence/final-report.mjs       # FINAL_TEST_REPORT.{md,json,pdf} from the records
 ```
 

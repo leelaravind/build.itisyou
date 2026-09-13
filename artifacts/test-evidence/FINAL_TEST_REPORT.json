@@ -1,18 +1,18 @@
 {
   "product": "build.itisyou",
-  "commit": "9e7127e",
-  "generatedAt": "2026-09-13T13:39:52.411Z",
+  "commit": "a2afc66",
+  "generatedAt": "2026-09-13T14:03:39.131Z",
   "verdict": "NOT RELEASE-READY — no recorded failure, but required checks are blocked or not checked",
   "tally": {
-    "PASSED": 23,
+    "PASSED": 24,
     "BLOCKED": 3,
     "DEFERRED": 1
   },
   "totals": {
     "unit": {
-      "passed": 2454,
+      "passed": 2457,
       "failed": 0,
-      "total": 2454
+      "total": 2457
     },
     "e2e": {
       "passed": 3843,
@@ -40,7 +40,7 @@
       "area": "Static",
       "name": "Typecheck",
       "status": "PASSED",
-      "detail": "pnpm typecheck — exit 0 at 9e7127e, 7 s",
+      "detail": "pnpm typecheck — exit 0 at 57d8754, 11 s",
       "record": "json/gates/static-typecheck-final.json"
     },
     {
@@ -54,7 +54,7 @@
       "area": "Unit and integration",
       "name": "Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components)",
       "status": "PASSED",
-      "detail": "2454/2454 passed (artifacts/test-evidence/unit/final-vitest.json)"
+      "detail": "2457/2457 passed (artifacts/test-evidence/unit/final-vitest.json)"
     },
     {
       "area": "Security",
@@ -120,6 +120,13 @@
       "detail": "516 passed, 0 failed, 0 flaky, 30 skipped (artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json)"
     },
     {
+      "area": "Performance",
+      "name": "Large project (§63) on staging — every project page renders",
+      "status": "PASSED",
+      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a2afc66, 292 s",
+      "record": "json/gates/staging-perf-large.json"
+    },
+    {
       "area": "CI",
       "name": "GitHub Actions at the latest recorded run",
       "status": "BLOCKED",
@@ -136,8 +143,8 @@
       "area": "Deployment",
       "name": "Staging web Worker deployed",
       "status": "PASSED",
-      "detail": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-final.sh — exit 0 at a3778c9, 640 s",
-      "record": "json/gates/staging-deploy-web-a3778c9.json"
+      "detail": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-fix.sh — exit 0 at a2afc66, 431 s",
+      "record": "json/gates/staging-deploy-web-a2afc66.json"
     },
     {
       "area": "Deployment",
@@ -150,8 +157,8 @@
       "area": "Deployment",
       "name": "Staging health, version and database reachability",
       "status": "PASSED",
-      "detail": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a3778c9 — exit 0 at a3778c9, 2 s",
-      "record": "json/gates/staging-health-a3778c9.json"
+      "detail": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a2afc66 — exit 0 at a2afc66, 3 s",
+      "record": "json/gates/staging-health-a2afc66.json"
     },
     {
       "area": "Rollback",
@@ -164,8 +171,8 @@
       "area": "Performance",
       "name": "Latency smoke against staging",
       "status": "PASSED",
-      "detail": "node scripts/evidence/perf-smoke.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a3778c9, 9 s",
-      "record": "json/gates/staging-perf-smoke-a3778c9.json"
+      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a2afc66, 292 s",
+      "record": "json/gates/staging-perf-large.json"
     },
     {
       "area": "Recovery",
@@ -1038,8 +1045,8 @@
     },
     {
       "file": "artifacts/test-evidence/unit/final-vitest.json",
-      "total": 2454,
-      "passed": 2454,
+      "total": 2457,
+      "passed": 2457,
       "failed": 0,
       "skipped": 0,
       "success": true,
@@ -1135,8 +1142,8 @@
           "failed": 0
         },
         "packages/twin": {
-          "total": 180,
-          "passed": 180,
+          "total": 183,
+          "passed": 183,
           "failed": 0
         }
       }
@@ -9010,11 +9017,11 @@
       "category": "static",
       "environment": "local",
       "command": "pnpm typecheck",
-      "commit": "9e7127e7a9603b21038a7655e3594b1b78376196",
+      "commit": "57d8754806d06e0f5042254c76d255b4a296795b",
       "dirty": true,
-      "startedAt": "2026-09-13T13:38:27.465Z",
-      "finishedAt": "2026-09-13T13:38:34.602Z",
-      "durationMs": 7137,
+      "startedAt": "2026-09-13T13:49:00.777Z",
+      "finishedAt": "2026-09-13T13:49:11.360Z",
+      "durationMs": 10583,
       "exitCode": 0,
       "signal": null,
       "result": "PASSED",
@@ -9022,20 +9029,68 @@
       "log": "artifacts/test-evidence/logs/static-typecheck-final.log"
     },
     {
+      "id": "staging-deploy-web-a2afc66",
+      "category": "deployment",
+      "environment": "staging-cloudflare-neon",
+      "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-fix.sh",
+      "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
+      "dirty": false,
+      "startedAt": "2026-09-13T13:49:34.933Z",
+      "finishedAt": "2026-09-13T13:56:46.156Z",
+      "durationMs": 431223,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/staging-deploy-web-a2afc66.log"
+    },
+    {
       "id": "unit-final",
       "category": "unit",
       "environment": "local",
       "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
-      "commit": "9e7127e7a9603b21038a7655e3594b1b78376196",
+      "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
       "dirty": true,
-      "startedAt": "2026-09-13T13:38:39.902Z",
-      "finishedAt": "2026-09-13T13:39:23.649Z",
-      "durationMs": 43747,
+      "startedAt": "2026-09-13T13:49:39.776Z",
+      "finishedAt": "2026-09-13T13:50:24.837Z",
+      "durationMs": 45061,
       "exitCode": 0,
       "signal": null,
       "result": "PASSED",
       "platform": "win32 x64 node v22.23.2",
       "log": "artifacts/test-evidence/logs/unit-final.log"
+    },
+    {
+      "id": "staging-health-a2afc66",
+      "category": "deployment",
+      "environment": "staging-cloudflare-neon",
+      "command": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a2afc66",
+      "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
+      "dirty": true,
+      "startedAt": "2026-09-13T13:57:16.323Z",
+      "finishedAt": "2026-09-13T13:57:18.850Z",
+      "durationMs": 2527,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-health-a2afc66.log"
+    },
+    {
+      "id": "staging-perf-large",
+      "category": "performance",
+      "environment": "staging-cloudflare-neon",
+      "command": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev",
+      "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
+      "dirty": true,
+      "startedAt": "2026-09-13T13:57:19.022Z",
+      "finishedAt": "2026-09-13T14:02:11.190Z",
+      "durationMs": 292168,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-perf-large.log"
     }
   ],
   "receipts": [
@@ -9140,6 +9195,24 @@
       "foundBy": "Final staging E2E run",
       "area": "Operations (database storage cap)",
       "status": "Staging moved to a fresh database; staging guest TTL shortened"
+    },
+    {
+      "id": "FR-018",
+      "foundBy": "Reading the staging re-run's skips",
+      "area": "Test coverage (evidence upload)",
+      "status": "Fixed — the test waits for the form; 27/27 on staging"
+    },
+    {
+      "id": "FR-019",
+      "foundBy": "§63 Large project on staging",
+      "area": "Baseline (dangling edges after filtering records)",
+      "status": "Fixed and re-verified on staging at `a2afc66`"
+    },
+    {
+      "id": "FR-020",
+      "foundBy": "§63 Large project on staging",
+      "area": "Performance (Work, Budget, Change at 9–10 s)",
+      "status": "OPEN — W-PERF-3"
     }
   ]
 }

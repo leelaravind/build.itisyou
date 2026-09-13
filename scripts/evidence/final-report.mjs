@@ -325,6 +325,15 @@ const checks = [
     ),
   },
   {
+    /*
+     * §63: "it must not crash" at the Large size. The gate fails when any project page answers
+     * anything but 200; latency against the interactive budget is in the record and in FR-020.
+     */
+    area: 'Performance',
+    name: 'Large project (§63) on staging — every project page renders',
+    ...fromGate(/^staging-perf-large$/, 'staging Large-project'),
+  },
+  {
     area: 'CI',
     name: 'GitHub Actions at the latest recorded run',
     ...ciStatus(),

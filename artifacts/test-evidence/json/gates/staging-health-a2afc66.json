@@ -1,0 +1,16 @@
+{
+  "id": "staging-health-a2afc66",
+  "category": "deployment",
+  "environment": "staging-cloudflare-neon",
+  "command": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a2afc66",
+  "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
+  "dirty": true,
+  "startedAt": "2026-09-13T13:57:16.323Z",
+  "finishedAt": "2026-09-13T13:57:18.850Z",
+  "durationMs": 2527,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-health-a2afc66.log"
+}

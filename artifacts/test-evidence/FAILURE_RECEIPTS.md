@@ -23,6 +23,9 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-015 | Local E2E under load | UI (pending submit buttons) | Reverted — the control was withdrawn, not the tests |
 | FR-016 | My own restore drill | Operations (staging database) | Recovered in 2.5 minutes, no data loss; procedure corrected |
 | FR-017 | Final staging E2E run | Operations (database storage cap) | Staging moved to a fresh database; staging guest TTL shortened |
+| FR-018 | Reading the staging re-run's skips | Test coverage (evidence upload) | Fixed — the test waits for the form; 27/27 on staging |
+| FR-019 | §63 Large project on staging | Baseline (dangling edges after filtering records) | Fixed and re-verified on staging at `a2afc66` |
+| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | OPEN — W-PERF-3 |
 
 ---
 
@@ -388,3 +391,45 @@ counting. The skip stays for its real purpose, a deployment with no bucket bound
 
 **Proof.** The evidence-and-approvals block on staging (Chromium, WebKit, iOS Safari): **27 passed,
 0 skipped, 0 failed** (`e2e/staging-5093b06-upload.json`). Before the fix the same journeys skipped.
+
+## FR-019 — A project with linked evidence could neither view nor record a baseline
+
+**Found by** `scripts/evidence/perf-large.mjs`, gap-spec §63's Large fixture on staging at `57d8754`.
+It seeds a real guest project with 12,106 nodes and 23,105 relationships as `govintel_app` inside an
+RLS-scoped transaction.
+
+**Observed.** Ten of eleven project pages answered 200. `/plan/:id/baseline` answered **500** on
+every request (`performance/perf-large-before-fix-57d8754.json`).
+
+**Root cause.** The baseline page and the baseline recording action both built "the plan without
+its records" by filtering out `EVIDENCE` and `APPROVAL` nodes while keeping **every edge**. A test's
+`EVIDENCED_BY` edge then pointed at a node that was no longer in the graph, and `TwinGraph` refuses a
+dangling edge by design. Any project whose twin links a test to evidence fails the same way,
+whatever its size. Size is only what made the fixture contain such an edge.
+
+**Change.** `planGraphFromRows` (`packages/twin/src/repository.ts`) drops the edges that touch a
+dropped node, and both call sites use it. Three repository tests cover it: the old filter throwing on
+those rows, records and their edges left out, and every plan node and plan-to-plan edge kept.
+
+**Proof.** Staging at `a2afc66`, with a freshly seeded Large project: `/plan/:id/baseline` **200** on
+every request (p95 1,432 ms), and **0 of 11** project pages crashed (`performance/perf-large.json`,
+`json/gates/staging-perf-large.json`). Post-deploy checks 9/9. Unit 2,457/2,457.
+
+## FR-020 — At the Large size, three pages take nine to ten seconds (OPEN)
+
+**Found by** the same run. **Observed** at `a2afc66` with 12,106 nodes, 6 samples per page after a
+warm-up:
+- Work, Budget and Change: p95 **9.4–10.3 s**.
+- Project Home and Plan: 2.3–2.5 s.
+- Trace, Rules and Baseline: 1.0–1.4 s.
+- Evidence, Release and Close: p50 about 0.9–1.1 s, with one slow sample each (p95 3.7–5.0 s).
+
+Nothing crashed, which is §63's bar. The interactive budget is 1.5 s.
+
+**Diagnosis so far, not profiled.** The three slow pages are exactly the three that call `decompose`
+(`packages/execution/src/decompose.ts`) on every request, against all 5,000 tasks. None of the eight
+faster pages call it.
+
+**Status.** OPEN — register W-PERF-3. Next step: time `decompose` on the Large fixture in
+`scale.test.ts`, then either store the decomposition when the plan is generated or cache it per twin
+version.
