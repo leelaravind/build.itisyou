@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2026-09-13T13:46:54.432Z",
+  "base": "https://govintel-web-staging.kpleelaaravind.workers.dev",
+  "fixture": {
+    "people": 100,
+    "tasks": 5000,
+    "requirements": 1000,
+    "tests": 3000,
+    "phases": 5,
+    "nodes": 12106,
+    "edges": 23105
+  },
+  "seed": {
+    "role": "govintel_app",
+    "rlsScoped": true,
+    "ms": 5967
+  },
+  "samplesPerRoute": 6,
+  "budgetP95Ms": 1500,
+  "results": [
+    {
+      "route": "/p/:id",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 72002,
+      "p50": 2254,
+      "p95": 2385
+    },
+    {
+      "route": "/plan/:id",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 870551,
+      "p50": 2426,
+      "p95": 2680
+    },
+    {
+      "route": "/plan/:id/trace",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 841300,
+      "p50": 953,
+      "p95": 1027
+    },
+    {
+      "route": "/plan/:id/rules",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 335481,
+      "p50": 1204,
+      "p95": 1344
+    },
+    {
+      "route": "/plan/:id/work",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 60804,
+      "p50": 8285,
+      "p95": 8748
+    },
+    {
+      "route": "/plan/:id/budget",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 92570,
+      "p50": 8984,
+      "p95": 9212
+    },
+    {
+      "route": "/plan/:id/evidence",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 332753,
+      "p50": 1040,
+      "p95": 1079
+    },
+    {
+      "route": "/plan/:id/change",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 1068764,
+      "p50": 8792,
+      "p95": 9261
+    },
+    {
+      "route": "/plan/:id/baseline",
+      "statuses": [
+        500
+      ],
+      "errorBoundary": false,
+      "bytes": 15332,
+      "p50": 858,
+      "p95": 896
+    },
+    {
+      "route": "/plan/:id/release",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 209600,
+      "p50": 935,
+      "p95": 954
+    },
+    {
+      "route": "/plan/:id/close",
+      "statuses": [
+        200
+      ],
+      "errorBoundary": false,
+      "bytes": 66332,
+      "p50": 866,
+      "p95": 1016
+    }
+  ],
+  "crashed": [
+    "/plan/:id/baseline"
+  ],
+  "overBudget": [
+    "/p/:id",
+    "/plan/:id",
+    "/plan/:id/work",
+    "/plan/:id/budget",
+    "/plan/:id/change"
+  ]
+}

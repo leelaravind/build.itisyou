@@ -19,6 +19,7 @@ import type { EdgeClass, TwinEdge } from '../src/edges.ts';
 import {
   canSave,
   graphFromRows,
+  planGraphFromRows,
   rowsFromGraph,
   type EdgeRow,
   type NodeRow,
@@ -83,6 +84,51 @@ function edge(from: string, to: string, edgeClass: EdgeClass): TwinEdge {
     createdAt: AT.toISOString(),
   };
 }
+
+describe('the plan a baseline captures', () => {
+  /*
+   * FR-019. A test linked to its evidence, as the §63 large fixture has 3,000 times over. Leaving the
+   * evidence node out while keeping the edge made the graph refuse a dangling reference, and the
+   * baseline page answered 500.
+   */
+  const rows = {
+    nodes: [
+      nodeRow({ id: 'task', class: 'TASK' }),
+      nodeRow({ id: 'test', class: 'TEST' }),
+      nodeRow({ id: 'evidence', class: 'EVIDENCE' }),
+      nodeRow({ id: 'approval', class: 'APPROVAL' }),
+    ],
+    edges: [
+      edgeRow({ id: 'e-dep', class: 'DEPENDS_ON', fromId: 'test', toId: 'task' }),
+      edgeRow({ id: 'e-ev', class: 'EVIDENCED_BY', fromId: 'test', toId: 'evidence' }),
+      edgeRow({ id: 'e-ap', class: 'APPROVED_BY', fromId: 'task', toId: 'approval' }),
+    ],
+  };
+
+  it('is what the plain filter could not build: the whole graph refuses the half-filtered rows', () => {
+    const planOnly = rows.nodes.filter(
+      (row) => row.class !== 'EVIDENCE' && row.class !== 'APPROVAL',
+    );
+    expect(() => graphFromRows(PROJECT, planOnly, rows.edges)).toThrow();
+  });
+
+  it('leaves out evidence and approval records and every edge that touches them', () => {
+    const graph = planGraphFromRows(PROJECT, rows.nodes, rows.edges);
+
+    expect(graph.size).toBe(2);
+    expect(graph.node('evidence')).toBeUndefined();
+    expect(graph.node('approval')).toBeUndefined();
+    expect(graph.edgeCount).toBe(1);
+  });
+
+  it('keeps every plan node and every edge between plan nodes', () => {
+    const graph = planGraphFromRows(PROJECT, rows.nodes, rows.edges);
+
+    expect(graph.node('task')).toBeDefined();
+    expect(graph.node('test')).toBeDefined();
+    expect(graph.edgesFrom('test').map((edge) => edge.id)).toEqual(['e-dep']);
+  });
+});
 
 describe('reading rows into a graph', () => {
   it('builds a graph from valid rows', () => {

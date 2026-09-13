@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { twinBaselines } from '@govintel/db/schema';
 import { createBaseline } from '@govintel/governance/baseline';
-import { graphFromRows } from '@govintel/twin/repository';
+import { planGraphFromRows } from '@govintel/twin/repository';
 import { toAppError } from '@govintel/shared/errors';
 import { logger } from '@govintel/shared/logging';
 import { withDatabase } from '../../../lib/server/database.ts';
@@ -65,10 +65,7 @@ async function record(projectId: string, reason: string): Promise<Outcome> {
     if (reason === '') return { kind: 'refused', reason: 'NO_REASON' };
 
     const rows = await loadProjectRows(projectId, project.organizationId);
-    const planNodes = rows.nodes.filter(
-      (node) => node.class !== 'EVIDENCE' && node.class !== 'APPROVAL',
-    );
-    const graph = graphFromRows(projectId, planNodes, rows.edges);
+    const graph = planGraphFromRows(projectId, rows.nodes, rows.edges);
 
     const [latest] = await withDatabase((db) =>
       db

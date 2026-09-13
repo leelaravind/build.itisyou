@@ -1,0 +1,16 @@
+{
+  "id": "staging-perf-large",
+  "category": "performance",
+  "environment": "staging-cloudflare-neon",
+  "command": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev",
+  "commit": "57d8754806d06e0f5042254c76d255b4a296795b",
+  "dirty": true,
+  "startedAt": "2026-09-13T13:42:27.593Z",
+  "finishedAt": "2026-09-13T13:46:54.467Z",
+  "durationMs": 266874,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-perf-large.log"
+}

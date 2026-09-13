@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { desc, eq } from 'drizzle-orm';
 import { twinBaselines } from '@govintel/db/schema';
-import { graphFromRows } from '@govintel/twin/repository';
+import { planGraphFromRows } from '@govintel/twin/repository';
 import type { TwinNode } from '@govintel/twin/nodes';
 import type { TwinEdge } from '@govintel/twin/edges';
 import {
@@ -87,11 +87,7 @@ export default async function BaselinePage({
 
   const { project, nodes, edges } = loaded;
   // The plan, without the evidence and approval records projected into it: what a baseline captures.
-  const graph = graphFromRows(
-    projectId,
-    nodes.filter((node) => node.class !== 'EVIDENCE' && node.class !== 'APPROVAL'),
-    edges,
-  );
+  const graph = planGraphFromRows(projectId, nodes, edges);
 
   const storedRows = await withDatabase((db) =>
     db

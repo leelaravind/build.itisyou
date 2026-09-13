@@ -89,6 +89,32 @@ export function graphFromRows(
   return new TwinGraph({ projectId, nodes, edges });
 }
 
+/** Records, not plan: what a baseline leaves out of the graph it captures. */
+const RECORD_CLASSES: readonly string[] = ['EVIDENCE', 'APPROVAL'];
+
+/**
+ * The plan alone, without evidence and approval records: the graph a baseline captures.
+ *
+ * Dropping those nodes has to drop every edge that touches them too. Filtering the nodes and keeping
+ * the edges leaves a test's `EVIDENCED_BY` edge pointing at a node that is no longer in the graph,
+ * and `TwinGraph` refuses a dangling edge — so a project with linked evidence could neither view nor
+ * record a baseline (FR-019, found by the §63 large fixture on staging).
+ */
+export function planGraphFromRows(
+  projectId: string,
+  nodeRows: readonly NodeRow[],
+  edgeRows: readonly EdgeRow[],
+): TwinGraph {
+  const kept = nodeRows.filter((row) => !RECORD_CLASSES.includes(row.class));
+  const ids = new Set(kept.map((row) => row.id));
+
+  return graphFromRows(
+    projectId,
+    kept,
+    edgeRows.filter((row) => ids.has(row.fromId) && ids.has(row.toId)),
+  );
+}
+
 function toNode(row: NodeRow): TwinNode {
   if (!isNodeClass(row.class)) {
     throw corrupt('node', row.id, `unrecognised class "${row.class}"`);
