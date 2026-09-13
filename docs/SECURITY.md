@@ -319,6 +319,35 @@ as a build artefact, and build output must not be copied off a machine that has 
 
 ---
 
+## 2e. Finding SEC-005 - four paths that were safe or correct only as the superuser
+
+Found 2026-09-13 in the final completion pass; receipts FR-005, FR-006, FR-008 and W-SEC-3 in
+`artifacts/test-evidence/FAILURE_RECEIPTS.md` and `docs/final-completion/COMPLETION_REGISTER.md`.
+
+SEC-001's lesson — a superuser does not see row-level security — applied again, one level out. The
+embedded development database connects as a superuser, so every local test, journey and development
+request ran on the one path production never takes:
+
+| Path | As superuser | As `govintel_app` under forced RLS |
+|---|---|---|
+| Sign-in (`completeSignIn`) | Worked | First sign-in threw on the membership insert (`WITH CHECK`); the guest conversion claimed no rows |
+| Guest expiry sweep | Worked | Deleted audit events it could not see, then failed on their `RESTRICT` key — every run |
+| Caller with no tenant (`withDatabase`) | **Returned every tenant's rows** (development only) | Returned nothing |
+| `intake_answers`, `ai_imports` | No policy at all | No policy at all — tenant data guarded only by application checks |
+
+**Fixes.** Sign-in runs each tenant-table step inside `applyTenantScope` and adopts the guest's
+organisation instead of moving rows, because an `UPDATE` of `organization_id` cannot pass a
+single-tenant policy for both the old and new row (`packages/db/src/sign-in.ts`). The sweep deletes
+each guest in its own scoped transaction. A caller with no tenant runs as the restricted role with no
+tenant set, locally too. Migration 003 gives the two tables a real key and forced RLS.
+
+**Regression protection.** `packages/db/test/sign-in.test.ts` and the "as the restricted role" block in
+`guest.test.ts` run whole flows under `SET ROLE govintel_app`; the pre-fix code fails them. The pooled
+isolation gate re-ran 6/6 on staging after migration 003.
+
+**The pattern.** A control verified only on a role that bypasses it has not been verified. New code
+that touches tenant tables should have a test that connects as `govintel_app`.
+
 ## 3. Tenant isolation
 
 Layered, because cross-tenant disclosure is the highest-severity failure this system can produce and

@@ -1,0 +1,15 @@
+# node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 949a76e
+# commit 949a76e29397096c29182e2a7f5b8abe81f21243 (dirty)
+# started 2026-09-13T11:00:01.876Z
+
+PASS  served over TLS — https://govintel-web-staging.kpleelaaravind.workers.dev
+PASS  health endpoint answers 200 — status 200
+PASS  database reachable (NORMAL mode) — {"status":"ok","mode":"NORMAL","version":"0.1.0-staging.949a76e","commit":"949a76e","environment":"staging"}
+PASS  serves the expected commit — commit 949a76e, expected 949a76e
+PASS  HSTS present — max-age=63072000; includeSubDomains; preload
+PASS  CSP uses a nonce and no unsafe-inline scripts — default-src 'self'; script-src 'self' 'nonce-972f9a5ebc0b449794a05f2ef247739d'; style-src 'self' 'unsafe-inline'; img-sr
+PASS  framing refused — DENY
+PASS  nosniff — nosniff
+PASS  an unknown project is 404, never 403 — status 404
+
+# exit 0 after 791 ms

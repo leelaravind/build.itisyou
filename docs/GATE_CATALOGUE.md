@@ -14,7 +14,7 @@
 A criterion phrased as "security reviewed" is a checkbox someone ticks. A criterion has to be a
 question the platform can answer from the project graph, or it is a self-assessment with extra steps.
 
-**39 of 56 criteria are answered automatically** from the
+**39 of 59 criteria are answered automatically** from the
 graph. The rest require an EVIDENCE or APPROVAL node — which is still stricter than a checkbox:
 something has to exist in the record, attributable and timestamped.
 
@@ -214,6 +214,9 @@ What is actually running has been checked, rather than assumed from what was rel
 | `security-headers` | The security headers are present in production. | evidence | **blocking** |
 | `critical-journeys` | The journeys that matter have been walked in production. | evidence | **blocking** |
 | `logging` | Logs are arriving where someone will see them. | evidence | **blocking** |
+| `authentication` | Signing in works against the production identity provider. | evidence | **blocking** |
+| `apis` | The APIs production depends on answer from production. | evidence | **blocking** |
+| `deployment-identity` | Production is running the version that was released. | evidence | **blocking** |
 
 ### Why each criterion exists
 
@@ -222,6 +225,9 @@ What is actually running has been checked, rather than assumed from what was rel
 - **The security headers are present in production.** Headers are frequently correct in the application and stripped or overridden by whatever sits in front of it.
 - **The journeys that matter have been walked in production.** Everything can be individually healthy while the thing users actually do is broken.
 - **Logs are arriving where someone will see them.** The first incident is the wrong time to discover that logging was never wired up in this environment.
+- **Signing in works against the production identity provider.** The redirect URI, the client secret and the issuer are all per-environment; a sign-in that works on staging proves nothing about production.
+- **The APIs production depends on answer from production.** Credentials, allow-lists and quotas differ by environment, so an integration that passed in staging can refuse production on its first call.
+- **Production is running the version that was released.** A deploy can report success while serving the previous build; the version the running system reports is the only evidence of what shipped.
 
 ---
 

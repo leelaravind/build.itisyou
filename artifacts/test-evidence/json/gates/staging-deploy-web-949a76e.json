@@ -1,0 +1,16 @@
+{
+  "id": "staging-deploy-web-949a76e",
+  "category": "deployment",
+  "environment": "staging",
+  "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh",
+  "commit": "949a76e29397096c29182e2a7f5b8abe81f21243",
+  "dirty": false,
+  "startedAt": "2026-09-13T10:51:29.671Z",
+  "finishedAt": "2026-09-13T10:59:47.865Z",
+  "durationMs": 498194,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-deploy-web-949a76e.log"
+}

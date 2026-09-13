@@ -1,6 +1,6 @@
 # pnpm docs:check
-# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
-# started 2026-09-13T10:50:00.706Z
+# commit 949a76e29397096c29182e2a7f5b8abe81f21243 (dirty)
+# started 2026-09-13T11:36:19.721Z
 
 $ node scripts/generate-icons.mjs --check && node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check && node --experimental-strip-types scripts/generate-governance-docs.mjs --check && node --experimental-strip-types scripts/generate-responsive-docs.mjs --check
 icons up to date (79 icons, 25 KB of path data)
@@ -14,4 +14,4 @@ Impact propagation specification is up to date.
 Governance model specification is up to date.
 Responsive contract is up to date.
 
-# exit 0 after 3610 ms
+# exit 0 after 3613 ms

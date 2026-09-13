@@ -1,0 +1,37 @@
+# E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --config p/typescript --config p/javascript --config p/nodejs --metrics=off --jobs 2 --exclude node_modules --exclude dist --exclude .next --exclude test --exclude e2e --exclude artifacts --json --output artifacts/test-evidence/security/semgrep.json apps packages scripts
+# commit 949a76e29397096c29182e2a7f5b8abe81f21243 (dirty)
+# started 2026-09-13T11:14:45.262Z
+
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 232 files tracked by git with 74 Code rules:
+                                                                                                                        
+  Language   Rules   Files          Origin      Rules                                                                   
+ ──────────────────────────        ───────────────────                                                                  
+  ts            74     164          Community      74                                                                   
+  js            68      23                                                                                              
+                                                                                                                        
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 0 (0 blocking)
+ • Rules run: 74
+ • Targets scanned: 187
+ • Parsed lines: ~99.9%
+ • Scan skipped: 
+   ◦ Matching --exclude patterns: 69
+ • Scan was limited to files tracked by git
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 74 rules on 187 files: 0 findings.
+(need more rules? `semgrep login` for additional free Semgrep Registry rules)
+
+If Semgrep missed a finding, please send us feedback to let us know!
+See https://semgrep.dev/docs/reporting-false-negatives/
+
+# exit 0 after 513418 ms

@@ -1,0 +1,16 @@
+{
+  "id": "e2e-staging-949a76e",
+  "category": "e2e",
+  "environment": "staging-cloudflare-neon",
+  "command": "npx playwright test --project=chromium --project=webkit --project=mobile-safari --workers=2 --reporter=line,json --output=test-results-staging",
+  "commit": "949a76e29397096c29182e2a7f5b8abe81f21243",
+  "dirty": true,
+  "startedAt": "2026-09-13T11:00:05.260Z",
+  "finishedAt": "2026-09-13T11:30:08.714Z",
+  "durationMs": 1803454,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-staging-949a76e.log"
+}

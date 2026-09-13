@@ -23,12 +23,12 @@ follow a year later.
 | Resource | Value | Notes |
 |---|---|---|
 | Cloudflare account | `a0365f6aaae5fe32b3fdb8fa08fd000c` | Shares the account with unrelated `itisyou-*` resources; everything here is namespaced `govintel-*` |
-| PostgreSQL | Neon project `tiny-mode-81422275` | Branch `staging` (`br-frosty-waterfall-zarolebw`), forked from `production` |
+| PostgreSQL | Neon project `silent-forest-67621251` (`build-itisyou-staging`) | Branch `br-mute-smoke-zaktflfl`, endpoint `ep-snowy-silence-zakx92wv`. Re-provisioned 2026-09-13: the previous project, `tiny-mode-81422275`, is suspended for quota until 2026-10-01 (FR-001) |
 | Hyperdrive | `fa38480586e44cebab20fe15ac2121a0` | Created `--caching-disabled`. Same id in both Workers |
 | R2 | `govintel-evidence-staging` | Private; no public bucket exists |
 | Queues | `govintel-outbox-staging`, `govintel-outbox-dlq-staging` | |
-| Worker (outbox) | `govintel-worker-staging` | **Deployed and verified.** Cron `* * * * *`, producer and consumer |
-| Worker (web) | `govintel-web-staging` | **Not yet deployed** — see §8 |
+| Worker (outbox) | `govintel-worker-staging` | **Deployed and verified.** Cron `17 */3 * * *` — budgeted by `apps/worker/test/schedule.test.ts` (it was every minute, which exhausted the database quota) |
+| Worker (web) | `govintel-web-staging` | **Deployed and verified** (re-created 2026-09-13; see `docs/final-completion/`) |
 
 **Decided:**
 
@@ -270,7 +270,7 @@ read alike, because the second is the one that gets quietly treated as the first
 
 | Target | Proposed | Basis |
 |---|---|---|
-| RPO — how much data may be lost | 15 minutes | Neon's continuous archiving. Still unverified: a drill restoring to an *earlier* point has not been run, only a restore of the current state |
+| RPO — how much data may be lost | 15 minutes | Neon's continuous archiving. A point-in-time restore to an *earlier* point was drilled on 2026-09-13 (below); the 6-hour history window is the outer bound |
 | RTO — how long recovery may take | 4 hours | Was an estimate. A drill has now produced a number, below — the estimate was two orders of magnitude pessimistic, which is its own finding |
 
 ### The drill, 2026-09-02
@@ -297,6 +297,27 @@ artefacts and has no drill at all. Three named gaps rather than an unqualified "
 The drill branch was deleted after the checks above, once nothing referenced it: no repository
 reference, no child branch, and the staging Worker healthy on its own branch throughout. A restored
 copy left lying about is a second, unmonitored copy of the same data.
+
+### The drill, 2026-09-13 — point in time, and a mistake worth recording
+
+Run against the re-provisioned staging project (`silent-forest-67621251`): a snapshot of `staging` at
+10:00:00Z — before migration 003 ran at 10:04:47Z — restored onto a new branch.
+
+| | |
+|---|---|
+| Restored point | 09:59:16Z (LSN `0/75BF6D8`) |
+| Time to a ready branch | **9 seconds** |
+| Schema | Pre-003 fingerprint `0433d7ed…`, exactly the shape at that time |
+| Restricted application role | `rolsuper=false`, `rolbypassrls=false` |
+| Pooled isolation on the restored copy, as `govintel_app` | **6/6** |
+
+**Do not restore onto a new branch with the default `finalize`.** For a new branch it defaults to
+`true`, which moves the compute from the source branch onto the restored one and swaps the names. The
+staging endpoint — the one Hyperdrive points at — served the 09:59Z data for two and a half minutes
+until the endpoints were moved back (FR-016). Pass `finalize: false`, or restore onto a parked branch,
+on any project something is connected to.
+
+Still not drilled: restoring deploy secrets, and the R2 evidence bucket.
 
 Both targets remain **proposed and unaccepted** — §51 requires explicit acceptance by somebody with
 authority, and that is an owner action, not a drill result.

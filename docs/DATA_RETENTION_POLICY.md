@@ -21,7 +21,7 @@ exactly how untrue it is, with the measured window.
 
 | Category | Retained for | Enforced by |
 |---|---|---|
-| Guest projects | 72 hours from the session's creation, not extended by activity | **Enforced.** `DEFAULT_GUEST_TTL_HOURS` (`packages/db/src/guest.ts`), overridable per environment with `GUEST_PROJECT_TTL_HOURS`; swept by `purgeExpiredGuestSessions`, called every minute by the outbox Worker's `scheduled` handler. The sweep takes the whole tenant: the projects, the audit events, the session, and the organisation the session owned. See §2 for why the audit events had to be part of it |
+| Guest projects | 72 hours from the session's creation, not extended by activity | **Enforced.** `DEFAULT_GUEST_TTL_HOURS` (`packages/db/src/guest.ts`), overridable per environment with `GUEST_PROJECT_TTL_HOURS`; swept by `purgeExpiredGuestSessions`, called every three hours by the outbox Worker's `scheduled` handler. The sweep takes the whole tenant: the projects, the audit events, the session, and the organisation the session owned. See §2 for why the audit events had to be part of it |
 | Active projects | As long as the organisation that owns them | **Enforced by cascade, not by a clock.** `projects.organization_id` is `ON DELETE CASCADE`; nothing expires an active project, and no dormancy rule has been decided |
 | Archived projects | Indefinitely | **Nothing deletes them.** `ARCHIVED` is a lifecycle state, not a deletion: the row and its twin, evidence and audit rows all remain. Deliberate — an archived project is the one most likely to be asked about later |
 | Deleted projects | Not applicable — **there is no delete** | **Absent, and stated rather than implied.** The product has no path that deletes a project. The two ways a project row disappears are guest expiry and deleting the organisation, both by cascade — and guest expiry is not a route anybody can ask for. See §4 |
@@ -48,6 +48,12 @@ hours this document promises.
 
 Measured on staging before the fix: **126 guest sessions owned projects with audit events, the first
 expiring at 2026-09-05T08:08:57Z.** Nothing had failed yet. It was about half an hour away.
+
+**Corrected 2026-09-13 (FR-005).** The fix above was tested only as a superuser. As the restricted role
+the Worker connects as, the sweep could not see the audit events or projects it was deleting — row-level
+security hid them — so it would still have failed on the first audited guest. It now deletes each
+expired guest in its own transaction, inside that guest's tenant scope, and a guest that cannot be
+deleted fails alone and is logged rather than stopping the rest.
 
 Deleting the events with the project is also the right answer rather than the convenient one. §40
 permits append, query and retention, and forbids updating an event or deleting an individual one; a
@@ -100,7 +106,7 @@ until that history expires.
 
 | | |
 |---|---|
-| Neon history retention, staging (`tiny-mode-81422275`) | 21,600 seconds — **6 hours** |
+| Neon history retention, staging (`silent-forest-67621251`, from 2026-09-13) | 21,600 seconds — **6 hours** |
 | Neon history retention, production (`fragrant-fog-40333847`) | 21,600 seconds — **6 hours** |
 | Read from | The Neon API, 2026-09-05 |
 

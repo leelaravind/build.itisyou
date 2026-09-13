@@ -33,6 +33,8 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-REL-1 | P1 | Release / production verification | The release page reads plans, production checks and deployment approvals from recorded evidence instead of empty lists; checks with no evidence stay NOT_CHECKED; a plan is rehearsed only from a test report or deployment record | DONE (mapping unit-tested; an end-to-end proof needs a project driven through the five earlier gates, not built) | `packages/release/test/records.test.ts` (10) |
 | W-BASE-1 | P2 | Baseline | Baselines are recorded: stored with checksum and reason in `twin_baselines`, audited in the same transaction, re-verified from storage, numbered, and compared with today's plan | DONE | `e2e/baseline.spec.ts` (3 new) |
 | W-A11Y-1 | P2 | Accessibility | Keyboard-only journey: start, intake, plan and Project Home without a pointer | DONE (spec); see the E2E record for the run | `e2e/keyboard.spec.ts` |
+| W-REL-2 | P2 | Release | The three §15.9 checks with no criterion (authentication, APIs, deployment identity) are now blocking MANUAL criteria of the Production Verification gate, so all ten production checks can be recorded through the product | DONE | `records.test.ts`, `docs/GATE_CATALOGUE.md` regenerated |
+| W-SEC-4 | P1 | Security | SAST did not exist in any form (plan §18, gap-spec §66). Semgrep's public TypeScript/JavaScript/Node rulesets now run locally and in CI's security job, failing on any finding; first run 74 rules on 187 files, 0 findings | DONE | `json/gates/security-sast-semgrep.json`, `security/semgrep.json` |
 | W-TEST-1 | P1 | Test coverage | WebKit and iOS Safari skipped every journey even over HTTPS; the skip is now keyed on the insecure origin | DONE | FR-012, staging browser matrix |
 
 ## Open — P0 and P1, in execution order
@@ -46,11 +48,10 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 
 | ID | Workstream | Item | Next step |
 |---|---|---|---|
-| W-REL-2 | Release | Three production checks (AUTHENTICATION, APIS, DEPLOYMENT_IDENTITY) have no catalogue purpose, and ownership, incidents and debt have no recording surface, so those inputs are always empty | Add the three purposes to the Production Verification gate's MANUAL criteria; an ownership/incident register on the release page |
 | W-UI-5 | UI states | No loading state. Two approaches tried and withdrawn: streaming boundaries broke the 404 rule (FR-007), and `useFormStatus` pending buttons froze actions under concurrent load (FR-015) | Investigate FR-015's mechanism in isolation before trying a third |
 | W-ID-3 | Identity | Returning user's guest work is kept apart, not merged (KI-066) | A SECURITY DEFINER transfer function owned by the migration role, audited, re-keying project rows between two organisations the caller owns |
 | W-GOV-1 | Approvals | `recordApproval` records the requester as approver with role fixed to PROJECT_OWNER — no segregation of duties for approvals (change requests do have it) | Accepted for V1 with the reason stated: every V1 organisation has exactly one member (no invites — W-ORG-2), so self-approval is the only approval possible. The segregation rule becomes required the day a second member can join |
-| W-BUD-1 | Budget / resources | Assumed day rate, UNKNOWN complexity, default GBP, `resources: []` | Intake fields for rate, currency and people; pass them to finance and capacity engines; show UNKNOWN where absent |
+| W-BUD-1 | Budget / resources | Assumed day rate and UNKNOWN complexity (both stated on the page), `resources: []`. The currency default is now disclosed when no currency was given | Intake fields for rate and people; pass them to finance and capacity engines |
 | W-RULE-1 | Rules | Methodology fixed to AGILE at four call sites | Read methodology from intake; `rules/methodology` already implements the variants |
 | W-UI-3 | UI | `navigation.ts` lists 19 routes that do not exist (used only by the design reference now) | Map to real routes or remove, with the AppShell sidebar |
 | W-TRACE-1 | Traceability | About half the requirements on the fixture still break at TEST | Honest as reported; closes when test cases are authored per requirement |

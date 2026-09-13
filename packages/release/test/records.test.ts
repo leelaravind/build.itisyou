@@ -49,7 +49,7 @@ describe('production checks from evidence', () => {
     expect(tls?.result).toBe('NOT_CHECKED');
   });
 
-  it('leaves checks the product cannot record as NOT_CHECKED, whatever is recorded', () => {
+  it('can pass all ten production checks, each from its own evidence', () => {
     const everything = [
       'production-availability',
       'production-tls',
@@ -58,18 +58,13 @@ describe('production checks from evidence', () => {
       'production-logging',
       'monitoring',
       'backup-restore',
+      'production-authentication',
+      'production-apis',
+      'production-identity',
     ].map((purpose, i) => evidence({ id: `e-${String(i)}`, purpose }));
 
     const checks = productionChecksFrom(everything, PRODUCTION_CHECKS);
-    const unrecordable = checks.filter((c) =>
-      ['AUTHENTICATION', 'APIS', 'DEPLOYMENT_IDENTITY'].includes(c.check),
-    );
-    expect(unrecordable.map((c) => c.result)).toEqual([
-      'NOT_CHECKED',
-      'NOT_CHECKED',
-      'NOT_CHECKED',
-    ]);
-    expect(checks.filter((c) => c.result === 'PASSED')).toHaveLength(7);
+    expect(checks.filter((c) => c.result === 'PASSED')).toHaveLength(PRODUCTION_CHECKS.length);
   });
 
   it('dates a check by its most recent evidence', () => {

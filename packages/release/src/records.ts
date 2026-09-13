@@ -12,8 +12,8 @@
  * - A production check is PASSED only when current evidence for it exists, and it cites that
  *   evidence. There is no FAILED from evidence, because recording evidence is attesting a pass; a
  *   check with nothing recorded stays NOT_CHECKED, which the engine refuses to treat as a pass.
- * - Checks with no catalogue purpose (AUTHENTICATION, APIS, DEPLOYMENT_IDENTITY) cannot be recorded
- *   through the product yet, so they are always NOT_CHECKED — named, not omitted.
+ * - Every one of the ten §15.9 checks has a catalogue purpose, so each can be recorded; one with no
+ *   evidence is NOT_CHECKED, named rather than omitted.
  * - A plan is *written* when its evidence exists and *rehearsed* only when that evidence shows it was
  *   exercised: a test report or a deployment record, never a document or an attestation.
  */
@@ -44,6 +44,9 @@ export const CHECK_PURPOSES: Readonly<Partial<Record<ProductionCheck, string>>> 
   LOGGING: 'production-logging',
   MONITORING: 'monitoring',
   BACKUP_RESTORE: 'backup-restore',
+  AUTHENTICATION: 'production-authentication',
+  APIS: 'production-apis',
+  DEPLOYMENT_IDENTITY: 'production-identity',
 };
 
 /** Which purpose is the written form of which plan. */

@@ -83,6 +83,18 @@ jobs:
       - name: Dependency vulnerability scan
         run: pnpm audit --audit-level=moderate
 
+      # SAST (plan §18, gap-spec §66), which did not exist in any form. Semgrep's public TypeScript,
+      # JavaScript and Node rulesets over the product code; `--error` fails the job on any finding.
+      # First run, 2026-09-13: 74 rules on 187 files, 0 findings.
+      - name: SAST (Semgrep)
+        run: |
+          python3 -m pip install --quiet semgrep==1.177.0
+          semgrep scan --metrics=off --error \
+            --config p/typescript --config p/javascript --config p/nodejs \
+            --exclude node_modules --exclude dist --exclude .next \
+            --exclude test --exclude e2e --exclude artifacts \
+            apps packages scripts
+
   # Sharded, because the suite outgrew one runner.
   #
   # 1,265 tests across five browsers stopped fitting in the 30-minute cap: the run at bf291a5 was

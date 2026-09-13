@@ -21,10 +21,10 @@ below backed by a record under `artifacts/test-evidence/`.
 | Staging | https://govintel-web-staging.kpleelaaravind.workers.dev — deployed, health `ok`, database `NORMAL`, TLS/HSTS/nonce-CSP verified, rollback drilled |
 | Production | `build.itisyou.app` — **not deployed**; blocked on the identity provider (owner) and the register's open items |
 | Unit and integration tests | see `FINAL_TEST_REPORT.md` for the final run |
-| End-to-end | local Chromium; staging Chromium, WebKit and iOS Safari; CI five-browser matrix |
-| Security | restricted role verified (no superuser/BYPASSRLS/owner), pooled isolation 6/6 on staging, every tenant table under forced RLS, 404-not-403 enforced, secret and dependency scans clean |
+| End-to-end | local Chromium; staging Chromium, WebKit and iOS Safari; CI five-browser matrix green at `949a76e` (4 shards × 340 tests, 0 failed) |
+| Security | restricted role verified (no superuser/BYPASSRLS/owner), pooled isolation 6/6 on staging and on a restored copy, every tenant table under forced RLS, 404-not-403 enforced, secret and dependency scans clean, SAST (Semgrep, 74 rules) 0 findings |
 | Accessibility | axe WCAG 2.2 AA on every route, landmarks, keyboard reachability, reflow at 320 px, a keyboard-only journey from start to plan |
-| Migrations and recovery | migration 003 applied to staging with row counts sampled before and after (unchanged, 0 keyless rows); rollback drilled in 9 s / 11 s; database restore not re-drilled this pass |
+| Migrations and recovery | migration 003 applied to staging with row counts sampled before and after (unchanged, 0 keyless rows); production's path 001→002→003 verified from its current fingerprint; rollback drilled in 9 s / 11 s; point-in-time restore drilled (ready in 9 s, restricted role intact, isolation 6/6 on the copy) |
 | Final report | `artifacts/test-evidence/pdf/FINAL_TEST_REPORT.pdf` |
 
 ## What was fixed in this pass

@@ -1,0 +1,177 @@
+# wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh
+# commit 949a76e29397096c29182e2a7f5b8abe81f21243
+# started 2026-09-13T10:51:29.671Z
+
+wsl: Failed to translate 'G:\Hard\VMWEAR\bin'
+wsl: Failed to translate 'G:\AravindAutomation\Ollama'
+pnpm store: /home/kplee/.pnpm-store/v11
+Scope: all 20 workspace projects
+Already up to date
+Done in 596ms using pnpm v11.22.0
+$ opennextjs-cloudflare build
+
+┌─────────────────────────────┐
+│ OpenNext — Cloudflare build │
+└─────────────────────────────┘
+
+Monorepo detected at /mnt/e/Project/build-wsl
+App directory: /mnt/e/Project/build-wsl/apps/web
+Next.js version : 16.3.3
+@opennextjs/cloudflare version: 1.20.4
+@opennextjs/aws version: 4.1.2
+workerd compatibility_date: 2026-08-01
+
+┌─────────────────────────────────┐
+│ OpenNext — Building Next.js app │
+└─────────────────────────────────┘
+
+$ next build
+▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.ts took 1533ms
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 27.7s
+  Running TypeScript ...
+  Finished TypeScript in 53s ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/3) ...
+✓ Generating static pages using 13 workers (3/3) in 422ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /api/health
+├ ƒ /auth/callback
+├ ƒ /design/reference
+├ ƒ /how-it-works
+├ ○ /icon.svg
+├ ƒ /intake/[projectId]
+├ ƒ /intake/[projectId]/import
+├ ƒ /intake/[projectId]/import/[importId]
+├ ƒ /intake/[projectId]/prompt
+├ ƒ /login
+├ ƒ /p/[projectId]
+├ ƒ /plan/[projectId]
+├ ƒ /plan/[projectId]/baseline
+├ ƒ /plan/[projectId]/budget
+├ ƒ /plan/[projectId]/change
+├ ƒ /plan/[projectId]/close
+├ ƒ /plan/[projectId]/evidence
+├ ƒ /plan/[projectId]/evidence/[evidenceId]/download
+├ ƒ /plan/[projectId]/release
+├ ƒ /plan/[projectId]/rules
+├ ƒ /plan/[projectId]/trace
+├ ƒ /plan/[projectId]/trace/[...requirementId]
+├ ƒ /plan/[projectId]/work
+├ ƒ /portfolio
+└ ƒ /start
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+┌──────────────────────────────┐
+│ OpenNext — Generating bundle │
+└──────────────────────────────┘
+
+Bundling middleware function...
+Bundling static assets...
+Bundling cache assets...
+Building server function: default...
+Applying code patches: 4.161s
+# copyPackageTemplateFiles
+[35m⚙️ Bundling the OpenNext server...
+[0m
+[35mWorker saved in `.open-next/worker.js` 🚀
+[0m
+OpenNext build complete.
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+OpenNext project detected, calling `opennextjs-cloudflare deploy`
+
+┌──────────────────────────────┐
+│ OpenNext — Cloudflare deploy │
+└──────────────────────────────┘
+
+Monorepo detected at /mnt/e/Project/build-wsl
+Found a non-empty CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE variable for binding. Hyperdrive will connect to this database during local development.
+Incremental cache does not need populating
+Tag cache does not need populating
+
+ ⛅️ wrangler 4.127.1 (update available 4.131.1)
+───────────────────────────────────────────────
+🌀 Building list of assets...
+✨ Read 23 files from the assets directory /mnt/e/Project/build-wsl/apps/web/.open-next/assets
+🌀 Starting asset upload...
+🌀 Found 1 new or modified static asset to upload. Proceeding with upload...
++ /BUILD_ID
+Uploaded 1 of 1 asset
+✨ Success! Uploaded 1 file (17 already uploaded) (1.57 sec)
+
+Total Upload: 12413.63 KiB / gzip: 2545.23 KiB
+Worker Startup Time: 27 ms
+Your Worker has access to the following bindings:
+Binding                                                          Resource                  
+env.OUTBOX_NUDGE (inherited)                                     Queue                     
+env.HYPERDRIVE (fa38480586e44cebab20fe15ac2121a0)                Hyperdrive Config         
+env.EVIDENCE (govintel-evidence-staging)                         R2 Bucket                 
+env.ASSETS                                                       Assets                    
+env.APP_ENV ("staging")                                          Environment Variable      
+env.DATABASE_URL_BINDING ("HYPERDRIVE")                          Environment Variable      
+env.APP_VERSION ("(hidden)")                                     Environment Variable      
+env.APP_COMMIT ("(hidden)")                                      Environment Variable      
+
+Uploaded govintel-web-staging (17.42 sec)
+Deployed govintel-web-staging triggers (4.62 sec)
+  https://govintel-web-staging.kpleelaaravind.workers.dev
+  Producer for govintel-outbox-staging
+Current Version ID: a10092e1-8f1c-4eaf-ae1c-46db5876baab
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mUsing direct eval with a bundler is not recommended and may cause problems[0m [direct-eval]
+
+    .open-next/server-functions/default/apps/web/handler.mjs:208:37738:
+[37m      208 │ ...{body} };`;ASM_CONSTS[start]=[32meval[37m(func)}if("__start_em_asm"in ...
+          ╵                                 [32m~~~~[0m
+
+  You can read more about direct eval and bundling here: [4mhttps://esbuild.github.io/link/direct-eval[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mUsing direct eval with a bundler is not recommended and may cause problems[0m [direct-eval]
+
+    .open-next/server-functions/default/apps/web/handler.mjs:208:38216:
+[37m      208 │ ...{body};`;moduleExports[name]=[32meval[37m(func)}for(var name in module...
+          ╵                                 [32m~~~~[0m
+
+  You can read more about direct eval and bundling here: [4mhttps://esbuild.github.io/link/direct-eval[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mUsing direct eval with a bundler is not recommended and may cause problems[0m [direct-eval]
+
+    .open-next/server-functions/default/apps/web/handler.mjs:211:90893:
+[37m      211 │ ...{body} };`;ASM_CONSTS[start]=[32meval[37m(func)}if("__start_em_asm"in ...
+          ╵                                 [32m~~~~[0m
+
+  You can read more about direct eval and bundling here: [4mhttps://esbuild.github.io/link/direct-eval[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mUsing direct eval with a bundler is not recommended and may cause problems[0m [direct-eval]
+
+    .open-next/server-functions/default/apps/web/handler.mjs:211:91371:
+[37m      211 │ ...{body};`;moduleExports[name]=[32meval[37m(func)}for(var name in module...
+          ╵                                 [32m~~~~[0m
+
+  You can read more about direct eval and bundling here: [4mhttps://esbuild.github.io/link/direct-eval[0m
+
+
+
+# exit 0 after 498194 ms

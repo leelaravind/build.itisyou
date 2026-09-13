@@ -1,0 +1,196 @@
+# npx playwright test e2e/budget.spec.ts e2e/lifecycle.spec.ts e2e/release.spec.ts e2e/rules.spec.ts e2e/guest-intake.spec.ts e2e/project-home.spec.ts --project=chromium --reporter=line,json
+# commit 949a76e29397096c29182e2a7f5b8abe81f21243 (dirty)
+# started 2026-09-13T11:30:42.682Z
+
+[WebServer] (node:17384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:23524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:23524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:7996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:1176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:13364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 80 tests using 4 workers
+
+(node:10368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:23936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:23780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/80] [chromium] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[2/80] [chromium] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[3/80] [chromium] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[4/80] [chromium] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[5/80] [chromium] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[6/80] [chromium] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[7/80] [chromium] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[8/80] [chromium] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[9/80] [chromium] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[10/80] [chromium] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[11/80] [chromium] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[12/80] [chromium] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[13/80] [chromium] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[14/80] [chromium] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[15/80] [chromium] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[16/80] [chromium] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[17/80] [chromium] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[18/80] [chromium] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[19/80] [chromium] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[20/80] [chromium] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[21/80] [chromium] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[22/80] [chromium] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[23/80] [chromium] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[24/80] [chromium] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[25/80] [chromium] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[26/80] [chromium] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[27/80] [chromium] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[28/80] [chromium] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[29/80] [chromium] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[30/80] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[31/80] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[32/80] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[33/80] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[34/80] [chromium] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[35/80] [chromium] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[36/80] [chromium] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[37/80] [chromium] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[38/80] [chromium] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[39/80] [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[40/80] [chromium] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[41/80] [chromium] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[42/80] [chromium] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[43/80] [chromium] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[WebServer] *** Fatal uncaught kj::Exception: workerd/util/sqlite.c++:852: failed: SENTRY_DO SQLite failed; NOSENTRY database is locked: SQLITE_BUSY (extended: SQLITE_BUSY_RECOVERY)
+
+[WebServer] stack: 7ff77fb81321 7ff78027c10a 7ff77f935675 7ff77fc66f17 7ff77fc66700 7ff77f9172e8 7ff77f916c18 7ff77f9bedea 7ff77fb7297a 7ff77e456173 7ff77fb78b72 7ff77fb7fa76 7ff77fb790cb 7ff77fb7fa76 7ff77fb7661b 7ff77e441ea8 7ff781ac20ce 7ffa28eccd86 7ffa2a68caeb
+
+[WebServer] (node:13364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[44/80] [chromium] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[45/80] [chromium] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[46/80] [chromium] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[47/80] [chromium] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[48/80] [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[49/80] [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[50/80] [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[51/80] [chromium] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[52/80] [chromium] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[53/80] [chromium] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[54/80] [chromium] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[55/80] [chromium] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[56/80] [chromium] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[57/80] [chromium] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[58/80] [chromium] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[59/80] [chromium] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[60/80] [chromium] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[61/80] [chromium] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[62/80] [chromium] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[63/80] [chromium] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+[64/80] [chromium] › e2e\rules.spec.ts:71:3 › the findings page › is reachable from the plan
+[65/80] [chromium] › e2e\rules.spec.ts:76:3 › the findings page › states that no model was involved
+[66/80] [chromium] › e2e\rules.spec.ts:83:3 › the findings page › names the ruleset version
+[67/80] [chromium] › e2e\rules.spec.ts:89:3 › the findings page › shows what cannot be decided separately from what does not apply
+[68/80] [chromium] › e2e\rules.spec.ts:105:3 › the findings page › names the questions that would settle the undecidable rules
+[69/80] [chromium] › e2e\rules.spec.ts:113:3 › the findings page › the answer link goes back to intake
+[70/80] [chromium] › e2e\rules.spec.ts:130:3 › the findings page › every finding names the rule that produced it
+[71/80] [chromium] › e2e\rules.spec.ts:143:3 › the findings page › says whether a finding blocks or advises
+[72/80] [chromium] › e2e\rules.spec.ts:150:3 › the findings page › explains each finding rather than only naming it
+[73/80] [chromium] › e2e\rules.spec.ts:163:3 › gates › shows the quality gates and their state
+[74/80] [chromium] › e2e\rules.spec.ts:168:3 › gates › distinguishes an undecidable gate from a failed one
+[75/80] [chromium] › e2e\rules.spec.ts:175:3 › gates › never conveys gate state by colour alone
+[76/80] [chromium] › e2e\rules.spec.ts:188:3 › gates › does not pass a gate on an empty project
+[77/80] [chromium] › e2e\rules.spec.ts:202:3 › a project belongs to one guest › another guest cannot read its findings
+[78/80] [chromium] › e2e\rules.spec.ts:214:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[79/80] [chromium] › e2e\rules.spec.ts:225:3 › accessibility of the findings page › has no axe violations
+[80/80] [chromium] › e2e\rules.spec.ts:241:3 › accessibility of the findings page › works without client JavaScript
+  3 skipped
+  77 passed (2.4m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 164812 ms

@@ -34,6 +34,14 @@ product has been done or is in `COMPLETION_REGISTER.md` with a next step.
 | Where | Neon console → project `project-staging` → Settings → Delete project. |
 | Verify | `Hyperdrive fa38480586e44cebab20fe15ac2121a0` still points at `ep-snowy-silence-zakx92wv` (it does), and staging `/api/health` still reports `NORMAL`. |
 
+## 4. Optional: delete the restore-drill branch
+
+| | |
+|---|---|
+| Why | The 2026-09-13 restore drill left branch `restore-drill-20260913` (`br-patient-surf-zafipp5p`) with endpoint `ep-green-truth-zaofi0r4` in `silent-forest-67621251`. It holds a 09:59Z copy of staging test data and suspends when idle, so it costs nothing, but a restored copy left lying about is a second, unmonitored copy of the data. Its snapshot and the `endpoint-parking` branch expire on their own on 2026-09-14. |
+| Where | Neon console → `build-itisyou-staging` → Branches → `restore-drill-20260913` → Delete. |
+| Verify | `staging` is still the default branch and staging `/api/health` reports `NORMAL`. |
+
 ## Not owner actions
 
 - **Production deployment** is approved by the contract once the release gates are genuinely green.

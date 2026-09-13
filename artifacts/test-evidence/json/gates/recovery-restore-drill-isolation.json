@@ -1,0 +1,16 @@
+{
+  "id": "recovery-restore-drill-isolation",
+  "category": "recovery",
+  "environment": "staging-restored-branch",
+  "command": "pnpm verify:isolation",
+  "commit": "949a76e29397096c29182e2a7f5b8abe81f21243",
+  "dirty": true,
+  "startedAt": "2026-09-13T11:07:12.617Z",
+  "finishedAt": "2026-09-13T11:07:16.061Z",
+  "durationMs": 3444,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/recovery-restore-drill-isolation.log"
+}

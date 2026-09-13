@@ -660,6 +660,41 @@ export const GATES: readonly Gate[] = [
         evidencePurpose: 'production-logging',
         check: evidenceFor('production-logging'),
       },
+      /*
+       * The three §15.9 checks that had no criterion. Without one the product could not record them,
+       * so the release page reported them NOT_CHECKED forever and production verification could never
+       * be completed through the product at all.
+       */
+      {
+        key: 'authentication',
+        statement: 'Signing in works against the production identity provider.',
+        kind: 'MANUAL',
+        blocking: true,
+        rationale:
+          'The redirect URI, the client secret and the issuer are all per-environment; a sign-in that works on staging proves nothing about production.',
+        evidencePurpose: 'production-authentication',
+        check: evidenceFor('production-authentication'),
+      },
+      {
+        key: 'apis',
+        statement: 'The APIs production depends on answer from production.',
+        kind: 'MANUAL',
+        blocking: true,
+        rationale:
+          'Credentials, allow-lists and quotas differ by environment, so an integration that passed in staging can refuse production on its first call.',
+        evidencePurpose: 'production-apis',
+        check: evidenceFor('production-apis'),
+      },
+      {
+        key: 'deployment-identity',
+        statement: 'Production is running the version that was released.',
+        kind: 'MANUAL',
+        blocking: true,
+        rationale:
+          'A deploy can report success while serving the previous build; the version the running system reports is the only evidence of what shipped.',
+        evidencePurpose: 'production-identity',
+        check: evidenceFor('production-identity'),
+      },
     ],
   },
 

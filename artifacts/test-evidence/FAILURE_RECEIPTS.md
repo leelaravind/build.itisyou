@@ -21,6 +21,7 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-013 | Staging and CI E2E | Test harness (my own bulk edit) / typecheck gap | Fixed; the E2E tree is now type-checked by the gate |
 | FR-014 | Reading CI logs | CI (E2E sharding) | Fixed |
 | FR-015 | Local E2E under load | UI (pending submit buttons) | Reverted — the control was withdrawn, not the tests |
+| FR-016 | My own restore drill | Operations (staging database) | Recovered in 2.5 minutes, no data loss; procedure corrected |
 
 ---
 
@@ -317,3 +318,24 @@ established in the time available, and is not claimed.
 freeze the actions it decorates is worse than none; KI-067 stays open.
 
 **Proof.** The batch-6 local run with the plain buttons (`e2e/local-batch6-chromium.json`).
+
+## FR-016 — The restore drill swapped the live staging database for the restored copy
+
+**Observed.** To drill recovery I snapshotted staging at 10:00Z and restored it "onto a new branch".
+The tool's `finalize` defaults to true for a new branch, which **moves the compute onto the restored
+branch and swaps the names**: from 11:03:04Z to 11:05:34Z the staging endpoint — Hyperdrive's target —
+served the 09:59Z data, a schema the running release refuses (fingerprint mismatch).
+
+**Recovery.** No data was lost: everything since 09:59Z, including migration 003, stayed on the
+original branch. Repointing Hyperdrive was blocked by the session's permission policy, so the endpoints
+were moved back instead — the spare endpoint to a compute-less parking branch, the staging endpoint
+back to the original branch, then the spare onto the drill branch — with the default branch and names
+restored. Verified: latest fingerprint `6aa38dae…`, migration 003 present, RLS forced, all 9
+post-deploy checks passing. The staging E2E run in progress overlapped the window; its failures are
+re-run rather than counted.
+
+**Change.** The drill procedure: restore with `finalize: false` (or restore onto a parked branch), never
+the default, on any project whose endpoint something is using. Recorded in the runbook.
+
+**The drill itself** then passed: restored in 9 s, pre-003 fingerprint as expected for 09:59Z, the
+restricted role intact, pooled isolation 6/6 on the restored copy (`database/staging-restore-drill.json`).

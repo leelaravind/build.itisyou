@@ -78,6 +78,8 @@ function playwrightSummary(file) {
   const run = readJson(file);
   const matrix = {};
   const bySpec = {};
+  /** file › title [project] → final outcome, so a re-run can be matched to the run it re-ran. */
+  const outcomes = {};
   const walk = (suite, spec) => {
     const specFile = suite.file ?? spec;
     for (const s of suite.specs ?? []) {
@@ -89,6 +91,7 @@ function playwrightSummary(file) {
         const key = specFile ?? 'unknown';
         bySpec[key] ??= { expected: 0, unexpected: 0, flaky: 0, skipped: 0 };
         bySpec[key][outcome] = (bySpec[key][outcome] ?? 0) + 1;
+        outcomes[`${key.replace(/\\/g, '/')} › ${s.title} [${project}]`] = outcome;
       }
     }
     for (const child of suite.suites ?? []) walk(child, specFile);
@@ -105,6 +108,9 @@ function playwrightSummary(file) {
     skipped: stats.skipped ?? 0,
     matrix,
     bySpec,
+    outcomes,
+    total:
+      (stats.expected ?? 0) + (stats.unexpected ?? 0) + (stats.flaky ?? 0) + (stats.skipped ?? 0),
   };
 }
 
@@ -147,7 +153,38 @@ const latestBy = (runs, predicate) =>
     .at(-1);
 
 const lastUnit = unitRuns.at(-1);
-const stagingE2e = latestBy(e2eRuns, (r) => r.file.includes('staging'));
+/*
+ * The staging verdict is the latest *full* run — the one with the most tests — not whichever staging
+ * file is newest, which may be a re-run of a handful. Failures in it count against it unless every one
+ * of them passed in a later staging run, and the detail says which, so a re-run can never quietly
+ * replace a failing full run.
+ */
+const stagingRuns = e2eRuns.filter((r) => r.file.includes('staging'));
+const maxStagingTotal = Math.max(0, ...stagingRuns.map((r) => r.total));
+const stagingE2e = latestBy(stagingRuns, (r) => r.total >= maxStagingTotal * 0.9);
+function stagingStatus(run) {
+  if (run === undefined)
+    return { status: 'NOT_CHECKED', detail: 'No full staging Playwright record' };
+  const failed = Object.entries(run.outcomes)
+    .filter(([, outcome]) => outcome === 'unexpected')
+    .map(([key]) => key);
+  const later = stagingRuns.filter((r) => String(r.startTime) > String(run.startTime));
+  const unresolved = failed.filter(
+    (key) => !later.some((r) => r.outcomes[key] === 'expected' || r.outcomes[key] === 'flaky'),
+  );
+  const base = `${run.expected} passed, ${run.unexpected} failed, ${run.flaky} flaky, ${run.skipped} skipped (${run.file})`;
+  if (failed.length === 0) return { status: 'PASSED', detail: base };
+  if (unresolved.length === 0) {
+    return {
+      status: 'PASSED',
+      detail: `${base}; all ${failed.length} failures passed on a later staging re-run (${later.map((r) => r.file).join(', ')}) — causes in FAILURE_RECEIPTS`,
+    };
+  }
+  return {
+    status: 'FAILED',
+    detail: `${base}; ${unresolved.length} failure(s) not re-run clean: ${unresolved.slice(0, 5).join('; ')}`,
+  };
+}
 const localE2e = latestBy(e2eRuns, (r) => r.file.includes('local'));
 const lastCi = [...ciRuns]
   .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
@@ -236,7 +273,7 @@ const checks = [
   {
     area: 'E2E',
     name: 'Staging release suite (Cloudflare + Neon)',
-    ...e2eStatus(stagingE2e, 'staging'),
+    ...stagingStatus(stagingE2e),
   },
   {
     area: 'CI',
@@ -285,10 +322,13 @@ const checks = [
   },
   {
     area: 'Recovery',
-    name: 'Database restore drill',
-    status: 'NOT_CHECKED',
-    detail:
-      'Drilled 2026-09-02 against the previous staging project (docs/DEPLOYMENT_RUNBOOK.md); not repeated in this pass',
+    name: 'Point-in-time database restore drill (restored copy verified as the restricted role)',
+    ...fromGate(/recovery-restore/, 'restore drill'),
+  },
+  {
+    area: 'Security',
+    name: 'Static application security testing (SAST, Semgrep public rulesets)',
+    ...fromGate(/sast/, 'SAST'),
   },
   {
     area: 'Identity',

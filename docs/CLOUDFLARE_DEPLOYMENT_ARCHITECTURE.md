@@ -346,8 +346,8 @@ document nobody can trust the second time.
 | Component | As designed | As built |
 |---|---|---|
 | Runtime | Workers via OpenNext | Unchanged. `govintel-web-staging` |
-| Background work | A second Worker, Queues, Cron | Unchanged. `govintel-worker-staging`, cron `* * * * *` |
-| Database | External PostgreSQL behind Hyperdrive | Neon `tiny-mode-81422275`, branch `staging`. Hyperdrive `fa38480586e44cebab20fe15ac2121a0`, **caching disabled** |
+| Background work | A second Worker, Queues, Cron | Unchanged. `govintel-worker-staging`, cron `17 */3 * * *` (budgeted against Neon's compute quota; every minute kept the database awake 97% of the time) |
+| Database | External PostgreSQL behind Hyperdrive | Neon `silent-forest-67621251` (re-provisioned 2026-09-13). Hyperdrive `fa38480586e44cebab20fe15ac2121a0`, **caching disabled** |
 | Object storage | R2, private | `govintel-evidence-staging` |
 | Minimum external services | Two | Confirmed: managed PostgreSQL now, an OIDC provider when auth ships |
 | D1, Redis, BullMQ, Workflows | Not introduced | Not introduced |

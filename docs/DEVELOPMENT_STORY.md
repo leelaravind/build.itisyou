@@ -3358,3 +3358,30 @@ where the cookie problem they skipped for does not exist; they now run there.
 
 No identity provider client exists, so nobody can sign in for real (owner action). Production is not
 deployed. The rest is in `docs/final-completion/COMPLETION_REGISTER.md`, with a next step for each.
+
+### Later the same day: the harness, and a drill that bit
+
+Three more findings, each of them about the machinery rather than the product, and each one only
+visible because something was run rather than read.
+
+- **CI's four E2E shards each ran all 1,340 tests.** `pnpm test:e2e -- --shard=N/4` passed the `--`
+  through and Playwright ignored what followed. The sharding that was added to keep the suite inside
+  its cap had never split anything; with `pnpm exec playwright test --shard=N/4` each shard runs 340
+  tests and the whole run takes about twelve minutes instead of twenty-six.
+- **Nothing type-checked the E2E specs.** A bulk edit of mine put `baseURL` in a scope that did not
+  have it; WebKit threw `ReferenceError` on staging and in all four shards. `tsc -p e2e` would have
+  said so, and now runs as part of `pnpm typecheck`.
+- **A pending-state button froze the product's main actions under load.** Every test passed alone;
+  under four workers the button stayed disabled and the action never finished. With plain buttons the
+  same specs passed 30 of 30. It was withdrawn rather than debugged against the clock.
+
+And one that was mine and not the tooling's. Drilling a point-in-time restore, I restored a snapshot
+"onto a new branch" with the default `finalize`, which for a new branch moves the compute from the
+source onto the restore and swaps the names. For two and a half minutes the staging endpoint served a
+copy from before migration 003. Nothing was lost — the original branch kept everything — and the
+endpoints were moved back without touching a credential. The drill itself then passed: restored in
+nine seconds, the restricted role intact, isolation 6/6 on the copy. The runbook now says to pass
+`finalize: false`.
+
+The measurement FR-001 left open is closed too: with Hyperdrive in front, Neon suspended the compute
+exactly five minutes after the last query, so the schedule budget's model holds.

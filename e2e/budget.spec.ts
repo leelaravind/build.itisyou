@@ -128,6 +128,15 @@ test.describe('the money surface', () => {
     await expect(section.getByRole('listitem').first()).toBeVisible();
   });
 
+  test('says the currency is assumed when nobody stated one', async ({ page }) => {
+    // BUD-CURRENCY-001: the page defaulted to GBP silently, an assumption presented as a fact.
+    await reachBudget(page);
+
+    await expect(page.getByRole('region', { name: /^contingency$/i })).toContainText(
+      /in GBP because no currency was given/,
+    );
+  });
+
   test('says plainly that no budget was recorded rather than reporting healthy', async ({
     page,
   }) => {

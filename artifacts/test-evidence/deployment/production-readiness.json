@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-09-13T11:15:00Z",
+  "target": "build.itisyou.app",
+  "verdict": "BLOCKED — not deployed",
+  "blockedBy": [
+    "No OIDC client for production (OWNER_ACTIONS item 1): gap-spec §6.2 requires a production login method",
+    "SAST not run anywhere (NOT_CHECKED in the final report)",
+    "Production database plan decision pending (OWNER_ACTIONS item 2; KI-068)"
+  ],
+  "ready": {
+    "worker": "build-itisyou-web-production exists, route build.itisyou.app custom_domain=true in zone itisyou.app",
+    "cronWorker": "govintel-worker-production configured (Hyperdrive c697deee…, 17 */3 * * *); wrangler --dry-run bundles (json/gates/worker-production-dry-run.json)",
+    "hyperdrive": "c697deee65094523ac73e77dc94b9fd0, caching disabled, user govintel_app",
+    "r2": "govintel-evidence-production",
+    "database": {
+      "project": "fragrant-fog-40333847 / br-falling-cell-zaq7zl6m",
+      "fingerprint": "7a07f39a13e9ad67b73d4a2acd6a5316",
+      "rows": { "projects": 0, "organizations": 0 },
+      "appRole": "govintel_app: rolbypassrls=false, rolsuper=false",
+      "migrationPathToCurrent": ["001-change-requests", "002-audit-retention-path", "003-intake-and-import-isolation"],
+      "currentFingerprint": "6aa38daebd263bd6bf10f2f639a6682b"
+    },
+    "postDeployVerification": "scripts/evidence/deploy-check.mjs (TLS, health, database, commit, HSTS, nonce CSP, framing, nosniff, 404 rule) — run 9/9 against staging",
+    "rollback": "wrangler rollback <version-id> drilled on staging: back in 9 s, forward in 11 s"
+  }
+}

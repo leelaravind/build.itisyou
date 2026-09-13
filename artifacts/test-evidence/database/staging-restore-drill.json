@@ -1,0 +1,19 @@
+{
+  "drill": "point-in-time restore of the staging database",
+  "project": "silent-forest-67621251",
+  "source": "br-mute-smoke-zaktflfl (staging)",
+  "requestedPoint": "2026-09-13T10:00:00Z",
+  "restoredPoint": "2026-09-13T09:59:16Z (parent_lsn 0/75BF6D8)",
+  "snapshot": "snap-nameless-feather-zacogfum (expires 2026-09-14T12:00:00Z)",
+  "restoredBranch": "br-patient-surf-zafipp5p (restore-drill-20260913), endpoint ep-green-truth-zaofi0r4",
+  "timeToReadySeconds": 9,
+  "restoredState": {
+    "schemaFingerprint": "0433d7ed47c7dcf46326073dc75fae97 (the pre-003 shape, as expected for 09:59Z)",
+    "projects": 224, "intake_answers": 116, "answers_without_key": 106, "twin_nodes": 29816, "audit_events": 27,
+    "projectsRlsForced": true, "intakeAnswersRlsForced": false,
+    "appRole": "govintel_app: rolbypassrls=false, rolsuper=false"
+  },
+  "isolationOnRestoredBranch": "6/6 as govintel_app (json/gates/recovery-restore-drill-isolation.json)",
+  "unexplained": "The pre-migration sample taken on the live branch at about 10:04Z counted 212 projects; the restore point at 09:59:16Z has 224. Nothing known deletes projects in that window. Recorded, not resolved.",
+  "incident": "restore_snapshot onto a new branch defaults to finalize=true, which moved the staging compute (ep-snowy-silence) onto the restored branch: staging pointed at the 09:59Z data from 11:03:04Z to 11:05:34Z. Recovered without data loss by moving endpoints back; see FAILURE_RECEIPTS FR-016."
+}

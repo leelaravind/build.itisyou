@@ -75,6 +75,11 @@ Found by running things. Each has a receipt in
 | FR-008 | P1 | Development database showed a sessionless visitor every guest's project | Fixed |
 | FR-009 | P0 | Lifecycle could never pass an approval-gated transition; evidence invisible to ten surfaces | Fixed |
 | FR-010 | P3 | Sign-up E2E journey depended on a fresh database | Fixed |
+| FR-011 | — | Full unit and E2E runs in parallel time out on this machine | Not a defect; runs separated |
+| FR-012 | P1 | WebKit and iOS Safari skipped every journey even over HTTPS | Fixed; they now run on staging |
+| FR-013 | P2 | Nothing type-checked the E2E specs (a bulk edit of mine shipped a ReferenceError) | Fixed; `pnpm typecheck` includes `e2e` |
+| FR-014 | P1 | CI's four E2E shards each ran the whole 1,340-test suite | Fixed; shards finish in about 8 minutes |
+| FR-015 | P2 (self-inflicted, caught before release) | A pending-state button froze server actions under concurrent load | Withdrawn |
 
 The pattern behind four of the five P0s is one thing: **the embedded development database connects as
 a superuser, and a superuser does not see row-level security.** Tests, local journeys and the

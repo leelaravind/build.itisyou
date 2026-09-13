@@ -110,6 +110,13 @@ export default async function BudgetPage({ params }: { params: Promise<{ project
   const assumptions = collectAssumptions(estimates);
 
   const currency = currencyOf(intake);
+  /*
+   * Whether the currency was stated or assumed. It used to fall back to GBP silently, which broke the
+   * page's own rule (BUD-CURRENCY-001, plan §11.2): an assumption presented as a fact.
+   */
+  const currencyAssumed = !intake.some(
+    (field) => field.fieldId === 'budget.currency' && typeof field.value === 'string',
+  );
   const dayRate = money(50_000, currency); // £500/day at 2 decimal places, stated as an assumption.
 
   const budgetCeiling = numberAnswer(intake, 'budget.total');
@@ -233,6 +240,7 @@ export default async function BudgetPage({ params }: { params: Promise<{ project
             </span>
             <span className="font-sans text-body-sm text-on-surface-variant">
               {sized.percent}% allowance, at an assumed day rate of {formatMoney(dayRate)}
+              {currencyAssumed ? ', in GBP because no currency was given' : ''}
             </span>
           </div>
 
