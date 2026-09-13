@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T14:03:39.131Z at `a2afc66` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T14:06:58.165Z at `548bca7` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -18,7 +18,7 @@ Generated 2026-09-13T14:03:39.131Z at `a2afc66` by `scripts/evidence/final-repor
 | Static | Lint | **PASSED** | pnpm lint — exit 0 at 5093b06, 97 s |
 | Static | Typecheck | **PASSED** | pnpm typecheck — exit 0 at 57d8754, 11 s |
 | Static | Generated documentation drift | **PASSED** | pnpm docs:check — exit 0 at 949a76e, 4 s |
-| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2457/2457 passed (artifacts/test-evidence/unit/final-vitest.json) |
+| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2458/2458 passed (artifacts/test-evidence/unit/final-vitest.json) |
 | Security | Secret scan | **PASSED** | pnpm scan:secrets — exit 0 at 5093b06, 1 s |
 | Security | Dependency vulnerability scan | **PASSED** | pnpm audit --audit-level=moderate — exit 0 at fc830b8, 1 s |
 | Security | Tenant isolation under a real pool, as the restricted role (staging Neon) | **PASSED** | pnpm verify:isolation — exit 0 at fc830b8, 3 s |
@@ -45,7 +45,7 @@ Generated 2026-09-13T14:03:39.131Z at `a2afc66` by `scripts/evidence/final-repor
 
 ## Test totals
 
-Unit and integration (Vitest, latest run): **2457 passed, 0 failed** of 2457.
+Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 
 | Area | Passed | Failed |
 |---|---|---|
@@ -56,7 +56,7 @@ Unit and integration (Vitest, latest run): **2457 passed, 0 failed** of 2457.
 | packages/db | 349 | 0 |
 | packages/design | 10 | 0 |
 | packages/discovery | 39 | 0 |
-| packages/execution | 121 | 0 |
+| packages/execution | 122 | 0 |
 | packages/finance | 84 | 0 |
 | packages/governance | 248 | 0 |
 | packages/intake | 63 | 0 |
@@ -344,9 +344,9 @@ Unit and integration (Vitest, latest run): **2457 passed, 0 failed** of 2457.
 | e2e-staging-a3778c9-firefox-mobile-chrome | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 1225 s |
 | static-typecheck-final | local | PASSED | 57d8754 (dirty) | 11 s |
 | staging-deploy-web-a2afc66 | staging-cloudflare-neon | PASSED | a2afc66 | 431 s |
-| unit-final | local | PASSED | a2afc66 (dirty) | 45 s |
 | staging-health-a2afc66 | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 3 s |
 | staging-perf-large | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 292 s |
+| unit-final | local | PASSED | 548bca7 (dirty) | 48 s |
 
 ## Failures found, and what happened to them
 

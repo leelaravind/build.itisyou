@@ -1,7 +1,7 @@
 {
   "product": "build.itisyou",
-  "commit": "a2afc66",
-  "generatedAt": "2026-09-13T14:03:39.131Z",
+  "commit": "548bca7",
+  "generatedAt": "2026-09-13T14:06:58.165Z",
   "verdict": "NOT RELEASE-READY — no recorded failure, but required checks are blocked or not checked",
   "tally": {
     "PASSED": 24,
@@ -10,9 +10,9 @@
   },
   "totals": {
     "unit": {
-      "passed": 2457,
+      "passed": 2458,
       "failed": 0,
-      "total": 2457
+      "total": 2458
     },
     "e2e": {
       "passed": 3843,
@@ -54,7 +54,7 @@
       "area": "Unit and integration",
       "name": "Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components)",
       "status": "PASSED",
-      "detail": "2457/2457 passed (artifacts/test-evidence/unit/final-vitest.json)"
+      "detail": "2458/2458 passed (artifacts/test-evidence/unit/final-vitest.json)"
     },
     {
       "area": "Security",
@@ -939,6 +939,21 @@
       }
     },
     {
+      "file": "artifacts/test-evidence/unit/decompose-large-vitest.json",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "byArea": {
+        "packages/execution": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0
+        }
+      }
+    },
+    {
       "file": "artifacts/test-evidence/unit/final-a3778c9-vitest.json",
       "total": 2450,
       "passed": 2450,
@@ -1045,8 +1060,8 @@
     },
     {
       "file": "artifacts/test-evidence/unit/final-vitest.json",
-      "total": 2457,
-      "passed": 2457,
+      "total": 2458,
+      "passed": 2458,
       "failed": 0,
       "skipped": 0,
       "success": true,
@@ -1087,8 +1102,8 @@
           "failed": 0
         },
         "packages/execution": {
-          "total": 121,
-          "passed": 121,
+          "total": 122,
+          "passed": 122,
           "failed": 0
         },
         "packages/finance": {
@@ -9045,22 +9060,6 @@
       "log": "artifacts/test-evidence/logs/staging-deploy-web-a2afc66.log"
     },
     {
-      "id": "unit-final",
-      "category": "unit",
-      "environment": "local",
-      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
-      "commit": "a2afc662d28723cc35737e086bc9f4cfff52e388",
-      "dirty": true,
-      "startedAt": "2026-09-13T13:49:39.776Z",
-      "finishedAt": "2026-09-13T13:50:24.837Z",
-      "durationMs": 45061,
-      "exitCode": 0,
-      "signal": null,
-      "result": "PASSED",
-      "platform": "win32 x64 node v22.23.2",
-      "log": "artifacts/test-evidence/logs/unit-final.log"
-    },
-    {
       "id": "staging-health-a2afc66",
       "category": "deployment",
       "environment": "staging-cloudflare-neon",
@@ -9091,6 +9090,22 @@
       "result": "PASSED",
       "platform": "win32 x64 node v22.23.2",
       "log": "artifacts/test-evidence/logs/staging-perf-large.log"
+    },
+    {
+      "id": "unit-final",
+      "category": "unit",
+      "environment": "local",
+      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
+      "commit": "548bca731453b0cd158d8f2781a3577dfd2355bd",
+      "dirty": true,
+      "startedAt": "2026-09-13T14:06:01.829Z",
+      "finishedAt": "2026-09-13T14:06:49.615Z",
+      "durationMs": 47786,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/unit-final.log"
     }
   ],
   "receipts": [

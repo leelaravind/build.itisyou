@@ -430,6 +430,12 @@ Nothing crashed, which is §63's bar. The interactive budget is 1.5 s.
 (`packages/execution/src/decompose.ts`) on every request, against all 5,000 tasks. None of the eight
 faster pages call it.
 
-**Status.** OPEN — register W-PERF-3. Next step: time `decompose` on the Large fixture in
-`scale.test.ts`, then either store the decomposition when the plan is generated or cache it per twin
-version.
+**Measured afterwards.** `decompose` alone on the same Large plan takes **1.16 s** on a laptop
+(`packages/execution/test/decompose-scale.test.ts`, duration in `unit/decompose-large-vitest.json`).
+That is a large share of a page, but it does not account for 9–10 s on its own. The rest of those
+pages' work — rule evaluation, `mergeIntoGraph`, the board and capacity summaries — has not been
+profiled yet. The correlation above is real; "decompose is the cause" would have been a guess.
+
+**Status.** OPEN — register W-PERF-3. Next step: profile one of the three pages end to end on the
+Large fixture. Then store or cache whatever dominates per twin version, starting with the
+decomposition.
