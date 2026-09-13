@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T14:08:45.410Z",
+  "generatedAt": "2026-09-13T14:11:25.140Z",
   "platform": "win32 x64 node v22.23.2",
   "fixture": {
     "nodes": 12106,
@@ -13,23 +13,23 @@
     },
     {
       "step": "rule evaluation (evaluateRules)",
-      "ms": 12
+      "ms": 11
     },
     {
       "step": "decompose",
-      "ms": 3327
+      "ms": 938
     },
     {
       "step": "mergeIntoGraph",
-      "ms": 23
+      "ms": 16
     },
     {
       "step": "buildToday",
-      "ms": 32
+      "ms": 16
     },
     {
       "step": "buildBoard",
-      "ms": 13
+      "ms": 9
     },
     {
       "step": "summariseProject",
@@ -37,8 +37,8 @@
     },
     {
       "step": "summariseCapacity",
-      "ms": 2
+      "ms": 1
     }
   ],
-  "totalMs": 3421
+  "totalMs": 1003
 }

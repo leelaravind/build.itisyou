@@ -717,11 +717,23 @@ export function decompose(input: DecompositionInput): DecompositionResult {
   const allNodes = [...graph.nodes, ...collapsed.nodes];
   const allEdges = [...graph.edges, ...collapsed.edges];
 
+  /*
+   * Children indexed once, in edge order. Filtering every edge for every node was quadratic: at
+   * gap-spec §63's Large size it was most of the Work, Budget and Change pages' time (FR-020).
+   */
+  const childIdsOf = new Map<string, string[]>();
+  for (const edge of allEdges) {
+    if (edge.class !== 'CONTAINS') continue;
+    const children = childIdsOf.get(edge.from);
+    if (children === undefined) childIdsOf.set(edge.from, [edge.to]);
+    else children.push(edge.to);
+  }
+
   const hierarchyNodes: HierarchyNode[] = allNodes.map((node) => ({
     id: node.id,
     class: node.class,
     label: node.label,
-    childIds: allEdges.filter((e) => e.class === 'CONTAINS' && e.from === node.id).map((e) => e.to),
+    childIds: childIdsOf.get(node.id) ?? [],
     isMarker: node.attributes.kind === 'PHASE_MARKER',
   }));
 
