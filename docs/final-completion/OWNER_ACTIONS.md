@@ -31,7 +31,11 @@ revisit before real traffic, not a gate.
 | Secret? | No. |
 | Verify | Neon console shows the plan; on Launch, set a spending notification. |
 
-## 3. Restore GitHub Actions — CI cannot run
+## 3. Restore GitHub Actions — CI cannot run on the private repository
+
+On 2026-09-13, at the owner's instruction, the repository was made public for 6½ minutes to run CI
+after a clean full-history secret audit. **All 8 jobs passed at `79a3c70`** (run `34764854102`), and it
+is private again. Commits pushed after that have no CI until billing is fixed.
 
 | | |
 |---|---|
@@ -76,8 +80,10 @@ projects `build-itisyou-staging-2` (`proud-truth-36178526`, the live staging dat
 ## Not owner actions
 
 - **Production deployment** is approved by the contract once the release gates are genuinely green.
-  What still blocks it is items 1 and 3 above (a production login method, and a CI verdict on the final
-  commit), with item 2 as the capacity decision to make before real traffic. The engineering work to
+  What still blocks it is item 1 above, a production login method. CI is green at `79a3c70`. The one
+  code change after it, the decompose heap at `756839f`, is verified by unit tests, output
+  equivalence and staging, but not by CI; item 3, or another short public window, gives it CI too.
+  Item 2 is the capacity decision to make before real traffic. The engineering work to
   deploy and verify is ready (`artifacts/test-evidence/deployment/production-readiness.json`).
 - **The custom domain** `build.itisyou.app` is already configured on the production Worker route
   (`custom_domain = true`) in a zone the account holds; deploying attaches it.

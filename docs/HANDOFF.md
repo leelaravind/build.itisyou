@@ -57,7 +57,16 @@ source branch's compute onto the restore — it took staging's database away for
 Save CI runs for the report with
 `gh run view <id> --json databaseId,headSha,status,conclusion,createdAt,jobs > artifacts/test-evidence/ci/run-<id>.json`.
 
-## CI is blocked on billing
+## CI is blocked on billing — except one public window
+
+On 2026-09-13, at the owner's instruction, the repository was made public for 6½ minutes after a
+clean full-history secret audit. CI ran and **all 8 jobs passed at `79a3c70`** (run `34764854102`),
+and the repository went back to private. The same can be repeated with
+`E:/Project/.claude-scratch/tmp/ci-window.sh`, which always restores private on exit, but only on the
+owner's say-so and only after re-auditing any new commits for secrets. Don't push during the window:
+the workflow's concurrency group cancels the dispatched run.
+
+### Before that
 
 From `5093b06` GitHub refuses to start Actions jobs for this private repository ("recent account
 payments have failed or your spending limit needs to be increased"). The last CI verdict is **green at

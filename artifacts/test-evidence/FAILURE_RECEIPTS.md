@@ -25,8 +25,9 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-017 | Final staging E2E run | Operations (database storage cap) | Staging moved to a fresh database; staging guest TTL shortened |
 | FR-018 | Reading the staging re-run's skips | Test coverage (evidence upload) | Fixed — the test waits for the form; 27/27 on staging |
 | FR-019 | §63 Large project on staging | Baseline (dangling edges after filtering records) | Fixed and re-verified on staging at `a2afc66` |
-| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | Partly fixed (quadratic scan removed; about 2× faster on staging); OPEN — W-PERF-3 |
+| FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | Largely fixed: 9–10 s → 1.7–2.2 s on staging at `756839f`; OPEN — W-PERF-3 for the rest |
 | FR-021 | Final local Chromium run | Test harness / machine contention | Not a product defect; the 3 tests passed when re-run alone |
+| FR-022 | Agent reading decompose while fixing FR-020 | Execution (phase dependency direction) | OPEN — W-EXEC-1 |
 
 ---
 
@@ -490,4 +491,40 @@ pattern recorded in FR-011, where the limits were deliberately left alone.
 **Proof.** The same three tests re-run alone with `--last-failed --workers=1`: **3 passed**
 (`e2e/local-final-chromium-rerun.json`). The report counts the full run as passed only because each
 failure passed on that later local re-run, and it names them.
+
+**Fixed further at `756839f`.** The remaining second was not `collapseSingletons`, which measured
+2.3 ms. It was the phase ordering: `decompose` called `TwinGraph.topologicalOrder`, which re-sorts
+every ready node after taking each one, and almost the whole plan starts out ready. `orderedPhaseKeys`
+now runs the same Kahn ordering with a min-heap, and the project node is looked up once. Locally on
+the Large plan, `decompose` went from about 1,000 ms to **37 ms**, and the Work page's pure steps from
+about 1,070 ms to 104 ms. The output is byte-identical over 6,032 recorded inputs, 6,000 of them
+seeded random plans, some with cycles; the phase order matches on 3,000 random graphs; and deliberately
+breaking the heap was caught. The 122 execution tests pass unedited; unit is 2,458/2,458. The same slow
+`topologicalOrder` is called at `packages/execution/src/scheduling.ts:328`. The durable fix is a heap
+inside `TwinGraph.topologicalOrder` itself.
+
+**On staging at `756839f`** (version `2ad74a7c`, post-deploy checks 9/9), with a freshly seeded Large
+project: all 11 pages answered 200.
+- Work: p50 **1.71 s**, down from 9.2 s originally and 4.5 s at `329fae5`.
+- Budget: p50 **2.19 s**, down from 9.6 s.
+- Change: p50 **1.75 s**, down from 9.1 s.
+- Project Home and Plan, which do not call `decompose`, are about 3.5 s.
+- The rest are 1.4–2.0 s, against a 1.5 s budget, with four Large projects now in the staging
+  database.
+
+The three pages that were 9–10 s are now within about 1.5× the budget. What is left is spread across
+the other pages, not concentrated in one place.
+
+## FR-022 — Phase dependencies run backwards (OPEN)
+
+**Found by** the agent that fixed FR-020, while proving its change preserved output. **Observed.** The
+generator links a later phase `DEPENDS_ON` the earlier one, and the topological sort puts nodes with no
+incoming edge first. So the ordering comes out last-phase-first, and the task dependencies `decompose`
+emits between phases run backwards: the solo fixture's output reads "discovery follows design, design
+follows build, build follows verify…". Pinned by the golden fixtures, which is why it survived, and
+left alone because the performance change had to keep output identical.
+
+**Status.** OPEN — register W-EXEC-1. Next step: decide the edge direction once, in the generator or
+in the ordering. Fix it with the golden fixtures regenerated on purpose, and add a test asserting
+discovery precedes build.
 

@@ -1,11 +1,11 @@
 {
   "product": "build.itisyou",
-  "commit": "7ed0985",
-  "generatedAt": "2026-09-13T14:54:31.369Z",
+  "commit": "756839f",
+  "generatedAt": "2026-09-13T15:29:59.344Z",
   "verdict": "NOT RELEASE-READY — no recorded failure, but required checks are blocked or not checked",
   "tally": {
-    "PASSED": 24,
-    "BLOCKED": 3,
+    "PASSED": 25,
+    "BLOCKED": 2,
     "DEFERRED": 1
   },
   "totals": {
@@ -123,14 +123,14 @@
       "area": "Performance",
       "name": "Large project (§63) on staging — every project page renders",
       "status": "PASSED",
-      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s",
+      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 756839f, 168 s",
       "record": "json/gates/staging-perf-large.json"
     },
     {
       "area": "CI",
       "name": "GitHub Actions at the latest recorded run",
-      "status": "BLOCKED",
-      "detail": "run 34758533871 at a3778c9: failure — no job started (GitHub Actions billing / spending limit; owner action). Last run that executed: run 34752927029 at 949a76e: success"
+      "status": "PASSED",
+      "detail": "run 34764854102 at 79a3c70: success"
     },
     {
       "area": "Database",
@@ -143,8 +143,8 @@
       "area": "Deployment",
       "name": "Staging web Worker deployed",
       "status": "PASSED",
-      "detail": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-perf.sh — exit 0 at 329fae5, 415 s",
-      "record": "json/gates/staging-deploy-web-329fae5.json"
+      "detail": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-heap.sh — exit 0 at 756839f, 370 s",
+      "record": "json/gates/staging-deploy-web-756839f.json"
     },
     {
       "area": "Deployment",
@@ -157,8 +157,8 @@
       "area": "Deployment",
       "name": "Staging health, version and database reachability",
       "status": "PASSED",
-      "detail": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 329fae5 — exit 0 at 329fae5, 3 s",
-      "record": "json/gates/staging-health-329fae5.json"
+      "detail": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 756839f — exit 0 at 756839f, 3 s",
+      "record": "json/gates/staging-health-756839f.json"
     },
     {
       "area": "Rollback",
@@ -171,7 +171,7 @@
       "area": "Performance",
       "name": "Latency smoke against staging",
       "status": "PASSED",
-      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s",
+      "detail": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 756839f, 168 s",
       "record": "json/gates/staging-perf-large.json"
     },
     {
@@ -8487,6 +8487,47 @@
           "conclusion": "failure"
         }
       ]
+    },
+    {
+      "id": 34764854102,
+      "sha": "79a3c70049ab4d5797cad73cf6504649f3cad49a",
+      "conclusion": "success",
+      "status": "completed",
+      "createdAt": "2026-09-13T15:11:33Z",
+      "jobs": [
+        {
+          "name": "Secret and dependency scan",
+          "conclusion": "success"
+        },
+        {
+          "name": "Concurrency suites against networked Postgres",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (2/4)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Cloudflare Worker build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Format, lint, typecheck, unit tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (1/4)",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (4/4)",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (3/4)",
+          "conclusion": "success"
+        }
+      ]
     }
   ],
   "gates": [
@@ -9643,38 +9684,6 @@
       "log": "artifacts/test-evidence/logs/staging-health-a2afc66.log"
     },
     {
-      "id": "profile-large-work-page",
-      "category": "performance",
-      "environment": "local",
-      "command": "node --experimental-strip-types scripts/evidence/profile-large.mjs",
-      "commit": "22b146e556633f4b5abb719411373b38ddbcd328",
-      "dirty": true,
-      "startedAt": "2026-09-13T14:08:41.714Z",
-      "finishedAt": "2026-09-13T14:08:45.438Z",
-      "durationMs": 3724,
-      "exitCode": 0,
-      "signal": null,
-      "result": "PASSED",
-      "platform": "win32 x64 node v22.23.2",
-      "log": "artifacts/test-evidence/logs/profile-large-work-page.log"
-    },
-    {
-      "id": "unit-final",
-      "category": "unit",
-      "environment": "local",
-      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
-      "commit": "0b85bd127939707d80311f424a51093883c77a45",
-      "dirty": true,
-      "startedAt": "2026-09-13T14:10:23.381Z",
-      "finishedAt": "2026-09-13T14:11:10.761Z",
-      "durationMs": 47380,
-      "exitCode": 0,
-      "signal": null,
-      "result": "PASSED",
-      "platform": "win32 x64 node v22.23.2",
-      "log": "artifacts/test-evidence/logs/unit-final.log"
-    },
-    {
       "id": "staging-deploy-web-329fae5",
       "category": "deployment",
       "environment": "staging-cloudflare-neon",
@@ -9705,22 +9714,6 @@
       "result": "PASSED",
       "platform": "win32 x64 node v22.23.2",
       "log": "artifacts/test-evidence/logs/staging-health-329fae5.log"
-    },
-    {
-      "id": "staging-perf-large",
-      "category": "performance",
-      "environment": "staging-cloudflare-neon",
-      "command": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev",
-      "commit": "329fae530f3616c29689d14c660219cb20ec018e",
-      "dirty": true,
-      "startedAt": "2026-09-13T14:18:55.166Z",
-      "finishedAt": "2026-09-13T14:22:38.417Z",
-      "durationMs": 223251,
-      "exitCode": 0,
-      "signal": null,
-      "result": "PASSED",
-      "platform": "win32 x64 node v22.23.2",
-      "log": "artifacts/test-evidence/logs/staging-perf-large.log"
     },
     {
       "id": "e2e-staging-329fae5-work-budget-change",
@@ -9769,6 +9762,86 @@
       "result": "PASSED",
       "platform": "win32 x64 node v22.21.0",
       "log": "artifacts/test-evidence/logs/e2e-local-final-chromium-rerun.log"
+    },
+    {
+      "id": "profile-large-work-page",
+      "category": "performance",
+      "environment": "local",
+      "command": "node --experimental-strip-types scripts/evidence/profile-large.mjs",
+      "commit": "79a3c70049ab4d5797cad73cf6504649f3cad49a",
+      "dirty": true,
+      "startedAt": "2026-09-13T15:18:16.371Z",
+      "finishedAt": "2026-09-13T15:18:16.756Z",
+      "durationMs": 385,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/profile-large-work-page.log"
+    },
+    {
+      "id": "unit-final",
+      "category": "unit",
+      "environment": "local",
+      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
+      "commit": "79a3c70049ab4d5797cad73cf6504649f3cad49a",
+      "dirty": true,
+      "startedAt": "2026-09-13T15:18:41.129Z",
+      "finishedAt": "2026-09-13T15:19:26.437Z",
+      "durationMs": 45308,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/unit-final.log"
+    },
+    {
+      "id": "staging-deploy-web-756839f",
+      "category": "deployment",
+      "environment": "staging-cloudflare-neon",
+      "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-heap.sh",
+      "commit": "756839f711e073a0d76cf509f50cd21ab409a4c5",
+      "dirty": false,
+      "startedAt": "2026-09-13T15:20:13.331Z",
+      "finishedAt": "2026-09-13T15:26:22.942Z",
+      "durationMs": 369611,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/staging-deploy-web-756839f.log"
+    },
+    {
+      "id": "staging-health-756839f",
+      "category": "deployment",
+      "environment": "staging-cloudflare-neon",
+      "command": "node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 756839f",
+      "commit": "756839f711e073a0d76cf509f50cd21ab409a4c5",
+      "dirty": true,
+      "startedAt": "2026-09-13T15:26:30.805Z",
+      "finishedAt": "2026-09-13T15:26:33.429Z",
+      "durationMs": 2624,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-health-756839f.log"
+    },
+    {
+      "id": "staging-perf-large",
+      "category": "performance",
+      "environment": "staging-cloudflare-neon",
+      "command": "node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev",
+      "commit": "756839f711e073a0d76cf509f50cd21ab409a4c5",
+      "dirty": true,
+      "startedAt": "2026-09-13T15:26:33.642Z",
+      "finishedAt": "2026-09-13T15:29:21.504Z",
+      "durationMs": 167862,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-perf-large.log"
     }
   ],
   "receipts": [
@@ -9890,7 +9963,19 @@
       "id": "FR-020",
       "foundBy": "§63 Large project on staging",
       "area": "Performance (Work, Budget, Change at 9–10 s)",
-      "status": "Partly fixed (quadratic scan removed; about 2× faster on staging); OPEN — W-PERF-3"
+      "status": "Largely fixed: 9–10 s → 1.7–2.2 s on staging at `756839f`; OPEN — W-PERF-3 for the rest"
+    },
+    {
+      "id": "FR-021",
+      "foundBy": "Final local Chromium run",
+      "area": "Test harness / machine contention",
+      "status": "Not a product defect; the 3 tests passed when re-run alone"
+    },
+    {
+      "id": "FR-022",
+      "foundBy": "Agent reading decompose while fixing FR-020",
+      "area": "Execution (phase dependency direction)",
+      "status": "OPEN — W-EXEC-1"
     }
   ]
 }
