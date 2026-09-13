@@ -1,0 +1,229 @@
+# npx playwright test e2e/baseline.spec.ts e2e/keyboard.spec.ts e2e/guest-intake.spec.ts e2e/lifecycle.spec.ts e2e/plan.spec.ts e2e/release.spec.ts e2e/close.spec.ts e2e/project-home.spec.ts e2e/change.spec.ts e2e/portfolio.spec.ts --project=chromium --reporter=line,json
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
+# started 2026-09-13T10:46:10.805Z
+
+[WebServer] (node:12364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:17876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:17876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:16216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:13552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:7652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:2892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:3400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:18708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 115 tests using 4 workers
+
+(node:17136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:23160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/115] [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[2/115] [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[3/115] [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[4/115] [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[5/115] [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[6/115] [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[7/115] [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[8/115] [chromium] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[9/115] [chromium] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[10/115] [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[11/115] [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[12/115] [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[13/115] [chromium] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[14/115] [chromium] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[15/115] [chromium] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[16/115] [chromium] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[17/115] [chromium] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[18/115] [chromium] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[19/115] [chromium] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[20/115] [chromium] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[21/115] [chromium] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[22/115] [chromium] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[23/115] [chromium] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[24/115] [chromium] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[25/115] [chromium] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[26/115] [chromium] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[27/115] [chromium] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[28/115] [chromium] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+[29/115] [chromium] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[30/115] [chromium] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[31/115] [chromium] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[32/115] [chromium] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+[33/115] [chromium] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[34/115] [chromium] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[35/115] [chromium] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[36/115] [chromium] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[37/115] [chromium] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[38/115] [chromium] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[39/115] [chromium] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[40/115] [chromium] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[41/115] [chromium] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[42/115] [chromium] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[43/115] [chromium] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[44/115] [chromium] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[45/115] [chromium] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[46/115] [chromium] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[47/115] [chromium] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[48/115] [chromium] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[49/115] [chromium] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[50/115] [chromium] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[51/115] [chromium] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[52/115] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[53/115] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[54/115] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[55/115] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[56/115] [chromium] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[57/115] [chromium] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[58/115] [chromium] › e2e\keyboard.spec.ts:41:3 › the keyboard-only journey › starts a project, answers the intake and builds the plan without a pointer
+[59/115] [chromium] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[60/115] [chromium] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[61/115] [chromium] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[62/115] [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[63/115] [chromium] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[64/115] [chromium] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[65/115] [chromium] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[WebServer] (node:18708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[66/115] [chromium] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[67/115] [chromium] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[68/115] [chromium] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[69/115] [chromium] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[70/115] [chromium] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[71/115] [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[72/115] [chromium] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[73/115] [chromium] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[74/115] [chromium] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[75/115] [chromium] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[76/115] [chromium] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[77/115] [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[78/115] [chromium] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[79/115] [chromium] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[80/115] [chromium] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[81/115] [chromium] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[82/115] [chromium] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[83/115] [chromium] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[84/115] [chromium] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[85/115] [chromium] › e2e\plan.spec.ts:230:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[86/115] [chromium] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[87/115] [chromium] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[88/115] [chromium] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[89/115] [chromium] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+[WebServer] {"timestamp":"2026-09-13T10:48:06.607Z","level":"warn","message":"rejected plan generation for unowned project","correlationId":"f702810f-0f58-4a3c-aa2b-0d24629ad1d0","context":{"projectId":"5dd76d75-6b76-4711-a683-144ef7a3ac60"}}
+
+[90/115] [chromium] › e2e\portfolio.spec.ts:46:3 › the portfolio surface › is reachable without an account
+[91/115] [chromium] › e2e\portfolio.spec.ts:52:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[92/115] [chromium] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[93/115] [chromium] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[94/115] [chromium] › e2e\portfolio.spec.ts:91:3 › the portfolio surface › explains that it names a project rather than averaging health
+[95/115] [chromium] › e2e\portfolio.spec.ts:108:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[96/115] [chromium] › e2e\portfolio.spec.ts:125:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[97/115] [chromium] › e2e\portfolio.spec.ts:136:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[98/115] [chromium] › e2e\portfolio.spec.ts:146:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[99/115] [chromium] › e2e\portfolio.spec.ts:159:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[100/115] [chromium] › e2e\portfolio.spec.ts:169:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+[101/115] [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[102/115] [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[103/115] [chromium] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[104/115] [chromium] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[105/115] [chromium] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[106/115] [chromium] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[107/115] [chromium] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[108/115] [chromium] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[109/115] [chromium] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[110/115] [chromium] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[111/115] [chromium] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[112/115] [chromium] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[113/115] [chromium] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[114/115] [chromium] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[115/115] [chromium] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+  3 skipped
+  112 passed (2.2m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 136371 ms

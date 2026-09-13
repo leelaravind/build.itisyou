@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { desc, eq } from 'drizzle-orm';
+import { twinBaselines } from '@govintel/db/schema';
 import { graphFromRows } from '@govintel/twin/repository';
+import type { TwinNode } from '@govintel/twin/nodes';
+import type { TwinEdge } from '@govintel/twin/edges';
 import {
   BASELINE_MEANING,
   BASELINE_TYPES,
@@ -8,10 +12,48 @@ import {
   createBaseline,
   variance,
   verifyIntegrity,
+  type BaselineType,
+  type GovernanceBaseline,
 } from '@govintel/governance/baseline';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
+import { ActionOutcome, messageFor } from '../../../../components/ui/ActionOutcome.tsx';
+import { withDatabase } from '../../../../lib/server/database.ts';
 import { loadPlanRows } from '../actions.ts';
+import { recordBaseline } from '../baseline-actions.ts';
+
+const BASELINE_REFUSED: Readonly<Record<string, string>> = {
+  NO_REASON: 'A baseline needs a reason. Nothing was recorded.',
+  EMPTY_GRAPH: 'There is no plan to baseline yet. Build the plan first.',
+  archived: 'This project is archived, so nothing further can be recorded against it.',
+  'rate-limited': 'Too many requests in a short time. Wait a moment and try again.',
+};
+
+/** A stored row back into the domain object, exactly as it was hashed. */
+function fromStored(row: typeof twinBaselines.$inferSelect): GovernanceBaseline {
+  const snapshot = row.snapshot as {
+    type: BaselineType;
+    createdBy: string;
+    reason: string;
+    takenAt: string;
+    nodes: readonly TwinNode[];
+    edges: readonly TwinEdge[];
+  };
+  return {
+    id: row.id,
+    projectId: row.projectId,
+    version: row.version,
+    label: row.label,
+    takenAt: snapshot.takenAt,
+    correlationId: row.correlationId,
+    checksum: row.checksum,
+    nodes: snapshot.nodes,
+    edges: snapshot.edges,
+    type: snapshot.type,
+    createdBy: snapshot.createdBy,
+    reason: snapshot.reason,
+  };
+}
 
 /**
  * Baselines and variance.
@@ -30,14 +72,36 @@ import { loadPlanRows } from '../actions.ts';
 
 export const metadata = { title: 'Baseline' };
 
-export default async function BaselinePage({ params }: { params: Promise<{ projectId: string }> }) {
+export default async function BaselinePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ recorded?: string; error?: string }>;
+}) {
   const { projectId } = await params;
+  const { recorded, error } = await searchParams;
 
   const loaded = await loadPlanRows(projectId);
   if (loaded === null) notFound();
 
   const { project, nodes, edges } = loaded;
-  const graph = graphFromRows(projectId, nodes, edges);
+  // The plan, without the evidence and approval records projected into it: what a baseline captures.
+  const graph = graphFromRows(
+    projectId,
+    nodes.filter((node) => node.class !== 'EVIDENCE' && node.class !== 'APPROVAL'),
+    edges,
+  );
+
+  const storedRows = await withDatabase((db) =>
+    db
+      .select()
+      .from(twinBaselines)
+      .where(eq(twinBaselines.projectId, projectId))
+      .orderBy(desc(twinBaselines.version)),
+  );
+  const stored = storedRows.map(fromStored);
+  const latestStored = stored[0];
 
   /*
    * A demonstration baseline taken against the project as it stands.
@@ -47,7 +111,7 @@ export default async function BaselinePage({ params }: { params: Promise<{ proje
    * beyond that would be claiming a governance record the project does not have.
    */
   const taken =
-    graph.size === 0
+    latestStored !== undefined || graph.size === 0
       ? undefined
       : createBaseline(graph, {
           id: `${projectId}:preview`,
@@ -60,7 +124,8 @@ export default async function BaselinePage({ params }: { params: Promise<{ proje
           correlationId: projectId,
         });
 
-  const baseline = taken?.ok === true ? taken.value : undefined;
+  // The stored baseline when there is one — re-verified from what was kept, not recomputed.
+  const baseline = latestStored ?? (taken?.ok === true ? taken.value : undefined);
   const integrity = baseline === undefined ? undefined : verifyIntegrity(baseline);
   const drift = baseline === undefined ? undefined : variance(baseline, graph);
 
@@ -80,6 +145,82 @@ export default async function BaselinePage({ params }: { params: Promise<{ proje
             rather than a series of overwrites.
           </p>
         </header>
+
+        {error !== undefined ? (
+          <ActionOutcome
+            tone="refused"
+            message={messageFor(
+              BASELINE_REFUSED,
+              error,
+              'That could not be recorded. Nothing was changed.',
+            )}
+          />
+        ) : recorded !== undefined ? (
+          <ActionOutcome
+            tone="success"
+            message="The baseline was recorded. It is stored with its checksum and cannot be edited."
+          />
+        ) : null}
+
+        {baseline === undefined ? null : (
+          <p className="font-sans text-body-sm text-on-surface-variant">
+            {latestStored === undefined
+              ? 'Preview only: nothing has been recorded yet. This is what a baseline of the plan as it stands would capture.'
+              : `Showing recorded baseline ${String(latestStored.version)}, taken ${latestStored.takenAt.slice(0, 16).replace('T', ' ')} UTC for this reason: ${latestStored.reason}`}
+          </p>
+        )}
+
+        {graph.size === 0 ? null : (
+          <form
+            action={recordBaseline}
+            className="flex flex-col gap-sm rounded-lg border border-outline-variant bg-surface-container-low p-lg"
+          >
+            <input type="hidden" name="projectId" value={projectId} />
+            <label htmlFor="baseline-reason" className="font-sans text-body-md text-on-surface">
+              Why record a baseline now?
+            </label>
+            <textarea
+              id="baseline-reason"
+              name="reason"
+              required
+              rows={2}
+              className="rounded border border-outline-variant bg-surface px-sm py-xs font-sans text-body-sm text-on-surface"
+            />
+            <button
+              type="submit"
+              className="inline-flex min-h-11 w-fit items-center gap-sm rounded bg-primary px-lg font-sans text-body-sm font-medium text-on-primary hover:bg-primary-fixed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <MaterialIcon name="flag" size={18} />
+              Record this baseline
+            </button>
+          </form>
+        )}
+
+        {stored.length === 0 ? null : (
+          <section className="flex flex-col gap-sm" aria-labelledby="recorded-heading">
+            <h2 id="recorded-heading" className="font-sans text-headline-sm text-on-surface">
+              Recorded baselines
+            </h2>
+            <ol className="flex flex-col gap-xs">
+              {stored.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="flex flex-col gap-xs rounded border border-outline-variant bg-surface-container-low p-md"
+                >
+                  <p className="font-sans text-body-md text-on-surface">
+                    {entry.label}
+                    <span className="font-mono text-data-mono-sm text-on-surface-variant">
+                      {' '}
+                      · {entry.takenAt.slice(0, 16).replace('T', ' ')} UTC ·{' '}
+                      {verifyIntegrity(entry).intact ? 'verified' : 'integrity check failed'}
+                    </span>
+                  </p>
+                  <p className="font-sans text-body-sm text-on-surface-variant">{entry.reason}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
 
         {baseline === undefined || integrity === undefined || drift === undefined ? (
           <section className="flex flex-col gap-md rounded-lg border border-outline-variant bg-surface-container-low p-lg">

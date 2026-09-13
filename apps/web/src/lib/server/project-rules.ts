@@ -7,6 +7,7 @@ import type { TwinGraph } from '@govintel/twin/graph';
 import { RULES, RULESET_VERSION } from '@govintel/rules/catalogue';
 import { evaluateRules, type EvaluationResult } from '@govintel/rules/evaluate';
 import type { EmittedGateCriterion } from '@govintel/rules/gates';
+import { methodologyFromAnswer } from '@govintel/rules/methodology';
 import { withDatabase } from './database.ts';
 
 /**
@@ -70,11 +71,13 @@ export function evaluateForProject(input: RuleInputs): ProjectRules {
       ...(input.projectType === 'UNKNOWN' ? {} : { projectType: input.projectType }),
       lifecycleState: input.lifecycleState,
       /*
-       * Hardcoded, and known to be. Methodology is not asked for anywhere in intake yet, so there is
-       * nothing truthful to pass; `'AGILE'` at least matches what the methodology engine assumes.
-       * Recorded in the register rather than hidden behind a comment on one of six copies.
+       * From the intake's `team.methodology` answer. It was hard-coded to AGILE at every call site,
+       * so a rule scoped to Kanban delivery could never apply to anybody. Unanswered, it falls back
+       * to the question's recommended default, which is what the intake itself would record.
        */
-      methodology: 'AGILE',
+      methodology: methodologyFromAnswer(
+        input.intake.find((field) => field.fieldId === 'team.methodology')?.value,
+      ),
       intake: input.intake,
       // The date is an input, never read from a clock inside the engine — that separation is what
       // makes the determinism claim testable.

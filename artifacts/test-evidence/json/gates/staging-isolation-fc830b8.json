@@ -1,0 +1,16 @@
+{
+  "id": "staging-isolation-fc830b8",
+  "category": "security",
+  "environment": "staging-neon",
+  "command": "pnpm verify:isolation",
+  "commit": "fc830b8a07294dd0cf60f902faa97898e145d8e5",
+  "dirty": true,
+  "startedAt": "2026-09-13T10:07:05.394Z",
+  "finishedAt": "2026-09-13T10:07:08.760Z",
+  "durationMs": 3366,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-isolation-fc830b8.log"
+}

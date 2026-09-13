@@ -173,3 +173,56 @@ test.describe('tenant isolation', () => {
     await other.close();
   });
 });
+
+test.describe('recording a baseline', () => {
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
+  });
+
+  /*
+   * The page used to take a preview on every render and compare it with the graph it had just been
+   * taken from, so it always read "verified, nothing moved" and no baseline was ever kept. These
+   * check that one is stored, verifies from storage, and becomes what the page shows.
+   */
+  test('stores a baseline with its reason and shows it as recorded', async ({ page }) => {
+    await reachBaseline(page);
+    await expect(page.getByText(/preview only: nothing has been recorded yet/i)).toBeVisible();
+
+    await page
+      .getByLabel(/why record a baseline now/i)
+      .fill('Scope agreed with the charity trustees.');
+    await page.getByRole('button', { name: /record this baseline/i }).click();
+
+    await expect(
+      page.getByRole('status').filter({ hasText: /baseline was recorded/i }),
+    ).toBeVisible();
+    await expect(page.getByText(/showing recorded baseline 1/i)).toBeVisible();
+
+    const recorded = page.getByRole('region', { name: /recorded baselines/i });
+    await expect(recorded.getByRole('listitem')).toHaveCount(1);
+    await expect(recorded).toContainText(/baseline 1/i);
+    await expect(recorded).toContainText(/verified/i);
+    await expect(recorded).toContainText('Scope agreed with the charity trustees.');
+  });
+
+  test('numbers the next baseline after the last one', async ({ page }) => {
+    await reachBaseline(page);
+    for (const reason of ['First agreement.', 'Second agreement.']) {
+      await page.getByLabel(/why record a baseline now/i).fill(reason);
+      await page.getByRole('button', { name: /record this baseline/i }).click();
+      await expect(
+        page.getByRole('status').filter({ hasText: /baseline was recorded/i }),
+      ).toBeVisible();
+    }
+
+    await expect(page.getByText(/showing recorded baseline 2/i)).toBeVisible();
+    await expect(
+      page.getByRole('region', { name: /recorded baselines/i }).getByRole('listitem'),
+    ).toHaveCount(2);
+  });
+
+  test('will not record a baseline without a reason', async ({ page }) => {
+    await reachBaseline(page);
+    await expect(page.getByLabel(/why record a baseline now/i)).toHaveAttribute('required', '');
+  });
+});

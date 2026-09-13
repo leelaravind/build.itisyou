@@ -29,6 +29,18 @@ export function isMethodology(value: string): value is Methodology {
   return METHODOLOGY_SET.has(value);
 }
 
+/**
+ * The intake's `team.methodology` answer as a methodology. The options lead with the methodology's
+ * name ("Kanban (continuous flow)"), so the first word decides. Anything unanswered or unrecognised is
+ * AGILE, the question's recommended default — the same value the intake records when somebody accepts
+ * the default, so the engine and the intake never disagree about an unanswered question.
+ */
+export function methodologyFromAnswer(answer: unknown): Methodology {
+  if (typeof answer !== 'string') return 'AGILE';
+  const word = answer.trim().split(/\s+/)[0]?.toUpperCase() ?? '';
+  return isMethodology(word) ? word : 'AGILE';
+}
+
 /* -------------------------------------------------------------------------- */
 /* What a methodology decides                                                 */
 /* -------------------------------------------------------------------------- */

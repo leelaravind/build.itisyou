@@ -1,0 +1,142 @@
+﻿
+node.exe : [WebServer] (node:20760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+
+[WebServer] (node:22548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[WebServer] (node:22548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:3136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+
+[WebServer] (node:21904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:10944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 30 tests using 4 workers
+
+(node:18648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:9840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+
+(node:8020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:12000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/30] [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[2/30] [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[3/30] [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[4/30] [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[5/30] [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[6/30] [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[7/30] [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[8/30] [chromium] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[9/30] [chromium] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[10/30] [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[11/30] [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[12/30] [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[13/30] [chromium] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[14/30] [chromium] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[15/30] [chromium] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[16/30] [chromium] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[17/30] [chromium] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[18/30] [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[19/30] [chromium] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[20/30] [chromium] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[21/30] [chromium] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[22/30] [chromium] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[23/30] [chromium] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[24/30] [chromium] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[25/30] [chromium] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[26/30] [chromium] › e2e\plan.spec.ts:230:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[27/30] [chromium] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[28/30] [chromium] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[WebServer] {"timestamp":"2026-09-13T10:45:10.469Z","level":"warn","message":"rejected plan generation for unowned proj
+ect","correlationId":"54483cc2-674a-4083-9cc1-f89540cbeb40","context":{"projectId":"c2ac280c-f358-4400-8891-66fb9f1c211
+7"}}
+
+[29/30] [chromium] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[30/30] [chromium] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+  30 passed (52.7s)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice

@@ -1,0 +1,16 @@
+{
+  "id": "staging-build-web-fc830b8",
+  "category": "deployment",
+  "environment": "staging",
+  "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-build.sh",
+  "commit": "fc830b8a07294dd0cf60f902faa97898e145d8e5",
+  "dirty": false,
+  "startedAt": "2026-09-13T09:58:26.850Z",
+  "finishedAt": "2026-09-13T10:04:30.366Z",
+  "durationMs": 363516,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-build-web-fc830b8.log"
+}

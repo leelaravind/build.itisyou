@@ -123,8 +123,15 @@ jobs:
       # No separate build step. `playwright.config.ts` builds before it starts the server — on
       # purpose, so a spec can never run against a stale artefact — and the `verify` job already
       # builds independently. Building here as well cost every shard a full Next build for nothing.
+      # `pnpm exec playwright test --shard`, not `pnpm test:e2e -- --shard`.
+      #
+      # The second form is what this step used to run, and pnpm passed the `--` through: the log read
+      # `$ playwright test -- --shard=1/4`, Playwright ignored everything after `--`, and every
+      # "shard" ran all 1,340 tests — four full copies of the suite, each within a few minutes of the
+      # cap. The sharding added at 47a676e never split anything; the run that went green there did so
+      # by fitting the whole suite into one job with minutes to spare.
       - name: Run E2E suite
-        run: pnpm test:e2e -- --shard=${{ matrix.shard }}/4
+        run: pnpm exec playwright test --shard=${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

@@ -1,0 +1,15 @@
+# node --experimental-strip-types scripts/migrate.mjs
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
+# started 2026-09-13T10:04:49.268Z
+
+expected  6aa38daebd263bd6bf10f2f639a6682b
+found     0433d7ed47c7dcf46326073dc75fae97
+
+1 written migration(s) to apply:
+  003-intake-and-import-isolation — intake_answers and ai_imports hold a project's answers and pasted AI output -- tenant data -- and were the two tenant tables without row-level security, guarded only by the application's ownership check. Their writers also left organization_id NULL, so a policy could not have been added without first making the key real. This backfills the key from each row's project, makes it NOT NULL, and forces the same tenant policy every other tenant table has.
+govintel_app can log in. Verified from pg_roles: no superuser, bypassrls, createdb or createrole.
+Granted govintel_app to the connecting role; either arrangement will work.
+
+Applied. schema_meta now records 6aa38daebd263bd6bf10f2f639a6682b.
+
+# exit 0 after 1773 ms

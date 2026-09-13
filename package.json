@@ -12,7 +12,7 @@
   "scripts": {
     "build": "pnpm --filter=@govintel/web build",
     "dev": "pnpm --filter=@govintel/web dev",
-    "typecheck": "tsc --build && pnpm --filter=@govintel/web typecheck",
+    "typecheck": "tsc --build && pnpm --filter=@govintel/web typecheck && tsc --noEmit -p e2e",
     "typecheck:clean": "tsc --build --force",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

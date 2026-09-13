@@ -18,6 +18,9 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-010 | E2E rerun | Test isolation | Fixed |
 | FR-011 | Full unit + E2E run in parallel | Test harness / machine contention | Not a product defect; re-run clean |
 | FR-012 | Staging E2E browser matrix | Test coverage (WebKit, iOS Safari) | Fixed — skip keyed on the insecure origin |
+| FR-013 | Staging and CI E2E | Test harness (my own bulk edit) / typecheck gap | Fixed; the E2E tree is now type-checked by the gate |
+| FR-014 | Reading CI logs | CI (E2E sharding) | Fixed |
+| FR-015 | Local E2E under load | UI (pending submit buttons) | Reverted — the control was withdrawn, not the tests |
 
 ---
 
@@ -52,9 +55,11 @@ environment's schedule would spend more than a fifth of the monthly quota.
 fails `keeps env.staging.triggers within a fifth of the monthly compute quota`
 (`logs/receipts/FR-002-planted-defects.log`). Hourly also fails (36 CU-h/month), deliberately.
 
-**Still to measure.** Whether Hyperdrive's idle pool keeps a Neon compute awake between ticks is not
-stated in Neon's docs. It is measured after the redeploy by sampling `active_time_seconds` an hour
-apart, rather than assumed.
+**Measured, not assumed:** whether Hyperdrive's idle pool keeps a Neon compute awake between ticks is not
+stated in Neon's docs. On the new staging project, with the web Worker and Hyperdrive in place, the
+endpoint reported `last_active 2026-09-13T10:36:56Z` and `suspended_at 2026-09-13T10:42:00Z` —
+suspended five minutes after the last query, exactly Neon's window. The pool does not hold it awake,
+so the budget model's assumption holds.
 
 ## FR-002 — The dead-letter pass never ran in the one situation it exists for
 
@@ -261,3 +266,54 @@ verification could never happen. The register recorded this; the staging run mea
 HTTP, and runs over HTTPS.
 
 **Proof.** The next staging run's WebKit and mobile-Safari rows (see the final report's browser matrix).
+
+## FR-013 — A bulk edit I made referenced a variable that was not there, and no gate type-checked it
+
+**Observed.** WebKit and mobile Safari failed `guest-intake.spec.ts` "the whole flow works without
+client JavaScript" with `ReferenceError: baseURL is not defined`, on staging and in all four CI shards
+at `fc830b8` (`logs/e2e-staging-fc830b8.log`, `ci/run-34750633125.json`).
+
+**Root cause.** The FR-012 edit rewrote every WebKit skip to `isWebkit(browserName) && insecure(baseURL)`
+and added `baseURL` to the `beforeEach` fixtures, but this one skip sits inside a test body whose
+fixtures did not name it. It threw only on WebKit, where `&&` evaluates its right-hand side.
+`tsc -p e2e` reports it (`TS2304: Cannot find name 'baseURL'`) — but nothing ran `tsc -p e2e`:
+`pnpm typecheck` covered the packages and the app, never the E2E specs.
+
+**Change.** The fixture is named. `pnpm typecheck` now ends with `tsc --noEmit -p e2e`, so CI's verify
+job type-checks every spec.
+
+**Proof.** `tsc --noEmit -p e2e` exits 0 with the fix and reports TS2304 with the file at `fc830b8`.
+
+## FR-014 — CI's four E2E shards each ran the whole suite
+
+**Observed.** Every E2E shard at `fc830b8` logged `Running 1340 tests using 3 workers` and reported the
+same two failures; the step ran `$ playwright test -- --shard=1/4`.
+
+**Root cause.** `pnpm test:e2e -- --shard=N/4` passed the `--` through to Playwright, which ignores what
+follows it. The sharding added at `47a676e` to keep the suite inside the 30-minute cap never split
+anything: each job ran all 1,340 tests in about 25 minutes, and the "green" run there was the whole
+suite fitting into one job with minutes to spare.
+
+**Change.** `pnpm exec playwright test --shard=N/4`. Locally, the same flag without `--` lists 340 of
+1,340 tests.
+
+**Proof.** The next CI run's per-shard "Running N tests" lines.
+
+## FR-015 — A pending-state button that froze the product's main actions under load
+
+**Observed.** After replacing four submit buttons (start, build the plan, lifecycle moves, record a
+baseline) with a `useFormStatus` pending button, a local Chromium batch failed repeatedly with the
+button left `[disabled]` and the action never completing: "Build the plan" stuck beside "No plan yet",
+"Continue" stuck on `/start` (`logs/receipts/FR-015-pending-submit-6-failed.log`). Each failing test
+passed on its own.
+
+**Diagnosis.** Measured, not argued: with the generate button restored to a plain `<button>` and
+nothing else changed, the same two specs under the same four-worker load passed 30/30
+(`logs/receipts/FR-015-plain-button-30-passed.log`). The failure needs concurrent server actions to
+appear, which is why every test passed alone. The exact mechanism in the framework was not
+established in the time available, and is not claimed.
+
+**Change.** The component was removed and all four buttons restored. A loading indicator that can
+freeze the actions it decorates is worse than none; KI-067 stays open.
+
+**Proof.** The batch-6 local run with the plain buttons (`e2e/local-batch6-chromium.json`).

@@ -1,0 +1,16 @@
+{
+  "id": "e2e-local-batch5-chromium",
+  "category": "e2e",
+  "environment": "local-pglite",
+  "command": "npx playwright test e2e/baseline.spec.ts e2e/keyboard.spec.ts e2e/guest-intake.spec.ts e2e/lifecycle.spec.ts e2e/plan.spec.ts e2e/release.spec.ts e2e/close.spec.ts e2e/project-home.spec.ts --project=chromium --reporter=line,json",
+  "commit": "fc830b8a07294dd0cf60f902faa97898e145d8e5",
+  "dirty": true,
+  "startedAt": "2026-09-13T10:33:47.239Z",
+  "finishedAt": "2026-09-13T10:36:42.772Z",
+  "durationMs": 175533,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-local-batch5-chromium.log"
+}

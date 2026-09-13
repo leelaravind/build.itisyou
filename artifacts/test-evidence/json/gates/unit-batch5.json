@@ -1,0 +1,16 @@
+{
+  "id": "unit-batch5",
+  "category": "unit",
+  "environment": "local",
+  "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/batch5-vitest.json",
+  "commit": "fc830b8a07294dd0cf60f902faa97898e145d8e5",
+  "dirty": true,
+  "startedAt": "2026-09-13T10:36:43.033Z",
+  "finishedAt": "2026-09-13T10:37:40.927Z",
+  "durationMs": 57894,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/unit-batch5.log"
+}

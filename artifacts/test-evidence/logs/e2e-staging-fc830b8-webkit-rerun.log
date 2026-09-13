@@ -1,0 +1,94 @@
+# npx playwright test e2e/trace.spec.ts e2e/guest-intake.spec.ts --project=webkit --project=mobile-safari --workers=1 --reporter=line,json --output=test-results-staging
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
+# started 2026-09-13T10:25:33.338Z
+
+
+Running 70 tests using 1 worker
+
+(node:24192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/70] [webkit] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[2/70] [webkit] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[3/70] [webkit] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[4/70] [webkit] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[5/70] [webkit] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[6/70] [webkit] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[7/70] [webkit] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[8/70] [webkit] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[9/70] [webkit] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[10/70] [webkit] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[11/70] [webkit] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[12/70] [webkit] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[13/70] [webkit] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[14/70] [webkit] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[15/70] [webkit] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[16/70] [webkit] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[17/70] [webkit] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[18/70] [webkit] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[19/70] [webkit] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[20/70] [webkit] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[21/70] [webkit] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[22/70] [webkit] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[23/70] [webkit] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[24/70] [webkit] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[25/70] [webkit] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[26/70] [webkit] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[27/70] [webkit] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[28/70] [webkit] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[29/70] [webkit] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[30/70] [webkit] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[31/70] [webkit] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[32/70] [webkit] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[33/70] [webkit] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[34/70] [webkit] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[35/70] [webkit] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+(node:3864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[36/70] [mobile-safari] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[37/70] [mobile-safari] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[38/70] [mobile-safari] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[39/70] [mobile-safari] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[40/70] [mobile-safari] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[41/70] [mobile-safari] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[42/70] [mobile-safari] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[43/70] [mobile-safari] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[44/70] [mobile-safari] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[45/70] [mobile-safari] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[46/70] [mobile-safari] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[47/70] [mobile-safari] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[48/70] [mobile-safari] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[49/70] [mobile-safari] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[50/70] [mobile-safari] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[51/70] [mobile-safari] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[52/70] [mobile-safari] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[53/70] [mobile-safari] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[54/70] [mobile-safari] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[55/70] [mobile-safari] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[56/70] [mobile-safari] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[57/70] [mobile-safari] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[58/70] [mobile-safari] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[59/70] [mobile-safari] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[60/70] [mobile-safari] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[61/70] [mobile-safari] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[62/70] [mobile-safari] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[63/70] [mobile-safari] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[64/70] [mobile-safari] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[65/70] [mobile-safari] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[66/70] [mobile-safari] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[67/70] [mobile-safari] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[68/70] [mobile-safari] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[69/70] [mobile-safari] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[70/70] [mobile-safari] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+  2 skipped
+  68 passed (8.0m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 481698 ms

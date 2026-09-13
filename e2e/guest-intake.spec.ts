@@ -337,7 +337,11 @@ test.describe('accessibility of the guest journey', () => {
     ).toEqual([]);
   });
 
-  test('the whole flow works without client JavaScript', async ({ browser, browserName }) => {
+  test('the whole flow works without client JavaScript', async ({
+    browser,
+    browserName,
+    baseURL,
+  }) => {
     test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     // The intake flow is server-rendered forms on purpose. A wizard that needs a hydrated bundle to
     // record an answer fails on a slow connection at exactly the wrong moment — after the user has

@@ -200,6 +200,24 @@ export const FIELD_DEFINITIONS: readonly FieldDefinition[] = [
     minMode: 'professional',
     recommendedDefault: false,
   },
+  {
+    id: 'team.methodology',
+    category: 'TEAM',
+    label: 'How will the work be run?',
+    rationale:
+      'Methodology changes how work is broken down and which practices apply (gap-spec §16). The mandatory gates apply whichever is chosen; what varies is how the work reaching them is organised.',
+    kind: 'select',
+    importance: 'OPTIONAL',
+    minMode: 'professional',
+    options: [
+      'Agile (sprints)',
+      'Kanban (continuous flow)',
+      'Waterfall (sequential)',
+      'Hybrid',
+      'Solo',
+    ],
+    recommendedDefault: 'Agile (sprints)',
+  },
 
   /* -------------------------------------------------- Technical context */
   {

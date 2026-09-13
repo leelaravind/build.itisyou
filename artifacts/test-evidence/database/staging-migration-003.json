@@ -1,0 +1,14 @@
+{
+  "environment": "staging",
+  "database": "neon silent-forest-67621251 / br-mute-smoke-zaktflfl",
+  "migration": "003-intake-and-import-isolation",
+  "from": "0433d7ed47c7dcf46326073dc75fae97",
+  "to": "6aa38daebd263bd6bf10f2f639a6682b",
+  "appliedAt": "2026-09-13T10:04:47.961Z",
+  "cutoverWindowSeconds": 98,
+  "before": { "projects": 212, "intake_answers": 110, "answers_without_key": 106, "ai_imports": 17, "imports_without_key": 17, "twin_nodes": 28775, "audit_events": 26 },
+  "after": { "projects": 212, "intake_answers": 110, "answers_without_key": 0, "answers_key_mismatch": 0, "ai_imports": 17, "imports_without_key": 0, "twin_nodes": 28775, "audit_events": 26 },
+  "rls": { "intake_answers": "enabled/forced", "ai_imports": "enabled/forced" },
+  "schemaMeta": ["0433d7ed47c7dcf46326073dc75fae97 @ 2026-09-13T08:54:58Z", "6aa38daebd263bd6bf10f2f639a6682b @ 2026-09-13T10:04:47Z"],
+  "servingAfter": "fc830b8, mode NORMAL"
+}

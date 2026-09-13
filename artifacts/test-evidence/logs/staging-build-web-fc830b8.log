@@ -1,0 +1,99 @@
+# wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-build.sh
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5
+# started 2026-09-13T09:58:26.850Z
+
+wsl: Failed to translate 'G:\Hard\VMWEAR\bin'
+wsl: Failed to translate 'G:\AravindAutomation\Ollama'
+pnpm store: /home/kplee/.pnpm-store/v11
+Scope: all 20 workspace projects
+Already up to date
+Done in 572ms using pnpm v11.22.0
+$ opennextjs-cloudflare build
+
+┌─────────────────────────────┐
+│ OpenNext — Cloudflare build │
+└─────────────────────────────┘
+
+Monorepo detected at /mnt/e/Project/build-wsl
+App directory: /mnt/e/Project/build-wsl/apps/web
+Next.js version : 16.3.3
+@opennextjs/cloudflare version: 1.20.4
+@opennextjs/aws version: 4.1.2
+workerd compatibility_date: 2026-08-01
+
+┌─────────────────────────────────┐
+│ OpenNext — Building Next.js app │
+└─────────────────────────────────┘
+
+$ next build
+▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.ts took 1258ms
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 22.5s
+  Running TypeScript ...
+  Finished TypeScript in 48s ...
+  Collecting page data using 13 workers ...
+  Generating static pages using 13 workers (0/3) ...
+✓ Generating static pages using 13 workers (3/3) in 314ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /api/health
+├ ƒ /auth/callback
+├ ƒ /design/reference
+├ ƒ /how-it-works
+├ ○ /icon.svg
+├ ƒ /intake/[projectId]
+├ ƒ /intake/[projectId]/import
+├ ƒ /intake/[projectId]/import/[importId]
+├ ƒ /intake/[projectId]/prompt
+├ ƒ /login
+├ ƒ /p/[projectId]
+├ ƒ /plan/[projectId]
+├ ƒ /plan/[projectId]/baseline
+├ ƒ /plan/[projectId]/budget
+├ ƒ /plan/[projectId]/change
+├ ƒ /plan/[projectId]/close
+├ ƒ /plan/[projectId]/evidence
+├ ƒ /plan/[projectId]/evidence/[evidenceId]/download
+├ ƒ /plan/[projectId]/release
+├ ƒ /plan/[projectId]/rules
+├ ƒ /plan/[projectId]/trace
+├ ƒ /plan/[projectId]/trace/[...requirementId]
+├ ƒ /plan/[projectId]/work
+├ ƒ /portfolio
+└ ƒ /start
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+┌──────────────────────────────┐
+│ OpenNext — Generating bundle │
+└──────────────────────────────┘
+
+Bundling middleware function...
+Bundling static assets...
+Bundling cache assets...
+Building server function: default...
+Applying code patches: 4.398s
+# copyPackageTemplateFiles
+[35m⚙️ Bundling the OpenNext server...
+[0m
+[35mWorker saved in `.open-next/worker.js` 🚀
+[0m
+OpenNext build complete.
+
+# exit 0 after 363516 ms

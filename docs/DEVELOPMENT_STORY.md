@@ -3294,3 +3294,67 @@ stored, CI green on every gate including the isolation check against a real Post
 never pass, whose lifecycle never advances and which has no way to sign in would be the precise
 failure the Phase-11 gate was built to prevent. The infrastructure is ready and waiting; what is not
 ready is V1.
+
+---
+
+## Entry 027 — Final completion: the superuser path
+
+2026-09-13, under `FINAL_PRODUCT_COMPLETION_IMPLEMENTATION_PLAN.md`. Everything below was measured,
+and each finding has a receipt in `artifacts/test-evidence/FAILURE_RECEIPTS.md`.
+
+### Staging was down, and the cause was ours
+
+Staging answered Cloudflare error 1042. Two things had happened. The web Worker had been deleted from
+the account — nothing in this repository does that, and the account hosts a dozen other products —
+and its database had been suspended by Neon for exhausting the free plan's 100 CU-hours, until
+2026-10-01. The second was our fault: the drainer ran every minute, and Neon only scales to zero after
+five idle minutes, so the compute was awake 97% of the time. Production was configured with the same
+schedule and would have gone dark ten days after launch.
+
+The schedule is now every three hours, and `apps/worker/src/schedule.ts` costs any schedule against
+the quota; a test reads every `crons` line out of `wrangler.toml` and fails the build if one would
+spend more than a fifth of it. Staging was re-provisioned on a new Neon project, the existing
+Hyperdrive repointed, and redeployed.
+
+### Four P0s with one cause
+
+The embedded development database connects as a superuser, and a superuser does not see row-level
+security. Every local test, every local journey and the development server ran on the one path
+production never takes. Found this pass, each by asking what a flow does as `govintel_app`:
+
+- **Sign-in would have failed on first use.** The membership insert violates the policy's
+  `WITH CHECK` when unscoped, and the guest conversion's `UPDATE projects` claims nothing. Worse, the
+  design could not work at all: an update that changes a row's tenant must pass the policy for both
+  tenants. Sign-in now *adopts* the guest's organisation as the account's, so no row changes tenant.
+- **The guest purge failed on the first audited guest**, deleting audit events it could not see and
+  then hitting their RESTRICT key — the whole sweep, every run. It now deletes each guest inside that
+  guest's own scope, one transaction each.
+- **A visitor with no session saw every guest's project** on `/portfolio` locally, because "no tenant"
+  meant "unscoped" and unscoped meant superuser. It now means the restricted role with no tenant.
+- **The lifecycle could never pass an approval gate** — not an RLS bug, but the same shape: a literal
+  `[]` left in place after the table it waited for had landed, and ten surfaces reading the graph
+  without the evidence projection. `loadPlanRows` now carries it for every page.
+
+The tests that now guard these run whole flows under `SET ROLE govintel_app`. The lesson worth keeping
+is that a mechanism tested only as a role that bypasses it has not been tested.
+
+### A fix that broke the most important guarantee
+
+Adding loading boundaries to the plan and intake pages turned every "not yours" 404 into a 200:
+streaming sends the status line before the page runs, so `notFound()` can only change the body. The
+isolation suite caught it before commit and the boundaries were removed. A loading state is still
+missing (KI-067), which is the right trade against a status-code guarantee.
+
+### What else changed
+
+A real Project Home replaced a fabricated one that rendered for any id; the portfolio lists the
+caller's projects; error and not-found pages exist; intake answers and AI imports got a tenant key
+and forced RLS (migration 003); the release page reads production checks and plans from recorded
+evidence; the closure page stops reporting unrecorded criteria as met; lifecycle refusals and
+change outcomes reach the user. WebKit and iOS Safari had skipped every journey even over HTTPS,
+where the cookie problem they skipped for does not exist; they now run there.
+
+### What is still not done
+
+No identity provider client exists, so nobody can sign in for real (owner action). Production is not
+deployed. The rest is in `docs/final-completion/COMPLETION_REGISTER.md`, with a next step for each.

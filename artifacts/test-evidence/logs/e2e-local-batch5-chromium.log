@@ -1,0 +1,1446 @@
+# npx playwright test e2e/baseline.spec.ts e2e/keyboard.spec.ts e2e/guest-intake.spec.ts e2e/lifecycle.spec.ts e2e/plan.spec.ts e2e/release.spec.ts e2e/close.spec.ts e2e/project-home.spec.ts --project=chromium --reporter=line,json
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
+# started 2026-09-13T10:33:47.239Z
+
+[WebServer] (node:23516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:5676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:5676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:2016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:16516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:2352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:14008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 89 tests using 4 workers
+
+(node:7336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:18940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+
+(node:15280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/89] [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[2/89] [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[3/89] [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[4/89] [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+  1) [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:65:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-567c7-ther-than-only-computing-it-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-567c7-ther-than-only-computing-it-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-567c7-ther-than-only-computing-it-chromium\error-context.md
+
+
+  2) [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:92:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-351db-items-never-as-a-percentage-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-351db-items-never-as-a-percentage-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-351db-items-never-as-a-percentage-chromium\error-context.md
+
+
+  3) [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:86:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-d2e2f--what-the-baseline-captured-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-d2e2f--what-the-baseline-captured-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-d2e2f--what-the-baseline-captured-chromium\error-context.md
+
+
+  4) [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:78:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-ca37c-tself-so-it-can-be-compared-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-ca37c-tself-so-it-can-be-compared-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-ca37c-tself-so-it-can-be-compared-chromium\error-context.md
+
+
+[WebServer] failed to get redirect response TypeError: fetch failed
+[WebServer]     at async l (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:1:10913)
+[WebServer]     at async o (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:2:4523)
+[WebServer]     at async Module.U [as handler] (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:4:2628) {
+[WebServer]   [cause]: Error: read ECONNRESET
+[WebServer]       at ignore-listed frames {
+[WebServer]     errno: -4077,
+[WebServer]     code: 'ECONNRESET',
+[WebServer]     syscall: 'read'
+[WebServer]   }
+[WebServer] }
+
+[WebServer] failed to get redirect response TypeError: fetch failed
+[WebServer]     at async l (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:1:10913)
+[WebServer]     at async o (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:2:4523)
+[WebServer]     at async Module.U [as handler] (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:4:2628) {
+[WebServer]   [cause]: Error: read ECONNRESET
+[WebServer]       at ignore-listed frames {
+[WebServer]     errno: -4077,
+[WebServer]     code: 'ECONNRESET',
+[WebServer]     syscall: 'read'
+[WebServer]   }
+[WebServer] }
+
+[WebServer] failed to get redirect response TypeError: fetch failed
+[WebServer]     at async l (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:1:10913)
+[WebServer]     at async o (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:2:4523)
+[WebServer]     at async Module.U [as handler] (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:4:2628) {
+[WebServer]   [cause]: Error: read ECONNRESET
+[WebServer]       at ignore-listed frames {
+[WebServer]     errno: -4077,
+[WebServer]     code: 'ECONNRESET',
+[WebServer]     syscall: 'read'
+[WebServer]   }
+[WebServer] }
+
+[WebServer] failed to get redirect response TypeError: fetch failed
+[WebServer]     at async l (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:1:10913)
+[WebServer]     at async o (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:2:4523)
+[WebServer]     at async Module.U [as handler] (E:\Project\build\apps\web\.next\server\chunks\ssr\1ne0_next_dist_10q0rv3._.js:4:2628) {
+[WebServer]   [cause]: Error: read ECONNRESET
+[WebServer]       at ignore-listed frames {
+[WebServer]     errno: -4077,
+[WebServer]     code: 'ECONNRESET',
+[WebServer]     syscall: 'read'
+[WebServer]   }
+[WebServer] }
+
+(node:10932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:11636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:2700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:2164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/89] [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[6/89] [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[7/89] [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[8/89] [chromium] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[9/89] [chromium] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+  5) [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:126:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-cf68e-le-accessibility-violations-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-cf68e-le-accessibility-violations-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-cf68e-le-accessibility-violations-chromium\error-context.md
+
+
+  6) [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:104:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-1b407--a-baseline-is-never-edited-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-1b407--a-baseline-is-never-edited-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-1b407--a-baseline-is-never-edited-chromium\error-context.md
+
+
+  7) [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:115:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-206f6--baseline-needs-an-approval-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-the-baseline-surf-206f6--baseline-needs-an-approval-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-the-baseline-surf-206f6--baseline-needs-an-approval-chromium\error-context.md
+
+
+(node:11312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:22784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[10/89] [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[11/89] [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[12/89] [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[13/89] [chromium] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+  8) [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:225:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-0aed5-a-baseline-without-a-reason-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-0aed5-a-baseline-without-a-reason-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-recording-a-basel-0aed5-a-baseline-without-a-reason-chromium\error-context.md
+
+
+  9) [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:188:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-93517-on-and-shows-it-as-recorded-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-93517-on-and-shows-it-as-recorded-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-recording-a-basel-93517-on-and-shows-it-as-recorded-chromium\error-context.md
+
+
+  10) [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      47 |   await page.goto(`/plan/${projectId}`);
+      48 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 49 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      50 |
+      51 |   await page.getByRole('link', { name: /see the baseline/i }).click();
+      52 |
+        at reachBaseline (E:\Project\build\e2e\baseline.spec.ts:49:82)
+        at E:\Project\build\e2e\baseline.spec.ts:209:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-aba70-baseline-after-the-last-one-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\baseline-recording-a-basel-aba70-baseline-after-the-last-one-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\baseline-recording-a-basel-aba70-baseline-after-the-last-one-chromium\error-context.md
+
+
+(node:24316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[14/89] [chromium] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[15/89] [chromium] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[16/89] [chromium] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[17/89] [chromium] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+  11) [chromium] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see what closing requires/i }).click();
+      49 |
+        at reachClosure (E:\Project\build\e2e\close.spec.ts:46:82)
+        at E:\Project\build\e2e\close.spec.ts:81:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--acb5c-rion-in-words-not-by-colour-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--acb5c-rion-in-words-not-by-colour-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\close-the-closure-surface--acb5c-rion-in-words-not-by-colour-chromium\error-context.md
+
+
+  12) [chromium] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see what closing requires/i }).click();
+      49 |
+        at reachClosure (E:\Project\build\e2e\close.spec.ts:46:82)
+        at E:\Project\build\e2e\close.spec.ts:90:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--db465--day-after-everybody-leaves-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--db465--day-after-everybody-leaves-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\close-the-closure-surface--db465--day-after-everybody-leaves-chromium\error-context.md
+
+
+  13) [chromium] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see what closing requires/i }).click();
+      49 |
+        at reachClosure (E:\Project\build\e2e\close.spec.ts:46:82)
+        at E:\Project\build\e2e\close.spec.ts:70:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--690ba-fore-anything-has-been-done-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\close-the-closure-surface--690ba-fore-anything-has-been-done-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\close-the-closure-surface--690ba-fore-anything-has-been-done-chromium\error-context.md
+
+
+[18/89] [chromium] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+(node:20728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:15280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:23148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[19/89] [chromium] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[20/89] [chromium] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[21/89] [chromium] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[22/89] [chromium] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[23/89] [chromium] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[24/89] [chromium] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[25/89] [chromium] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[26/89] [chromium] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[27/89] [chromium] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[28/89] [chromium] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[29/89] [chromium] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[30/89] [chromium] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[31/89] [chromium] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[32/89] [chromium] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[33/89] [chromium] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[34/89] [chromium] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[35/89] [chromium] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[36/89] [chromium] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[37/89] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[38/89] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[39/89] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[40/89] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[41/89] [chromium] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[42/89] [chromium] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[43/89] [chromium] › e2e\keyboard.spec.ts:41:3 › the keyboard-only journey › starts a project, answers the intake and builds the plan without a pointer
+[44/89] [chromium] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[45/89] [chromium] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[46/89] [chromium] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[47/89] [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[48/89] [chromium] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[49/89] [chromium] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[WebServer] (node:14008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+  14) [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: /where this project is/i })
+    Expected pattern: /not passed/i
+    Received string:  "Where this project isStage 1 of 12Idea·Discovery·Planning·Planned·Approved·In progress·Verifying·Release ready·Live·Operating·Completed·ArchivedMove to DiscoveryReadyStarting to look into an idea requires nothing. A gate here would only stop people beginning.Move to Discovery"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: /where this project is/i })
+        13 × locator resolved to <section aria-labelledby="lifecycle-heading" class="flex flex-col gap-md rounded-lg border border-outline-variant bg-surface-container-low p-lg">…</section>
+           - unexpected value "Where this project isStage 1 of 12Idea·Discovery·Planning·Planned·Approved·In progress·Verifying·Release ready·Live·Operating·Completed·ArchivedMove to DiscoveryReadyStarting to look into an idea requires nothing. A gate here would only stop people beginning.Move to Discovery"
+
+
+      124 |
+      125 |     const lifecycle = page.getByRole('region', { name: /where this project is/i });
+    > 126 |     await expect(lifecycle).toContainText(/not passed/i);
+          |                             ^
+      127 |     await expect(lifecycle).toContainText(/discovery/i);
+      128 |
+      129 |     // Never offers a way around itself.
+        at E:\Project\build\e2e\lifecycle.spec.ts:126:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\lifecycle-the-lifecycle-na-55ee1-t-rather-than-only-refusing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\lifecycle-the-lifecycle-na-55ee1-t-rather-than-only-refusing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\lifecycle-the-lifecycle-na-55ee1-t-rather-than-only-refusing-chromium\error-context.md
+
+
+(node:18040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[50/89] [chromium] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[51/89] [chromium] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[52/89] [chromium] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[53/89] [chromium] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[54/89] [chromium] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[55/89] [chromium] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[56/89] [chromium] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[57/89] [chromium] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[58/89] [chromium] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[59/89] [chromium] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[60/89] [chromium] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[61/89] [chromium] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[62/89] [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[63/89] [chromium] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+  15) [chromium] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:114:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-give-74336--provenance-beside-the-item-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-give-74336--provenance-beside-the-item-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-give-74336--provenance-beside-the-item-chromium\error-context.md
+
+
+  16) [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/intake\/[0-9a-f-]{36}/
+    Received string:  "http://localhost:3000/start"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        13 × locator resolved to <html lang="en" data-density="professional">…</html>
+           - unexpected value "http://localhost:3000/start"
+
+
+      38 |   await page.getByLabel(/describe your project/i).fill(idea);
+      39 |   await page.getByRole('button', { name: /continue/i }).click();
+    > 40 |   await expect(page).toHaveURL(/\/intake\/[0-9a-f-]{36}/);
+         |                      ^
+      41 |
+      42 |   const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
+      43 |   expect(projectId).not.toBe('');
+        at startProject (E:\Project\build\e2e\plan.spec.ts:40:22)
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:49:21)
+        at E:\Project\build\e2e\plan.spec.ts:123:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-neve-e9013-omething-the-user-confirmed-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-neve-e9013-omething-the-user-confirmed-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-neve-e9013-omething-the-user-confirmed-chromium\error-context.md
+
+
+  17) [chromium] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume ────────
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/intake\/[0-9a-f-]{36}/
+    Received string:  "http://localhost:3000/start"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        13 × locator resolved to <html lang="en" data-density="professional">…</html>
+           - unexpected value "http://localhost:3000/start"
+
+
+      38 |   await page.getByLabel(/describe your project/i).fill(idea);
+      39 |   await page.getByRole('button', { name: /continue/i }).click();
+    > 40 |   await expect(page).toHaveURL(/\/intake\/[0-9a-f-]{36}/);
+         |                      ^
+      41 |
+      42 |   const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
+      43 |   expect(projectId).not.toBe('');
+        at startProject (E:\Project\build\e2e\plan.spec.ts:40:22)
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:49:21)
+        at E:\Project\build\e2e\plan.spec.ts:142:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-states-what-it-had-to-assume-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-states-what-it-had-to-assume-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-states-what-it-had-to-assume-chromium\error-context.md
+
+
+  18) [chromium] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases ─────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:102:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-contains-phases-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-contains-phases-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-contains-phases-chromium\error-context.md
+
+
+(node:25000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:2652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:8004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[64/89] [chromium] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[65/89] [chromium] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[66/89] [chromium] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[67/89] [chromium] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+  19) [chromium] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:153:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-says-0398a--not-only-that-one-was-made-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-says-0398a--not-only-that-one-was-made-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-says-0398a--not-only-that-one-was-made-chromium\error-context.md
+
+
+  20) [chromium] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:174:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-repo-dbc97-built-from-the-same-answers-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-repo-dbc97-built-from-the-same-answers-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-repo-dbc97-built-from-the-same-answers-chromium\error-context.md
+
+
+  21) [chromium] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:161:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-list-eb027-rather-than-filling-the-gap-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-generated-plan-list-eb027-rather-than-filling-the-gap-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-generated-plan-list-eb027-rather-than-filling-the-gap-chromium\error-context.md
+
+
+(node:6416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:14932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:19200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[68/89] [chromium] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[69/89] [chromium] › e2e\plan.spec.ts:230:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[70/89] [chromium] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[71/89] [chromium] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[72/89] [chromium] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[WebServer] {"timestamp":"2026-09-13T10:36:06.534Z","level":"warn","message":"rejected plan generation for unowned project","correlationId":"b83e0a79-994c-4ad9-9d51-f284cf637253","context":{"projectId":"8b00f73b-bc31-48f0-8acd-77eb74cf0db8"}}
+
+[73/89] [chromium] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[74/89] [chromium] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+  22) [chromium] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:219:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-a-plan-belongs-to-one-f5d9b-nother-guest-cannot-open-it-chromium\error-context.md
+
+
+[75/89] [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+(node:10312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[76/89] [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[77/89] [chromium] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+  23) [chromium] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      52 |   await page.getByRole('button', { name: /build the plan/i }).click();
+      53 |
+    > 54 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      55 |   return projectId;
+      56 | }
+      57 |
+        at buildPlan (E:\Project\build\e2e\plan.spec.ts:54:82)
+        at E:\Project\build\e2e\plan.spec.ts:330:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\plan-accessibility-of-the--36c78-e-violations-once-generated-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\plan-accessibility-of-the--36c78-e-violations-once-generated-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\plan-accessibility-of-the--36c78-e-violations-once-generated-chromium\error-context.md
+
+
+  24) [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/intake\/[0-9a-f-]{36}/
+    Received string:  "http://localhost:3000/start"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        13 × locator resolved to <html lang="en" data-density="professional">…</html>
+           - unexpected value "http://localhost:3000/start"
+
+
+      32 |   await page.getByLabel(/describe your project/i).fill(idea);
+      33 |   await page.getByRole('button', { name: /continue/i }).click();
+    > 34 |   await expect(page).toHaveURL(/\/intake\/[0-9a-f-]{36}/);
+         |                      ^
+      35 |
+      36 |   const projectId = /\/intake\/([^/?]+)/.exec(page.url())?.[1] ?? '';
+      37 |   expect(projectId).not.toBe('');
+        at startProject (E:\Project\build\e2e\project-home.spec.ts:34:22)
+        at E:\Project\build\e2e\project-home.spec.ts:47:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\project-home-project-home--4a1d2-oject-that-has-just-started-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\project-home-project-home--4a1d2-oject-that-has-just-started-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\project-home-project-home--4a1d2-oject-that-has-just-started-chromium\error-context.md
+
+
+(node:19520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:22796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[78/89] [chromium] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[79/89] [chromium] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[80/89] [chromium] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[81/89] [chromium] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[82/89] [chromium] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[83/89] [chromium] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[84/89] [chromium] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+  25) [chromium] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:78:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-25c5c-unevaluated-gate-as-passing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-25c5c-unevaluated-gate-as-passing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surfac-25c5c-unevaluated-gate-as-passing-chromium\error-context.md
+
+
+  26) [chromium] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order ───
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:62:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surface-shows-all-six-gates-in-order-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surface-shows-all-six-gates-in-order-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surface-shows-all-six-gates-in-order-chromium\error-context.md
+
+
+  27) [chromium] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:70:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-d1a6d-sult-in-words-not-by-colour-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-d1a6d-sult-in-words-not-by-colour-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surfac-d1a6d-sult-in-words-not-by-colour-chromium\error-context.md
+
+
+(node:6636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:23764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:9600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[85/89] [chromium] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[86/89] [chromium] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[87/89] [chromium] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[88/89] [chromium] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+  28) [chromium] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:99:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-5acff-ocker-rather-than-naming-it-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-5acff-ocker-rather-than-naming-it-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surfac-5acff-ocker-rather-than-naming-it-chromium\error-context.md
+
+
+  29) [chromium] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:141:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-859c0-adiness-percentage-or-score-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-859c0-adiness-percentage-or-score-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surfac-859c0-adiness-percentage-or-score-chromium\error-context.md
+
+
+  30) [chromium] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      44 |   await page.goto(`/plan/${projectId}`);
+      45 |   await page.getByRole('button', { name: /build the plan/i }).click();
+    > 46 |   await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                  ^
+      47 |
+      48 |   await page.getByRole('link', { name: /see release readiness/i }).click();
+      49 |
+        at reachRelease (E:\Project\build\e2e\release.spec.ts:46:82)
+        at E:\Project\build\e2e\release.spec.ts:128:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-6c49d-ed-when-nothing-was-checked-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\release-the-release-surfac-6c49d-ed-when-nothing-was-checked-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\release-the-release-surfac-6c49d-ed-when-nothing-was-checked-chromium\error-context.md
+
+
+(node:20848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[89/89] [chromium] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+  30 failed
+    [chromium] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it 
+    [chromium] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared 
+    [chromium] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured 
+    [chromium] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage 
+    [chromium] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited 
+    [chromium] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval 
+    [chromium] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations 
+    [chromium] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded 
+    [chromium] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one 
+    [chromium] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason 
+    [chromium] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done 
+    [chromium] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour 
+    [chromium] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves 
+    [chromium] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing 
+    [chromium] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases ───────────────────────
+    [chromium] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item 
+    [chromium] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed 
+    [chromium] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume ──────────
+    [chromium] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made 
+    [chromium] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap 
+    [chromium] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers 
+    [chromium] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it 
+    [chromium] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated 
+    [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started 
+    [chromium] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order ─────
+    [chromium] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour 
+    [chromium] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing 
+    [chromium] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it 
+    [chromium] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked 
+    [chromium] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score 
+  3 skipped
+  56 passed (2.9m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 1 after 175533 ms

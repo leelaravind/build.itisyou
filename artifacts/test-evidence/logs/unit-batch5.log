@@ -1,0 +1,375 @@
+# pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/batch5-vitest.json
+# commit fc830b8a07294dd0cf60f902faa97898e145d8e5 (dirty)
+# started 2026-09-13T10:36:43.033Z
+
+
+ RUN  v4.1.11 E:/Project/build
+
+····································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································{"timestamp":"2026-09-13T10:36:53.427Z","level":"warn","message":"rate limit exceeded","correlationId":"62e231f2-a76b-4631-b111-fa7cbb4cdb0e","context":{"action":"auth-begin","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.435Z","level":"warn","message":"rate limit exceeded","correlationId":"7c64c378-1df2-41bb-940d-2096cf9f86ef","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.436Z","level":"warn","message":"rate limit exceeded","correlationId":"2d6f5556-27fc-4312-bc0d-c30c4dfc66ce","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.436Z","level":"warn","message":"rate limit exceeded","correlationId":"945f6a98-7e0c-4804-8bad-b63541092869","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.436Z","level":"warn","message":"rate limit exceeded","correlationId":"27f86eb3-baad-44c6-a097-460cb93b3200","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"c12fa3b1-4e0c-4425-96f7-95afc3db25db","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"3b08b2c3-ea3e-4b20-96c7-df41442f785e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"c7ff0667-4daa-4a1a-8b6a-d5b6f8f17fb2","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"237f7450-7596-48c6-8a50-51bdaaa82aaa","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"1433aee1-05c9-4700-be1e-b6f684139721","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"8ba2ee5d-1823-4386-9039-a0cedd7e5cf4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"20e41f29-7d6c-4971-925c-5de7c620866e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.437Z","level":"warn","message":"rate limit exceeded","correlationId":"e65aa5e5-b6c5-43bd-bfbe-c8b2764cb6af","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"088139de-f012-4ec5-96e5-720c0a75bc76","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"3c122057-f004-454a-8eda-9f0314926cd6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"f5868dbc-1623-439d-a323-13405791a6b1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"ec85ce0d-a60a-420f-89bc-6c231c74b843","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"f7df0b02-509f-4171-b5ff-9df4917f0ade","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"80d69ec3-3356-40bc-8c00-fc3fabeae599","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"1d0a8263-bc82-40f0-a9be-f716e504ac7c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"c1541e27-78fc-440b-a40d-5b86d4a318fc","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"2823845a-2d98-45e7-99bd-7d3da10c9405","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"8735560c-bc3d-4f63-b359-ea78eebf07f4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"6fb6da4d-e209-470e-92b8-1ded1dfb4b35","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"94d3222b-5c9a-4888-8070-f98336609839","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"802f1e60-1d95-4b98-8ca1-0033f6033c80","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"b4362d7a-6994-40f2-8991-3c6b0a7e4bef","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"e2281b76-93e4-45f2-8396-1fd3aa469634","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"838170a3-016e-406f-850c-5a7301e65532","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"98eaf9fc-4cd9-44cc-b7bc-5f40258f989d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"fd5d5566-42e6-4e7c-80b6-72ebfcb008b7","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"bec3f8e8-ce15-4deb-9dfa-d04de9728c6b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"83606942-aa2e-4c67-b286-77a6c3db5f9d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"ee730286-f363-4c35-8fdb-1a07a4aedb5a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"f55d1de1-a9ee-4d16-9c56-9ccdb0595d7b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"a68946f3-1874-4dab-b172-af672ccf431d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"715fef90-81aa-4e37-8745-a812d40a0d5c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"af059f86-981f-4925-ac0c-86f9c53fb823","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"e9bcdc80-d134-486e-9f12-98a907be3321","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"30df28eb-364c-4a2e-860e-ff51bbe027f3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"2b61c2ab-322f-43e3-8244-e1ffd4076463","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"bda98c9c-6005-4663-be7a-8bc0d4cc5d39","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"0fc4fdfc-6e58-4b87-b74e-69c2affcfca9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"8a5337e2-3402-4ad1-b5cd-ed44c2f5e3da","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"17b5c585-3aa7-4edc-a770-8184e7d875b9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"1c95f089-d462-4f5b-b75d-76347b79e4e2","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"82173b26-5d9f-450f-a853-a05f0a034496","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"7b68641d-6ae2-41fa-bd2f-812bf29a304a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"dabc8f7c-0fd0-4b4e-85d8-2c5485efbfd4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"c749a482-6b1f-47f7-aa75-faefc0422987","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"c0fbab6e-69a6-43e7-85cd-1583581a44ab","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"41196049-90cb-4eb3-b596-b5efa506705c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"fef3e850-a42a-4239-8236-242cd2b6ae1e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"504cd797-f30c-4c3e-a224-36dab7fbb95f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"d12cce05-8d7f-4085-961d-1129a4574fd2","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"e1980039-f9ba-4cd3-8afc-0d0b86c1286b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"e782d822-5a65-491b-be72-be8c51721ce7","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"464069b2-661a-4c0d-a5f2-e48ef888577f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"85ecbc69-4a7e-4d1c-beb8-7200ed599ec9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"d01cf98d-c476-426f-be64-29f7fbbaba60","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.438Z","level":"warn","message":"rate limit exceeded","correlationId":"84c2ac75-32ae-4110-84ea-466c145cb741","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"077ab7c8-e4d9-46d2-a067-6b293362f9dd","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"9116ee3e-ef41-450d-89f7-01c04b1edbca","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"740f72ad-0437-42a5-8f78-58823270242e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"14397b59-d169-44ac-b4e1-c9578f4bd58d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"ec8fcd2b-1e02-4be6-9a6d-5ef07aa7ea90","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"6a49038f-68e3-45ca-8735-87f46f0dc8f7","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"5c182470-c7eb-4eb3-a8ab-e3a378b1604d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"191fc1be-e4ae-46a4-8eea-96ff58a61279","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"2437ad64-bdb1-4f1a-9e4b-8c9dac1e0e1c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"326fd8a6-d201-49f1-b3a0-6fced4bf81c9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"c4900a9c-db0c-40a8-a0ef-7fb1af703e13","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"e40605ea-760c-4b29-bcc7-78333778b5d3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"33e6dafd-4d66-447a-81a4-2cf4e69217f3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"605bd534-e223-484b-beb1-0ca5414104d1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"7f61467d-5398-4545-822a-9dd8bcf1fb08","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"6845579b-89b8-4138-93f1-1520cef5d1d8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"57d760f4-ce3a-4623-adae-c2a809214c3a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"a50ca569-cf69-405d-95ae-149ec0217c46","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"59b35fe4-29f8-471f-a8f8-68e0e7f62501","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"f75bc736-c84e-4718-8136-c2cd996a3f6a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"31bc8f38-66bd-4402-bb1b-0cbe6ff10188","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"6353952a-dac5-410e-95d6-65295a37bf8c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"e80edecf-6bda-47fa-80ec-7f5066f473a0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"3e5a70a3-0d10-493a-b297-dd99a4101a64","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"6928a563-594a-4953-a914-512f4ea1316b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"f31ac203-a0b7-4f46-b511-3be3bf81080c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"650b1824-0d52-40ef-bac0-140e22480144","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"14bf7ed1-c4ca-464c-9ec0-6facebcc97ae","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"f0ecfc49-4543-4e52-8516-b1bd24d82af0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"ffc0bf23-54d6-45e9-a1d1-fe3ff5a80673","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"93087336-21ff-4ca6-b06e-2b6483a68e56","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"50383348-5037-4b67-aada-cee9955a75a9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"eb923229-5da7-4be5-beb8-0e69312980ff","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"925933fc-ec62-43b4-b18d-276222836ea5","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"345610a7-75b1-41e8-b6a7-e790c21ee173","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"b9e00b2c-8519-4573-bcbb-0de8a5ad1ad0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"6b38cd5f-a68d-4e4d-ae7f-566a1cd2b966","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"dbe34954-4ca4-41df-ba95-4dbf98018458","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"27cd4026-1c4b-46b1-822d-a09179f0de5a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"25c81a4e-3086-431c-8dd4-3a6b0d90c39c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"afbcf8a2-7ff7-4d3c-a0df-5e5d52b5fe2b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.439Z","level":"warn","message":"rate limit exceeded","correlationId":"87355908-3b74-4629-bed6-7cdbc7ca30b1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"a34b43c0-8461-4c7c-a810-2e24d680dcd7","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"5a37156c-3dcc-450f-8c8a-cef92b03cb22","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"7b25c3c9-c2e2-46d8-98e2-605412f17a8a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"4de08473-7d22-4cf5-9315-37853a51ec67","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"75d4dd4a-49aa-4db6-97d5-9643f9cf7268","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"72577dd4-b89f-4954-9cf3-e08c4e83526e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.440Z","level":"warn","message":"rate limit exceeded","correlationId":"fd522565-49ee-4859-a9fa-0402141b777d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"a2141464-b5f6-4b1c-a17b-5ab7272e53b9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"58851350-1267-4fd5-bc92-57e4cc799812","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"2c683b31-0f92-45a6-9e45-6e005e9002a1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"c6fc8787-b502-4b5a-8b02-ac2ebb1cf5b6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"0cd290cd-db89-4f91-8b9d-395513ccaf3d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"f419a7c2-15f0-4e94-9079-e6626d05e3ea","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"a6d0f8a5-cbae-44e4-a010-b6842924b8b0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"1ae81701-0106-43b1-af1f-b649b5a1a884","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"547524c6-f5f8-4e83-9539-810c267baba8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"2ba7be29-4e2a-40c3-b42e-15b0698c621c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"ea440041-f910-4a79-afbf-c3b7401fc9de","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"943ad1b1-bc3d-4025-91eb-313f0691be7c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"3ccd94e8-b642-4c2e-af71-ed9afebadcac","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"d171f8a6-1a76-4307-9e2e-bfed704d2f7a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"df58b6a6-f66a-45e7-a5cf-31c45083b875","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"e2c970d3-d674-411d-a1ce-ffdd2860468d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"7cc03a28-6514-4384-9de2-e1b2c1224c40","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"174d7d5c-838d-4b4a-87db-cb2136e1c099","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.441Z","level":"warn","message":"rate limit exceeded","correlationId":"4d9021ac-f9d0-4c7d-ab14-2058be44bd55","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"86f8f441-9f03-4eb5-a2d2-d44755cbcf91","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"bafdcbe7-ec82-4617-9257-0286e77015e4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"df81778f-f896-4199-b663-72f58bf71c81","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"509ab494-ce78-4a1f-a3df-03e93d2435e4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"b2536d6a-a47e-4421-80ba-0546cc18dde9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"d0b22445-7dac-486e-9516-475f2cfbf80a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"5f22fefd-3a46-456b-b975-83f2180dc493","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"6e52a467-9f82-499a-9678-11dd871b1168","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"0a6785a5-8399-4780-88aa-ee154a8f5c29","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"067cd327-6d6a-41ea-ad96-842a781a0b0c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"da50a9f6-b6a4-442b-8469-f20e8c153564","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"1fe02d38-4470-49d8-bef0-18087c10e134","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"f07112b5-b961-4e8b-b46b-7cf2b8a0ef45","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"91716f2f-11e1-4214-972c-e0750d5af86a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"8bbe83b8-41b2-4577-8563-9db0ba714e8d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"05dbfe91-f399-4068-a026-901a34e8a276","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"920ec6a6-4001-4818-8fea-9200f79153d6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"771f2ec4-e172-4925-adf8-ff3109277d64","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"904d3219-320a-4fa0-99d5-ed23d731f8a6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"2adc1f1c-85a2-479c-aba5-5a5f73e83ac0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"902c971a-2bb4-4dd8-92ed-66bbbd86187c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"feffbebb-29e6-4b14-87eb-cb04c9f285df","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"92e94891-b1df-4e39-bc33-4a69c6336b34","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"63a539bf-42a7-4e3e-a658-0fcaeb8d60f0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"8b3c240f-62da-4fdd-9c62-3590dc107300","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"9dffa929-47a5-476e-828b-ba89d1b93a32","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"d92bfbb4-b2a5-432b-8830-c8326283cd69","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"e7900642-171a-440b-a15a-31455125c896","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"5f3eaabf-28c6-4b44-972e-c93f1bad3f5c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"cf786fff-053f-4c61-9b4b-8f52d05cdff8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"c1a8f148-f0b8-4e38-8bd7-f72d652fadf5","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"c4f8a8aa-e4de-490b-ad7c-0ed191bf90f4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"8edc38f7-87d9-4b05-84cc-b992d79b632a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"c2184ae1-462d-498a-8c55-ad8faf1c0b5b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"3a03f630-9778-4fff-8e21-79e4b500940f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"8cbcb03b-168e-4a91-ba75-dcef738b8cbe","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"b127d375-1a96-401a-9b8a-b1045deeadcb","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"cd4ac4bb-657e-4a07-b069-5ff32d33f2c8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"0891c9dc-6e37-4870-ba52-1927ec8ab33a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"9a8b6179-3f88-47e5-a8a2-4f467f7c36f6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"afc76843-5bbf-4dd9-a1bf-a29163bc7f8f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"fa0e0a44-7b89-4566-82d3-94cd25810046","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"a8a187a5-dae7-4a07-9d92-0a6ca200ce84","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"7fbc0892-a507-486a-89f6-22a3c63cc5cf","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"dbdc0402-22be-446b-a2a0-a1ecac7bbd32","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"d1f7f303-86ba-4ec7-95ce-80eea405becb","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"c77bbdac-b0cb-4932-a988-507fb6a81f4c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"f6bd3794-486d-46d2-905b-b8702eaee65c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"43a1dbdd-e59b-4b18-92bc-c287e1289426","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"91b80431-35b6-4370-9594-5d134c1cd68a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"3582380a-1414-4dd8-bd3f-b428a4cfb185","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"1c7ff35b-d6dd-48a0-88e9-d716989d6aa8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"af1f8de1-178c-47cd-b21f-1575e73aec9d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"4b1cb497-be60-47a1-b2f5-44636fcc6165","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"7c2c2a5a-0c29-4ba5-b2a9-bca73f56f9b8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"0feed77e-2f88-43ae-8b6f-671d7fdb26e6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"43c4611c-9b64-4acd-a93b-099098014602","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"98cfd11d-bd61-43e5-a331-4648d631ba55","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"5558a046-fe67-4193-99c0-9e15bb039b7e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"6ceec179-d97b-463b-9ae4-471bc361fd47","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"6a1b4c15-23f7-42ab-a763-91411a191ff8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"dc86082f-2106-448a-b31c-6b45a9996b00","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"32104bc3-7c82-4cc5-85ec-94f4d0521c4f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"bba5e2aa-0edd-4483-af76-688c0bc722ac","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"57a92fa2-6f86-404f-8d56-cdcc6d1de1cc","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"0ee3b8ef-c99b-4fb4-b9fa-e0325b5db331","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"54efe5b6-8798-46e0-a5f6-905e4c313ed4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"c4247048-5994-4443-8ce4-654b85e27d37","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"8488b78b-22d0-49b3-93b9-ba5e2ee86014","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"d1353622-ef42-41b5-8a31-2fa04e1e4162","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"55eb22d9-b165-4664-811a-8ee1ff977e5e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"33153d27-5391-47eb-a214-fcce6fcdf804","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"f50ab33b-6b91-4a0b-bc53-7dd6dd2648a8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.442Z","level":"warn","message":"rate limit exceeded","correlationId":"f77f2b3b-7dd2-4396-8c0b-9322b8f2c21a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"3973e878-d31d-4186-984f-f438247a1518","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"7dd84704-6a21-428c-a2fc-da1596ebc7bd","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"41e1f9f9-7787-4f4f-91e9-2f70bd81827a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"34b28b05-2873-4009-844d-517a253ca41d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"5fc0f9a3-20af-4ca7-a250-b83829cb4c50","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"f1c6b17b-fe8e-421f-8b98-5bbdea7b928e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"6f78f182-261f-4443-8df5-b4d7ed5a2bbc","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"64e7cbcc-ace0-4554-a191-4592a58d4256","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"fc98ce36-2965-430f-8a8d-26632736c40f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"c187c8f1-82fd-4610-a6ed-310adadb34b6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"2cdeb6a6-593c-40f6-bf61-dae7fb7d87d0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"dbce664d-b683-4e5c-b5ca-8d5bac2c75cc","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"abd49324-75da-4271-bab4-cd9e7b2e52ef","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"cf7f4700-2d4a-4f50-9b0d-106f100f3fda","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.443Z","level":"warn","message":"rate limit exceeded","correlationId":"10d6de95-322a-438a-aa14-8728a7dcfa5d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"1ef455d3-caec-4ebb-accc-81d8074a0250","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"477c018b-621a-4af5-9879-64a0ccc7868d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"8391c6dc-56e6-4459-955d-0f9d64184d4b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"43111291-48ff-4cf7-ac91-79a9e3ad7114","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"2eb08891-bcad-479f-b479-e0a82d08f6f5","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"4c451311-93a6-47b0-947e-5cefd32aa5ee","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"2e14e8a0-6d36-4407-9705-63157e75f632","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"8d8c8edd-0f4d-481a-a7d1-e3f5869e2366","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"a72b5a87-c713-43fa-87fb-441fe219668a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"fa3ffcdd-0423-41a9-9e13-f4cba219f83b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"fc93a843-cea7-4e17-87f7-0cda0f332289","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"13f21326-ec3e-437c-919c-3c35b6467a31","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"4e077011-0d3e-4351-872c-2d87a0ac41fb","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"fc5431d5-b750-4743-88a7-419fb6a41eef","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"a8e641aa-5547-4a65-bf93-4fa73b53a8a9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"13b7d0e1-3fd2-4e93-80d8-02df19e32638","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"1c359970-d107-41f9-9555-6dc6010ba89e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"62426069-4616-4805-b48d-4c50477b34ae","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"df93f421-eac8-4fa6-b029-0cb9990c95e8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"47e3c7e7-3e12-42c3-be9e-23f3b6b81768","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"1c34efa7-84d4-4b0a-898c-9330ca1278c1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"ebfc3326-4c6d-4de9-8ce1-1b38bbc20c4f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"bc0703fb-2868-41e3-8446-d2a1171d6357","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"5624eea9-2018-48c3-8ceb-a606f4dcc947","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"2ff69950-e34b-491a-baf4-fa1f9804f36e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"d119dd50-e3eb-4e62-b2df-d97de4ba2fa9","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"ff180d53-5ea5-454c-b977-4bb92f031465","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"536e4037-44f5-4a2a-9512-51da2f0c17e1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"4203c3c1-dae0-4f20-8b07-fdf29a0bea41","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"a695e823-ee33-4b58-96e1-fcf1a9ad46d1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"9dc8402d-2aea-40cb-88ac-a3596b24449e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"980fc140-284f-4aa3-8ab3-7ed529878dfd","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"09771605-ab35-4823-9c8c-7c66101c7a6d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"0cb18883-490d-40d0-82b9-59c1c2731380","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"30c82f96-8438-42a8-aab7-2477f6fbf132","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"3088ca8b-1cd7-44a5-9285-4e5b11f4361b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"5a54fb6a-0f61-477f-84b7-7a9e79c26945","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"39eccba5-64be-4e61-a5d5-057ef1933f43","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"234be397-e17a-4172-adfd-52385b972007","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"0e575615-17f6-41d9-a5e7-e07085f34f66","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"a7728665-5f98-4710-a126-49d4753fd95a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"0cd22101-d3fa-437f-a323-be614c10cdc5","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"14ddafd0-64f4-4e04-b4b0-cc3f117ad5b1","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"53bcd004-cf68-46bf-952d-39dc2563c1fb","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"9249c752-6bf1-45e4-8e6b-24d71468cb9b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"1b741fef-c4f8-4d6b-89c0-b7aea6f61b1e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"a1e94cb5-f67d-4a2b-906d-43d123bc68d8","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"baca1dca-8ff0-4133-b99d-8f8ef4e5876d","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"d67f6174-b369-442c-ac3a-62e481223144","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"00ce9b52-d217-4207-bc6f-d813add15bc5","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"f341c0ed-0c45-4377-a202-0bf9917d3c0f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"045e6595-a489-418c-a77b-72ba014cced3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"852c0d2d-6842-4e2f-9070-7a4e74a0a5e6","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.444Z","level":"warn","message":"rate limit exceeded","correlationId":"178a513e-e29f-480e-b2e5-48101be21836","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"47b8aa4f-301d-458e-a275-2d645115cf89","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"d31044b4-b57f-43a6-b0f4-320ff0dd2bc7","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"ca447352-2785-4bde-8ccb-506e476bae4f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"2e25026f-ee88-4245-9cdf-03db2cce81f0","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"9dbfa788-b7dc-4789-9483-cc3e4da0aa09","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"cd8f39ba-aa4b-4d01-8c10-98854bd16158","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"36b6952f-0d44-4d21-9b32-79211b409e52","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"bc0d59cd-09b7-4821-aa39-64aa75c8507a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"2e9b1a0d-4c31-4eea-9c30-ac30bcd41d23","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"edcdd41a-5ec6-40e8-a35a-6161fbaf49be","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"d080c000-3b29-4f8c-ad31-9c12f6dea05e","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"cce12d15-8e2f-4471-9b89-26e7f76ca9e4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"068a46b5-3804-4855-80f7-b5eb783767af","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"72587f5a-ba61-49fe-a0bb-b2eae849c80f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"055e9e8f-bf52-433d-b7a1-9899f999c2ee","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"1348e6d3-a616-4405-9c86-cbb4eb1b41ad","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"5e100701-19ba-4e9d-9d00-d07ae27f78a3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"e47a6b9d-263c-4dcf-8458-e87b3fb14dcf","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"b23b59f1-f180-4df3-a522-f7dc3b06e290","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"51a13b70-9d19-45aa-892c-956045d9afb4","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"8bbf844e-593e-4521-a8f4-53835702dd11","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"d93a09d3-40d5-4531-a524-12c9e5388704","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"9dc80550-c9e3-45e3-bcdb-ee5a0c0b1844","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"05cc1849-01fa-4e19-8876-e2cfd952c810","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"822c8648-1f58-42fd-8ae1-300398964073","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"e6f24486-79d0-432c-ae90-26f07029dc8c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"c118c719-a3e9-4ee9-878a-a612c3f4bdab","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"3421fdb9-8490-46dd-a76d-1c64af317ee3","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"990edd5d-f99b-40f2-8496-5fd8259bcc4f","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"1eed0075-3d85-42a7-bd36-2af384cf2d5a","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"e4d091da-5351-496c-ba2a-ff7fda92747c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"d19f2758-7c63-42c8-a954-49464ca82e2c","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.445Z","level":"warn","message":"rate limit exceeded","correlationId":"c7f0673b-6d4b-426c-ac32-40a67d3301bf","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.446Z","level":"warn","message":"rate limit requested for unknown action","correlationId":"dc5ca43a-25c2-4571-af82-c5b3c4d7b3fa","context":{"action":"no-such-action"}}
+{"timestamp":"2026-09-13T10:36:53.447Z","level":"warn","message":"rate limit exceeded","correlationId":"e705a040-f677-4801-a2ee-ba6cc49b351b","context":{"action":"ai-import","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.448Z","level":"warn","message":"rate limit exceeded","correlationId":"910b4af9-3d16-40f4-8504-298fd9cdf53a","context":{"action":"auth-begin","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.448Z","level":"warn","message":"rate limit exceeded","correlationId":"452f2903-726a-499a-8473-52e01613db18","context":{"action":"auth-callback","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.448Z","level":"warn","message":"rate limit exceeded","correlationId":"a38c2104-409b-4cfc-8ad5-a2cc5b5ea041","context":{"action":"evidence-record","limit":600}}
+··················{"timestamp":"2026-09-13T10:36:53.449Z","level":"warn","message":"rate limit exceeded","correlationId":"2913e9b3-85d2-4ad2-9252-857f672a10cc","context":{"action":"guest-project-create","limit":600}}
+{"timestamp":"2026-09-13T10:36:53.450Z","level":"warn","message":"rate limit exceeded","correlationId":"7b957db3-541c-4c10-8344-9e1d3f7d82c1","context":{"action":"intake-answer","limit":3000}}
+{"timestamp":"2026-09-13T10:36:53.451Z","level":"warn","message":"rate limit exceeded","correlationId":"9f077722-5c7b-4aee-9102-e36fd34f6b89","context":{"action":"project-transition","limit":600}}
+{"timestamp":"2026-09-13T10:36:53.452Z","level":"warn","message":"rate limit exceeded","correlationId":"b601679d-a1e4-404b-aeea-987ef8f49247","context":{"action":"auth-begin","limit":300}}
+{"timestamp":"2026-09-13T10:36:53.452Z","level":"warn","message":"rate limit exceeded","correlationId":"b0537828-efe3-47a4-a4ed-eddeca25685a","context":{"action":"auth-callback","limit":300}}
+·················································································································································································································································································································································································································································································································x·x···········································································································································································································································································································································································································
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |node| packages/rules/test/methodology-answer.test.ts > methodology from the intake answer > maps every option the intake offers to a distinct methodology
+AssertionError: expected Set{ 'AGILE', 'HYBRID', 'SOLO' } to deeply equal Set{ 'AGILE', 'KANBAN', …(3) }
+
+- Expected
++ Received
+
+  Set {
+    "AGILE",
+    "HYBRID",
+-   "KANBAN",
+    "SOLO",
+-   "WATERFALL",
+  }
+
+ ❯ packages/rules/test/methodology-answer.test.ts:18:29
+     16|   it('maps every option the intake offers to a distinct methodology', …
+     17|     const mapped = (question?.options ?? []).map((option) => methodolo…
+     18|     expect(new Set(mapped)).toEqual(new Set(METHODOLOGIES));
+       |                             ^
+     19|   });
+     20|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |node| packages/rules/test/methodology-answer.test.ts > methodology from the intake answer > reads Kanban as Kanban, which the hard-coded value never could
+AssertionError: expected 'AGILE' to be 'KANBAN' // Object.is equality
+
+Expected: "KANBAN"
+Received: "AGILE"
+
+ ❯ packages/rules/test/methodology-answer.test.ts:29:63
+     27|
+     28|   it('reads Kanban as Kanban, which the hard-coded value never could',…
+     29|     expect(methodologyFromAnswer('Kanban (continuous flow)')).toBe('KA…
+       |                                                               ^
+     30|   });
+     31| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 64 passed (65)
+      Tests  2 failed | 2451 passed (2453)
+   Start at  11:36:44
+   Duration  56.41s (transform 21.01s, setup 597ms, import 53.62s, tests 247.77s, environment 2.22s)
+
+JSON report written to E:/Project/build/artifacts/test-evidence/unit/batch5-vitest.json
+
+# exit 1 after 57894 ms

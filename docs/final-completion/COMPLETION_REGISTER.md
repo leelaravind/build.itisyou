@@ -31,6 +31,8 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-COMP-1 | P1 | Completion | Closure counts unrun tests and quarantined evidence; security findings and stale documents are UNKNOWN, not zero | DONE | `completion.test.ts` (2 new) |
 | W-UI-4 | P2 | UI | Lifecycle refusals and change-request outcomes are shown, mapped to safe sentences; unknown codes are never echoed | DONE | `e2e/change.spec.ts` (2 new) |
 | W-REL-1 | P1 | Release / production verification | The release page reads plans, production checks and deployment approvals from recorded evidence instead of empty lists; checks with no evidence stay NOT_CHECKED; a plan is rehearsed only from a test report or deployment record | DONE (mapping unit-tested; an end-to-end proof needs a project driven through the five earlier gates, not built) | `packages/release/test/records.test.ts` (10) |
+| W-BASE-1 | P2 | Baseline | Baselines are recorded: stored with checksum and reason in `twin_baselines`, audited in the same transaction, re-verified from storage, numbered, and compared with today's plan | DONE | `e2e/baseline.spec.ts` (3 new) |
+| W-A11Y-1 | P2 | Accessibility | Keyboard-only journey: start, intake, plan and Project Home without a pointer | DONE (spec); see the E2E record for the run | `e2e/keyboard.spec.ts` |
 | W-TEST-1 | P1 | Test coverage | WebKit and iOS Safari skipped every journey even over HTTPS; the skip is now keyed on the insecure origin | DONE | FR-012, staging browser matrix |
 
 ## Open — P0 and P1, in execution order
@@ -45,22 +47,20 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | ID | Workstream | Item | Next step |
 |---|---|---|---|
 | W-REL-2 | Release | Three production checks (AUTHENTICATION, APIS, DEPLOYMENT_IDENTITY) have no catalogue purpose, and ownership, incidents and debt have no recording surface, so those inputs are always empty | Add the three purposes to the Production Verification gate's MANUAL criteria; an ownership/incident register on the release page |
+| W-UI-5 | UI states | No loading state. Two approaches tried and withdrawn: streaming boundaries broke the 404 rule (FR-007), and `useFormStatus` pending buttons froze actions under concurrent load (FR-015) | Investigate FR-015's mechanism in isolation before trying a third |
 | W-ID-3 | Identity | Returning user's guest work is kept apart, not merged (KI-066) | A SECURITY DEFINER transfer function owned by the migration role, audited, re-keying project rows between two organisations the caller owns |
 | W-GOV-1 | Approvals | `recordApproval` records the requester as approver with role fixed to PROJECT_OWNER — no segregation of duties for approvals (change requests do have it) | Accepted for V1 with the reason stated: every V1 organisation has exactly one member (no invites — W-ORG-2), so self-approval is the only approval possible. The segregation rule becomes required the day a second member can join |
-| W-BASE-1 | Baseline | Baseline page is a preview; `twin_baselines` has no writer | "Record this baseline" action writing `twin_baselines` with the checksum, audited; approval subject becomes the stored baseline |
 | W-BUD-1 | Budget / resources | Assumed day rate, UNKNOWN complexity, default GBP, `resources: []` | Intake fields for rate, currency and people; pass them to finance and capacity engines; show UNKNOWN where absent |
 | W-RULE-1 | Rules | Methodology fixed to AGILE at four call sites | Read methodology from intake; `rules/methodology` already implements the variants |
 | W-UI-3 | UI | `navigation.ts` lists 19 routes that do not exist (used only by the design reference now) | Map to real routes or remove, with the AppShell sidebar |
-| W-UI-5 | UI states | No loading state (streaming boundaries break the 404 rule — FR-007) | `useFormStatus` pending states on submit buttons (client-side, no streaming) |
-| W-OUT-1 | Outbox | No producer writes `outbox_events`; handlers are log-only | V1 has no transport (§43/§44). Either write rows beside the audit events already in each transaction, or remove the queue. Decision recorded in KNOWN_ISSUES KI-059 |
 | W-TRACE-1 | Traceability | About half the requirements on the fixture still break at TEST | Honest as reported; closes when test cases are authored per requirement |
 | W-PERF-1 | Performance | §63 medium/large fixtures and a p95 measurement do not exist | Generate fixtures in `fixtures/`, measure plan/trace/budget server time on staging |
-| W-A11Y-1 | Accessibility | Keyboard-only full journey (plan §32.10 #39) not automated end to end | One spec driving start → intake → plan by keyboard only |
 
 ## Open — P3 and deferred
 
 | ID | Item | Status |
 |---|---|---|
+| W-OUT-1 | Outbox: no producer writes `outbox_events`, handlers are log-only (§43/§44: V1 has no transport to deliver to). **Also found:** the drainer claims rows as `govintel_app` with no tenant scope, and `outbox_events` forces RLS, so it would claim nothing even once producers exist — the same defect class as FR-005. Production is configured without a queue. | DEFERRED, with the reason stated. When a transport exists: a SECURITY DEFINER claim function (migration), then producers beside the audit writes already in each transaction |
 | W-DISC-1 | Search, command palette, notifications (`@govintel/discovery/*`, built and unit-tested, no UI) | DEFERRED — no V1 flow depends on them; recorded rather than shipped half-wired |
 | W-EXP-1 | Project export | DEFERRED (register marked it not required for V1) |
 | W-MOB-1 | Distinct mobile screens 59–64 | DEFERRED — every page reflows to 320 px and passes the reflow test; distinct screens are not built |
