@@ -1,0 +1,16 @@
+{
+  "id": "profile-large-work-page",
+  "category": "performance",
+  "environment": "local",
+  "command": "node --experimental-strip-types scripts/evidence/profile-large.mjs",
+  "commit": "22b146e556633f4b5abb719411373b38ddbcd328",
+  "dirty": true,
+  "startedAt": "2026-09-13T14:08:41.714Z",
+  "finishedAt": "2026-09-13T14:08:45.438Z",
+  "durationMs": 3724,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/profile-large-work-page.log"
+}

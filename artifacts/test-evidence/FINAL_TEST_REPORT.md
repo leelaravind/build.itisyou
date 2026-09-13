@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T14:06:58.165Z at `548bca7` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T14:09:19.927Z at `22b146e` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -347,6 +347,7 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | staging-health-a2afc66 | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 3 s |
 | staging-perf-large | staging-cloudflare-neon | PASSED | a2afc66 (dirty) | 292 s |
 | unit-final | local | PASSED | 548bca7 (dirty) | 48 s |
+| profile-large-work-page | local | PASSED | 22b146e (dirty) | 4 s |
 
 ## Failures found, and what happened to them
 

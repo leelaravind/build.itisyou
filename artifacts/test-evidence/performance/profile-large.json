@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-09-13T14:08:45.410Z",
+  "platform": "win32 x64 node v22.23.2",
+  "fixture": {
+    "nodes": 12106,
+    "edges": 23105
+  },
+  "page": "app/plan/[projectId]/work/page.tsx (pure steps only)",
+  "steps": [
+    {
+      "step": "graph construction",
+      "ms": 11
+    },
+    {
+      "step": "rule evaluation (evaluateRules)",
+      "ms": 12
+    },
+    {
+      "step": "decompose",
+      "ms": 3327
+    },
+    {
+      "step": "mergeIntoGraph",
+      "ms": 23
+    },
+    {
+      "step": "buildToday",
+      "ms": 32
+    },
+    {
+      "step": "buildBoard",
+      "ms": 13
+    },
+    {
+      "step": "summariseProject",
+      "ms": 1
+    },
+    {
+      "step": "summariseCapacity",
+      "ms": 2
+    }
+  ],
+  "totalMs": 3421
+}

@@ -436,6 +436,18 @@ That is a large share of a page, but it does not account for 9–10 s on its own
 pages' work — rule evaluation, `mergeIntoGraph`, the board and capacity summaries — has not been
 profiled yet. The correlation above is real; "decompose is the cause" would have been a guess.
 
-**Status.** OPEN — register W-PERF-3. Next step: profile one of the three pages end to end on the
-Large fixture. Then store or cache whatever dominates per twin version, starting with the
-decomposition.
+**Profiled.** `scripts/evidence/profile-large.mjs` runs every pure step of the Work page on the
+full Large fixture with real rule emissions (`performance/profile-large.json`):
+
+- `decompose`: **3,327 ms** of 3,421 ms, which is 97%.
+- Rule evaluation 12 ms, graph construction 11 ms, `mergeIntoGraph` 23 ms, `buildToday` 32 ms,
+  `buildBoard` 13 ms, the two summaries 1–2 ms each.
+
+The 1.16 s above was a smaller fixture with no emissions. So the decomposition is the cost, and
+Budget and Change pay it too, because they call it on every request. At that ratio, a Worker running
+it a few times slower than a laptop gives the 9–10 s measured on staging.
+
+**Status.** OPEN — register W-PERF-3. Next step: compute the decomposition once, when the plan is
+generated or the twin changes, and store it with the twin version, instead of on every page view.
+Then find what in `decompose` grows faster than linearly: 5,000 tasks taking 3.3 s suggests a scan
+per task.
