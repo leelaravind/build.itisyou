@@ -1,7 +1,7 @@
 {
   "product": "build.itisyou",
-  "commit": "a3778c9",
-  "generatedAt": "2026-09-13T13:31:15.870Z",
+  "commit": "9e7127e",
+  "generatedAt": "2026-09-13T13:39:52.411Z",
   "verdict": "NOT RELEASE-READY — no recorded failure, but required checks are blocked or not checked",
   "tally": {
     "PASSED": 23,
@@ -10,9 +10,9 @@
   },
   "totals": {
     "unit": {
-      "passed": 2450,
+      "passed": 2454,
       "failed": 0,
-      "total": 2450
+      "total": 2454
     },
     "e2e": {
       "passed": 3843,
@@ -40,7 +40,7 @@
       "area": "Static",
       "name": "Typecheck",
       "status": "PASSED",
-      "detail": "pnpm typecheck — exit 0 at 5093b06, 8 s",
+      "detail": "pnpm typecheck — exit 0 at 9e7127e, 7 s",
       "record": "json/gates/static-typecheck-final.json"
     },
     {
@@ -54,7 +54,7 @@
       "area": "Unit and integration",
       "name": "Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components)",
       "status": "PASSED",
-      "detail": "2450/2450 passed (artifacts/test-evidence/unit/final-a3778c9-vitest.json)"
+      "detail": "2454/2454 passed (artifacts/test-evidence/unit/final-vitest.json)"
     },
     {
       "area": "Security",
@@ -1027,6 +1027,111 @@
         "packages/traceability": {
           "total": 86,
           "passed": 86,
+          "failed": 0
+        },
+        "packages/twin": {
+          "total": 180,
+          "passed": 180,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "file": "artifacts/test-evidence/unit/final-vitest.json",
+      "total": 2454,
+      "passed": 2454,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "byArea": {
+        "apps/web": {
+          "total": 257,
+          "passed": 257,
+          "failed": 0
+        },
+        "apps/worker": {
+          "total": 23,
+          "passed": 23,
+          "failed": 0
+        },
+        "packages/change": {
+          "total": 57,
+          "passed": 57,
+          "failed": 0
+        },
+        "packages/completion": {
+          "total": 44,
+          "passed": 44,
+          "failed": 0
+        },
+        "packages/db": {
+          "total": 349,
+          "passed": 349,
+          "failed": 0
+        },
+        "packages/design": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0
+        },
+        "packages/discovery": {
+          "total": 39,
+          "passed": 39,
+          "failed": 0
+        },
+        "packages/execution": {
+          "total": 121,
+          "passed": 121,
+          "failed": 0
+        },
+        "packages/finance": {
+          "total": 84,
+          "passed": 84,
+          "failed": 0
+        },
+        "packages/governance": {
+          "total": 248,
+          "passed": 248,
+          "failed": 0
+        },
+        "packages/intake": {
+          "total": 63,
+          "passed": 63,
+          "failed": 0
+        },
+        "packages/interchange": {
+          "total": 155,
+          "passed": 155,
+          "failed": 0
+        },
+        "packages/organization": {
+          "total": 36,
+          "passed": 36,
+          "failed": 0
+        },
+        "packages/release": {
+          "total": 77,
+          "passed": 77,
+          "failed": 0
+        },
+        "packages/resilience": {
+          "total": 34,
+          "passed": 34,
+          "failed": 0
+        },
+        "packages/rules": {
+          "total": 376,
+          "passed": 376,
+          "failed": 0
+        },
+        "packages/shared": {
+          "total": 211,
+          "passed": 211,
+          "failed": 0
+        },
+        "packages/traceability": {
+          "total": 90,
+          "passed": 90,
           "failed": 0
         },
         "packages/twin": {
@@ -8805,22 +8910,6 @@
       "log": "artifacts/test-evidence/logs/static-lint-final.log"
     },
     {
-      "id": "static-typecheck-final",
-      "category": "static",
-      "environment": "local",
-      "command": "pnpm typecheck",
-      "commit": "5093b0682869132f70a13a60fc74192e4f721199",
-      "dirty": true,
-      "startedAt": "2026-09-13T12:57:33.369Z",
-      "finishedAt": "2026-09-13T12:57:41.375Z",
-      "durationMs": 8006,
-      "exitCode": 0,
-      "signal": null,
-      "result": "PASSED",
-      "platform": "win32 x64 node v22.23.2",
-      "log": "artifacts/test-evidence/logs/static-typecheck-final.log"
-    },
-    {
       "id": "staging-deploy-web-a3778c9",
       "category": "deployment",
       "environment": "staging-cloudflare-neon",
@@ -8915,6 +9004,38 @@
       "result": "PASSED",
       "platform": "win32 x64 node v22.21.0",
       "log": "artifacts/test-evidence/logs/e2e-staging-a3778c9-firefox-mobile-chrome.log"
+    },
+    {
+      "id": "static-typecheck-final",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm typecheck",
+      "commit": "9e7127e7a9603b21038a7655e3594b1b78376196",
+      "dirty": true,
+      "startedAt": "2026-09-13T13:38:27.465Z",
+      "finishedAt": "2026-09-13T13:38:34.602Z",
+      "durationMs": 7137,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/static-typecheck-final.log"
+    },
+    {
+      "id": "unit-final",
+      "category": "unit",
+      "environment": "local",
+      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/final-vitest.json",
+      "commit": "9e7127e7a9603b21038a7655e3594b1b78376196",
+      "dirty": true,
+      "startedAt": "2026-09-13T13:38:39.902Z",
+      "finishedAt": "2026-09-13T13:39:23.649Z",
+      "durationMs": 43747,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/unit-final.log"
     }
   ],
   "receipts": [

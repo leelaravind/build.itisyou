@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T13:31:15.870Z at `a3778c9` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T13:39:52.411Z at `9e7127e` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -16,9 +16,9 @@ Generated 2026-09-13T13:31:15.870Z at `a3778c9` by `scripts/evidence/final-repor
 |---|---|---|---|
 | Static | Formatting | **PASSED** | pnpm format:check — exit 0 at 5093b06, 12 s |
 | Static | Lint | **PASSED** | pnpm lint — exit 0 at 5093b06, 97 s |
-| Static | Typecheck | **PASSED** | pnpm typecheck — exit 0 at 5093b06, 8 s |
+| Static | Typecheck | **PASSED** | pnpm typecheck — exit 0 at 9e7127e, 7 s |
 | Static | Generated documentation drift | **PASSED** | pnpm docs:check — exit 0 at 949a76e, 4 s |
-| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2450/2450 passed (artifacts/test-evidence/unit/final-a3778c9-vitest.json) |
+| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2454/2454 passed (artifacts/test-evidence/unit/final-vitest.json) |
 | Security | Secret scan | **PASSED** | pnpm scan:secrets — exit 0 at 5093b06, 1 s |
 | Security | Dependency vulnerability scan | **PASSED** | pnpm audit --audit-level=moderate — exit 0 at fc830b8, 1 s |
 | Security | Tenant isolation under a real pool, as the restricted role (staging Neon) | **PASSED** | pnpm verify:isolation — exit 0 at fc830b8, 3 s |
@@ -44,7 +44,7 @@ Generated 2026-09-13T13:31:15.870Z at `a3778c9` by `scripts/evidence/final-repor
 
 ## Test totals
 
-Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
+Unit and integration (Vitest, latest run): **2454 passed, 0 failed** of 2454.
 
 | Area | Passed | Failed |
 |---|---|---|
@@ -65,7 +65,7 @@ Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
 | packages/resilience | 34 | 0 |
 | packages/rules | 376 | 0 |
 | packages/shared | 211 | 0 |
-| packages/traceability | 86 | 0 |
+| packages/traceability | 90 | 0 |
 | packages/twin | 180 | 0 |
 
 ## End-to-end runs and browser matrix
@@ -335,13 +335,14 @@ Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
 | static-secrets-final | local | PASSED | 5093b06 (dirty) | 1 s |
 | static-docs-final | local | PASSED | 5093b06 (dirty) | 8 s |
 | static-lint-final | local | PASSED | 5093b06 (dirty) | 97 s |
-| static-typecheck-final | local | PASSED | 5093b06 (dirty) | 8 s |
 | staging-deploy-web-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 640 s |
 | unit-final-a3778c9 | local | PASSED | a3778c9 (dirty) | 104 s |
 | security-sast-semgrep | local | PASSED | a3778c9 (dirty) | 556 s |
 | staging-health-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 2 s |
 | staging-perf-smoke-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 9 s |
 | e2e-staging-a3778c9-firefox-mobile-chrome | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 1225 s |
+| static-typecheck-final | local | PASSED | 9e7127e (dirty) | 7 s |
+| unit-final | local | PASSED | 9e7127e (dirty) | 44 s |
 
 ## Failures found, and what happened to them
 
