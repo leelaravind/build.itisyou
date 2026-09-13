@@ -68,8 +68,14 @@ Confirmed by direct invocation during this audit:
 |---|---|---|
 | CPU cores | 16 | Supports parallel Vitest/Playwright workers |
 | RAM | 23.7 GB | Ample |
-| Disk E: free | 47.7 GB | Repository lives here |
-| Disk C: free | **10.9 GB** | **Constrained.** Keep pnpm store and Playwright cache off C:. Monitor. |
+| Disk C: free | **12.5 GB / 285 GB (4.4%)** | **Critical.** A full C: terminates the Claude Code process mid-run. Nothing of ours goes here. |
+| Disk E: free | **26.3 GB / 59 GB (44%)** | Repository, pnpm store, and small scratch/temp. Not roomy — no bulk artifacts. |
+| Disk G: free | 419 GB / 932 GB (45%) | External HDD. The only roomy volume: downloads, dumps, archives, browser binaries. |
+
+Disk figures measured 2026-09-05; C: has stayed near the 10.9 GB originally recorded, so the
+constraint is real and not merely precautionary. Temp goes to E:, anything large goes to G:.
+Redirects live in `E:/Project/.claude-scratch/env.sh` (and `env.ps1`) — source one before any command
+that writes non-trivial data. `.npmrc` already pins `store-dir`, `cache-dir`, and `state-dir` to E:.
 
 ### 2.4 Selected stack — pinned versions
 

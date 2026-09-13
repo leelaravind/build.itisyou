@@ -1,0 +1,16 @@
+{
+  "id": "baseline-audit-deps",
+  "category": "security",
+  "environment": "local",
+  "command": "pnpm audit --audit-level=moderate",
+  "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+  "dirty": true,
+  "startedAt": "2026-09-13T08:43:25.917Z",
+  "finishedAt": "2026-09-13T08:43:27.142Z",
+  "durationMs": 1225,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/baseline-audit-deps.log"
+}

@@ -1,0 +1,11 @@
+ ❯ |node| apps/worker/test/schedule.test.ts (13 tests | 1 failed) 83ms
+     × keeps env.staging.triggers within a fifth of the monthly compute quota 20ms
+ ❯ |node| apps/worker/test/drain.test.ts (9 tests | 2 failed) 5637ms
+     × dead-letters exhausted rows even when nothing else is pending 112ms
+     × gives the final attempt its chance before dead-lettering it 96ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |node| apps/worker/test/drain.test.ts > drain > dead-letters exhausted rows even when nothing else is pending
+ FAIL  |node| apps/worker/test/drain.test.ts > drain > gives the final attempt its chance before dead-lettering it
+ FAIL  |node| apps/worker/test/schedule.test.ts > schedule cost against the database quota > keeps env.staging.triggers within a fifth of the monthly compute quota
+ Test Files  2 failed (2)
+      Tests  3 failed | 19 passed (22)

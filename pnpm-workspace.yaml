@@ -14,3 +14,11 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - '@cloudflare/workers-types@5.20260901.1'
+
+# GHSA-g89c-p67h-r497 / GHSA-2jg2-4ch7-h545 (libheif, high) reach the tree only through
+# wrangler > miniflare > sharp@0.35.2 — deploy tooling, never the deployed Worker — but `pnpm audit`
+# is a release gate and it is right to fail on it. 0.35.4 is already resolved elsewhere in the tree,
+# so this unifies on the patched version rather than introducing one. Remove once miniflare's own
+# range reaches it.
+overrides:
+  'sharp@<0.35.4': '^0.35.4'

@@ -70,10 +70,22 @@ max_batch_timeout = 5
 max_retries = 5
 dead_letter_queue = "govintel-outbox-dlq-staging"
 
-# Every minute. The outbox is the durable record, so this cadence decides *latency* rather than
-# whether a side effect happens at all — which is why a minute is comfortable rather than tight.
+# Every three hours, at 17 past. A budgeted quantity, not a latency preference.
+#
+# This was `* * * * *`, and it took staging's database down: Neon scales a compute to zero only after
+# five idle minutes, so a query every minute meant it never slept — 97% of wall-clock time awake,
+# measured — and the free plan's 100 CU-hours were gone in ten days. Neon then suspends the compute
+# until the next billing period (HTTP 402, "exceeded the compute time quota"), which for staging was
+# 2026-09-11 to 2026-10-01.
+#
+# `apps/worker/test/schedule.test.ts` costs every schedule in this file against a fifth of that
+# quota and fails the build if one exceeds it. Hourly fails too: 36 CU-hours a month on its own.
+#
+# What three hours costs in behaviour: expired guest data is deleted within three hours of expiring
+# (the read path refuses an expired session at once, so this bounds storage, not access), and outbox
+# events wait up to three hours for a handler that, in V1, has no transport to deliver to.
 [env.staging.triggers]
-crons = ["* * * * *"]
+crons = ["17 */3 * * *"]
 
 # ---------------------------------------------------------------------------
 # Production — not provisioned

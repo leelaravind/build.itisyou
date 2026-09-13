@@ -1,0 +1,11 @@
+# pnpm format:check
+# commit 553a55172c001ff10e4f3dd268aa0ae29ed064a7 (dirty)
+# started 2026-09-13T08:40:11.415Z
+
+$ prettier --check .
+Checking formatting...
+[[33mwarn[39m] scripts/evidence/run-gate.mjs
+[[33mwarn[39m] Code style issues found in the above file. Run Prettier with --write to fix.
+[ELIFECYCLE] Command failed with exit code 1.
+
+# exit 1 after 24910 ms

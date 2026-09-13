@@ -58,6 +58,8 @@ export default defineConfig({
             // Server-side application code: cookie signing, session handling. Node environment, no
             // DOM — which is why it belongs in this project rather than the `client` one.
             'apps/*/test/server/**/*.test.ts',
+            // The background Worker: the drainer against real Postgres, and the cron budget.
+            'apps/worker/test/**/*.test.ts',
           ],
           exclude: ['**/node_modules/**', '**/dist/**', '**/.next/**', 'e2e/**'],
         },

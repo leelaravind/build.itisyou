@@ -91,6 +91,13 @@ Browsers cached at `C:\Users\kplee\AppData\Local\ms-playwright`:
 
 **Total Browsers:** 12 separate installations across 4 engine families. Cross-browser testing is ready.
 
+> **Cache location is a known deviation.** REPOSITORY_REALITY 2.3 requires browser binaries off
+> C:, but these 12 installs (2.2 GB) predate that rule and still sit under
+> `C:/Users/kplee/AppData/Local/ms-playwright`. They are left in place because other concurrent
+> sessions may be mid-run against them. New installs go to `G:/claude-temp/ms-playwright` via
+> `PLAYWRIGHT_BROWSERS_PATH`, set in `E:/Project/.claude-scratch/env.sh`. Reclaim the C: copy with
+> `pnpm exec playwright uninstall --all` only when no other session is running Playwright.
+
 ---
 
 ## 5. Latest Published Versions (npm registry)

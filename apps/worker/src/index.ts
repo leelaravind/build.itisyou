@@ -1,10 +1,10 @@
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { connect, type PooledDatabase } from '@govintel/db/connect';
-import { rowsOf } from '@govintel/db/client';
 import { outboxEvents } from '@govintel/db/schema';
 import { purgeExpiredGuestSessions } from '@govintel/db/guest';
-import { classify, MAX_ATTEMPTS } from '@govintel/resilience/jobs';
+import { classify } from '@govintel/resilience/jobs';
 import { logger } from '@govintel/shared/logging';
+import { drain, type OutboxMessage } from './drain.ts';
 
 /**
  * The outbox drainer and queue consumer.
@@ -40,35 +40,7 @@ export interface Env {
   readonly APP_ENV: string;
 }
 
-/**
- * What is put on the queue.
- *
- * The id and the key, not the payload. Two reasons, and the second is the one that matters:
- *
- * - A payload can exceed the message size limit, and a side effect that silently stops being
- *   delivered above a certain size is the worst kind of size limit.
- * - The row is the truth. Sending the payload means the consumer acts on a copy taken at publish
- *   time, and if the row changed in between — a redaction, a correction — it acts on something the
- *   database no longer says.
- */
-export interface OutboxMessage {
-  readonly id: string;
-  readonly idempotencyKey: string | null;
-  readonly eventType: string;
-  readonly correlationId: string;
-}
-
-/** How many rows one cron tick publishes. */
-const DRAIN_BATCH = 100;
-
-/**
- * How long a row may sit claimed before another drainer may publish it again.
- *
- * The drainer marks a row as attempted when it publishes, so two overlapping ticks do not publish the
- * same row twice. That mark has to expire, or a tick that dies between the mark and the publish would
- * strand the row forever — the failure that looks exactly like a side effect nobody ever needed.
- */
-const CLAIM_TIMEOUT_MS = 5 * 60 * 1000;
+export type { OutboxMessage } from './drain.ts';
 
 export default {
   /**
@@ -103,7 +75,7 @@ export default {
      */
     ctx.waitUntil(
       Promise.allSettled([
-        drain(db, env).catch((error: unknown) => {
+        runDrain(db, env).catch((error: unknown) => {
           logger.error('outbox drain failed', { error: String(error) });
         }),
         purge(db).catch((error: unknown) => {
@@ -177,83 +149,16 @@ async function purge(db: PooledDatabase): Promise<void> {
 /* Draining                                                                   */
 /* -------------------------------------------------------------------------- */
 
-async function drain(db: PooledDatabase, env: Env): Promise<void> {
-  const claimedBefore = new Date(Date.now() - CLAIM_TIMEOUT_MS);
+async function runDrain(db: PooledDatabase, env: Env): Promise<void> {
+  const { published, deadLettered } = await drain(db, async (message) => {
+    await env.OUTBOX_QUEUE.send(message);
+  });
 
-  /*
-   * Claim a batch and read it back in one statement.
-   *
-   * `FOR UPDATE SKIP LOCKED` is what makes two overlapping ticks safe: the second skips rows the
-   * first is holding rather than blocking on them. Without it, a slow drain and the next scheduled
-   * tick serialise behind each other and the backlog grows while both are running.
-   *
-   * The `attempt_count` bump is the claim. It is also the retry counter, which means a row that keeps
-   * failing to publish eventually exceeds `MAX_ATTEMPTS` and is dead-lettered rather than retried
-   * forever — §46's distinction between a failure worth repeating and one that is not.
-   */
-  const claimed = rowsOf<{
-    id: string;
-    idempotency_key: string | null;
-    event_type: string;
-    correlation_id: string;
-  }>(
-    await db.execute(sql`
-    WITH claimed AS (
-      SELECT id
-      FROM outbox_events
-      WHERE processed_at IS NULL
-        AND dead_lettered = false
-        AND attempt_count < ${MAX_ATTEMPTS}
-        AND (last_attempted_at IS NULL OR last_attempted_at < ${claimedBefore.toISOString()})
-      ORDER BY created_at ASC
-      LIMIT ${DRAIN_BATCH}
-      FOR UPDATE SKIP LOCKED
-    )
-    UPDATE outbox_events AS o
-    SET attempt_count = o.attempt_count + 1,
-        last_attempted_at = now()
-    FROM claimed
-    WHERE o.id = claimed.id
-    RETURNING o.id, o.idempotency_key, o.event_type, o.correlation_id
-  `),
-  );
-
-  if (claimed.length === 0) return;
-
-  for (const row of claimed) {
-    await env.OUTBOX_QUEUE.send({
-      id: row.id,
-      idempotencyKey: row.idempotency_key,
-      eventType: row.event_type,
-      correlationId: row.correlation_id,
-    });
+  if (published > 0) {
+    logger.info('outbox drained', { published, environment: env.APP_ENV });
   }
 
-  logger.info('outbox drained', { published: claimed.length, environment: env.APP_ENV });
-
-  await deadLetterExhausted(db);
-}
-
-/**
- * Mark rows that have run out of attempts.
- *
- * Separate from the claim so that a row is dead-lettered *after* its final attempt rather than
- * instead of it. Doing it in the claim would consume the last attempt without ever making it.
- */
-async function deadLetterExhausted(db: PooledDatabase): Promise<void> {
-  const exhausted = await db
-    .update(outboxEvents)
-    .set({ deadLettered: true, lastErrorCode: 'ATTEMPTS_EXHAUSTED' })
-    .where(
-      and(
-        isNull(outboxEvents.processedAt),
-        eq(outboxEvents.deadLettered, false),
-        sql`${outboxEvents.attemptCount} >= ${MAX_ATTEMPTS}`,
-      ),
-    )
-    .returning({ id: outboxEvents.id });
-
-  if (exhausted.length > 0) {
+  if (deadLettered.length > 0) {
     /*
      * Logged at error, not warn.
      *
@@ -261,10 +166,7 @@ async function deadLetterExhausted(db: PooledDatabase): Promise<void> {
      * change itself succeeded — so nothing else in the system will ever report it. This log line is
      * the only place that fact appears.
      */
-    logger.error('outbox events dead-lettered', {
-      count: exhausted.length,
-      ids: exhausted.map((row) => row.id),
-    });
+    logger.error('outbox events dead-lettered', { count: deadLettered.length, ids: deadLettered });
   }
 }
 

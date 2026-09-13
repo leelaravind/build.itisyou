@@ -1,0 +1,27 @@
+# pnpm audit --audit-level=moderate
+# commit 553a55172c001ff10e4f3dd268aa0ae29ed064a7 (dirty)
+# started 2026-09-13T08:43:25.917Z
+
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 │
+│                     │ and GHSA-2jg2-4ch7-h545                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ sharp                                                  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <0.35.4                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=0.35.4                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ .>@opennextjs/cloudflare>wrangler>miniflare>sharp      │
+│                     │                                                        │
+│                     │ .>wrangler>miniflare>sharp                             │
+│                     │                                                        │
+│                     │ apps__web>@opennextjs/                                 │
+│                     │ cloudflare>wrangler>miniflare>sharp                    │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-rgj7-g3m4-5g8c      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+1 vulnerabilities found
+Severity: 1 high
+
+# exit 1 after 1225 ms

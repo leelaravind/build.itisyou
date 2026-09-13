@@ -1,0 +1,16 @@
+{
+  "id": "baseline-unit",
+  "category": "unit",
+  "environment": "local",
+  "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/baseline-vitest.json",
+  "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+  "dirty": true,
+  "startedAt": "2026-09-13T08:43:41.601Z",
+  "finishedAt": "2026-09-13T08:45:47.723Z",
+  "durationMs": 126122,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/baseline-unit.log"
+}

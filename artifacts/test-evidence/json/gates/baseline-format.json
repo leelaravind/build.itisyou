@@ -1,0 +1,16 @@
+{
+  "id": "baseline-format",
+  "category": "static",
+  "environment": "local",
+  "command": "pnpm format:check",
+  "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+  "dirty": true,
+  "startedAt": "2026-09-13T08:40:11.415Z",
+  "finishedAt": "2026-09-13T08:40:36.325Z",
+  "durationMs": 24910,
+  "exitCode": 1,
+  "signal": null,
+  "result": "FAILED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/baseline-format.log"
+}
