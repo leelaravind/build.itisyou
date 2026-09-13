@@ -160,15 +160,24 @@ const lastUnit = unitRuns.at(-1);
  * replace a failing full run.
  */
 const stagingRuns = e2eRuns.filter((r) => r.file.includes('staging'));
-const maxStagingTotal = Math.max(0, ...stagingRuns.map((r) => r.total));
-const stagingE2e = latestBy(stagingRuns, (r) => r.total >= maxStagingTotal * 0.9);
-function stagingStatus(run) {
+/*
+ * The same rule for local runs: a re-run of three tests is not "the local suite", and a failure in
+ * the full run is resolved only by that test passing in a later local run.
+ */
+const localRuns = e2eRuns.filter((r) => r.file.includes('local'));
+const latestFull = (runs) => {
+  const max = Math.max(0, ...runs.map((r) => r.total));
+  return latestBy(runs, (r) => r.total >= max * 0.9);
+};
+const stagingE2e = latestFull(stagingRuns);
+const stagingStatus = (run) => suiteStatus(run, stagingRuns, 'staging');
+function suiteStatus(run, runs, label) {
   if (run === undefined)
-    return { status: 'NOT_CHECKED', detail: 'No full staging Playwright record' };
+    return { status: 'NOT_CHECKED', detail: `No full ${label} Playwright record` };
   const failed = Object.entries(run.outcomes)
     .filter(([, outcome]) => outcome === 'unexpected')
     .map(([key]) => key);
-  const later = stagingRuns.filter((r) => String(r.startTime) > String(run.startTime));
+  const later = runs.filter((r) => String(r.startTime) > String(run.startTime));
   const passedLater = (key) =>
     later.some((r) => r.outcomes[key] === 'expected' || r.outcomes[key] === 'flaky');
   /*
@@ -185,7 +194,7 @@ function stagingStatus(run) {
   if (unresolved.length === 0) {
     return {
       status: 'PASSED',
-      detail: `${base}; ${failed.length - skippedOnRerun.length} failures passed on a later staging re-run and ${skippedOnRerun.length} reached their own documented skip (${skippedOnRerun.join('; ')}) — re-runs: ${later.map((r) => r.file).join(', ')}; causes in FAILURE_RECEIPTS`,
+      detail: `${base}; ${failed.length - skippedOnRerun.length} failures passed on a later ${label} re-run and ${skippedOnRerun.length} reached their own documented skip (${skippedOnRerun.join('; ')}) — re-runs: ${later.map((r) => r.file).join(', ')}; causes in FAILURE_RECEIPTS`,
     };
   }
   return {
@@ -194,7 +203,7 @@ function stagingStatus(run) {
   };
 }
 
-const localE2e = latestBy(e2eRuns, (r) => r.file.includes('local'));
+const localE2e = latestFull(localRuns);
 const lastCi = [...ciRuns]
   .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
   .at(-1);
@@ -304,7 +313,7 @@ const checks = [
   {
     area: 'E2E',
     name: 'Local critical journeys (PGlite, Chromium)',
-    ...e2eStatus(localE2e, 'local'),
+    ...suiteStatus(localE2e, localRuns, 'local'),
   },
   {
     area: 'E2E',

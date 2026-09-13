@@ -1,0 +1,16 @@
+{
+  "id": "e2e-local-final-chromium-rerun",
+  "category": "e2e",
+  "environment": "local-pglite-mock-oidc",
+  "command": "npx playwright test --project=chromium --last-failed --workers=1 --reporter=line,json",
+  "commit": "7ed0985c194285d1c129602c7f9a8c0b964728d4",
+  "dirty": true,
+  "startedAt": "2026-09-13T14:52:46.031Z",
+  "finishedAt": "2026-09-13T14:53:24.437Z",
+  "durationMs": 38406,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-local-final-chromium-rerun.log"
+}

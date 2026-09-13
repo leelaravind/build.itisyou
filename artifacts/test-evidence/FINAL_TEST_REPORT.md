@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T14:27:12.146Z at `a378dc8` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T14:54:31.369Z at `7ed0985` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -22,11 +22,11 @@ Generated 2026-09-13T14:27:12.146Z at `a378dc8` by `scripts/evidence/final-repor
 | Security | Secret scan | **PASSED** | pnpm scan:secrets — exit 0 at 5093b06, 1 s |
 | Security | Dependency vulnerability scan | **PASSED** | pnpm audit --audit-level=moderate — exit 0 at fc830b8, 1 s |
 | Security | Tenant isolation under a real pool, as the restricted role (staging Neon) | **PASSED** | pnpm verify:isolation — exit 0 at fc830b8, 3 s |
-| Security | Cross-tenant attack suite (isolation.spec, 404-not-403) | **PASSED** | 8 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
-| Security | Security headers and CSP | **PASSED** | 28 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
-| Security | CSRF origin checks | **PASSED** | 12 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
-| Accessibility | axe WCAG 2.2 AA, landmarks, keyboard, reflow | **PASSED** | 42 passed, 0 failed, 2 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
-| E2E | Local critical journeys (PGlite, Chromium) | **PASSED** | 77 passed, 0 failed, 0 flaky, 3 skipped (artifacts/test-evidence/e2e/local-batch7-chromium.json) |
+| Security | Cross-tenant attack suite (isolation.spec, 404-not-403) | **PASSED** | 4 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-final-chromium.json |
+| Security | Security headers and CSP | **PASSED** | 14 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-final-chromium.json |
+| Security | CSRF origin checks | **PASSED** | 6 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-final-chromium.json |
+| Accessibility | axe WCAG 2.2 AA, landmarks, keyboard, reflow | **PASSED** | 22 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-final-chromium.json |
+| E2E | Local critical journeys (PGlite, Chromium) | **PASSED** | 255 passed, 3 failed, 0 flaky, 15 skipped (artifacts/test-evidence/e2e/local-final-chromium.json); 3 failures passed on a later local re-run and 0 reached their own documented skip () — re-runs: artifacts/test-evidence/e2e/local-final-chromium-rerun.json; causes in FAILURE_RECEIPTS |
 | E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json, artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS |
 | E2E | Staging, Firefox and mobile Chrome | **PASSED** | 516 passed, 0 failed, 0 flaky, 30 skipped (artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json) |
 | Performance | Large project (§63) on staging — every project page renders | **PASSED** | node scripts/evidence/perf-large.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 329fae5, 223 s |
@@ -142,6 +142,22 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | Project | Passed | Failed | Flaky | Skipped |
 |---|---|---|---|---|
 | chromium | 77 | 0 | 0 | 3 |
+
+### artifacts/test-evidence/e2e/local-final-chromium-rerun.json
+
+3 passed · 0 failed · 0 flaky · 0 skipped · 34 s
+
+| Project | Passed | Failed | Flaky | Skipped |
+|---|---|---|---|---|
+| chromium | 3 | 0 | 0 | 0 |
+
+### artifacts/test-evidence/e2e/local-final-chromium.json
+
+255 passed · 3 failed · 0 flaky · 15 skipped · 284 s
+
+| Project | Passed | Failed | Flaky | Skipped |
+|---|---|---|---|---|
+| chromium | 255 | 3 | 0 | 15 |
 
 ### artifacts/test-evidence/e2e/staging-329fae5-work-budget-change.json
 
@@ -359,6 +375,8 @@ Unit and integration (Vitest, latest run): **2458 passed, 0 failed** of 2458.
 | staging-health-329fae5 | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 3 s |
 | staging-perf-large | staging-cloudflare-neon | PASSED | 329fae5 (dirty) | 223 s |
 | e2e-staging-329fae5-work-budget-change | staging-cloudflare-neon | PASSED | a378dc8 | 210 s |
+| e2e-local-final-chromium | local-pglite-mock-oidc | FAILED | 7ed0985 | 287 s |
+| e2e-local-final-chromium-rerun | local-pglite-mock-oidc | PASSED | 7ed0985 (dirty) | 38 s |
 
 ## Failures found, and what happened to them
 

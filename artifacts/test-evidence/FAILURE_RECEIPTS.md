@@ -26,6 +26,7 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-018 | Reading the staging re-run's skips | Test coverage (evidence upload) | Fixed — the test waits for the form; 27/27 on staging |
 | FR-019 | §63 Large project on staging | Baseline (dangling edges after filtering records) | Fixed and re-verified on staging at `a2afc66` |
 | FR-020 | §63 Large project on staging | Performance (Work, Budget, Change at 9–10 s) | Partly fixed (quadratic scan removed; about 2× faster on staging); OPEN — W-PERF-3 |
+| FR-021 | Final local Chromium run | Test harness / machine contention | Not a product defect; the 3 tests passed when re-run alone |
 
 ---
 
@@ -473,4 +474,20 @@ it collapses). Then compute the decomposition once per twin version instead of o
 **Regression at `329fae5` on staging.** The Work, Budget, Change and Baseline specs in Chromium:
 **57 passed, 0 failed** (`e2e/staging-329fae5-work-budget-change.json`). Those specs include tenant
 isolation, the 404 rule and axe.
+
+## FR-021 — Three local tests timed out while agents were loading the machine
+
+**Observed.** The final local Chromium run at `7ed0985` (embedded database, mock OIDC issuer):
+255 passed, 3 failed, 15 skipped (`e2e/local-final-chromium.json`). All three failures were the
+tests' own 5-second waits for a server action: project creation in `lifecycle.spec` ("refuses
+evidence that points at nothing"), and plan generation in two `work.spec` setups. The screenshot shows
+the start form submitted with no refusal on the page; the answer simply took longer than 5 s.
+
+**Cause.** They failed in the minutes when two agents started beside the suite: a worktree
+`pnpm install` with profiling runs, and a full-history `git log -p` sweep. That is the contention
+pattern recorded in FR-011, where the limits were deliberately left alone.
+
+**Proof.** The same three tests re-run alone with `--last-failed --workers=1`: **3 passed**
+(`e2e/local-final-chromium-rerun.json`). The report counts the full run as passed only because each
+failure passed on that later local re-run, and it names them.
 
