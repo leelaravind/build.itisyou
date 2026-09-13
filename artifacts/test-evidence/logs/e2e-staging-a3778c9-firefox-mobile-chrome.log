@@ -1,0 +1,578 @@
+# npx playwright test --project=firefox --project=mobile-chrome --workers=2 --reporter=line,json --output=test-results-staging
+# commit a3778c93b158163e36577160b6f6015d3f5e69d3 (dirty)
+# started 2026-09-13T13:10:28.885Z
+
+
+Running 546 tests using 2 workers
+
+(node:2596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:12416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/546] [firefox] › e2e\accessibility.spec.ts:43:5 › axe — no violations › landing passes best-practice checks
+[2/546] [firefox] › e2e\accessibility.spec.ts:26:5 › axe — no violations › landing has no WCAG 2.2 A/AA violations
+[3/546] [firefox] › e2e\accessibility.spec.ts:26:5 › axe — no violations › design reference has no WCAG 2.2 A/AA violations
+[4/546] [firefox] › e2e\accessibility.spec.ts:43:5 › axe — no violations › design reference passes best-practice checks
+[5/546] [firefox] › e2e\accessibility.spec.ts:66:3 › landmarks and document structure › the shell exposes exactly one main landmark
+[6/546] [firefox] › e2e\accessibility.spec.ts:71:3 › landmarks and document structure › navigation landmarks are individually named
+[7/546] [firefox] › e2e\accessibility.spec.ts:86:3 › landmarks and document structure › the page has exactly one h1
+[8/546] [firefox] › e2e\accessibility.spec.ts:91:3 › landmarks and document structure › heading levels do not skip
+[9/546] [firefox] › e2e\accessibility.spec.ts:106:3 › landmarks and document structure › the document declares a language
+[10/546] [firefox] › e2e\accessibility.spec.ts:111:3 › landmarks and document structure › the page has a non-empty title
+[11/546] [firefox] › e2e\accessibility.spec.ts:118:3 › keyboard operability › a skip link is the first thing a keyboard user reaches
+[12/546] [firefox] › e2e\accessibility.spec.ts:133:3 › keyboard operability › the skip link becomes visible when focused
+[13/546] [firefox] › e2e\accessibility.spec.ts:141:3 › keyboard operability › every interactive control is reachable by keyboard
+[14/546] [firefox] › e2e\accessibility.spec.ts:169:3 › keyboard operability › focus is visible on every focused control
+[15/546] [firefox] › e2e\accessibility.spec.ts:189:3 › keyboard operability › icon-only controls carry accessible names
+[16/546] [firefox] › e2e\accessibility.spec.ts:206:3 › status is never conveyed by colour alone › every gate state renders a text label
+[17/546] [firefox] › e2e\accessibility.spec.ts:216:3 › status is never conveyed by colour alone › every gate state renders an icon alongside its label
+[18/546] [firefox] › e2e\accessibility.spec.ts:224:3 › status is never conveyed by colour alone › an uncertain figure is shown as a range, not a false midpoint
+[19/546] [firefox] › e2e\accessibility.spec.ts:233:3 › status is never conveyed by colour alone › an unknown figure is labelled unknown rather than shown as zero
+[20/546] [firefox] › e2e\accessibility.spec.ts:240:3 › reflow and zoom › content reflows at 320px without horizontal scrolling
+[21/546] [firefox] › e2e\accessibility.spec.ts:262:3 › reflow and zoom › has no axe violations at mobile width
+[22/546] [firefox] › e2e\accessibility.spec.ts:277:3 › reflow and zoom › respects prefers-reduced-motion
+[23/546] [firefox] › e2e\ai-import.spec.ts:123:3 › the request the user takes to an AI › says what leaves the platform before offering the copy button
+[24/546] [firefox] › e2e\ai-import.spec.ts:153:3 › the request the user takes to an AI › never claims to send anything itself
+[25/546] [firefox] › e2e\ai-import.spec.ts:161:3 › the request the user takes to an AI › the request text is present in the DOM without JavaScript
+[26/546] [firefox] › e2e\ai-import.spec.ts:180:3 › a well-formed response › is validated, previewed and only then applied
+[27/546] [firefox] › e2e\ai-import.spec.ts:192:3 › a well-formed response › states how much of it is cited rather than guessed
+[28/546] [firefox] › e2e\ai-import.spec.ts:202:3 › a well-formed response › records the decision and does not offer it twice
+[29/546] [firefox] › e2e\ai-import.spec.ts:212:3 › a well-formed response › applies the answers to the project, and says which
+[30/546] [firefox] › e2e\ai-import.spec.ts:237:3 › a well-formed response › can be discarded, keeping nothing
+[31/546] [firefox] › e2e\ai-import.spec.ts:247:3 › a well-formed response › survives being wrapped in the prose an AI usually adds
+[32/546] [firefox] › e2e\ai-import.spec.ts:278:3 › responses that must not be applied › a claim that says it was confirmed by the user
+[33/546] [firefox] › e2e\ai-import.spec.ts:299:3 › responses that must not be applied › instructions dressed as data
+[34/546] [firefox] › e2e\ai-import.spec.ts:319:3 › responses that must not be applied › a response written against a version this platform does not accept
+[35/546] [firefox] › e2e\ai-import.spec.ts:338:3 › responses that must not be applied › a dependency cycle between requirements
+[36/546] [firefox] › e2e\ai-import.spec.ts:366:3 › responses that must not be applied › an unknown top-level property
+[37/546] [firefox] › e2e\ai-import.spec.ts:380:3 › responses that must not be applied › text that is not JSON at all
+[38/546] [firefox] › e2e\ai-import.spec.ts:385:3 › responses that must not be applied › markup in a value is rendered as text, never as HTML
+[39/546] [firefox] › e2e\ai-import.spec.ts:409:3 › responses that must not be applied › a very large payload is refused rather than processed
+[40/546] [firefox] › e2e\ai-import.spec.ts:426:3 › an import belongs to one project and one guest › another guest cannot open it
+[41/546] [firefox] › e2e\ai-import.spec.ts:440:3 › an import belongs to one project and one guest › an unknown import id is indistinguishable from a forbidden one
+[42/546] [firefox] › e2e\ai-import.spec.ts:454:3 › accessibility of the interchange screens › the paste screen has no axe violations
+[43/546] [firefox] › e2e\ai-import.spec.ts:472:3 › accessibility of the interchange screens › the validation result has no axe violations
+[44/546] [firefox] › e2e\ai-import.spec.ts:491:3 › accessibility of the interchange screens › a rejected response explains itself rather than only failing
+[45/546] [firefox] › e2e\auth.spec.ts:72:3 › signing in › completes the round trip and leaves the user signed in
+[46/546] [firefox] › e2e\auth.spec.ts:80:3 › signing in › sends state and a PKCE challenge to the provider
+[47/546] [firefox] › e2e\auth.spec.ts:105:3 › signing in › refuses a callback carrying a state we never issued
+[48/546] [firefox] › e2e\auth.spec.ts:127:3 › signing up to save work started as a guest › carries the guest’s project onto the new account
+[49/546] [firefox] › e2e\auth.spec.ts:152:3 › signing up to save work started as a guest › tells a returning user their guest work was kept apart, and keeps it reachable
+[50/546] [firefox] › e2e\auth.spec.ts:189:3 › signing out › ends the session rather than only clearing the cookie
+[51/546] [firefox] › e2e\auth.spec.ts:221:3 › an account is its own tenant › a first sign-in creates an organisation to act in
+[52/546] [firefox] › e2e\auth.spec.ts:237:3 › an account is its own tenant › one account cannot open another account’s project
+[53/546] [firefox] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[54/546] [firefox] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[55/546] [firefox] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[56/546] [firefox] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[57/546] [firefox] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[58/546] [firefox] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[59/546] [firefox] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[60/546] [firefox] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[61/546] [firefox] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[62/546] [firefox] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[63/546] [firefox] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[64/546] [firefox] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[65/546] [firefox] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[66/546] [firefox] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[67/546] [firefox] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[68/546] [firefox] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[69/546] [firefox] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[70/546] [firefox] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[71/546] [firefox] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[72/546] [firefox] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[73/546] [firefox] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[74/546] [firefox] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[75/546] [firefox] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[76/546] [firefox] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[77/546] [firefox] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[78/546] [firefox] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[79/546] [firefox] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[80/546] [firefox] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[81/546] [firefox] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[82/546] [firefox] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[83/546] [firefox] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[84/546] [firefox] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[85/546] [firefox] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[86/546] [firefox] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[87/546] [firefox] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[88/546] [firefox] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[89/546] [firefox] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[90/546] [firefox] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[91/546] [firefox] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[92/546] [firefox] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[93/546] [firefox] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+[94/546] [firefox] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[95/546] [firefox] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[96/546] [firefox] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[97/546] [firefox] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+[98/546] [firefox] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[99/546] [firefox] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[100/546] [firefox] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[101/546] [firefox] › e2e\csrf.spec.ts:17:3 › state-changing requests from another origin › are refused
+[102/546] [firefox] › e2e\csrf.spec.ts:34:3 › state-changing requests from another origin › are refused even when the origin only looks similar
+[103/546] [firefox] › e2e\csrf.spec.ts:50:3 › state-changing requests from another origin › are refused when the origin header is absent
+[104/546] [firefox] › e2e\csrf.spec.ts:65:3 › state-changing requests from another origin › are refused when the origin is not a URL at all
+[105/546] [firefox] › e2e\csrf.spec.ts:77:3 › the check does not break the product › a same-origin POST is allowed through
+[106/546] [firefox] › e2e\csrf.spec.ts:94:3 › the check does not break the product › GET requests are not affected
+[107/546] [firefox] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[108/546] [firefox] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[109/546] [firefox] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[110/546] [firefox] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[111/546] [firefox] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[112/546] [firefox] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[113/546] [firefox] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[114/546] [firefox] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[115/546] [firefox] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[116/546] [firefox] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[117/546] [firefox] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[118/546] [firefox] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[119/546] [firefox] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[120/546] [firefox] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[121/546] [firefox] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[122/546] [firefox] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[123/546] [firefox] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[124/546] [firefox] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[125/546] [firefox] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[126/546] [firefox] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[127/546] [firefox] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[128/546] [firefox] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[129/546] [firefox] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › the route list was discovered, not empty
+[130/546] [firefox] › e2e\isolation.spec.ts:93:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[131/546] [firefox] › e2e\isolation.spec.ts:121:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[132/546] [firefox] › e2e\isolation.spec.ts:136:3 › every project surface isolates by tenant › no surface is reachable with no session at all
+[133/546] [firefox] › e2e\keyboard.spec.ts:41:3 › the keyboard-only journey › starts a project, answers the intake and builds the plan without a pointer
+[134/546] [firefox] › e2e\lifecycle.spec.ts:85:3 › the lifecycle › a new project starts at the beginning and says so
+[135/546] [firefox] › e2e\lifecycle.spec.ts:98:3 › the lifecycle › offers the next step and nothing further
+[136/546] [firefox] › e2e\lifecycle.spec.ts:111:3 › the lifecycle › advances when nothing is required, and records where it got to
+[137/546] [firefox] › e2e\lifecycle.spec.ts:122:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[138/546] [firefox] › e2e\lifecycle.spec.ts:146:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[139/546] [firefox] › e2e\lifecycle.spec.ts:179:3 › evidence and approvals › records evidence and stops asking for it
+[140/546] [firefox] › e2e\lifecycle.spec.ts:194:3 › evidence and approvals › refuses evidence that points at nothing
+[141/546] [firefox] › e2e\lifecycle.spec.ts:215:3 › evidence and approvals › refuses an approval with no reason
+[142/546] [firefox] › e2e\lifecycle.spec.ts:234:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[143/546] [firefox] › e2e\lifecycle.spec.ts:288:3 › evidence and approvals › refuses a file the allowlist does not accept
+[144/546] [firefox] › e2e\lifecycle.spec.ts:310:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[145/546] [firefox] › e2e\lifecycle.spec.ts:343:3 › evidence and approvals › evidence survives regenerating the plan
+[146/546] [firefox] › e2e\lifecycle.spec.ts:369:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[147/546] [firefox] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › / fits the viewport
+[148/546] [firefox] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /how-it-works fits the viewport
+[149/546] [firefox] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /start fits the viewport
+[150/546] [firefox] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /login fits the viewport
+[151/546] [firefox] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /portfolio fits the viewport
+[152/546] [firefox] › e2e\mobile.spec.ts:145:3 › no route scrolls sideways on a phone › every project surface fits the viewport
+[153/546] [firefox] › e2e\mobile.spec.ts:177:3 › touch targets › every visible control is large enough to hit
+[154/546] [firefox] › e2e\mobile.spec.ts:219:3 › dense representations get a different shape, not a smaller one › the traceability chain is readable as text
+[155/546] [firefox] › e2e\mobile.spec.ts:245:3 › dense representations get a different shape, not a smaller one › the work board becomes stacked lists with their status named
+[156/546] [firefox] › e2e\mobile.spec.ts:256:3 › dense representations get a different shape, not a smaller one › budget figures carry their unit inline
+[157/546] [firefox] › e2e\mobile.spec.ts:276:3 › mobile accessibility › the landing page has no violations at a phone size
+[158/546] [firefox] › e2e\mobile.spec.ts:290:3 › mobile accessibility › the intake wizard has no violations at a phone size
+[159/546] [firefox] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[160/546] [firefox] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[161/546] [firefox] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[162/546] [firefox] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[163/546] [firefox] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[164/546] [firefox] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[165/546] [firefox] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[166/546] [firefox] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[167/546] [firefox] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[168/546] [firefox] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[169/546] [firefox] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[170/546] [firefox] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[171/546] [firefox] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[172/546] [firefox] › e2e\plan.spec.ts:230:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[173/546] [firefox] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[174/546] [firefox] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[175/546] [firefox] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[176/546] [firefox] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+[177/546] [firefox] › e2e\portfolio.spec.ts:46:3 › the portfolio surface › is reachable without an account
+[178/546] [firefox] › e2e\portfolio.spec.ts:52:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[179/546] [firefox] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[180/546] [firefox] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[181/546] [firefox] › e2e\portfolio.spec.ts:91:3 › the portfolio surface › explains that it names a project rather than averaging health
+[182/546] [firefox] › e2e\portfolio.spec.ts:108:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[183/546] [firefox] › e2e\portfolio.spec.ts:125:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[184/546] [firefox] › e2e\portfolio.spec.ts:136:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[185/546] [firefox] › e2e\portfolio.spec.ts:146:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[186/546] [firefox] › e2e\portfolio.spec.ts:159:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[187/546] [firefox] › e2e\portfolio.spec.ts:169:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+[188/546] [firefox] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[189/546] [firefox] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[190/546] [firefox] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[191/546] [firefox] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[192/546] [firefox] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[193/546] [firefox] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[194/546] [firefox] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[195/546] [firefox] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[196/546] [firefox] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[197/546] [firefox] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[198/546] [firefox] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[199/546] [firefox] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[200/546] [firefox] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[201/546] [firefox] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[202/546] [firefox] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+[203/546] [firefox] › e2e\rules.spec.ts:71:3 › the findings page › is reachable from the plan
+[204/546] [firefox] › e2e\rules.spec.ts:76:3 › the findings page › states that no model was involved
+[205/546] [firefox] › e2e\rules.spec.ts:83:3 › the findings page › names the ruleset version
+[206/546] [firefox] › e2e\rules.spec.ts:89:3 › the findings page › shows what cannot be decided separately from what does not apply
+[207/546] [firefox] › e2e\rules.spec.ts:105:3 › the findings page › names the questions that would settle the undecidable rules
+[208/546] [firefox] › e2e\rules.spec.ts:113:3 › the findings page › the answer link goes back to intake
+[209/546] [firefox] › e2e\rules.spec.ts:130:3 › the findings page › every finding names the rule that produced it
+[210/546] [firefox] › e2e\rules.spec.ts:143:3 › the findings page › says whether a finding blocks or advises
+[211/546] [firefox] › e2e\rules.spec.ts:150:3 › the findings page › explains each finding rather than only naming it
+[212/546] [firefox] › e2e\rules.spec.ts:163:3 › gates › shows the quality gates and their state
+[213/546] [firefox] › e2e\rules.spec.ts:168:3 › gates › distinguishes an undecidable gate from a failed one
+[214/546] [firefox] › e2e\rules.spec.ts:175:3 › gates › never conveys gate state by colour alone
+[215/546] [firefox] › e2e\rules.spec.ts:188:3 › gates › does not pass a gate on an empty project
+[216/546] [firefox] › e2e\rules.spec.ts:202:3 › a project belongs to one guest › another guest cannot read its findings
+[217/546] [firefox] › e2e\rules.spec.ts:214:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[218/546] [firefox] › e2e\rules.spec.ts:225:3 › accessibility of the findings page › has no axe violations
+[219/546] [firefox] › e2e\rules.spec.ts:241:3 › accessibility of the findings page › works without client JavaScript
+[220/546] [firefox] › e2e\security-headers.spec.ts:19:3 › security headers › serves a Content-Security-Policy
+[221/546] [firefox] › e2e\security-headers.spec.ts:24:3 › security headers › CSP restricts scripts to same origin, with no unsafe-inline
+[222/546] [firefox] › e2e\security-headers.spec.ts:33:3 › security headers › CSP blocks the CDN the design exports depend on
+[223/546] [firefox] › e2e\security-headers.spec.ts:43:3 › security headers › CSP restricts fonts to self, so they must be self-hosted
+[224/546] [firefox] › e2e\security-headers.spec.ts:48:3 › security headers › CSP forbids framing and object embedding
+[225/546] [firefox] › e2e\security-headers.spec.ts:58:5 › security headers › supporting headers › sends X-Content-Type-Options: nosniff
+[226/546] [firefox] › e2e\security-headers.spec.ts:62:5 › security headers › supporting headers › sends X-Frame-Options: DENY
+[227/546] [firefox] › e2e\security-headers.spec.ts:66:5 › security headers › supporting headers › sends a strict Referrer-Policy
+[228/546] [firefox] › e2e\security-headers.spec.ts:72:5 › security headers › supporting headers › sends HSTS with a long max-age and subdomains
+[229/546] [firefox] › e2e\security-headers.spec.ts:80:5 › security headers › supporting headers › sends a Permissions-Policy denying sensitive capabilities
+[230/546] [firefox] › e2e\security-headers.spec.ts:88:5 › security headers › supporting headers › does not advertise the framework via X-Powered-By
+[231/546] [firefox] › e2e\security-headers.spec.ts:96:3 › landing page › renders for an anonymous visitor with no login
+[232/546] [firefox] › e2e\security-headers.spec.ts:108:3 › landing page › loads no third-party resources
+[233/546] [firefox] › e2e\security-headers.spec.ts:127:3 › landing page › reports no console errors
+[234/546] [firefox] › e2e\staging.spec.ts:25:3 › deployment identity › the running process reports what it is
+[235/546] [firefox] › e2e\staging.spec.ts:55:3 › deployment identity › health discloses nothing beyond a status and a version
+[236/546] [firefox] › e2e\staging.spec.ts:47:3 › deployment identity › health is never cached
+[237/546] [firefox] › e2e\staging.spec.ts:94:5 › performance smoke › / responds within the smoke budget
+[238/546] [firefox] › e2e\staging.spec.ts:94:5 › performance smoke › /how-it-works responds within the smoke budget
+[239/546] [firefox] › e2e\staging.spec.ts:94:5 › performance smoke › /start responds within the smoke budget
+[240/546] [firefox] › e2e\staging.spec.ts:94:5 › performance smoke › /portfolio responds within the smoke budget
+[241/546] [firefox] › e2e\staging.spec.ts:104:3 › performance smoke › a fully planned project renders within the smoke budget
+[242/546] [firefox] › e2e\staging.spec.ts:144:3 › the deployed artefact serves what was built › serves a production build rather than a development one
+[243/546] [firefox] › e2e\staging.spec.ts:161:3 › the deployed artefact serves what was built › does not advertise what it is built with
+[244/546] [firefox] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[245/546] [firefox] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[246/546] [firefox] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[247/546] [firefox] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[248/546] [firefox] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[249/546] [firefox] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[250/546] [firefox] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[251/546] [firefox] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[252/546] [firefox] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[253/546] [firefox] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[254/546] [firefox] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[255/546] [firefox] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[256/546] [firefox] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+[257/546] [firefox] › e2e\work.spec.ts:66:3 › before a plan exists › says there is nothing to break down yet
+[258/546] [firefox] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[259/546] [firefox] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[260/546] [firefox] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[261/546] [firefox] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[262/546] [firefox] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[263/546] [firefox] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[264/546] [firefox] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[265/546] [firefox] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[266/546] [firefox] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[267/546] [firefox] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[268/546] [firefox] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[269/546] [firefox] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[270/546] [firefox] › e2e\work.spec.ts:209:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[271/546] [firefox] › e2e\work.spec.ts:214:3 › a project belongs to one guest › a malformed project id is too
+[272/546] [firefox] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[273/546] [firefox] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+(node:17748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:25012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[274/546] [mobile-chrome] › e2e\accessibility.spec.ts:26:5 › axe — no violations › landing has no WCAG 2.2 A/AA violations
+[275/546] [mobile-chrome] › e2e\accessibility.spec.ts:43:5 › axe — no violations › landing passes best-practice checks
+[276/546] [mobile-chrome] › e2e\accessibility.spec.ts:26:5 › axe — no violations › design reference has no WCAG 2.2 A/AA violations
+[277/546] [mobile-chrome] › e2e\accessibility.spec.ts:43:5 › axe — no violations › design reference passes best-practice checks
+[278/546] [mobile-chrome] › e2e\accessibility.spec.ts:66:3 › landmarks and document structure › the shell exposes exactly one main landmark
+[279/546] [mobile-chrome] › e2e\accessibility.spec.ts:71:3 › landmarks and document structure › navigation landmarks are individually named
+[280/546] [mobile-chrome] › e2e\accessibility.spec.ts:86:3 › landmarks and document structure › the page has exactly one h1
+[281/546] [mobile-chrome] › e2e\accessibility.spec.ts:91:3 › landmarks and document structure › heading levels do not skip
+[282/546] [mobile-chrome] › e2e\accessibility.spec.ts:106:3 › landmarks and document structure › the document declares a language
+[283/546] [mobile-chrome] › e2e\accessibility.spec.ts:111:3 › landmarks and document structure › the page has a non-empty title
+[284/546] [mobile-chrome] › e2e\accessibility.spec.ts:118:3 › keyboard operability › a skip link is the first thing a keyboard user reaches
+[285/546] [mobile-chrome] › e2e\accessibility.spec.ts:133:3 › keyboard operability › the skip link becomes visible when focused
+[286/546] [mobile-chrome] › e2e\accessibility.spec.ts:141:3 › keyboard operability › every interactive control is reachable by keyboard
+[287/546] [mobile-chrome] › e2e\accessibility.spec.ts:169:3 › keyboard operability › focus is visible on every focused control
+[288/546] [mobile-chrome] › e2e\accessibility.spec.ts:189:3 › keyboard operability › icon-only controls carry accessible names
+[289/546] [mobile-chrome] › e2e\accessibility.spec.ts:206:3 › status is never conveyed by colour alone › every gate state renders a text label
+[290/546] [mobile-chrome] › e2e\accessibility.spec.ts:216:3 › status is never conveyed by colour alone › every gate state renders an icon alongside its label
+[291/546] [mobile-chrome] › e2e\accessibility.spec.ts:224:3 › status is never conveyed by colour alone › an uncertain figure is shown as a range, not a false midpoint
+[292/546] [mobile-chrome] › e2e\accessibility.spec.ts:233:3 › status is never conveyed by colour alone › an unknown figure is labelled unknown rather than shown as zero
+[293/546] [mobile-chrome] › e2e\accessibility.spec.ts:240:3 › reflow and zoom › content reflows at 320px without horizontal scrolling
+[294/546] [mobile-chrome] › e2e\accessibility.spec.ts:262:3 › reflow and zoom › has no axe violations at mobile width
+[295/546] [mobile-chrome] › e2e\accessibility.spec.ts:277:3 › reflow and zoom › respects prefers-reduced-motion
+[296/546] [mobile-chrome] › e2e\ai-import.spec.ts:123:3 › the request the user takes to an AI › says what leaves the platform before offering the copy button
+[297/546] [mobile-chrome] › e2e\ai-import.spec.ts:153:3 › the request the user takes to an AI › never claims to send anything itself
+[298/546] [mobile-chrome] › e2e\ai-import.spec.ts:161:3 › the request the user takes to an AI › the request text is present in the DOM without JavaScript
+[299/546] [mobile-chrome] › e2e\ai-import.spec.ts:180:3 › a well-formed response › is validated, previewed and only then applied
+[300/546] [mobile-chrome] › e2e\ai-import.spec.ts:192:3 › a well-formed response › states how much of it is cited rather than guessed
+[301/546] [mobile-chrome] › e2e\ai-import.spec.ts:202:3 › a well-formed response › records the decision and does not offer it twice
+[302/546] [mobile-chrome] › e2e\ai-import.spec.ts:212:3 › a well-formed response › applies the answers to the project, and says which
+[303/546] [mobile-chrome] › e2e\ai-import.spec.ts:237:3 › a well-formed response › can be discarded, keeping nothing
+[304/546] [mobile-chrome] › e2e\ai-import.spec.ts:247:3 › a well-formed response › survives being wrapped in the prose an AI usually adds
+[305/546] [mobile-chrome] › e2e\ai-import.spec.ts:278:3 › responses that must not be applied › a claim that says it was confirmed by the user
+[306/546] [mobile-chrome] › e2e\ai-import.spec.ts:299:3 › responses that must not be applied › instructions dressed as data
+[307/546] [mobile-chrome] › e2e\ai-import.spec.ts:319:3 › responses that must not be applied › a response written against a version this platform does not accept
+[308/546] [mobile-chrome] › e2e\ai-import.spec.ts:338:3 › responses that must not be applied › a dependency cycle between requirements
+[309/546] [mobile-chrome] › e2e\ai-import.spec.ts:366:3 › responses that must not be applied › an unknown top-level property
+[310/546] [mobile-chrome] › e2e\ai-import.spec.ts:380:3 › responses that must not be applied › text that is not JSON at all
+[311/546] [mobile-chrome] › e2e\ai-import.spec.ts:385:3 › responses that must not be applied › markup in a value is rendered as text, never as HTML
+[312/546] [mobile-chrome] › e2e\ai-import.spec.ts:409:3 › responses that must not be applied › a very large payload is refused rather than processed
+[313/546] [mobile-chrome] › e2e\ai-import.spec.ts:426:3 › an import belongs to one project and one guest › another guest cannot open it
+[314/546] [mobile-chrome] › e2e\ai-import.spec.ts:440:3 › an import belongs to one project and one guest › an unknown import id is indistinguishable from a forbidden one
+[315/546] [mobile-chrome] › e2e\ai-import.spec.ts:454:3 › accessibility of the interchange screens › the paste screen has no axe violations
+[316/546] [mobile-chrome] › e2e\ai-import.spec.ts:472:3 › accessibility of the interchange screens › the validation result has no axe violations
+[317/546] [mobile-chrome] › e2e\ai-import.spec.ts:491:3 › accessibility of the interchange screens › a rejected response explains itself rather than only failing
+[318/546] [mobile-chrome] › e2e\auth.spec.ts:72:3 › signing in › completes the round trip and leaves the user signed in
+[319/546] [mobile-chrome] › e2e\auth.spec.ts:80:3 › signing in › sends state and a PKCE challenge to the provider
+[320/546] [mobile-chrome] › e2e\auth.spec.ts:105:3 › signing in › refuses a callback carrying a state we never issued
+[321/546] [mobile-chrome] › e2e\auth.spec.ts:127:3 › signing up to save work started as a guest › carries the guest’s project onto the new account
+[322/546] [mobile-chrome] › e2e\auth.spec.ts:152:3 › signing up to save work started as a guest › tells a returning user their guest work was kept apart, and keeps it reachable
+[323/546] [mobile-chrome] › e2e\auth.spec.ts:189:3 › signing out › ends the session rather than only clearing the cookie
+[324/546] [mobile-chrome] › e2e\auth.spec.ts:221:3 › an account is its own tenant › a first sign-in creates an organisation to act in
+[325/546] [mobile-chrome] › e2e\auth.spec.ts:237:3 › an account is its own tenant › one account cannot open another account’s project
+[326/546] [mobile-chrome] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[327/546] [mobile-chrome] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[328/546] [mobile-chrome] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[329/546] [mobile-chrome] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[330/546] [mobile-chrome] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[331/546] [mobile-chrome] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[332/546] [mobile-chrome] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[333/546] [mobile-chrome] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[334/546] [mobile-chrome] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[335/546] [mobile-chrome] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[336/546] [mobile-chrome] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[337/546] [mobile-chrome] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[338/546] [mobile-chrome] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[339/546] [mobile-chrome] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[340/546] [mobile-chrome] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[341/546] [mobile-chrome] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[342/546] [mobile-chrome] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[343/546] [mobile-chrome] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[344/546] [mobile-chrome] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[345/546] [mobile-chrome] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[346/546] [mobile-chrome] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[347/546] [mobile-chrome] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[348/546] [mobile-chrome] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[349/546] [mobile-chrome] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[350/546] [mobile-chrome] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[351/546] [mobile-chrome] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[352/546] [mobile-chrome] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[353/546] [mobile-chrome] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[354/546] [mobile-chrome] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[355/546] [mobile-chrome] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[356/546] [mobile-chrome] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[357/546] [mobile-chrome] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[358/546] [mobile-chrome] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[359/546] [mobile-chrome] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[360/546] [mobile-chrome] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[361/546] [mobile-chrome] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[362/546] [mobile-chrome] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[363/546] [mobile-chrome] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[364/546] [mobile-chrome] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[365/546] [mobile-chrome] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[366/546] [mobile-chrome] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+[367/546] [mobile-chrome] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[368/546] [mobile-chrome] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[369/546] [mobile-chrome] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[370/546] [mobile-chrome] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+[371/546] [mobile-chrome] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[372/546] [mobile-chrome] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[373/546] [mobile-chrome] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[374/546] [mobile-chrome] › e2e\csrf.spec.ts:17:3 › state-changing requests from another origin › are refused
+[375/546] [mobile-chrome] › e2e\csrf.spec.ts:34:3 › state-changing requests from another origin › are refused even when the origin only looks similar
+[376/546] [mobile-chrome] › e2e\csrf.spec.ts:50:3 › state-changing requests from another origin › are refused when the origin header is absent
+[377/546] [mobile-chrome] › e2e\csrf.spec.ts:65:3 › state-changing requests from another origin › are refused when the origin is not a URL at all
+[378/546] [mobile-chrome] › e2e\csrf.spec.ts:77:3 › the check does not break the product › a same-origin POST is allowed through
+[379/546] [mobile-chrome] › e2e\csrf.spec.ts:94:3 › the check does not break the product › GET requests are not affected
+[380/546] [mobile-chrome] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[381/546] [mobile-chrome] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+[382/546] [mobile-chrome] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[383/546] [mobile-chrome] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[384/546] [mobile-chrome] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[385/546] [mobile-chrome] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+[386/546] [mobile-chrome] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[387/546] [mobile-chrome] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[388/546] [mobile-chrome] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[389/546] [mobile-chrome] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[390/546] [mobile-chrome] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[391/546] [mobile-chrome] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[392/546] [mobile-chrome] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[393/546] [mobile-chrome] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[394/546] [mobile-chrome] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[395/546] [mobile-chrome] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[396/546] [mobile-chrome] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[397/546] [mobile-chrome] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[398/546] [mobile-chrome] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[399/546] [mobile-chrome] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[400/546] [mobile-chrome] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[401/546] [mobile-chrome] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[402/546] [mobile-chrome] › e2e\isolation.spec.ts:83:3 › every project surface isolates by tenant › the route list was discovered, not empty
+[403/546] [mobile-chrome] › e2e\isolation.spec.ts:93:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[404/546] [mobile-chrome] › e2e\isolation.spec.ts:121:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[405/546] [mobile-chrome] › e2e\isolation.spec.ts:136:3 › every project surface isolates by tenant › no surface is reachable with no session at all
+[406/546] [mobile-chrome] › e2e\keyboard.spec.ts:41:3 › the keyboard-only journey › starts a project, answers the intake and builds the plan without a pointer
+[407/546] [mobile-chrome] › e2e\lifecycle.spec.ts:85:3 › the lifecycle › a new project starts at the beginning and says so
+[408/546] [mobile-chrome] › e2e\lifecycle.spec.ts:98:3 › the lifecycle › offers the next step and nothing further
+[409/546] [mobile-chrome] › e2e\lifecycle.spec.ts:111:3 › the lifecycle › advances when nothing is required, and records where it got to
+[410/546] [mobile-chrome] › e2e\lifecycle.spec.ts:122:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[411/546] [mobile-chrome] › e2e\lifecycle.spec.ts:146:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[412/546] [mobile-chrome] › e2e\lifecycle.spec.ts:179:3 › evidence and approvals › records evidence and stops asking for it
+[413/546] [mobile-chrome] › e2e\lifecycle.spec.ts:194:3 › evidence and approvals › refuses evidence that points at nothing
+[414/546] [mobile-chrome] › e2e\lifecycle.spec.ts:215:3 › evidence and approvals › refuses an approval with no reason
+[415/546] [mobile-chrome] › e2e\lifecycle.spec.ts:234:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[416/546] [mobile-chrome] › e2e\lifecycle.spec.ts:288:3 › evidence and approvals › refuses a file the allowlist does not accept
+[417/546] [mobile-chrome] › e2e\lifecycle.spec.ts:310:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[418/546] [mobile-chrome] › e2e\lifecycle.spec.ts:343:3 › evidence and approvals › evidence survives regenerating the plan
+[419/546] [mobile-chrome] › e2e\lifecycle.spec.ts:369:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[420/546] [mobile-chrome] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › / fits the viewport
+[421/546] [mobile-chrome] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /how-it-works fits the viewport
+[422/546] [mobile-chrome] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /start fits the viewport
+[423/546] [mobile-chrome] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /login fits the viewport
+[424/546] [mobile-chrome] › e2e\mobile.spec.ts:134:5 › no route scrolls sideways on a phone › /portfolio fits the viewport
+[425/546] [mobile-chrome] › e2e\mobile.spec.ts:145:3 › no route scrolls sideways on a phone › every project surface fits the viewport
+[426/546] [mobile-chrome] › e2e\mobile.spec.ts:177:3 › touch targets › every visible control is large enough to hit
+[427/546] [mobile-chrome] › e2e\mobile.spec.ts:219:3 › dense representations get a different shape, not a smaller one › the traceability chain is readable as text
+[428/546] [mobile-chrome] › e2e\mobile.spec.ts:245:3 › dense representations get a different shape, not a smaller one › the work board becomes stacked lists with their status named
+[429/546] [mobile-chrome] › e2e\mobile.spec.ts:256:3 › dense representations get a different shape, not a smaller one › budget figures carry their unit inline
+[430/546] [mobile-chrome] › e2e\mobile.spec.ts:276:3 › mobile accessibility › the landing page has no violations at a phone size
+[431/546] [mobile-chrome] › e2e\mobile.spec.ts:290:3 › mobile accessibility › the intake wizard has no violations at a phone size
+[432/546] [mobile-chrome] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[433/546] [mobile-chrome] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[434/546] [mobile-chrome] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[435/546] [mobile-chrome] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[436/546] [mobile-chrome] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[437/546] [mobile-chrome] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[438/546] [mobile-chrome] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[439/546] [mobile-chrome] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[440/546] [mobile-chrome] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[441/546] [mobile-chrome] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[442/546] [mobile-chrome] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[443/546] [mobile-chrome] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[444/546] [mobile-chrome] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[445/546] [mobile-chrome] › e2e\plan.spec.ts:230:3 › a plan belongs to one project and one guest › an unknown project id is indistinguishable from a forbidden one
+[446/546] [mobile-chrome] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[447/546] [mobile-chrome] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[448/546] [mobile-chrome] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[449/546] [mobile-chrome] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+[450/546] [mobile-chrome] › e2e\portfolio.spec.ts:46:3 › the portfolio surface › is reachable without an account
+[451/546] [mobile-chrome] › e2e\portfolio.spec.ts:52:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[452/546] [mobile-chrome] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[453/546] [mobile-chrome] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[454/546] [mobile-chrome] › e2e\portfolio.spec.ts:91:3 › the portfolio surface › explains that it names a project rather than averaging health
+[455/546] [mobile-chrome] › e2e\portfolio.spec.ts:108:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[456/546] [mobile-chrome] › e2e\portfolio.spec.ts:125:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[457/546] [mobile-chrome] › e2e\portfolio.spec.ts:136:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[458/546] [mobile-chrome] › e2e\portfolio.spec.ts:146:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[459/546] [mobile-chrome] › e2e\portfolio.spec.ts:159:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[460/546] [mobile-chrome] › e2e\portfolio.spec.ts:169:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+[461/546] [mobile-chrome] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[462/546] [mobile-chrome] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[463/546] [mobile-chrome] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[464/546] [mobile-chrome] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[465/546] [mobile-chrome] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[466/546] [mobile-chrome] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[467/546] [mobile-chrome] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[468/546] [mobile-chrome] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[469/546] [mobile-chrome] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[470/546] [mobile-chrome] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[471/546] [mobile-chrome] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[472/546] [mobile-chrome] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[473/546] [mobile-chrome] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[474/546] [mobile-chrome] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[475/546] [mobile-chrome] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+[476/546] [mobile-chrome] › e2e\rules.spec.ts:71:3 › the findings page › is reachable from the plan
+[477/546] [mobile-chrome] › e2e\rules.spec.ts:76:3 › the findings page › states that no model was involved
+[478/546] [mobile-chrome] › e2e\rules.spec.ts:83:3 › the findings page › names the ruleset version
+[479/546] [mobile-chrome] › e2e\rules.spec.ts:89:3 › the findings page › shows what cannot be decided separately from what does not apply
+[480/546] [mobile-chrome] › e2e\rules.spec.ts:105:3 › the findings page › names the questions that would settle the undecidable rules
+[481/546] [mobile-chrome] › e2e\rules.spec.ts:113:3 › the findings page › the answer link goes back to intake
+[482/546] [mobile-chrome] › e2e\rules.spec.ts:130:3 › the findings page › every finding names the rule that produced it
+[483/546] [mobile-chrome] › e2e\rules.spec.ts:143:3 › the findings page › says whether a finding blocks or advises
+[484/546] [mobile-chrome] › e2e\rules.spec.ts:150:3 › the findings page › explains each finding rather than only naming it
+[485/546] [mobile-chrome] › e2e\rules.spec.ts:163:3 › gates › shows the quality gates and their state
+[486/546] [mobile-chrome] › e2e\rules.spec.ts:168:3 › gates › distinguishes an undecidable gate from a failed one
+[487/546] [mobile-chrome] › e2e\rules.spec.ts:175:3 › gates › never conveys gate state by colour alone
+[488/546] [mobile-chrome] › e2e\rules.spec.ts:188:3 › gates › does not pass a gate on an empty project
+[489/546] [mobile-chrome] › e2e\rules.spec.ts:202:3 › a project belongs to one guest › another guest cannot read its findings
+[490/546] [mobile-chrome] › e2e\rules.spec.ts:214:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[491/546] [mobile-chrome] › e2e\rules.spec.ts:225:3 › accessibility of the findings page › has no axe violations
+[492/546] [mobile-chrome] › e2e\rules.spec.ts:241:3 › accessibility of the findings page › works without client JavaScript
+[493/546] [mobile-chrome] › e2e\security-headers.spec.ts:19:3 › security headers › serves a Content-Security-Policy
+[494/546] [mobile-chrome] › e2e\security-headers.spec.ts:24:3 › security headers › CSP restricts scripts to same origin, with no unsafe-inline
+[495/546] [mobile-chrome] › e2e\security-headers.spec.ts:43:3 › security headers › CSP restricts fonts to self, so they must be self-hosted
+[496/546] [mobile-chrome] › e2e\security-headers.spec.ts:33:3 › security headers › CSP blocks the CDN the design exports depend on
+[497/546] [mobile-chrome] › e2e\security-headers.spec.ts:48:3 › security headers › CSP forbids framing and object embedding
+[498/546] [mobile-chrome] › e2e\security-headers.spec.ts:58:5 › security headers › supporting headers › sends X-Content-Type-Options: nosniff
+[499/546] [mobile-chrome] › e2e\security-headers.spec.ts:62:5 › security headers › supporting headers › sends X-Frame-Options: DENY
+[500/546] [mobile-chrome] › e2e\security-headers.spec.ts:66:5 › security headers › supporting headers › sends a strict Referrer-Policy
+[501/546] [mobile-chrome] › e2e\security-headers.spec.ts:72:5 › security headers › supporting headers › sends HSTS with a long max-age and subdomains
+[502/546] [mobile-chrome] › e2e\security-headers.spec.ts:80:5 › security headers › supporting headers › sends a Permissions-Policy denying sensitive capabilities
+[503/546] [mobile-chrome] › e2e\security-headers.spec.ts:88:5 › security headers › supporting headers › does not advertise the framework via X-Powered-By
+[504/546] [mobile-chrome] › e2e\security-headers.spec.ts:96:3 › landing page › renders for an anonymous visitor with no login
+[505/546] [mobile-chrome] › e2e\security-headers.spec.ts:108:3 › landing page › loads no third-party resources
+[506/546] [mobile-chrome] › e2e\security-headers.spec.ts:127:3 › landing page › reports no console errors
+[507/546] [mobile-chrome] › e2e\staging.spec.ts:25:3 › deployment identity › the running process reports what it is
+[508/546] [mobile-chrome] › e2e\staging.spec.ts:47:3 › deployment identity › health is never cached
+[509/546] [mobile-chrome] › e2e\staging.spec.ts:55:3 › deployment identity › health discloses nothing beyond a status and a version
+[510/546] [mobile-chrome] › e2e\staging.spec.ts:94:5 › performance smoke › / responds within the smoke budget
+[511/546] [mobile-chrome] › e2e\staging.spec.ts:94:5 › performance smoke › /how-it-works responds within the smoke budget
+[512/546] [mobile-chrome] › e2e\staging.spec.ts:94:5 › performance smoke › /start responds within the smoke budget
+[513/546] [mobile-chrome] › e2e\staging.spec.ts:94:5 › performance smoke › /portfolio responds within the smoke budget
+[514/546] [mobile-chrome] › e2e\staging.spec.ts:104:3 › performance smoke › a fully planned project renders within the smoke budget
+[515/546] [mobile-chrome] › e2e\staging.spec.ts:144:3 › the deployed artefact serves what was built › serves a production build rather than a development one
+[516/546] [mobile-chrome] › e2e\staging.spec.ts:161:3 › the deployed artefact serves what was built › does not advertise what it is built with
+[517/546] [mobile-chrome] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[518/546] [mobile-chrome] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[519/546] [mobile-chrome] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[520/546] [mobile-chrome] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[521/546] [mobile-chrome] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[522/546] [mobile-chrome] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[523/546] [mobile-chrome] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[524/546] [mobile-chrome] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[525/546] [mobile-chrome] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[526/546] [mobile-chrome] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[527/546] [mobile-chrome] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[528/546] [mobile-chrome] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[529/546] [mobile-chrome] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+[530/546] [mobile-chrome] › e2e\work.spec.ts:66:3 › before a plan exists › says there is nothing to break down yet
+[531/546] [mobile-chrome] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[532/546] [mobile-chrome] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[533/546] [mobile-chrome] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[534/546] [mobile-chrome] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[535/546] [mobile-chrome] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[536/546] [mobile-chrome] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[537/546] [mobile-chrome] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[538/546] [mobile-chrome] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[539/546] [mobile-chrome] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[540/546] [mobile-chrome] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[541/546] [mobile-chrome] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[542/546] [mobile-chrome] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[543/546] [mobile-chrome] › e2e\work.spec.ts:209:3 › a project belongs to one guest › an unknown project id is indistinguishable from a forbidden one
+[544/546] [mobile-chrome] › e2e\work.spec.ts:214:3 › a project belongs to one guest › a malformed project id is too
+[545/546] [mobile-chrome] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[546/546] [mobile-chrome] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+  30 skipped
+  516 passed (20.4m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 1225186 ms

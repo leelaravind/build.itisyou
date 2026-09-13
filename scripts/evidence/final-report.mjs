@@ -312,6 +312,19 @@ const checks = [
     ...stagingStatus(stagingE2e),
   },
   {
+    /*
+     * The staging release suite covers Chromium, WebKit and iOS Safari. With CI blocked, the other
+     * two browsers of the matrix are run against staging separately; the check is NOT_CHECKED until
+     * that record exists.
+     */
+    area: 'E2E',
+    name: 'Staging, Firefox and mobile Chrome',
+    ...e2eStatus(
+      latestBy(stagingRuns, (r) => r.file.includes('firefox-mobile-chrome')),
+      'staging Firefox / mobile Chrome',
+    ),
+  },
+  {
     area: 'CI',
     name: 'GitHub Actions at the latest recorded run',
     ...ciStatus(),

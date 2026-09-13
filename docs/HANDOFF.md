@@ -150,7 +150,7 @@ against a schema it does not recognise (`docs/MIGRATION_POLICY.md`) — apply an
 
 | Resource | Value |
 |---|---|
-| GitHub | `leelaravind/build.itisyou`, private. CI runs on every push (8 jobs, E2E in 4 shards) |
+| GitHub | `leelaravind/build.itisyou`, private. CI is configured to run on every push (8 jobs, E2E in 4 shards); **no job has started since `5093b06`** — billing, see above |
 | Cloudflare account | `a0365f6aaae5fe32b3fdb8fa08fd000c`; zone `itisyou.app` active |
 | Staging web Worker | `govintel-web-staging` → https://govintel-web-staging.kpleelaaravind.workers.dev (re-created 2026-09-13; it had been deleted from the account) |
 | Staging cron Worker | `govintel-worker-staging`, `17 */3 * * *` (was every minute — FR-001) |
@@ -175,7 +175,7 @@ cron without changing the budget on purpose.
 ### Credentials
 
 Staging DSNs and the app-role password were in this session's scratchpad, which is temporary. To
-regenerate: `get_connection_string` for `silent-forest-67621251` (owner DSN; drop `-pooler` from the
+regenerate: `get_connection_string` for `proud-truth-36178526` (owner DSN; drop `-pooler` from the
 host for migrations), then `APP_ROLE_PASSWORD=<new> DATABASE_URL_UNPOOLED=<owner dsn> pnpm migrate`
 resets `govintel_app`'s password, then `npx wrangler hyperdrive update fa38480586e44cebab20fe15ac2121a0
 --origin-password <new> …` from `apps/web`. `SESSION_SECRET` is a Worker secret (`wrangler secret put`).

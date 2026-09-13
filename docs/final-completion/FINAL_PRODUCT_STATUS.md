@@ -19,11 +19,11 @@ below backed by a record under `artifacts/test-evidence/`.
 
 | | |
 |---|---|
-| Staging | https://govintel-web-staging.kpleelaaravind.workers.dev — deployed, health `ok`, database `NORMAL`, TLS/HSTS/nonce-CSP verified, rollback drilled |
+| Staging | https://govintel-web-staging.kpleelaaravind.workers.dev — serving the final commit `a3778c9` (version `71b8bc79`), health `ok`, database `NORMAL`, 9/9 post-deploy checks (TLS, HSTS, nonce CSP, framing, nosniff, 404 rule), perf smoke within budget, rollback drilled; database Neon `proud-truth-36178526` |
 | Production | `build.itisyou.app` — **not deployed**; blocked on the identity provider (owner) and the register's open items |
-| Unit and integration tests | **2,450 / 2,450** passed (Vitest, final local run); packages, app server code, worker, components |
-| End-to-end | local Chromium; staging Chromium, WebKit and iOS Safari; CI five-browser matrix green at `949a76e` (4 shards × 340 tests, 0 failed) |
-| CI | **Blocked from `5093b06` by GitHub billing** — no job starts. Last verdict green at `949a76e`; later commits verified by the same gates locally and on staging |
+| Unit and integration tests | **2,450 / 2,450** passed at the final commit `a3778c9` (Vitest, 64 files; `json/gates/unit-final-a3778c9.json`) |
+| End-to-end | **All five browsers on staging, 0 unresolved failures.** Firefox and mobile Chrome at the final commit `a3778c9`: **516 passed, 0 failed, 0 flaky, 30 skipped**. The skips: 16 sign-in journeys (no identity provider on staging, an owner action), 12 phone-only tests on desktop Firefox, and 2 waiting for mobile navigation (DEFERRED). Chromium, WebKit and iOS Safari at `5093b06`: full run plus re-run after FR-017, and the upload block 27/27 (FR-018). Local Chromium. CI five-browser matrix green at `949a76e` |
+| CI | **Blocked from `5093b06` by GitHub billing** — no job starts (runs `34754927664`, `34758533871` at `a3778c9`: 8 jobs, 0 steps). Last verdict green at `949a76e`; later commits verified by the same gates locally (format, lint, typecheck, docs, secrets, unit, SAST at `a3778c9`) and on staging |
 | Security | restricted role verified (no superuser/BYPASSRLS/owner), pooled isolation 6/6 on staging and on a restored copy, every tenant table under forced RLS, 404-not-403 enforced, secret and dependency scans clean, SAST (Semgrep, 74 rules) 0 findings |
 | Accessibility | axe WCAG 2.2 AA on every route, landmarks, keyboard reachability, reflow at 320 px, a keyboard-only journey from start to plan |
 | Migrations and recovery | migration 003 applied to staging with row counts sampled before and after (unchanged, 0 keyless rows); production's path 001→002→003 verified from its current fingerprint; rollback drilled in 9 s / 11 s; point-in-time restore drilled (ready in 9 s, restricted role intact, isolation 6/6 on the copy) |

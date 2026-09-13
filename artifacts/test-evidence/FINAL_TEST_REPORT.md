@@ -1,6 +1,6 @@
 # Final test report — build.itisyou
 
-Generated 2026-09-13T12:51:44.779Z at `5093b06` by `scripts/evidence/final-report.mjs` from recorded evidence only.
+Generated 2026-09-13T13:31:15.870Z at `a3778c9` by `scripts/evidence/final-report.mjs` from recorded evidence only.
 
 ## Verdict
 
@@ -8,35 +8,36 @@ Generated 2026-09-13T12:51:44.779Z at `5093b06` by `scripts/evidence/final-repor
 
 | PASSED | FAILED | NOT_CHECKED | BLOCKED | DEFERRED |
 |---|---|---|---|---|
-| 22 | 0 | 0 | 3 | 1 |
+| 23 | 0 | 0 | 3 | 1 |
 
 ## Required checks
 
 | Area | Check | Status | Evidence |
 |---|---|---|---|
-| Static | Formatting | **PASSED** | pnpm format:check — exit 0 at 949a76e, 11 s |
-| Static | Lint | **PASSED** | pnpm lint — exit 0 at 949a76e, 57 s |
-| Static | Typecheck | **PASSED** | pnpm typecheck — exit 0 at 949a76e, 48 s |
+| Static | Formatting | **PASSED** | pnpm format:check — exit 0 at 5093b06, 12 s |
+| Static | Lint | **PASSED** | pnpm lint — exit 0 at 5093b06, 97 s |
+| Static | Typecheck | **PASSED** | pnpm typecheck — exit 0 at 5093b06, 8 s |
 | Static | Generated documentation drift | **PASSED** | pnpm docs:check — exit 0 at 949a76e, 4 s |
-| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2450/2450 passed (artifacts/test-evidence/unit/batch7-vitest.json) |
-| Security | Secret scan | **PASSED** | pnpm scan:secrets — exit 0 at 949a76e, 1 s |
+| Unit and integration | Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components) | **PASSED** | 2450/2450 passed (artifacts/test-evidence/unit/final-a3778c9-vitest.json) |
+| Security | Secret scan | **PASSED** | pnpm scan:secrets — exit 0 at 5093b06, 1 s |
 | Security | Dependency vulnerability scan | **PASSED** | pnpm audit --audit-level=moderate — exit 0 at fc830b8, 1 s |
 | Security | Tenant isolation under a real pool, as the restricted role (staging Neon) | **PASSED** | pnpm verify:isolation — exit 0 at fc830b8, 3 s |
-| Security | Cross-tenant attack suite (isolation.spec, 404-not-403) | **PASSED** | 4 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-5093b06-rerun.json |
-| Security | Security headers and CSP | **PASSED** | 42 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-5093b06.json |
-| Security | CSRF origin checks | **PASSED** | 18 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-5093b06.json |
-| Accessibility | axe WCAG 2.2 AA, landmarks, keyboard, reflow | **PASSED** | 61 passed, 0 failed, 5 skipped in artifacts/test-evidence/e2e/staging-5093b06.json |
+| Security | Cross-tenant attack suite (isolation.spec, 404-not-403) | **PASSED** | 8 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
+| Security | Security headers and CSP | **PASSED** | 28 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
+| Security | CSRF origin checks | **PASSED** | 12 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
+| Accessibility | axe WCAG 2.2 AA, landmarks, keyboard, reflow | **PASSED** | 42 passed, 0 failed, 2 skipped in artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json |
 | E2E | Local critical journeys (PGlite, Chromium) | **PASSED** | 77 passed, 0 failed, 0 flaky, 3 skipped (artifacts/test-evidence/e2e/local-batch7-chromium.json) |
-| E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json; causes in FAILURE_RECEIPTS |
-| CI | GitHub Actions at the latest recorded run | **BLOCKED** | run 34754927664 at 5093b06: failure — no job started (GitHub Actions billing / spending limit; owner action). Last run that executed: run 34752927029 at 949a76e: success |
+| E2E | Staging release suite (Cloudflare + Neon) | **PASSED** | 392 passed, 367 failed, 0 flaky, 60 skipped (artifacts/test-evidence/e2e/staging-5093b06.json); 365 failures passed on a later staging re-run and 2 reached their own documented skip (guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [webkit]; guest-intake.spec.ts › issues an HttpOnly session cookie once a project is started [mobile-safari]) — re-runs: artifacts/test-evidence/e2e/staging-5093b06-rerun.json, artifacts/test-evidence/e2e/staging-5093b06-upload.json, artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json; causes in FAILURE_RECEIPTS |
+| E2E | Staging, Firefox and mobile Chrome | **PASSED** | 516 passed, 0 failed, 0 flaky, 30 skipped (artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json) |
+| CI | GitHub Actions at the latest recorded run | **BLOCKED** | run 34758533871 at a3778c9: failure — no job started (GitHub Actions billing / spending limit; owner action). Last run that executed: run 34752927029 at 949a76e: success |
 | Database | Schema applied to staging by the migration tool | **PASSED** | node --experimental-strip-types scripts/migrate.mjs — exit 0 at fc830b8, 2 s |
-| Deployment | Staging web Worker deployed | **PASSED** | wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh — exit 0 at 5093b06, 555 s |
+| Deployment | Staging web Worker deployed | **PASSED** | wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy-final.sh — exit 0 at a3778c9, 640 s |
 | Deployment | Staging cron Worker deployed with the budgeted schedule | **PASSED** | cd apps/worker && npx wrangler deploy --env staging — exit 0 at efdb739, 28 s |
-| Deployment | Staging health, version and database reachability | **PASSED** | node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev 5093b06 — exit 0 at 5093b06, 1 s |
+| Deployment | Staging health, version and database reachability | **PASSED** | node scripts/evidence/deploy-check.mjs https://govintel-web-staging.kpleelaaravind.workers.dev a3778c9 — exit 0 at a3778c9, 2 s |
 | Rollback | Staging rollback drill (roll back, verify, roll forward) | **PASSED** | bash /e/Project/.claude-scratch/tmp/rollback-drill.sh — exit 0 at b3829d0, 21 s |
-| Performance | Latency smoke against staging | **PASSED** | node scripts/evidence/perf-smoke.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at 5093b06, 8 s |
+| Performance | Latency smoke against staging | **PASSED** | node scripts/evidence/perf-smoke.mjs https://govintel-web-staging.kpleelaaravind.workers.dev — exit 0 at a3778c9, 9 s |
 | Recovery | Point-in-time database restore drill (restored copy verified as the restricted role) | **PASSED** | pnpm verify:isolation — exit 0 at 949a76e, 3 s |
-| Security | Static application security testing (SAST, Semgrep public rulesets) | **PASSED** | E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --config p/typescript --config p/javascript --config p/nodejs --metrics=off --jobs 2 --exclude node_modules --exclude dist --exclude .next --exclude test --exclude e2e --exclude artifacts --json --output artifacts/test-evidence/security/semgrep.json apps packages scripts — exit 0 at 5093b06, 487 s |
+| Security | Static application security testing (SAST, Semgrep public rulesets) | **PASSED** | E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --config p/typescript --config p/javascript --config p/nodejs --metrics=off --jobs 2 --exclude node_modules --exclude dist --exclude .next --exclude test --exclude e2e --exclude artifacts --json --output artifacts/test-evidence/security/semgrep.json apps packages scripts — exit 0 at a3778c9, 556 s |
 | Identity | Sign-in against a real identity provider | **BLOCKED** | No OIDC client exists for any environment (OWNER_ACTIONS.md item 1). Verified against a local mock issuer only |
 | Production | Production deployment and post-deploy verification | **BLOCKED** | Not deployed: release gates are not all green (identity provider, open P1s in COMPLETION_REGISTER.md) |
 | Mobile | Distinct mobile screens 59–64 | **DEFERRED** | Pages reflow to 320 px and pass the reflow checks; distinct screens are not built (register W-MOB-1) |
@@ -181,6 +182,15 @@ Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
 | webkit | 244 | 1 | 0 | 28 |
 | mobile-safari | 255 | 1 | 0 | 17 |
 
+### artifacts/test-evidence/e2e/staging-a3778c9-firefox-mobile-chrome.json
+
+516 passed · 0 failed · 0 flaky · 30 skipped · 1223 s
+
+| Project | Passed | Failed | Flaky | Skipped |
+|---|---|---|---|---|
+| firefox | 253 | 0 | 0 | 20 |
+| mobile-chrome | 263 | 0 | 0 | 10 |
+
 ### artifacts/test-evidence/e2e/staging-b3829d0.json
 
 388 passed · 0 failed · 0 flaky · 410 skipped · 370 s
@@ -248,6 +258,15 @@ Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
   - Concurrency suites against networked Postgres: failure
   - End-to-end and accessibility (2/4): failure
   - Cloudflare Worker build: failure
+- Run 34758533871 at `a3778c9` — **failure**
+  - Secret and dependency scan: failure
+  - End-to-end and accessibility (3/4): failure
+  - End-to-end and accessibility (4/4): failure
+  - End-to-end and accessibility (2/4): failure
+  - Format, lint, typecheck, unit tests: failure
+  - Concurrency suites against networked Postgres: failure
+  - Cloudflare Worker build: failure
+  - End-to-end and accessibility (1/4): failure
 
 ## Gate records
 
@@ -307,12 +326,22 @@ Unit and integration (Vitest, latest run): **2450 passed, 0 failed** of 2450.
 | staging-health-5093b06 | staging | PASSED | 5093b06 (dirty) | 1 s |
 | staging-perf-smoke-5093b06 | staging | PASSED | 5093b06 (dirty) | 8 s |
 | e2e-staging-5093b06 | staging-cloudflare-neon | FAILED | 5093b06 (dirty) | 1933 s |
-| security-sast-semgrep | local | PASSED | 5093b06 (dirty) | 487 s |
 | staging2-migrate | staging | PASSED | 5093b06 (dirty) | 1 s |
 | staging2-isolation | staging-neon | PASSED | 5093b06 (dirty) | 4 s |
 | staging-health-5093b06-db2 | staging | PASSED | 5093b06 (dirty) | 1 s |
 | e2e-staging-5093b06-rerun | staging-cloudflare-neon | PASSED | 5093b06 (dirty) | 1311 s |
 | e2e-staging-5093b06-upload | staging-cloudflare-neon | PASSED | 5093b06 (dirty) | 100 s |
+| static-format-final | local | PASSED | 5093b06 (dirty) | 12 s |
+| static-secrets-final | local | PASSED | 5093b06 (dirty) | 1 s |
+| static-docs-final | local | PASSED | 5093b06 (dirty) | 8 s |
+| static-lint-final | local | PASSED | 5093b06 (dirty) | 97 s |
+| static-typecheck-final | local | PASSED | 5093b06 (dirty) | 8 s |
+| staging-deploy-web-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 640 s |
+| unit-final-a3778c9 | local | PASSED | a3778c9 (dirty) | 104 s |
+| security-sast-semgrep | local | PASSED | a3778c9 (dirty) | 556 s |
+| staging-health-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 2 s |
+| staging-perf-smoke-a3778c9 | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 9 s |
+| e2e-staging-a3778c9-firefox-mobile-chrome | staging-cloudflare-neon | PASSED | a3778c9 (dirty) | 1225 s |
 
 ## Failures found, and what happened to them
 
