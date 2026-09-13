@@ -113,6 +113,49 @@ END;
 $$ LANGUAGE plpgsql;
 `,
   },
+  {
+    id: '003-intake-and-import-isolation',
+    from: '0433d7ed47c7dcf46326073dc75fae97',
+    to: '6aa38daebd263bd6bf10f2f639a6682b',
+    why:
+      "intake_answers and ai_imports hold a project's answers and pasted AI output -- tenant data -- " +
+      "and were the two tenant tables without row-level security, guarded only by the application's " +
+      'ownership check. Their writers also left organization_id NULL, so a policy could not have ' +
+      "been added without first making the key real. This backfills the key from each row's " +
+      'project, makes it NOT NULL, and forces the same tenant policy every other tenant table has.',
+    rollback:
+      'ALTER TABLE ... NO FORCE ROW LEVEL SECURITY; DISABLE ROW LEVEL SECURITY; DROP POLICY ' +
+      '..._tenant_isolation; ALTER COLUMN organization_id DROP NOT NULL -- on both tables. The ' +
+      'backfilled keys are correct values and are left in place. A hard cutover under the exact ' +
+      'fingerprint rule (MIGRATION_POLICY.md): the previous release writes these rows without the ' +
+      'key and refuses to serve against this shape, so apply and deploy together.',
+    sql: `
+UPDATE intake_answers AS a
+SET organization_id = p.organization_id
+FROM projects AS p
+WHERE a.project_id = p.id AND a.organization_id IS DISTINCT FROM p.organization_id;
+
+UPDATE ai_imports AS i
+SET organization_id = p.organization_id
+FROM projects AS p
+WHERE i.project_id = p.id AND i.organization_id IS DISTINCT FROM p.organization_id;
+
+ALTER TABLE intake_answers ALTER COLUMN organization_id SET NOT NULL;
+ALTER TABLE ai_imports ALTER COLUMN organization_id SET NOT NULL;
+
+ALTER TABLE intake_answers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE intake_answers FORCE ROW LEVEL SECURITY;
+CREATE POLICY intake_answers_tenant_isolation ON intake_answers
+  USING (organization_id::text = current_setting('app.current_organization_id', true))
+  WITH CHECK (organization_id::text = current_setting('app.current_organization_id', true));
+
+ALTER TABLE ai_imports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_imports FORCE ROW LEVEL SECURITY;
+CREATE POLICY ai_imports_tenant_isolation ON ai_imports
+  USING (organization_id::text = current_setting('app.current_organization_id', true))
+  WITH CHECK (organization_id::text = current_setting('app.current_organization_id', true));
+`,
+  },
 ];
 
 /** Bookkeeping, so a migration cannot be applied twice and the history is readable in the database. */

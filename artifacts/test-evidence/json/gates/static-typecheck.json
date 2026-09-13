@@ -1,0 +1,16 @@
+{
+  "id": "static-typecheck",
+  "category": "static",
+  "environment": "local",
+  "command": "pnpm typecheck",
+  "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+  "dirty": true,
+  "startedAt": "2026-09-13T09:56:42.112Z",
+  "finishedAt": "2026-09-13T09:56:48.003Z",
+  "durationMs": 5891,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/static-typecheck.log"
+}

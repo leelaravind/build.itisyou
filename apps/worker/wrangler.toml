@@ -88,17 +88,28 @@ dead_letter_queue = "govintel-outbox-dlq-staging"
 crons = ["17 */3 * * *"]
 
 # ---------------------------------------------------------------------------
-# Production — not provisioned
+# Production
 # ---------------------------------------------------------------------------
 #
-# Deliberately left without bindings rather than filled with placeholder ids.
+# The database and the schedule, and no queue. Guest expiry (§5.3) is the job production needs, and
+# it was not going to run: this section had no bindings at all. The outbox drain is skipped where no
+# queue is bound — nothing in V1 writes an outbox row, so a production queue would be infrastructure
+# with no producer (the register records the outbox decision as W-OUT-1).
 #
-# A placeholder that looks like an id is the shape that gets deployed by accident; an environment
-# with no bindings fails immediately and unmistakably at deploy time. Phase 20 provisions these
-# against the production account and fills this section in — see the runbook §6.
+# Not deployed: production is blocked until its release gates pass (docs/final-completion/).
 
 [env.production]
 name = "govintel-worker-production"
 
 [env.production.vars]
 APP_ENV = "production"
+
+# The production Hyperdrive configuration the web Worker uses, caching disabled for the same reason
+# as staging's (KI-050): under RLS two tenants issue byte-identical queries.
+[[env.production.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "c697deee65094523ac73e77dc94b9fd0"
+
+# The same budgeted schedule as staging; apps/worker/test/schedule.test.ts costs it.
+[env.production.triggers]
+crons = ["17 */3 * * *"]

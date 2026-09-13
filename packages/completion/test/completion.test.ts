@@ -475,6 +475,29 @@ describe('a project can close only when criteria pass or accepted exceptions exi
 /* Archive                                                                    */
 /* -------------------------------------------------------------------------- */
 
+describe('a criterion with no record behind it is unknown, not met', () => {
+  /*
+   * The closure page passed literal zeros for security findings and stale documents, so a project
+   * nobody had reviewed or documented reported both criteria met. Undefined now means "there is no
+   * record to count from", and it must neither pass nor be excusable.
+   */
+  it('reports security as unknown when no findings are recorded', () => {
+    const result = assessClosure(closeable({ openSecurityFindings: undefined }));
+    const outcome = result.outcomes.find((o) => o.criterion === 'SECURITY_RESOLVED');
+    expect(outcome?.result).toBe('UNKNOWN');
+    expect(result.mayClose).toBe(false);
+  });
+
+  it('reports documents as unknown when none are tracked, and an exception cannot excuse it', () => {
+    const result = assessClosure(
+      closeable({ staleDocuments: undefined, exceptions: [exception()] }),
+    );
+    const outcome = result.outcomes.find((o) => o.criterion === 'DOCUMENTS_COMPLETE');
+    expect(outcome?.result).toBe('UNKNOWN');
+    expect(result.mayClose).toBe(false);
+  });
+});
+
 describe('archiving is not deletion', () => {
   const request = {
     projectId: PROJECT,

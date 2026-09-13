@@ -1,0 +1,9 @@
+# pnpm format:check
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:56:33.948Z
+
+$ prettier --check .
+Checking formatting...
+All matched files use Prettier code style!
+
+# exit 0 after 7965 ms

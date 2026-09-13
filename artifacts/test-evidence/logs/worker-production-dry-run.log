@@ -1,0 +1,21 @@
+# cd apps/worker && npx wrangler deploy --env production --dry-run --outdir ../../.wrangler-dry
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:47:07.542Z
+
+
+ ⛅️ wrangler 4.127.1 (update available 4.131.1)
+───────────────────────────────────────────────
+Total Upload: 1187.77 KiB / gzip: 241.63 KiB
+Your Worker has access to the following bindings:
+Binding                                                Resource                  
+env.HYPERDRIVE (c697deee65094523ac73e77dc94b9fd0)      Hyperdrive Config         
+env.APP_ENV ("production")                             Environment Variable      
+
+--dry-run: exiting now.
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 5746 ms

@@ -14,6 +14,11 @@ import { withDatabase } from '../../../../lib/server/database.ts';
 import { loadPlanRows } from '../actions.ts';
 import { applyChange, changeRequestsFor, decideChange, requestChange } from '../change-actions.ts';
 import type { IconName } from '../../../../components/ui/icon-paths.ts';
+import {
+  ActionOutcome,
+  CHANGE_REFUSALS,
+  messageFor,
+} from '../../../../components/ui/ActionOutcome.tsx';
 
 /**
  * Change impact preview.
@@ -34,10 +39,41 @@ export default async function ChangePage({
   searchParams,
 }: {
   params: Promise<{ projectId: string }>;
-  searchParams: Promise<{ node?: string }>;
+  searchParams: Promise<{
+    node?: string;
+    error?: string;
+    requested?: string;
+    decided?: string;
+    applied?: string;
+  }>;
 }) {
   const { projectId } = await params;
-  const { node: selectedId } = await searchParams;
+  const { node: selectedId, error, requested, decided, applied } = await searchParams;
+
+  const outcome =
+    error !== undefined
+      ? {
+          tone: 'refused' as const,
+          message: messageFor(
+            CHANGE_REFUSALS,
+            error,
+            'That could not be done. Nothing was changed.',
+          ),
+        }
+      : applied !== undefined
+        ? {
+            tone: 'success' as const,
+            message: 'The change was applied and the project moved to a new version.',
+          }
+        : decided !== undefined
+          ? { tone: 'success' as const, message: 'The decision was recorded.' }
+          : requested !== undefined
+            ? {
+                tone: 'success' as const,
+                message:
+                  'The change request was raised, with its impact recorded against this version.',
+              }
+            : undefined;
 
   const loaded = await loadPlanRows(projectId);
   if (loaded === null) notFound();
@@ -132,6 +168,10 @@ export default async function ChangePage({
             it, so you can disagree with the reasoning rather than only with the answer.
           </p>
         </header>
+
+        {outcome === undefined ? null : (
+          <ActionOutcome tone={outcome.tone} message={outcome.message} />
+        )}
 
         {candidates.length === 0 ? (
           <section className="flex flex-col gap-md rounded-lg border border-outline-variant bg-surface-container-low p-lg">

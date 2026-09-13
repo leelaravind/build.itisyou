@@ -130,6 +130,9 @@ async function record(input: {
     );
 
     const row = {
+      // The tenant key, which row-level security on intake_answers compares against. It used to be
+      // left NULL, which is why the table could not carry a policy at all.
+      organizationId: project.organizationId,
       projectId: input.projectId,
       fieldId: field.fieldId,
       category: field.category,

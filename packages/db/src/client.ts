@@ -324,7 +324,7 @@ CREATE INDEX project_members_user_idx ON project_members (user_id);
 
 CREATE TABLE intake_answers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
   field_id text NOT NULL,
   category text NOT NULL,
@@ -350,7 +350,7 @@ CREATE INDEX intake_answers_org_idx ON intake_answers (organization_id);
 
 CREATE TABLE ai_imports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id uuid REFERENCES organizations(id) ON DELETE CASCADE,
+  organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
   prompt_id text,
   state text NOT NULL DEFAULT 'RAW',
@@ -808,6 +808,18 @@ CREATE POLICY change_requests_tenant_isolation ON change_requests
 ALTER TABLE approvals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE approvals FORCE ROW LEVEL SECURITY;
 CREATE POLICY approvals_tenant_isolation ON approvals
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE intake_answers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE intake_answers FORCE ROW LEVEL SECURITY;
+CREATE POLICY intake_answers_tenant_isolation ON intake_answers
+  USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
+  WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
+
+ALTER TABLE ai_imports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_imports FORCE ROW LEVEL SECURITY;
+CREATE POLICY ai_imports_tenant_isolation ON ai_imports
   USING (organization_id::text = current_setting('${TENANT_SETTING}', true))
   WITH CHECK (organization_id::text = current_setting('${TENANT_SETTING}', true));
 

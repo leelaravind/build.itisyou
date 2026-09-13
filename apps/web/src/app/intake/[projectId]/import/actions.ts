@@ -116,6 +116,8 @@ async function store(projectId: string, raw: string): Promise<Outcome> {
       db
         .insert(aiImports)
         .values({
+          // The tenant key row-level security compares against; it used to be left NULL.
+          organizationId: project.organizationId,
           projectId,
           // Verbatim. `raw` is evidence of what was submitted; `response` is what the validator was
           // willing to make of it, and the two must not be conflated.

@@ -23,6 +23,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 const SCHEMA_VERSION = '1.0.0';
 
 /** A well-formed response that should pass every layer. */
@@ -106,8 +116,8 @@ async function paste(page: Page, payload: string): Promise<void> {
 }
 
 test.describe('the request the user takes to an AI', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('says what leaves the platform before offering the copy button', async ({ page }) => {
@@ -163,8 +173,8 @@ test.describe('the request the user takes to an AI', () => {
 });
 
 test.describe('a well-formed response', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('is validated, previewed and only then applied', async ({ page }) => {
@@ -255,8 +265,8 @@ test.describe('a well-formed response', () => {
  * it has failed regardless of what the validator concluded.
  */
 test.describe('responses that must not be applied', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   async function expectRefused(page: Page, payload: string): Promise<void> {
@@ -409,8 +419,8 @@ test.describe('responses that must not be applied', () => {
 });
 
 test.describe('an import belongs to one project and one guest', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('another guest cannot open it', async ({ page, browser }) => {
@@ -437,8 +447,8 @@ test.describe('an import belongs to one project and one guest', () => {
 });
 
 test.describe('accessibility of the interchange screens', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('the paste screen has no axe violations', async ({ page }) => {

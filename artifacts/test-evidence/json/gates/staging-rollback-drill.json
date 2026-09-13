@@ -1,0 +1,16 @@
+{
+  "id": "staging-rollback-drill",
+  "category": "rollback",
+  "environment": "staging",
+  "command": "bash /e/Project/.claude-scratch/tmp/rollback-drill.sh",
+  "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+  "dirty": true,
+  "startedAt": "2026-09-13T09:44:23.244Z",
+  "finishedAt": "2026-09-13T09:44:43.744Z",
+  "durationMs": 20500,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging-rollback-drill.log"
+}

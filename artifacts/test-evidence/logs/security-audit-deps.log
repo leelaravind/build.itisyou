@@ -1,0 +1,7 @@
+# pnpm audit --audit-level=moderate
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:56:52.142Z
+
+No known vulnerabilities found
+
+# exit 0 after 923 ms

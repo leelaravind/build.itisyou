@@ -1,0 +1,12 @@
+# node scripts/evidence/perf-smoke.mjs https://govintel-web-staging.kpleelaaravind.workers.dev
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:44:50.997Z
+
+/api/health    seq p50 76 ms p95 292 ms | x20 p50 234 ms p95 774 ms | status 200
+/              seq p50 34 ms p95 40 ms | x20 p50 57 ms p95 700 ms | status 200
+/start         seq p50 31 ms p95 35 ms | x20 p50 52 ms p95 61 ms | status 200
+/how-it-works  seq p50 31 ms p95 39 ms | x20 p50 54 ms p95 55 ms | status 200
+/portfolio     seq p50 92 ms p95 105 ms | x20 p50 116 ms p95 184 ms | status 200
+/login         seq p50 31 ms p95 38 ms | x20 p50 52 ms p95 55 ms | status 200
+
+# exit 0 after 7344 ms

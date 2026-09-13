@@ -1,0 +1,265 @@
+# npx playwright test e2e/change.spec.ts e2e/portfolio.spec.ts e2e/project-home.spec.ts e2e/intake.spec.ts e2e/guest-intake.spec.ts e2e/ai-import.spec.ts --project=chromium --reporter=line,json
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:46:05.130Z
+
+[WebServer] (node:7844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next build
+
+[WebServer] (node:24320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+[WebServer] 
+[WebServer]   To migrate automatically, run:
+[WebServer]   npx @next/codemod@canary middleware-to-proxy .
+[WebServer] 
+[WebServer]   Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+[WebServer] (node:24320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:11372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:9868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:8228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:3652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:1168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:8124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:7864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ next start
+
+[WebServer] (node:8388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] {"timestamp":"2026-09-13T09:47:00.648Z","level":"warn","message":"the development database was built from a different schema; rebuilding it","correlationId":"edcbeb78-4c51-44ea-a25e-40a7fd645ccc","context":{"expected":"6aa38daebd263bd6bf10f2f639a6682b","found":"0433d7ed47c7dcf46326073dc75fae97","dataDir":".pglite"}}
+
+
+Running 76 tests using 4 workers
+
+(node:11940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:14008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:2460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/76] [chromium] › e2e\ai-import.spec.ts:161:3 › the request the user takes to an AI › the request text is present in the DOM without JavaScript
+[2/76] [chromium] › e2e\ai-import.spec.ts:153:3 › the request the user takes to an AI › never claims to send anything itself
+[3/76] [chromium] › e2e\ai-import.spec.ts:180:3 › a well-formed response › is validated, previewed and only then applied
+[4/76] [chromium] › e2e\ai-import.spec.ts:123:3 › the request the user takes to an AI › says what leaves the platform before offering the copy button
+[5/76] [chromium] › e2e\ai-import.spec.ts:192:3 › a well-formed response › states how much of it is cited rather than guessed
+[6/76] [chromium] › e2e\ai-import.spec.ts:202:3 › a well-formed response › records the decision and does not offer it twice
+[7/76] [chromium] › e2e\ai-import.spec.ts:212:3 › a well-formed response › applies the answers to the project, and says which
+[8/76] [chromium] › e2e\ai-import.spec.ts:237:3 › a well-formed response › can be discarded, keeping nothing
+[9/76] [chromium] › e2e\ai-import.spec.ts:247:3 › a well-formed response › survives being wrapped in the prose an AI usually adds
+[10/76] [chromium] › e2e\ai-import.spec.ts:278:3 › responses that must not be applied › a claim that says it was confirmed by the user
+[11/76] [chromium] › e2e\ai-import.spec.ts:319:3 › responses that must not be applied › a response written against a version this platform does not accept
+[12/76] [chromium] › e2e\ai-import.spec.ts:299:3 › responses that must not be applied › instructions dressed as data
+[13/76] [chromium] › e2e\ai-import.spec.ts:338:3 › responses that must not be applied › a dependency cycle between requirements
+[14/76] [chromium] › e2e\ai-import.spec.ts:366:3 › responses that must not be applied › an unknown top-level property
+[15/76] [chromium] › e2e\ai-import.spec.ts:380:3 › responses that must not be applied › text that is not JSON at all
+[16/76] [chromium] › e2e\ai-import.spec.ts:385:3 › responses that must not be applied › markup in a value is rendered as text, never as HTML
+[17/76] [chromium] › e2e\ai-import.spec.ts:409:3 › responses that must not be applied › a very large payload is refused rather than processed
+[18/76] [chromium] › e2e\ai-import.spec.ts:426:3 › an import belongs to one project and one guest › another guest cannot open it
+[19/76] [chromium] › e2e\ai-import.spec.ts:440:3 › an import belongs to one project and one guest › an unknown import id is indistinguishable from a forbidden one
+[20/76] [chromium] › e2e\ai-import.spec.ts:454:3 › accessibility of the interchange screens › the paste screen has no axe violations
+[21/76] [chromium] › e2e\ai-import.spec.ts:472:3 › accessibility of the interchange screens › the validation result has no axe violations
+[22/76] [chromium] › e2e\ai-import.spec.ts:491:3 › accessibility of the interchange screens › a rejected response explains itself rather than only failing
+[23/76] [chromium] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[24/76] [chromium] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[25/76] [chromium] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[26/76] [chromium] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[27/76] [chromium] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[28/76] [chromium] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[29/76] [chromium] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[30/76] [chromium] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[31/76] [chromium] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[32/76] [chromium] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[33/76] [chromium] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[34/76] [chromium] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[35/76] [chromium] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[36/76] [chromium] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[37/76] [chromium] › e2e\change.spec.ts:394:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[38/76] [chromium] › e2e\guest-intake.spec.ts:16:3 › landing page › invites an anonymous visitor to start
+[39/76] [chromium] › e2e\guest-intake.spec.ts:26:3 › landing page › makes no fabricated social-proof claim
+[40/76] [chromium] › e2e\guest-intake.spec.ts:21:3 › landing page › states that no account is required
+  1) [chromium] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected pattern: /nothing was changed/i
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <p role="alert" class="flex items-center gap-sm rounded border border-danger/40 bg-danger/10 p-md font-sans text-body-sm text-on-surface">…</p> aka getByText('That could not be done.')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      388 |
+      389 |     const alert = page.getByRole('alert');
+    > 390 |     await expect(alert).toContainText(/nothing was changed/i);
+          |                         ^
+      391 |     await expect(alert).not.toContainText('script');
+      392 |   });
+      393 |
+        at E:\Project\build\e2e\change.spec.ts:390:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\change-a-change-request-en-fe84f-e-code-from-the-address-bar-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\change-a-change-request-en-fe84f-e-code-from-the-address-bar-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\change-a-change-request-en-fe84f-e-code-from-the-address-bar-chromium\error-context.md
+
+
+[41/76] [chromium] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[42/76] [chromium] › e2e\guest-intake.spec.ts:66:3 › starting a project without an account › refuses an empty idea with an announced error
+(node:22736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[43/76] [chromium] › e2e\guest-intake.spec.ts:36:3 › landing page › every primary link resolves
+[44/76] [chromium] › e2e\guest-intake.spec.ts:75:3 › starting a project without an account › issues no session cookie merely for visiting the landing page
+[45/76] [chromium] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[46/76] [chromium] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[47/76] [chromium] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[48/76] [chromium] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[49/76] [chromium] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[50/76] [chromium] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[51/76] [chromium] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[52/76] [chromium] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[53/76] [chromium] › e2e\guest-intake.spec.ts:288:3 › guest project isolation › an unknown project id is not distinguishable from a forbidden one
+[54/76] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › / has no axe violations
+[55/76] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /start has no axe violations
+[56/76] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /how-it-works has no axe violations
+[57/76] [chromium] › e2e\guest-intake.spec.ts:298:5 › accessibility of the guest journey › /login has no axe violations
+[58/76] [chromium] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[59/76] [chromium] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[60/76] [chromium] › e2e\portfolio.spec.ts:46:3 › the portfolio surface › is reachable without an account
+[61/76] [chromium] › e2e\portfolio.spec.ts:52:3 › the portfolio surface › says why it is empty rather than showing an empty table
+[62/76] [chromium] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[63/76] [chromium] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[64/76] [chromium] › e2e\portfolio.spec.ts:91:3 › the portfolio surface › explains that it names a project rather than averaging health
+[65/76] [chromium] › e2e\portfolio.spec.ts:108:3 › the portfolio surface › explains that a total including an invisible project discloses it
+[66/76] [chromium] › e2e\portfolio.spec.ts:125:3 › gap-spec §44: the integrations boundary › offers no connect button anywhere
+[67/76] [chromium] › e2e\portfolio.spec.ts:136:3 › gap-spec §44: the integrations boundary › labels every integration as planned, in words
+[68/76] [chromium] › e2e\portfolio.spec.ts:146:3 › gap-spec §44: the integrations boundary › says what each integration still would not do
+[69/76] [chromium] › e2e\portfolio.spec.ts:159:3 › gap-spec §44: the integrations boundary › does not claim any integration is available or connected
+[70/76] [chromium] › e2e\portfolio.spec.ts:169:3 › gap-spec §44: the integrations boundary › has no detectable accessibility violations
+[71/76] [chromium] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[72/76] [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[73/76] [chromium] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[74/76] [chromium] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[75/76] [chromium] › e2e\project-home.spec.ts:110:3 › project home › is a 404 for an id that is not a project
+[76/76] [chromium] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+  2) [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /what the engine produced/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /what the engine produced/i })
+
+
+      74 |     await page.goto(`/plan/${projectId}`);
+      75 |     await page.getByRole('button', { name: /build the plan/i }).click();
+    > 76 |     await expect(page.getByRole('heading', { name: /what the engine produced/i })).toBeVisible();
+         |                                                                                    ^
+      77 |
+      78 |     await page.goto(`/p/${projectId}`);
+      79 |
+        at E:\Project\build\e2e\project-home.spec.ts:76:84
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\project-home-project-home--2b2f6-ock-it-once-there-is-a-plan-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\project-home-project-home--2b2f6-ock-it-once-there-is-a-plan-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\project-home-project-home--2b2f6-ock-it-once-there-is-a-plan-chromium\error-context.md
+
+
+[WebServer] (node:8388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+  2 failed
+    [chromium] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar 
+    [chromium] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan 
+  74 passed (2.1m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 1 after 139189 ms

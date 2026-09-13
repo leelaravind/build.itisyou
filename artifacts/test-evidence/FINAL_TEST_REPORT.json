@@ -1,0 +1,935 @@
+{
+  "product": "build.itisyou",
+  "commit": "b3829d0",
+  "generatedAt": "2026-09-13T09:39:21.062Z",
+  "verdict": "NOT READY — at least one required check failed",
+  "tally": {
+    "FAILED": 2,
+    "PASSED": 12,
+    "NOT_CHECKED": 8,
+    "BLOCKED": 2,
+    "DEFERRED": 1
+  },
+  "totals": {
+    "unit": {
+      "passed": 2421,
+      "failed": 0,
+      "total": 2421
+    },
+    "e2e": {
+      "passed": 165,
+      "failed": 12,
+      "flaky": 0,
+      "skipped": 9
+    }
+  },
+  "checks": [
+    {
+      "area": "Static",
+      "name": "Formatting",
+      "status": "FAILED",
+      "detail": "pnpm format:check — exit 1 at 553a551, 25 s",
+      "record": "json/gates/baseline-format.json"
+    },
+    {
+      "area": "Static",
+      "name": "Lint",
+      "status": "PASSED",
+      "detail": "pnpm lint — exit 0 at b3829d0, 73 s",
+      "record": "json/gates/lint-b3829d0-fix.json"
+    },
+    {
+      "area": "Static",
+      "name": "Typecheck",
+      "status": "PASSED",
+      "detail": "pnpm typecheck — exit 0 at 553a551, 13 s",
+      "record": "json/gates/baseline-typecheck.json"
+    },
+    {
+      "area": "Static",
+      "name": "Generated documentation drift",
+      "status": "PASSED",
+      "detail": "pnpm docs:check — exit 0 at 553a551, 11 s",
+      "record": "json/gates/baseline-docs-check.json"
+    },
+    {
+      "area": "Unit and integration",
+      "name": "Vitest (domain, rules, lifecycle, interchange, twin, database, worker, components)",
+      "status": "PASSED",
+      "detail": "2421/2421 passed (artifacts/test-evidence/unit/batch2-vitest.json)"
+    },
+    {
+      "area": "Security",
+      "name": "Secret scan",
+      "status": "PASSED",
+      "detail": "pnpm scan:secrets — exit 0 at 553a551, 1 s",
+      "record": "json/gates/baseline-secrets.json"
+    },
+    {
+      "area": "Security",
+      "name": "Dependency vulnerability scan",
+      "status": "FAILED",
+      "detail": "pnpm audit --audit-level=moderate — exit 1 at 553a551, 1 s",
+      "record": "json/gates/baseline-audit-deps.json"
+    },
+    {
+      "area": "Security",
+      "name": "Tenant isolation under a real pool, as the restricted role (staging Neon)",
+      "status": "PASSED",
+      "detail": "pnpm verify:isolation — exit 0 at efdb739, 6 s",
+      "record": "json/gates/staging-isolation.json"
+    },
+    {
+      "area": "Security",
+      "name": "Cross-tenant attack suite (isolation.spec, 404-not-403)",
+      "status": "PASSED",
+      "detail": "4 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-batch3-chromium.json"
+    },
+    {
+      "area": "Security",
+      "name": "Security headers and CSP",
+      "status": "NOT_CHECKED",
+      "detail": "security-headers.spec not in any recorded run"
+    },
+    {
+      "area": "Security",
+      "name": "CSRF origin checks",
+      "status": "NOT_CHECKED",
+      "detail": "csrf.spec not in any recorded run"
+    },
+    {
+      "area": "Accessibility",
+      "name": "axe WCAG 2.2 AA, landmarks, keyboard, reflow",
+      "status": "PASSED",
+      "detail": "22 passed, 0 failed, 0 skipped in artifacts/test-evidence/e2e/local-batch3-chromium.json"
+    },
+    {
+      "area": "E2E",
+      "name": "Local critical journeys (PGlite, Chromium)",
+      "status": "PASSED",
+      "detail": "79 passed, 0 failed, 0 flaky, 3 skipped (artifacts/test-evidence/e2e/local-batch3-chromium.json)"
+    },
+    {
+      "area": "E2E",
+      "name": "Staging release suite (Cloudflare + Neon)",
+      "status": "NOT_CHECKED",
+      "detail": "No staging Playwright record"
+    },
+    {
+      "area": "CI",
+      "name": "GitHub Actions at the latest recorded run",
+      "status": "NOT_CHECKED",
+      "detail": "run 34749541918 at b3829d0: in_progress"
+    },
+    {
+      "area": "Database",
+      "name": "Schema applied to staging by the migration tool",
+      "status": "PASSED",
+      "detail": "pnpm migrate — exit 0 at efdb739, 5 s",
+      "record": "json/gates/staging-migrate.json"
+    },
+    {
+      "area": "Deployment",
+      "name": "Staging web Worker deployed",
+      "status": "PASSED",
+      "detail": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh — exit 0 at b3829d0, 484 s",
+      "record": "json/gates/staging-deploy-web-b3829d0.json"
+    },
+    {
+      "area": "Deployment",
+      "name": "Staging cron Worker deployed with the budgeted schedule",
+      "status": "PASSED",
+      "detail": "cd apps/worker && npx wrangler deploy --env staging — exit 0 at efdb739, 28 s",
+      "record": "json/gates/staging-deploy-worker.json"
+    },
+    {
+      "area": "Deployment",
+      "name": "Staging health, version and database reachability",
+      "status": "NOT_CHECKED",
+      "detail": "No staging health record"
+    },
+    {
+      "area": "Rollback",
+      "name": "Staging rollback drill (roll back, verify, roll forward)",
+      "status": "NOT_CHECKED",
+      "detail": "No rollback drill record"
+    },
+    {
+      "area": "Performance",
+      "name": "Latency smoke against staging",
+      "status": "NOT_CHECKED",
+      "detail": "No performance smoke record"
+    },
+    {
+      "area": "Recovery",
+      "name": "Database restore drill",
+      "status": "NOT_CHECKED",
+      "detail": "Drilled 2026-09-02 against the previous staging project (docs/DEPLOYMENT_RUNBOOK.md); not repeated in this pass"
+    },
+    {
+      "area": "Identity",
+      "name": "Sign-in against a real identity provider",
+      "status": "BLOCKED",
+      "detail": "No OIDC client exists for any environment (OWNER_ACTIONS.md item 1). Verified against a local mock issuer only"
+    },
+    {
+      "area": "Production",
+      "name": "Production deployment and post-deploy verification",
+      "status": "BLOCKED",
+      "detail": "Not deployed: release gates are not all green (identity provider, open P1s in COMPLETION_REGISTER.md)"
+    },
+    {
+      "area": "Mobile",
+      "name": "Distinct mobile screens 59–64",
+      "status": "DEFERRED",
+      "detail": "Pages reflow to 320 px and pass the reflow checks; distinct screens are not built (register W-MOB-1)"
+    }
+  ],
+  "unitRuns": [
+    {
+      "file": "artifacts/test-evidence/unit/baseline-vitest.json",
+      "total": 2374,
+      "passed": 2374,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "byArea": {
+        "apps/web": {
+          "total": 257,
+          "passed": 257,
+          "failed": 0
+        },
+        "packages/change": {
+          "total": 57,
+          "passed": 57,
+          "failed": 0
+        },
+        "packages/completion": {
+          "total": 42,
+          "passed": 42,
+          "failed": 0
+        },
+        "packages/db": {
+          "total": 322,
+          "passed": 322,
+          "failed": 0
+        },
+        "packages/design": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0
+        },
+        "packages/discovery": {
+          "total": 39,
+          "passed": 39,
+          "failed": 0
+        },
+        "packages/execution": {
+          "total": 121,
+          "passed": 121,
+          "failed": 0
+        },
+        "packages/finance": {
+          "total": 84,
+          "passed": 84,
+          "failed": 0
+        },
+        "packages/governance": {
+          "total": 238,
+          "passed": 238,
+          "failed": 0
+        },
+        "packages/intake": {
+          "total": 63,
+          "passed": 63,
+          "failed": 0
+        },
+        "packages/interchange": {
+          "total": 155,
+          "passed": 155,
+          "failed": 0
+        },
+        "packages/organization": {
+          "total": 36,
+          "passed": 36,
+          "failed": 0
+        },
+        "packages/release": {
+          "total": 67,
+          "passed": 67,
+          "failed": 0
+        },
+        "packages/resilience": {
+          "total": 34,
+          "passed": 34,
+          "failed": 0
+        },
+        "packages/rules": {
+          "total": 372,
+          "passed": 372,
+          "failed": 0
+        },
+        "packages/shared": {
+          "total": 211,
+          "passed": 211,
+          "failed": 0
+        },
+        "packages/traceability": {
+          "total": 86,
+          "passed": 86,
+          "failed": 0
+        },
+        "packages/twin": {
+          "total": 180,
+          "passed": 180,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "file": "artifacts/test-evidence/unit/batch2-vitest.json",
+      "total": 2421,
+      "passed": 2421,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "byArea": {
+        "apps/web": {
+          "total": 257,
+          "passed": 257,
+          "failed": 0
+        },
+        "apps/worker": {
+          "total": 22,
+          "passed": 22,
+          "failed": 0
+        },
+        "packages/change": {
+          "total": 57,
+          "passed": 57,
+          "failed": 0
+        },
+        "packages/completion": {
+          "total": 42,
+          "passed": 42,
+          "failed": 0
+        },
+        "packages/db": {
+          "total": 337,
+          "passed": 337,
+          "failed": 0
+        },
+        "packages/design": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0
+        },
+        "packages/discovery": {
+          "total": 39,
+          "passed": 39,
+          "failed": 0
+        },
+        "packages/execution": {
+          "total": 121,
+          "passed": 121,
+          "failed": 0
+        },
+        "packages/finance": {
+          "total": 84,
+          "passed": 84,
+          "failed": 0
+        },
+        "packages/governance": {
+          "total": 248,
+          "passed": 248,
+          "failed": 0
+        },
+        "packages/intake": {
+          "total": 63,
+          "passed": 63,
+          "failed": 0
+        },
+        "packages/interchange": {
+          "total": 155,
+          "passed": 155,
+          "failed": 0
+        },
+        "packages/organization": {
+          "total": 36,
+          "passed": 36,
+          "failed": 0
+        },
+        "packages/release": {
+          "total": 67,
+          "passed": 67,
+          "failed": 0
+        },
+        "packages/resilience": {
+          "total": 34,
+          "passed": 34,
+          "failed": 0
+        },
+        "packages/rules": {
+          "total": 372,
+          "passed": 372,
+          "failed": 0
+        },
+        "packages/shared": {
+          "total": 211,
+          "passed": 211,
+          "failed": 0
+        },
+        "packages/traceability": {
+          "total": 86,
+          "passed": 86,
+          "failed": 0
+        },
+        "packages/twin": {
+          "total": 180,
+          "passed": 180,
+          "failed": 0
+        }
+      }
+    }
+  ],
+  "e2eRuns": [
+    {
+      "file": "artifacts/test-evidence/e2e/local-batch2-chromium.json",
+      "startTime": "2026-09-13T09:16:19.600Z",
+      "durationMs": 109319,
+      "expected": 39,
+      "unexpected": 9,
+      "flaky": 0,
+      "skipped": 3,
+      "matrix": {
+        "chromium": {
+          "expected": 39,
+          "unexpected": 9,
+          "flaky": 0,
+          "skipped": 3
+        }
+      },
+      "bySpec": {
+        "auth.spec.ts": {
+          "expected": 6,
+          "unexpected": 1,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "isolation.spec.ts": {
+          "expected": 1,
+          "unexpected": 3,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "lifecycle.spec.ts": {
+          "expected": 9,
+          "unexpected": 1,
+          "flaky": 0,
+          "skipped": 3
+        },
+        "plan.spec.ts": {
+          "expected": 15,
+          "unexpected": 3,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "portfolio.spec.ts": {
+          "expected": 8,
+          "unexpected": 1,
+          "flaky": 0,
+          "skipped": 0
+        }
+      }
+    },
+    {
+      "file": "artifacts/test-evidence/e2e/local-batch2-rerun-chromium.json",
+      "startTime": "2026-09-13T09:19:32.122Z",
+      "durationMs": 60052,
+      "expected": 47,
+      "unexpected": 3,
+      "flaky": 0,
+      "skipped": 3,
+      "matrix": {
+        "chromium": {
+          "expected": 47,
+          "unexpected": 3,
+          "flaky": 0,
+          "skipped": 3
+        }
+      },
+      "bySpec": {
+        "auth.spec.ts": {
+          "expected": 6,
+          "unexpected": 1,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "isolation.spec.ts": {
+          "expected": 4,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "lifecycle.spec.ts": {
+          "expected": 10,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 3
+        },
+        "plan.spec.ts": {
+          "expected": 18,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "portfolio.spec.ts": {
+          "expected": 9,
+          "unexpected": 2,
+          "flaky": 0,
+          "skipped": 0
+        }
+      }
+    },
+    {
+      "file": "artifacts/test-evidence/e2e/local-batch3-chromium.json",
+      "startTime": "2026-09-13T09:25:17.684Z",
+      "durationMs": 71740,
+      "expected": 79,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 3,
+      "matrix": {
+        "chromium": {
+          "expected": 79,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 3
+        }
+      },
+      "bySpec": {
+        "accessibility.spec.ts": {
+          "expected": 22,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "auth.spec.ts": {
+          "expected": 8,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "isolation.spec.ts": {
+          "expected": 4,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "lifecycle.spec.ts": {
+          "expected": 10,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 3
+        },
+        "plan.spec.ts": {
+          "expected": 18,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "portfolio.spec.ts": {
+          "expected": 11,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        },
+        "project-home.spec.ts": {
+          "expected": 6,
+          "unexpected": 0,
+          "flaky": 0,
+          "skipped": 0
+        }
+      }
+    }
+  ],
+  "ciRuns": [
+    {
+      "id": 34749541918,
+      "sha": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+      "conclusion": "",
+      "status": "in_progress",
+      "createdAt": "2026-09-13T09:27:38Z",
+      "jobs": [
+        {
+          "name": "Secret and dependency scan",
+          "conclusion": "success"
+        },
+        {
+          "name": "Concurrency suites against networked Postgres",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (1/4)",
+          "conclusion": ""
+        },
+        {
+          "name": "Cloudflare Worker build",
+          "conclusion": "success"
+        },
+        {
+          "name": "End-to-end and accessibility (3/4)",
+          "conclusion": ""
+        },
+        {
+          "name": "Format, lint, typecheck, unit tests",
+          "conclusion": "failure"
+        },
+        {
+          "name": "End-to-end and accessibility (2/4)",
+          "conclusion": ""
+        },
+        {
+          "name": "End-to-end and accessibility (4/4)",
+          "conclusion": ""
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "baseline-format",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm format:check",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:40:11.415Z",
+      "finishedAt": "2026-09-13T08:40:36.325Z",
+      "durationMs": 24910,
+      "exitCode": 1,
+      "signal": null,
+      "result": "FAILED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-format.log"
+    },
+    {
+      "id": "baseline-lint",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm lint",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:40:36.617Z",
+      "finishedAt": "2026-09-13T08:43:13.118Z",
+      "durationMs": 156501,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-lint.log"
+    },
+    {
+      "id": "baseline-docs-check",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm docs:check",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:43:13.431Z",
+      "finishedAt": "2026-09-13T08:43:24.265Z",
+      "durationMs": 10834,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-docs-check.log"
+    },
+    {
+      "id": "baseline-secrets",
+      "category": "security",
+      "environment": "local",
+      "command": "pnpm scan:secrets",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:43:24.538Z",
+      "finishedAt": "2026-09-13T08:43:25.693Z",
+      "durationMs": 1155,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-secrets.log"
+    },
+    {
+      "id": "baseline-audit-deps",
+      "category": "security",
+      "environment": "local",
+      "command": "pnpm audit --audit-level=moderate",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:43:25.917Z",
+      "finishedAt": "2026-09-13T08:43:27.142Z",
+      "durationMs": 1225,
+      "exitCode": 1,
+      "signal": null,
+      "result": "FAILED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-audit-deps.log"
+    },
+    {
+      "id": "baseline-typecheck",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm typecheck",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:43:27.418Z",
+      "finishedAt": "2026-09-13T08:43:40.609Z",
+      "durationMs": 13191,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-typecheck.log"
+    },
+    {
+      "id": "baseline-unit",
+      "category": "unit",
+      "environment": "local",
+      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/baseline-vitest.json",
+      "commit": "553a55172c001ff10e4f3dd268aa0ae29ed064a7",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:43:41.601Z",
+      "finishedAt": "2026-09-13T08:45:47.723Z",
+      "durationMs": 126122,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/baseline-unit.log"
+    },
+    {
+      "id": "staging-migrate",
+      "category": "database",
+      "environment": "staging",
+      "command": "pnpm migrate",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": false,
+      "startedAt": "2026-09-13T08:54:57.125Z",
+      "finishedAt": "2026-09-13T08:55:01.763Z",
+      "durationMs": 4638,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-migrate.log"
+    },
+    {
+      "id": "staging-isolation",
+      "category": "security",
+      "environment": "staging-neon",
+      "command": "pnpm verify:isolation",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:55:09.684Z",
+      "finishedAt": "2026-09-13T08:55:15.298Z",
+      "durationMs": 5614,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-isolation.log"
+    },
+    {
+      "id": "staging-deploy-web-efdb739",
+      "category": "deployment",
+      "environment": "staging",
+      "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T08:56:18.306Z",
+      "finishedAt": "2026-09-13T09:14:23.997Z",
+      "durationMs": 1085691,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-deploy-web-efdb739.log"
+    },
+    {
+      "id": "unit-batch2",
+      "category": "unit",
+      "environment": "local",
+      "command": "pnpm vitest run --reporter=dot --reporter=json --outputFile.json=artifacts/test-evidence/unit/batch2-vitest.json",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:12:47.985Z",
+      "finishedAt": "2026-09-13T09:14:44.480Z",
+      "durationMs": 116495,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/unit-batch2.log"
+    },
+    {
+      "id": "staging-deploy-worker",
+      "category": "deployment",
+      "environment": "staging",
+      "command": "cd apps/worker && npx wrangler deploy --env staging",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:15:15.581Z",
+      "finishedAt": "2026-09-13T09:15:43.334Z",
+      "durationMs": 27753,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-deploy-worker.log"
+    },
+    {
+      "id": "e2e-local-batch2-chromium",
+      "category": "e2e",
+      "environment": "local-pglite",
+      "command": "npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts --project=chromium --reporter=line,json",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:16:09.141Z",
+      "finishedAt": "2026-09-13T09:18:09.402Z",
+      "durationMs": 120261,
+      "exitCode": 1,
+      "signal": null,
+      "result": "FAILED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/e2e-local-batch2-chromium.log"
+    },
+    {
+      "id": "e2e-local-batch2-rerun-chromium",
+      "category": "e2e",
+      "environment": "local-pglite",
+      "command": "npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts --project=chromium --reporter=line,json",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:19:30.332Z",
+      "finishedAt": "2026-09-13T09:20:32.233Z",
+      "durationMs": 61901,
+      "exitCode": 1,
+      "signal": null,
+      "result": "FAILED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/e2e-local-batch2-rerun-chromium.log"
+    },
+    {
+      "id": "e2e-local-batch3-chromium",
+      "category": "e2e",
+      "environment": "local-pglite",
+      "command": "npx playwright test e2e/auth.spec.ts e2e/lifecycle.spec.ts e2e/portfolio.spec.ts e2e/plan.spec.ts e2e/isolation.spec.ts e2e/project-home.spec.ts e2e/accessibility.spec.ts --project=chromium --reporter=line,json",
+      "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:25:15.969Z",
+      "finishedAt": "2026-09-13T09:26:29.475Z",
+      "durationMs": 73506,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.21.0",
+      "log": "artifacts/test-evidence/logs/e2e-local-batch3-chromium.log"
+    },
+    {
+      "id": "staging-deploy-web-b3829d0",
+      "category": "deployment",
+      "environment": "staging",
+      "command": "wsl -e bash /mnt/e/Project/.claude-scratch/tmp/wsl-deploy.sh",
+      "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+      "dirty": false,
+      "startedAt": "2026-09-13T09:28:15.357Z",
+      "finishedAt": "2026-09-13T09:36:19.405Z",
+      "durationMs": 484048,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/staging-deploy-web-b3829d0.log"
+    },
+    {
+      "id": "lint-b3829d0-fix",
+      "category": "static",
+      "environment": "local",
+      "command": "pnpm lint",
+      "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+      "dirty": true,
+      "startedAt": "2026-09-13T09:31:21.092Z",
+      "finishedAt": "2026-09-13T09:32:33.816Z",
+      "durationMs": 72724,
+      "exitCode": 0,
+      "signal": null,
+      "result": "PASSED",
+      "platform": "win32 x64 node v22.23.2",
+      "log": "artifacts/test-evidence/logs/lint-b3829d0-fix.log"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "FR-001",
+      "foundBy": "Probing staging",
+      "area": "Operations / database capacity",
+      "status": "Fixed in code; staging re-provisioned (see FR-004)"
+    },
+    {
+      "id": "FR-002",
+      "foundBy": "Writing FR-001's tests",
+      "area": "Outbox drainer",
+      "status": "Fixed"
+    },
+    {
+      "id": "FR-003",
+      "foundBy": "Baseline `pnpm audit`",
+      "area": "Dependency security",
+      "status": "Fixed"
+    },
+    {
+      "id": "FR-004",
+      "foundBy": "Probing staging",
+      "area": "Deployment",
+      "status": "Staging re-provisioned and redeployed at `efdb739`"
+    },
+    {
+      "id": "FR-005",
+      "foundBy": "Reading the purge against the RLS policies",
+      "area": "Guest retention",
+      "status": "Fixed"
+    },
+    {
+      "id": "FR-006",
+      "foundBy": "Reading sign-in against the RLS policies",
+      "area": "Authentication / tenancy",
+      "status": "Fixed (first sign-in); returning-user merge is a known issue"
+    },
+    {
+      "id": "FR-007",
+      "foundBy": "Local E2E after my own change",
+      "area": "Security (404-not-403)",
+      "status": "Fixed — the change was reverted"
+    },
+    {
+      "id": "FR-008",
+      "foundBy": "A new E2E test",
+      "area": "Tenant isolation (development parity)",
+      "status": "Fixed"
+    },
+    {
+      "id": "FR-009",
+      "foundBy": "Inventory of graph readers",
+      "area": "Lifecycle / gates",
+      "status": "Fixed"
+    },
+    {
+      "id": "FR-010",
+      "foundBy": "E2E rerun",
+      "area": "Test isolation",
+      "status": "Fixed"
+    }
+  ]
+}

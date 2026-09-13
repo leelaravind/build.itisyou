@@ -20,6 +20,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 async function startProject(page: Page, idea: string): Promise<string> {
   await page.goto('/start');
   await page.getByLabel(/describe your project/i).fill(idea);
@@ -54,8 +64,8 @@ async function reachRules(page: Page, idea = 'A tool for booking meeting rooms.'
 }
 
 test.describe('the findings page', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('is reachable from the plan', async ({ page }) => {
@@ -146,8 +156,8 @@ test.describe('the findings page', () => {
 });
 
 test.describe('gates', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('shows the quality gates and their state', async ({ page }) => {
@@ -185,8 +195,8 @@ test.describe('gates', () => {
 });
 
 test.describe('a project belongs to one guest', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('another guest cannot read its findings', async ({ page, browser }) => {
@@ -208,8 +218,8 @@ test.describe('a project belongs to one guest', () => {
 });
 
 test.describe('accessibility of the findings page', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('has no axe violations', async ({ page }) => {

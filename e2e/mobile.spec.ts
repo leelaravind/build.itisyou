@@ -29,6 +29,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 /** Routes reachable without a project. Each is checked for overflow. */
 const PUBLIC_ROUTES = ['/', '/how-it-works', '/start', '/login', '/portfolio'];
 
@@ -115,8 +125,8 @@ async function horizontalOverflow(page: Page): Promise<number> {
 }
 
 test.describe('no route scrolls sideways on a phone', () => {
-  test.beforeEach(({ browserName, isMobile }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, isMobile, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     test.skip(!isMobile, 'Only meaningful at a phone viewport.');
   });
 
@@ -159,8 +169,8 @@ test.describe('no route scrolls sideways on a phone', () => {
 });
 
 test.describe('touch targets', () => {
-  test.beforeEach(({ browserName, isMobile }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, isMobile, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     test.skip(!isMobile, 'Only meaningful at a phone viewport.');
   });
 
@@ -201,8 +211,8 @@ test.describe('touch targets', () => {
 });
 
 test.describe('dense representations get a different shape, not a smaller one', () => {
-  test.beforeEach(({ browserName, isMobile }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, isMobile, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     test.skip(!isMobile, 'Only meaningful at a phone viewport.');
   });
 
@@ -258,8 +268,8 @@ test.describe('dense representations get a different shape, not a smaller one', 
 });
 
 test.describe('mobile accessibility', () => {
-  test.beforeEach(({ browserName, isMobile }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, isMobile, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     test.skip(!isMobile, 'Only meaningful at a phone viewport.');
   });
 

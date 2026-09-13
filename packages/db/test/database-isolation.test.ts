@@ -147,8 +147,8 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
-        VALUES (${projectId}, 'budget.total', 'BUDGET', '42'::jsonb, 'UNKNOWN', 'USER_PROVIDED', 'LOW')
+        INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${ORG_A}, ${projectId}, 'budget.total', 'BUDGET', '42'::jsonb, 'UNKNOWN', 'USER_PROVIDED', 'LOW')
       `),
     ).rejects.toThrow();
   });
@@ -161,8 +161,8 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
-        VALUES (${projectId}, 'budget.total', 'BUDGET', NULL, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+        INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${ORG_A}, ${projectId}, 'budget.total', 'BUDGET', NULL, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
       `),
     ).rejects.toThrow();
   });
@@ -174,14 +174,14 @@ describe('schema integrity', () => {
     const projectId = project.rows[0]!.id;
 
     await database.db.execute(sql`
-      INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
-      VALUES (${projectId}, 'idea.summary', 'IDEA', '"a"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+      INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+      VALUES (${ORG_A}, ${projectId}, 'idea.summary', 'IDEA', '"a"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
     `);
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
-        VALUES (${projectId}, 'idea.summary', 'IDEA', '"b"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+        INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+        VALUES (${ORG_A}, ${projectId}, 'idea.summary', 'IDEA', '"b"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
       `),
     ).rejects.toThrow();
   });
@@ -201,7 +201,7 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'ACCEPTED', '{}')
+        INSERT INTO ai_imports (organization_id, project_id, state, raw) VALUES (${ORG_A}, ${projectId}, 'ACCEPTED', '{}')
       `),
     ).rejects.toThrow();
   });
@@ -214,7 +214,7 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'MATERIALIZED', '{}')
+        INSERT INTO ai_imports (organization_id, project_id, state, raw) VALUES (${ORG_A}, ${projectId}, 'MATERIALIZED', '{}')
       `),
     ).rejects.toThrow();
   });
@@ -228,7 +228,7 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'RAW', 'pasted text')
+        INSERT INTO ai_imports (organization_id, project_id, state, raw) VALUES (${ORG_A}, ${projectId}, 'RAW', 'pasted text')
       `),
     ).resolves.toBeDefined();
   });
@@ -241,7 +241,7 @@ describe('schema integrity', () => {
 
     await expect(
       database.db.execute(sql`
-        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'APPLIED', '{}')
+        INSERT INTO ai_imports (organization_id, project_id, state, raw) VALUES (${ORG_A}, ${projectId}, 'APPLIED', '{}')
       `),
     ).rejects.toThrow();
   });
@@ -697,5 +697,79 @@ describe('transactional outbox', () => {
 
     const result = await database.db.execute(sql`SELECT id FROM outbox_events`);
     expect(result.rows).toHaveLength(3);
+  });
+});
+
+/**
+ * Migration 003: the two tenant tables that had no row-level security.
+ *
+ * Answers and pasted AI output are a project's own data. They were guarded only by the application's
+ * ownership check; these hold the database to the same rule as every other tenant table.
+ */
+describe('intake answers and AI imports are isolated by tenant', () => {
+  async function projectOf(org: string, name: string): Promise<string> {
+    const project = await database.db.execute<{ id: string }>(sql`
+      INSERT INTO projects (organization_id, name) VALUES (${org}, ${name}) RETURNING id
+    `);
+    return project.rows[0]!.id;
+  }
+
+  it('shows a tenant its own intake answers and nobody else’s', async () => {
+    const projectId = await projectOf(ORG_A, 'answers of A');
+    await database.db.execute(sql`
+      INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+      VALUES (${ORG_A}, ${projectId}, 'idea.summary', 'IDEA', '"secret plan"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+    `);
+
+    const own = await database.asTenant(ORG_A, (tx) =>
+      tx.execute<{ field_id: string }>(sql`SELECT field_id FROM intake_answers`),
+    );
+    const other = await database.asTenant(ORG_B, (tx) =>
+      tx.execute<{ field_id: string }>(sql`SELECT field_id FROM intake_answers`),
+    );
+
+    expect(own.rows).toHaveLength(1);
+    expect(other.rows).toHaveLength(0);
+  });
+
+  it('shows a tenant its own AI imports and nobody else’s', async () => {
+    const projectId = await projectOf(ORG_A, 'imports of A');
+    await database.db.execute(sql`
+      INSERT INTO ai_imports (organization_id, project_id, state, raw)
+      VALUES (${ORG_A}, ${projectId}, 'RAW', 'pasted text that belongs to A')
+    `);
+
+    const own = await database.asTenant(ORG_A, (tx) =>
+      tx.execute<{ raw: string }>(sql`SELECT raw FROM ai_imports`),
+    );
+    const other = await database.asTenant(ORG_B, (tx) =>
+      tx.execute<{ raw: string }>(sql`SELECT raw FROM ai_imports`),
+    );
+
+    expect(own.rows).toHaveLength(1);
+    expect(other.rows).toHaveLength(0);
+  });
+
+  it('refuses an answer written into another tenant from inside a scope', async () => {
+    const projectId = await projectOf(ORG_B, 'answers of B');
+
+    await expect(
+      database.asTenant(ORG_A, (tx) =>
+        tx.execute(sql`
+          INSERT INTO intake_answers (organization_id, project_id, field_id, category, value, state, provenance, confidence)
+          VALUES (${ORG_B}, ${projectId}, 'idea.summary', 'IDEA', '"planted"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM')
+        `),
+      ),
+    ).rejects.toThrow();
+  });
+
+  it('refuses an import with no tenant key at all', async () => {
+    const projectId = await projectOf(ORG_A, 'keyless import');
+
+    await expect(
+      database.db.execute(sql`
+        INSERT INTO ai_imports (project_id, state, raw) VALUES (${projectId}, 'RAW', 'no key')
+      `),
+    ).rejects.toThrow();
   });
 });

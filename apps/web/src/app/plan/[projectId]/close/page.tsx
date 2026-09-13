@@ -35,8 +35,22 @@ export default async function ClosePage({ params }: { params: Promise<{ projectI
   const loaded = await loadPlanRows(projectId);
   if (loaded === null) notFound();
 
-  const { project, nodes, edges } = loaded;
+  const { project, nodes, edges, evidence } = loaded;
   const graph = graphFromRows(projectId, nodes, edges);
+
+  /*
+   * Counted from what the product holds, and `undefined` where it holds nothing to count.
+   *
+   * These four were literal zeros, so a project nobody had tested, reviewed or documented reported
+   * "no test is failing", "no security finding outstanding" and "no document contradicts the
+   * project" — three criteria met by the absence of any record. A test that has not been run has
+   * not passed; a findings register that does not exist has not been cleared.
+   */
+  const tests = graph.nodesOfClass('TEST');
+  const testsNotPassed = tests.filter(
+    (test) => test.attributes.executed !== true || test.attributes.result !== 'PASSED',
+  ).length;
+  const quarantinedEvidence = evidence.filter((row) => row.state === 'QUARANTINED').length;
 
   const traceability = analyse(graph);
 
@@ -56,10 +70,11 @@ export default async function ClosePage({ params }: { params: Promise<{ projectI
     debt: [],
     blockingTraceabilityGaps: traceability.counts.blocked,
     untraceableRequirements: traceability.counts.notAssessable,
-    failingTests: 0,
-    openSecurityFindings: 0,
-    staleDocuments: 0,
-    unverifiableEvidence: 0,
+    failingTests: testsNotPassed,
+    // No findings register and no document system exist in V1: unknown, not zero.
+    openSecurityFindings: undefined,
+    staleDocuments: undefined,
+    unverifiableEvidence: quarantinedEvidence,
     hasDeliveredWork: graph.nodesOfClass('TASK').length > 0,
   });
 

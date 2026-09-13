@@ -36,7 +36,13 @@ import { drain, type OutboxMessage } from './drain.ts';
 
 export interface Env {
   readonly HYPERDRIVE: { readonly connectionString: string };
-  readonly OUTBOX_QUEUE: Queue<OutboxMessage>;
+  /**
+   * Absent where no queue is provisioned — production, for now. Nothing in V1 writes an outbox row
+   * (there is no transport to deliver one to, §43/§44), so provisioning a queue there would be
+   * infrastructure with no producer. Guest expiry is the job production needs, and it does not
+   * depend on the queue.
+   */
+  readonly OUTBOX_QUEUE?: Queue<OutboxMessage>;
   readonly APP_ENV: string;
 }
 
@@ -156,8 +162,13 @@ async function purge(db: PooledDatabase): Promise<void> {
 /* -------------------------------------------------------------------------- */
 
 async function runDrain(db: PooledDatabase, env: Env): Promise<void> {
+  const queue = env.OUTBOX_QUEUE;
+
+  // No queue, no drain: claiming rows with nowhere to publish them would burn their attempts.
+  if (queue === undefined) return;
+
   const { published, deadLettered } = await drain(db, async (message) => {
-    await env.OUTBOX_QUEUE.send(message);
+    await queue.send(message);
   });
 
   if (published > 0) {

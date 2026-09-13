@@ -1,0 +1,18 @@
+# bash /e/Project/.claude-scratch/tmp/rollback-drill.sh
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:44:23.244Z
+
+before: {"status":"ok","mode":"NORMAL","version":"0.1.0-staging.b3829d0","commit":"b3829d0","environment":"staging"}
+--- rolling back to a0c2420f (efdb739)
+╰  SUCCESS  Worker Version a0c2420f-1114-494f-aaba-ea3bd9ae7b88 has been deployed to 100% of traffic.
+
+Current Version ID: a0c2420f-1114-494f-aaba-ea3bd9ae7b88
+after rollback (9 s): {"status":"ok","mode":"NORMAL","version":"0.1.0-staging.efdb739","commit":"efdb739","environment":"staging"}
+--- rolling forward to 81a60e02 (b3829d0)
+╰  SUCCESS  Worker Version 81a60e02-325e-4085-9d86-2d25e20b1ad0 has been deployed to 100% of traffic.
+
+Current Version ID: 81a60e02-325e-4085-9d86-2d25e20b1ad0
+after roll-forward (11 s): {"status":"ok","mode":"NORMAL","version":"0.1.0-staging.b3829d0","commit":"b3829d0","environment":"staging"}
+drill passed
+
+# exit 0 after 20500 ms

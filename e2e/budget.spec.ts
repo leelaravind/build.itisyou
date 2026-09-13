@@ -19,6 +19,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 async function startProject(page: Page, idea: string): Promise<string> {
   await page.goto('/start');
   await page.getByLabel(/describe your project/i).fill(idea);
@@ -52,8 +62,8 @@ async function reachBudget(
 }
 
 test.describe('before a plan exists', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('says there is nothing to cost yet rather than showing zero', async ({ page }) => {
@@ -69,8 +79,8 @@ test.describe('before a plan exists', () => {
 });
 
 test.describe('the money surface', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('presents effort as a range, never as one number', async ({ page }) => {
@@ -201,8 +211,8 @@ test.describe('the money surface', () => {
 });
 
 test.describe('tenant isolation', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('a second guest cannot read the first guest’s money', async ({ page, browser }) => {

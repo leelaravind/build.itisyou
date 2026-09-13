@@ -1,0 +1,16 @@
+{
+  "id": "static-format",
+  "category": "static",
+  "environment": "local",
+  "command": "pnpm format:check",
+  "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
+  "dirty": true,
+  "startedAt": "2026-09-13T09:56:33.948Z",
+  "finishedAt": "2026-09-13T09:56:41.913Z",
+  "durationMs": 7965,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/static-format.log"
+}

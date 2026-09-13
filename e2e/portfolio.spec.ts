@@ -17,6 +17,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 async function startProject(page: Page, idea: string): Promise<string> {
   await page.goto('/start');
   await page.getByLabel(/describe your project/i).fill(idea);
@@ -29,8 +39,8 @@ async function startProject(page: Page, idea: string): Promise<string> {
 }
 
 test.describe('the portfolio surface', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('is reachable without an account', async ({ page }) => {
@@ -108,8 +118,8 @@ test.describe('the portfolio surface', () => {
 });
 
 test.describe('gap-spec §44: the integrations boundary', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('offers no connect button anywhere', async ({ page }) => {

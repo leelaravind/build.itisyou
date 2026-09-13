@@ -8,6 +8,11 @@ import { MaterialIcon } from '../../../components/ui/MaterialIcon.tsx';
 import { generatePlan, loadPlanRows } from './actions.ts';
 import { availableTransitions } from './lifecycle-actions.ts';
 import { LifecycleCard } from '../../../components/lifecycle/LifecycleCard.tsx';
+import {
+  ActionOutcome,
+  LIFECYCLE_REFUSALS,
+  messageFor,
+} from '../../../components/ui/ActionOutcome.tsx';
 
 /**
  * The generated plan.
@@ -39,10 +44,10 @@ export default async function PlanPage({
   searchParams,
 }: {
   params: Promise<{ projectId: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; refused?: string }>;
 }) {
   const { projectId } = await params;
-  const { error } = await searchParams;
+  const { error, refused } = await searchParams;
 
   const loaded = await loadPlanRows(projectId);
   if (loaded === null) notFound();
@@ -89,8 +94,21 @@ export default async function PlanPage({
             <MaterialIcon name="error" size={18} className="text-danger" />
             {error === 'archived'
               ? 'This project is archived, so its plan cannot be regenerated.'
-              : 'The plan could not be generated. Nothing was changed.'}
+              : error === 'rate-limited'
+                ? 'Too many requests in a short time. Wait a moment and try again.'
+                : 'The plan could not be generated. Nothing was changed.'}
           </p>
+        )}
+
+        {refused === undefined ? null : (
+          <ActionOutcome
+            tone="refused"
+            message={messageFor(
+              LIFECYCLE_REFUSALS,
+              refused,
+              'The project did not move. Nothing was changed.',
+            )}
+          />
         )}
 
         {lifecycle === null ? null : (

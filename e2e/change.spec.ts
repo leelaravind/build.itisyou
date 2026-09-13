@@ -18,6 +18,16 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 async function startProject(page: Page, idea: string): Promise<string> {
   await page.goto('/start');
   await page.getByLabel(/describe your project/i).fill(idea);
@@ -113,8 +123,8 @@ async function selectPersonalData(page: Page): Promise<void> {
 }
 
 test.describe('the change-impact surface', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('offers something to change', async ({ page }) => {
@@ -204,8 +214,8 @@ test.describe('the change-impact surface', () => {
 });
 
 test.describe('tenant isolation', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('a second guest cannot read the first guest’s impact analysis', async ({
@@ -243,8 +253,8 @@ test.describe('tenant isolation', () => {
 });
 
 test.describe('a change request, end to end', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   /*
@@ -339,6 +349,47 @@ test.describe('a change request, end to end', () => {
     await expect(
       page.getByRole('listitem').filter({ hasText: 'Record the processing purpose' }),
     ).toContainText(/against version/);
+  });
+
+  test('says what happened after each step', async ({ page }) => {
+    /*
+     * Every change action redirects back here with its outcome in the query string, and the page
+     * used to read none of it — a request, a decision and an apply all returned to an unchanged page
+     * with nothing said, which reads as the click not having registered.
+     */
+    await reachChange(page);
+    await requestAChange(page, 'Say what happened');
+    await expect(
+      page.getByRole('status').filter({ hasText: /change request was raised/i }),
+    ).toBeVisible();
+
+    const request = page.getByRole('listitem').filter({ hasText: 'Say what happened' });
+    await request.getByLabel(/why are you deciding this way/i).fill('Agreed.');
+    await request.getByRole('button', { name: /^approve$/i }).click();
+    await expect(
+      page.getByRole('status').filter({ hasText: /decision was recorded/i }),
+    ).toBeVisible();
+
+    await page
+      .getByRole('listitem')
+      .filter({ hasText: 'Say what happened' })
+      .getByRole('button', { name: /apply it/i })
+      .click();
+    await expect(
+      page
+        .getByRole('status')
+        .filter({ hasText: /applied and the project moved to a new version/i }),
+    ).toBeVisible();
+  });
+
+  test('never echoes an unrecognised outcome code from the address bar', async ({ page }) => {
+    const projectId = await reachChange(page);
+    await page.goto(`/plan/${projectId}/change?error=%3Cscript%3Ealert(1)%3C%2Fscript%3E`);
+
+    // Filtered by text: the framework's route announcer is also role="alert", and empty.
+    const alert = page.getByRole('alert').filter({ hasText: /nothing was changed/i });
+    await expect(alert).toBeVisible();
+    await expect(alert).not.toContainText('script');
   });
 
   test('a second guest cannot see the first guest’s change requests', async ({ page, browser }) => {

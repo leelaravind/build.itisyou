@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { graphFromRows } from '@govintel/twin/repository';
 import { testsFromGraph } from '@govintel/release/testing';
 import { evaluateReadiness, type GateOutcome } from '@govintel/release/readiness';
+import { PRODUCTION_CHECKS } from '@govintel/release/deployment';
+import { plansFrom, productionChecksFrom } from '@govintel/release/records';
 import { PublicHeader } from '../../../../components/shell/PublicHeader.tsx';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon.tsx';
 import { loadPlanRows } from '../actions.ts';
@@ -30,26 +32,29 @@ export default async function ReleasePage({ params }: { params: Promise<{ projec
   const loaded = await loadPlanRows(projectId);
   if (loaded === null) notFound();
 
-  const { project, nodes, edges } = loaded;
+  const { project, nodes, edges, evidence, approvals } = loaded;
   const graph = graphFromRows(projectId, nodes, edges);
 
   /*
-   * Everything a real release would supply is absent for a project that has not deployed: no plans,
-   * no approvals, no production checks, no ownership.
+   * Plans, production checks and approvals come from what the project has recorded.
    *
-   * That is the honest state, and rendering it is the point — this page shows what a project would
-   * need before it could ship, which is far more useful early than a page that refuses to appear
-   * until the answers exist.
+   * They were literal empty lists, so the gates could say what a release needed but never register
+   * that any of it had happened — recorded evidence for availability, TLS or a rehearsed rollback
+   * changed nothing here. A check with no evidence is still NOT_CHECKED, which the engine refuses to
+   * treat as a pass; ownership, incidents and debt have no recording surface yet and stay empty.
    */
+  const deploymentApprovals = approvals
+    .filter((row) => row.subjectType === 'DEPLOYMENT' && row.state === 'APPROVED')
+    .map((row) => row.id);
   const report = evaluateReadiness({
     graph,
     tests: testsFromGraph(graph),
     requiredCategories: ['UNIT', 'END_TO_END', 'SECURITY', 'ACCESSIBILITY'],
     findings: [],
-    plans: [],
+    plans: plansFrom(evidence),
     requiredPlans: ['DEPLOYMENT', 'ROLLBACK', 'MIGRATION', 'MONITORING', 'BACKUP', 'CONFIGURATION'],
-    productionChecks: [],
-    approvals: [],
+    productionChecks: productionChecksFrom(evidence, PRODUCTION_CHECKS),
+    approvals: deploymentApprovals,
     target: 'PRODUCTION',
     alreadyDeployedTo: [],
     ownership: [],

@@ -173,9 +173,19 @@ function isWebkit(browserName: string): boolean {
   return browserName === 'webkit';
 }
 
+/**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
 test.describe('intake accepts "I don\'t know" as an answer', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   async function startProject(page: Page): Promise<void> {
@@ -328,7 +338,7 @@ test.describe('accessibility of the guest journey', () => {
   });
 
   test('the whole flow works without client JavaScript', async ({ browser, browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
     // The intake flow is server-rendered forms on purpose. A wizard that needs a hydrated bundle to
     // record an answer fails on a slow connection at exactly the wrong moment — after the user has
     // already invested effort.

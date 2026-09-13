@@ -26,6 +26,16 @@ function isWebkit(browserName: string): boolean {
 }
 
 /**
+ * KI-024 is about plain HTTP: WebKit drops the session cookie on an insecure origin. Over HTTPS —
+ * staging — it holds it, so the skip applies to the insecure origin only. It used to be keyed on the
+ * browser alone, which skipped WebKit and iOS Safari against HTTPS staging too, so the re-verification
+ * KI-024 made mandatory could never fire.
+ */
+function insecure(baseURL: string | undefined): boolean {
+  return !(baseURL ?? 'http://localhost').startsWith('https://');
+}
+
+/**
  * Every route segment under `app/plan/[projectId]/` that renders a page.
  *
  * Read from disk at collection time. Next.js's own routing is derived from this directory, so
@@ -66,8 +76,8 @@ async function startProject(page: Page, idea: string): Promise<string> {
 }
 
 test.describe('every project surface isolates by tenant', () => {
-  test.beforeEach(({ browserName }) => {
-    test.skip(isWebkit(browserName), MOBILE_SAFARI_NOTE);
+  test.beforeEach(({ browserName, baseURL }) => {
+    test.skip(isWebkit(browserName) && insecure(baseURL), MOBILE_SAFARI_NOTE);
   });
 
   test('the route list was discovered, not empty', () => {

@@ -77,12 +77,14 @@ const packages = readdirSync(join(root, 'packages')).map((name) => {
       .filter((s) => s.source.includes(`'${specifier}'`))
       .map((s) => s.file);
     const file = join(dir, String(target));
-    let size = 0;
-    try {
-      size = lines(file);
-    } catch {
-      size = 0;
-    }
+    // A subpath export can name a file that has not been built; count it as empty rather than fail.
+    const size = (() => {
+      try {
+        return lines(file);
+      } catch {
+        return 0;
+      }
+    })();
     return { specifier, file: rel(file), lines: size, productionCallers: callers };
   });
   const tests = walk(join(dir, 'test'), (f) => /\.test\.ts$/.test(f)).length;

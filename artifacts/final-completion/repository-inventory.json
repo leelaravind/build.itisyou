@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-13T09:17:11.683Z",
-  "commit": "efdb73928e2db2c855667e70107d8da9ca51821b",
+  "generatedAt": "2026-09-13T09:28:22.915Z",
+  "commit": "b3829d0b0844e14275f62e67a274be3040bf8be1",
   "routes": [
     {
       "route": "/api/health",
@@ -14,6 +14,13 @@
       "kind": "route",
       "file": "apps/web/src/app/auth/callback/route.ts",
       "lines": 133,
+      "readsDatabase": false
+    },
+    {
+      "route": "/design/reference",
+      "kind": "page",
+      "file": "apps/web/src/app/design/reference/page.tsx",
+      "lines": 85,
       "readsDatabase": false
     },
     {
@@ -50,13 +57,6 @@
       "file": "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx",
       "lines": 509,
       "readsDatabase": true
-    },
-    {
-      "route": "/intake/[projectId]",
-      "kind": "loading",
-      "file": "apps/web/src/app/intake/[projectId]/loading.tsx",
-      "lines": 10,
-      "readsDatabase": false
     },
     {
       "route": "/intake/[projectId]",
@@ -97,8 +97,8 @@
       "route": "/p/[projectId]",
       "kind": "page",
       "file": "apps/web/src/app/p/[projectId]/page.tsx",
-      "lines": 83,
-      "readsDatabase": false
+      "lines": 306,
+      "readsDatabase": true
     },
     {
       "route": "/",
@@ -148,13 +148,6 @@
       "file": "apps/web/src/app/plan/[projectId]/evidence/[evidenceId]/download/route.ts",
       "lines": 105,
       "readsDatabase": true
-    },
-    {
-      "route": "/plan/[projectId]",
-      "kind": "loading",
-      "file": "apps/web/src/app/plan/[projectId]/loading.tsx",
-      "lines": 10,
-      "readsDatabase": false
     },
     {
       "route": "/plan/[projectId]",
@@ -364,6 +357,7 @@
             "apps/web/src/app/intake/[projectId]/import/[importId]/page.tsx",
             "apps/web/src/app/intake/[projectId]/page.tsx",
             "apps/web/src/app/intake/[projectId]/prompt/page.tsx",
+            "apps/web/src/app/p/[projectId]/page.tsx",
             "apps/web/src/app/plan/[projectId]/actions.ts",
             "apps/web/src/app/plan/[projectId]/budget/page.tsx",
             "apps/web/src/app/plan/[projectId]/change/page.tsx",
@@ -895,6 +889,7 @@
           "file": "packages/rules/src/gates.ts",
           "lines": 1061,
           "productionCallers": [
+            "apps/web/src/app/p/[projectId]/page.tsx",
             "apps/web/src/app/plan/[projectId]/budget/page.tsx",
             "apps/web/src/app/plan/[projectId]/evidence-actions.ts",
             "apps/web/src/app/plan/[projectId]/lifecycle-actions.ts",
@@ -1080,6 +1075,7 @@
           "file": "packages/twin/src/repository.ts",
           "lines": 272,
           "productionCallers": [
+            "apps/web/src/app/p/[projectId]/page.tsx",
             "apps/web/src/app/plan/[projectId]/actions.ts",
             "apps/web/src/app/plan/[projectId]/baseline/page.tsx",
             "apps/web/src/app/plan/[projectId]/budget/page.tsx",
@@ -1176,7 +1172,7 @@
       },
       {
         "file": "e2e/auth.spec.ts",
-        "tests": 7
+        "tests": 8
       },
       {
         "file": "e2e/baseline.spec.ts",
@@ -1220,7 +1216,11 @@
       },
       {
         "file": "e2e/portfolio.spec.ts",
-        "tests": 9
+        "tests": 11
+      },
+      {
+        "file": "e2e/project-home.spec.ts",
+        "tests": 6
       },
       {
         "file": "e2e/release.spec.ts",
@@ -1247,7 +1247,7 @@
         "tests": 19
       }
     ],
-    "e2eTestDeclarations": 251
+    "e2eTestDeclarations": 260
   },
   "database": {
     "tables": [

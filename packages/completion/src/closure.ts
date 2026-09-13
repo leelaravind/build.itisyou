@@ -202,10 +202,16 @@ export interface ClosureInput {
   readonly untraceableRequirements: number;
   /** Tests that have not passed. */
   readonly failingTests: number;
-  /** Security findings still open or in progress at a blocking severity. */
-  readonly openSecurityFindings: number;
-  /** Documents that no longer match the project. */
-  readonly staleDocuments: number;
+  /**
+   * Security findings still open or in progress at a blocking severity.
+   *
+   * `undefined` when there is no findings register to count from. That is not zero: a project whose
+   * findings were never recorded has not resolved them, and reading the absence as "none open" is
+   * how an unassessed criterion gets reported as met.
+   */
+  readonly openSecurityFindings: number | undefined;
+  /** Documents that no longer match the project. `undefined` when no document is tracked at all. */
+  readonly staleDocuments: number | undefined;
   /** Evidence records that failed their integrity check. */
   readonly unverifiableEvidence: number;
   /** Whether the project has delivered anything, so vacuous criteria are not reported as met. */
@@ -279,20 +285,24 @@ export function assessClosure(input: ClosureInput): ClosureAssessment {
     },
     {
       criterion: 'SECURITY_RESOLVED',
-      met: input.openSecurityFindings === 0,
+      met: input.openSecurityFindings === undefined ? undefined : input.openSecurityFindings === 0,
       explanation:
-        input.openSecurityFindings === 0
-          ? 'No blocking security finding is outstanding.'
-          : `${String(input.openSecurityFindings)} blocking security finding(s) are still open.`,
+        input.openSecurityFindings === undefined
+          ? 'No security findings are recorded for this project, so whether any is still open cannot be told.'
+          : input.openSecurityFindings === 0
+            ? 'No blocking security finding is outstanding.'
+            : `${String(input.openSecurityFindings)} blocking security finding(s) are still open.`,
       evidence: ['security'],
     },
     {
       criterion: 'DOCUMENTS_COMPLETE',
-      met: input.staleDocuments === 0,
+      met: input.staleDocuments === undefined ? undefined : input.staleDocuments === 0,
       explanation:
-        input.staleDocuments === 0
-          ? 'No document contradicts the project.'
-          : `${String(input.staleDocuments)} document(s) say something the project no longer does.`,
+        input.staleDocuments === undefined
+          ? 'No documents are tracked against this project, so whether any contradicts it cannot be told.'
+          : input.staleDocuments === 0
+            ? 'No document contradicts the project.'
+            : `${String(input.staleDocuments)} document(s) say something the project no longer does.`,
       evidence: ['documents'],
     },
     {

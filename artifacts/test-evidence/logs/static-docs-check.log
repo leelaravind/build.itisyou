@@ -1,0 +1,17 @@
+# pnpm docs:check
+# commit b3829d0b0844e14275f62e67a274be3040bf8be1 (dirty)
+# started 2026-09-13T09:56:48.188Z
+
+$ node scripts/generate-icons.mjs --check && node --experimental-strip-types scripts/generate-permissions-matrix.mjs --check && node --experimental-strip-types scripts/generate-twin-schema.mjs --check && node --experimental-strip-types scripts/generate-rule-docs.mjs --check && node --experimental-strip-types scripts/generate-calculation-docs.mjs --check && node --experimental-strip-types scripts/generate-traceability-docs.mjs --check && node --experimental-strip-types scripts/generate-threat-model.mjs --check && node --experimental-strip-types scripts/generate-impact-docs.mjs --check && node --experimental-strip-types scripts/generate-governance-docs.mjs --check && node --experimental-strip-types scripts/generate-responsive-docs.mjs --check
+icons up to date (79 icons, 25 KB of path data)
+Permissions matrix is up to date.
+Digital Twin schema is up to date.
+Rule format spec and gate catalogue are up to date.
+Capacity and budget specifications are up to date.
+Traceability model specification is up to date.
+Threat model is up to date.
+Impact propagation specification is up to date.
+Governance model specification is up to date.
+Responsive contract is up to date.
+
+# exit 0 after 2638 ms

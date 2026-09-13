@@ -8,7 +8,8 @@
     "./security": "./src/security.ts",
     "./deployment": "./src/deployment.ts",
     "./operations": "./src/operations.ts",
-    "./readiness": "./src/readiness.ts"
+    "./readiness": "./src/readiness.ts",
+    "./records": "./src/records.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"

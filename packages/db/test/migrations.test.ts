@@ -19,7 +19,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 import { MIGRATIONS, SCHEMA_MIGRATIONS_DDL, pathBetween } from '../../../scripts/migrations.mjs';
-import { SCHEMA_DDL, ROW_LEVEL_SECURITY_DDL, rowsOf } from '../src/client.ts';
+import { SCHEMA_DDL, SCHEMA_FINGERPRINT, ROW_LEVEL_SECURITY_DDL, rowsOf } from '../src/client.ts';
 
 interface Column {
   column_name: string;
@@ -256,5 +256,82 @@ describe('what the migration runner will and will not do', () => {
       expect(migration.sql, migration.id).not.toMatch(/\bDROP\b/i);
       expect(migration.sql, migration.id).not.toMatch(/\bALTER\s+TABLE\s+\w+\s+DROP\b/i);
     }
+  });
+});
+
+/**
+ * 003: tenant keys and row-level security on intake_answers and ai_imports.
+ *
+ * Reconstructs the shape 003 was written against — nullable keys, no policy, and rows whose key was
+ * never set, which is what the writers produced — then applies it, and asks the two questions that
+ * matter: does it end up where the DDL says, and does the backfill give every existing row its key.
+ */
+describe('003 isolates intake answers and AI imports', () => {
+  let before: PGlite;
+
+  beforeAll(async () => {
+    before = new PGlite();
+    await before.exec(SCHEMA_DDL);
+    await before.exec(ROW_LEVEL_SECURITY_DDL);
+    await before.exec(SCHEMA_MIGRATIONS_DDL);
+
+    for (const table of ['intake_answers', 'ai_imports']) {
+      await before.exec(`
+        DROP POLICY ${table}_tenant_isolation ON ${table};
+        ALTER TABLE ${table} NO FORCE ROW LEVEL SECURITY;
+        ALTER TABLE ${table} DISABLE ROW LEVEL SECURITY;
+        ALTER TABLE ${table} ALTER COLUMN organization_id DROP NOT NULL;
+      `);
+    }
+
+    await before.exec(`
+      INSERT INTO organizations (id, name, slug) VALUES ('11111111-1111-4111-8111-111111111111', 'A', 'a');
+      INSERT INTO projects (id, organization_id, name)
+        VALUES ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '11111111-1111-4111-8111-111111111111', 'p');
+      INSERT INTO intake_answers (project_id, field_id, category, value, state, provenance, confidence)
+        VALUES ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'idea.summary', 'IDEA', '"x"'::jsonb, 'PROVIDED', 'USER_PROVIDED', 'MEDIUM');
+      INSERT INTO ai_imports (project_id, state, raw)
+        VALUES ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'RAW', 'pasted');
+    `);
+
+    const migration = MIGRATIONS.find((entry) => entry.id === '003-intake-and-import-isolation');
+    if (migration === undefined) throw new Error('003-intake-and-import-isolation is missing');
+    await before.exec(migration.sql);
+  });
+
+  afterAll(async () => {
+    await before.close();
+  });
+
+  for (const table of ['intake_answers', 'ai_imports']) {
+    it(`gives ${table} the columns the DDL declares`, async () => {
+      expect(await columnsOf(before, table)).toEqual(await columnsOf(fromDdl, table));
+    });
+
+    it(`forces row-level security on ${table} with the DDL's policy`, async () => {
+      expect(await forcedRls(before, table)).toBe(true);
+      expect(await policiesOf(before, table)).toEqual(await policiesOf(fromDdl, table));
+    });
+
+    it(`backfills the tenant key on every existing ${table} row`, async () => {
+      const rows = rowsOf<{ missing: number }>(
+        await before.query(
+          `SELECT count(*)::int AS missing FROM ${table} WHERE organization_id IS NULL`,
+        ),
+      );
+      expect(rows[0]?.missing).toBe(0);
+    });
+  }
+
+  it('ends the chain at the fingerprint this build expects', () => {
+    expect(MIGRATIONS.at(-1)?.to).toBe(SCHEMA_FINGERPRINT);
+  });
+
+  it('starts where 002 ended, so the chain is unbroken', () => {
+    const path = pathBetween('6c7aaf28d6e3c642e10ed889c03af2d4', SCHEMA_FINGERPRINT);
+    expect(path?.map((step) => step.id)).toEqual([
+      '002-audit-retention-path',
+      '003-intake-and-import-isolation',
+    ]);
   });
 });

@@ -16,6 +16,8 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-008 | A new E2E test | Tenant isolation (development parity) | Fixed |
 | FR-009 | Inventory of graph readers | Lifecycle / gates | Fixed |
 | FR-010 | E2E rerun | Test isolation | Fixed |
+| FR-011 | Full unit + E2E run in parallel | Test harness / machine contention | Not a product defect; re-run clean |
+| FR-012 | Staging E2E browser matrix | Test coverage (WebKit, iOS Safari) | Fixed — skip keyed on the insecure origin |
 
 ---
 
@@ -224,3 +226,38 @@ only because the superuser path moved rows across tenants, which production cann
 
 **Change.** A new identity per run for the sign-up journey, and a separate returning-user journey that
 asserts what should happen to them.
+
+## FR-011 — Three failures that were the machine, not the product
+
+**Observed.** Running the full Vitest suite and a local Playwright batch at the same time: the
+`migrations.test.ts` top-level `beforeAll` (two full PGlite databases) hit its 30 s hook timeout and
+all 20 of its tests were reported *skipped*; `project-home.spec.ts` "names the gates…" waited more than
+5 s for plan generation; and `change.spec.ts` "never echoes an unrecognised outcome code" failed a
+strict-mode locator (`logs/unit-batch4.log`, `logs/e2e-local-batch4-chromium.log`).
+
+**Diagnosis.** Two were contention: the same file passed 20/20 alone and in both earlier full runs,
+and plan generation is the heaviest server work in the product. The third was a real harness defect:
+the framework's route announcer is also `role="alert"`, so an unfiltered `getByRole('alert')`
+matched two elements.
+
+**Change.** The locator is filtered by text. No timeout was raised: a limit that fails under contention
+is telling the truth about contention.
+
+**Proof.** Re-run with nothing else on the machine: Playwright 84 passed, 0 failed
+(`logs/e2e-local-batch4-rerun-chromium.log`); Vitest 2,436 / 2,436 with no skips
+(`unit/batch4-rerun-vitest.json`).
+
+## FR-012 — WebKit and iOS Safari never ran the journeys, even over HTTPS
+
+**Observed.** The staging run at `b3829d0`: 388 passed, 0 failed — but WebKit skipped 193 tests and
+mobile Safari 194 (`e2e/staging-b3829d0.json`).
+
+**Root cause.** Fifteen specs skipped on `browserName === 'webkit'`. KI-024 is about plain HTTP —
+WebKit drops the session cookie on an insecure origin — and its own note says it is "verified against
+HTTPS at the staging gate". Keyed on the browser, the skip fired on HTTPS staging too, so that
+verification could never happen. The register recorded this; the staging run measured it.
+
+**Change.** Each skip is now `isWebkit(browserName) && insecure(baseURL)`: WebKit still skips over local
+HTTP, and runs over HTTPS.
+
+**Proof.** The next staging run's WebKit and mobile-Safari rows (see the final report's browser matrix).

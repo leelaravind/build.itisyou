@@ -1,0 +1,139 @@
+{
+  "base": "https://govintel-web-staging.kpleelaaravind.workers.dev",
+  "measuredAt": "2026-09-13T09:44:58.317Z",
+  "budgetP95Ms": 1500,
+  "results": [
+    {
+      "route": "/api/health",
+      "sequential": {
+        "n": 15,
+        "p50": 76,
+        "p95": 292,
+        "max": 292,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 234,
+        "p95": 774,
+        "max": 900,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    },
+    {
+      "route": "/",
+      "sequential": {
+        "n": 15,
+        "p50": 34,
+        "p95": 40,
+        "max": 40,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 57,
+        "p95": 700,
+        "max": 700,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    },
+    {
+      "route": "/start",
+      "sequential": {
+        "n": 15,
+        "p50": 31,
+        "p95": 35,
+        "max": 35,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 52,
+        "p95": 61,
+        "max": 185,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    },
+    {
+      "route": "/how-it-works",
+      "sequential": {
+        "n": 15,
+        "p50": 31,
+        "p95": 39,
+        "max": 39,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 54,
+        "p95": 55,
+        "max": 56,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    },
+    {
+      "route": "/portfolio",
+      "sequential": {
+        "n": 15,
+        "p50": 92,
+        "p95": 105,
+        "max": 105,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 116,
+        "p95": 184,
+        "max": 191,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    },
+    {
+      "route": "/login",
+      "sequential": {
+        "n": 15,
+        "p50": 31,
+        "p95": 38,
+        "max": 38,
+        "statuses": [
+          200
+        ]
+      },
+      "concurrent": {
+        "n": 20,
+        "p50": 52,
+        "p95": 55,
+        "max": 122,
+        "statuses": [
+          200
+        ]
+      },
+      "withinBudget": true
+    }
+  ]
+}
