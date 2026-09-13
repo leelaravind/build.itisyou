@@ -1,24 +1,24 @@
 {
   "base": "https://govintel-web-staging.kpleelaaravind.workers.dev",
-  "measuredAt": "2026-09-13T09:44:58.317Z",
+  "measuredAt": "2026-09-13T11:47:38.368Z",
   "budgetP95Ms": 1500,
   "results": [
     {
       "route": "/api/health",
       "sequential": {
         "n": 15,
-        "p50": 76,
-        "p95": 292,
-        "max": 292,
+        "p50": 79,
+        "p95": 133,
+        "max": 133,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 234,
-        "p95": 774,
-        "max": 900,
+        "p50": 600,
+        "p95": 808,
+        "max": 843,
         "statuses": [
           200
         ]
@@ -29,18 +29,18 @@
       "route": "/",
       "sequential": {
         "n": 15,
-        "p50": 34,
-        "p95": 40,
-        "max": 40,
+        "p50": 31,
+        "p95": 66,
+        "max": 66,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 57,
-        "p95": 700,
-        "max": 700,
+        "p50": 169,
+        "p95": 580,
+        "max": 806,
         "statuses": [
           200
         ]
@@ -51,18 +51,18 @@
       "route": "/start",
       "sequential": {
         "n": 15,
-        "p50": 31,
-        "p95": 35,
-        "max": 35,
+        "p50": 32,
+        "p95": 44,
+        "max": 44,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 52,
-        "p95": 61,
-        "max": 185,
+        "p50": 77,
+        "p95": 79,
+        "max": 79,
         "statuses": [
           200
         ]
@@ -73,18 +73,18 @@
       "route": "/how-it-works",
       "sequential": {
         "n": 15,
-        "p50": 31,
-        "p95": 39,
-        "max": 39,
+        "p50": 32,
+        "p95": 40,
+        "max": 40,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 54,
-        "p95": 55,
-        "max": 56,
+        "p50": 52,
+        "p95": 62,
+        "max": 63,
         "statuses": [
           200
         ]
@@ -95,18 +95,18 @@
       "route": "/portfolio",
       "sequential": {
         "n": 15,
-        "p50": 92,
-        "p95": 105,
-        "max": 105,
+        "p50": 100,
+        "p95": 131,
+        "max": 131,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 116,
-        "p95": 184,
-        "max": 191,
+        "p50": 170,
+        "p95": 224,
+        "max": 231,
         "statuses": [
           200
         ]
@@ -117,18 +117,18 @@
       "route": "/login",
       "sequential": {
         "n": 15,
-        "p50": 31,
-        "p95": 38,
-        "max": 38,
+        "p50": 29,
+        "p95": 103,
+        "max": 103,
         "statuses": [
           200
         ]
       },
       "concurrent": {
         "n": 20,
-        "p50": 52,
-        "p95": 55,
-        "max": 122,
+        "p50": 73,
+        "p95": 75,
+        "max": 75,
         "statuses": [
           200
         ]

@@ -36,13 +36,16 @@ Order is dependency and risk, not screen order. "Proof" points at a test, a rece
 | W-REL-2 | P2 | Release | The three §15.9 checks with no criterion (authentication, APIs, deployment identity) are now blocking MANUAL criteria of the Production Verification gate, so all ten production checks can be recorded through the product | DONE | `records.test.ts`, `docs/GATE_CATALOGUE.md` regenerated |
 | W-SEC-4 | P1 | Security | SAST did not exist in any form (plan §18, gap-spec §66). Semgrep's public TypeScript/JavaScript/Node rulesets now run locally and in CI's security job, failing on any finding; first run 74 rules on 187 files, 0 findings | DONE | `json/gates/security-sast-semgrep.json`, `security/semgrep.json` |
 | W-TEST-1 | P1 | Test coverage | WebKit and iOS Safari skipped every journey even over HTTPS; the skip is now keyed on the insecure origin | DONE | FR-012, staging browser matrix |
+| W-TEST-2 | P1 | Test coverage | Evidence-upload journeys skipped themselves on staging, where R2 is bound, because the test counted the form before it rendered | DONE | FR-018, `json/gates/e2e-staging-5093b06-upload.json` (27/27, 0 skipped) |
+| W-OPS-6 | P1 | Capacity | E2E traffic filled the staging branch to Neon's 512 MiB cap; staging moved to a fresh project and its guest TTL is 6 hours | DONE | FR-017, `staging2-migrate`, `staging2-isolation` |
 
 ## Open — P0 and P1, in execution order
 
 | ID | Sev | Workstream | Item | Depends on | Next step |
 |---|---|---|---|---|---|
 | W-ID-2 | P1 | Identity | No identity provider client exists for staging or production | — | BLOCKED_EXTERNAL — see `OWNER_ACTIONS.md` item 1 |
-| W-OPS-5 | P1 | Capacity | Production on Neon's free plan has 100 CU-hours/month and suspends until month end when exceeded; there is no alert | W-OPS-1 | Owner decision on plan (OWNER_ACTIONS item 2); meanwhile the schedule budget holds scheduled work to a fifth |
+| W-CI-1 | P1 | CI | GitHub no longer starts Actions jobs for this private repository (payment / spending limit) from `5093b06`; the last verdict is green at `949a76e` | — | BLOCKED_EXTERNAL — `OWNER_ACTIONS.md` item 3. Meanwhile every CI gate is run locally and recorded |
+| W-OPS-5 | P1 | Capacity | Production on Neon's free plan has 100 CU-hours/month (suspends until month end when exceeded) and a 512 MiB branch cap (writes fail when reached — staging hit it, FR-017); there is no alert | W-OPS-1 | Owner decision on plan (OWNER_ACTIONS item 2); meanwhile the schedule budget holds scheduled work to a fifth |
 
 ## Open — P2
 

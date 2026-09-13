@@ -1,0 +1,66 @@
+# npx playwright test e2e/lifecycle.spec.ts -g evidence and approvals --project=chromium --project=webkit --project=mobile-safari --workers=2 --reporter=line,json --output=test-results-staging
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:47:16.631Z
+
+
+Running 27 tests using 2 workers
+
+(node:24156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:25584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/27] [chromium] › e2e\lifecycle.spec.ts:179:3 › evidence and approvals › records evidence and stops asking for it
+[2/27] [chromium] › e2e\lifecycle.spec.ts:146:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[3/27] [chromium] › e2e\lifecycle.spec.ts:194:3 › evidence and approvals › refuses evidence that points at nothing
+[4/27] [chromium] › e2e\lifecycle.spec.ts:215:3 › evidence and approvals › refuses an approval with no reason
+[5/27] [chromium] › e2e\lifecycle.spec.ts:234:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[6/27] [chromium] › e2e\lifecycle.spec.ts:288:3 › evidence and approvals › refuses a file the allowlist does not accept
+[7/27] [chromium] › e2e\lifecycle.spec.ts:310:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[8/27] [chromium] › e2e\lifecycle.spec.ts:343:3 › evidence and approvals › evidence survives regenerating the plan
+[9/27] [chromium] › e2e\lifecycle.spec.ts:369:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+(node:11748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[10/27] [webkit] › e2e\lifecycle.spec.ts:146:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[11/27] [webkit] › e2e\lifecycle.spec.ts:179:3 › evidence and approvals › records evidence and stops asking for it
+(node:4292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[12/27] [webkit] › e2e\lifecycle.spec.ts:194:3 › evidence and approvals › refuses evidence that points at nothing
+[13/27] [webkit] › e2e\lifecycle.spec.ts:215:3 › evidence and approvals › refuses an approval with no reason
+[14/27] [webkit] › e2e\lifecycle.spec.ts:234:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[15/27] [webkit] › e2e\lifecycle.spec.ts:288:3 › evidence and approvals › refuses a file the allowlist does not accept
+[16/27] [webkit] › e2e\lifecycle.spec.ts:310:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[17/27] [webkit] › e2e\lifecycle.spec.ts:343:3 › evidence and approvals › evidence survives regenerating the plan
+[18/27] [webkit] › e2e\lifecycle.spec.ts:369:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+(node:18108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[19/27] [mobile-safari] › e2e\lifecycle.spec.ts:146:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[20/27] [mobile-safari] › e2e\lifecycle.spec.ts:179:3 › evidence and approvals › records evidence and stops asking for it
+(node:23992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[21/27] [mobile-safari] › e2e\lifecycle.spec.ts:194:3 › evidence and approvals › refuses evidence that points at nothing
+[22/27] [mobile-safari] › e2e\lifecycle.spec.ts:215:3 › evidence and approvals › refuses an approval with no reason
+[23/27] [mobile-safari] › e2e\lifecycle.spec.ts:234:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[24/27] [mobile-safari] › e2e\lifecycle.spec.ts:288:3 › evidence and approvals › refuses a file the allowlist does not accept
+[25/27] [mobile-safari] › e2e\lifecycle.spec.ts:310:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[26/27] [mobile-safari] › e2e\lifecycle.spec.ts:343:3 › evidence and approvals › evidence survives regenerating the plan
+[27/27] [mobile-safari] › e2e\lifecycle.spec.ts:369:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+  27 passed (1.6m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 99711 ms

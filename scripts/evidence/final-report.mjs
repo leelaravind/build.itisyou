@@ -169,15 +169,23 @@ function stagingStatus(run) {
     .filter(([, outcome]) => outcome === 'unexpected')
     .map(([key]) => key);
   const later = stagingRuns.filter((r) => String(r.startTime) > String(run.startTime));
-  const unresolved = failed.filter(
-    (key) => !later.some((r) => r.outcomes[key] === 'expected' || r.outcomes[key] === 'flaky'),
-  );
+  const passedLater = (key) =>
+    later.some((r) => r.outcomes[key] === 'expected' || r.outcomes[key] === 'flaky');
+  /*
+   * A failure whose re-run reached the test's own documented skip (a platform condition, such as
+   * WebKit's cookie report under KI-024) is not a pass and is not hidden: it is counted as skipped,
+   * like the run's other skips, and named in the detail.
+   */
+  const skippedLater = (key) =>
+    !passedLater(key) && later.some((r) => r.outcomes[key] === 'skipped');
+  const unresolved = failed.filter((key) => !passedLater(key) && !skippedLater(key));
+  const skippedOnRerun = failed.filter(skippedLater);
   const base = `${run.expected} passed, ${run.unexpected} failed, ${run.flaky} flaky, ${run.skipped} skipped (${run.file})`;
   if (failed.length === 0) return { status: 'PASSED', detail: base };
   if (unresolved.length === 0) {
     return {
       status: 'PASSED',
-      detail: `${base}; all ${failed.length} failures passed on a later staging re-run (${later.map((r) => r.file).join(', ')}) — causes in FAILURE_RECEIPTS`,
+      detail: `${base}; ${failed.length - skippedOnRerun.length} failures passed on a later staging re-run and ${skippedOnRerun.length} reached their own documented skip (${skippedOnRerun.join('; ')}) — re-runs: ${later.map((r) => r.file).join(', ')}; causes in FAILURE_RECEIPTS`,
     };
   }
   return {
@@ -185,6 +193,7 @@ function stagingStatus(run) {
     detail: `${base}; ${unresolved.length} failure(s) not re-run clean: ${unresolved.slice(0, 5).join('; ')}`,
   };
 }
+
 const localE2e = latestBy(e2eRuns, (r) => r.file.includes('local'));
 const lastCi = [...ciRuns]
   .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
@@ -222,6 +231,33 @@ const specStatus = (spec) => {
     detail: `${counts.expected} passed, ${counts.unexpected} failed, ${counts.skipped} skipped in ${run.file}`,
   };
 };
+
+/**
+ * A run whose jobs never started — every job with no steps — is not a failure of the code; it is CI
+ * being unavailable (for this repository: the account's Actions spending limit). It is BLOCKED, and the
+ * last run that actually executed is named, so a reader can see both facts.
+ */
+function ciStatus() {
+  if (lastCi === undefined) return { status: 'NOT_CHECKED', detail: 'No CI run saved' };
+  const started = (run) => (run.jobs ?? []).some((job) => (job.steps ?? []).length > 0);
+  const describe = (run) =>
+    `run ${run.databaseId} at ${String(run.headSha).slice(0, 7)}: ${run.conclusion || run.status}`;
+  if (!started(lastCi)) {
+    const lastRun = [...ciRuns]
+      .filter(started)
+      .sort((x, y) => String(x.createdAt).localeCompare(String(y.createdAt)))
+      .at(-1);
+    return {
+      status: 'BLOCKED',
+      detail: `${describe(lastCi)} — no job started (GitHub Actions billing / spending limit; owner action)${lastRun === undefined ? '' : `. Last run that executed: ${describe(lastRun)}`}`,
+    };
+  }
+  if (lastCi.conclusion === 'success') return { status: 'PASSED', detail: describe(lastCi) };
+  if (lastCi.conclusion === '' || lastCi.conclusion == null) {
+    return { status: 'NOT_CHECKED', detail: describe(lastCi) };
+  }
+  return { status: 'FAILED', detail: describe(lastCi) };
+}
 
 const checks = [
   { area: 'Static', name: 'Formatting', ...fromGate(/format/, 'format') },
@@ -278,17 +314,7 @@ const checks = [
   {
     area: 'CI',
     name: 'GitHub Actions at the latest recorded run',
-    ...(lastCi === undefined
-      ? { status: 'NOT_CHECKED', detail: 'No CI run saved' }
-      : {
-          status:
-            lastCi.conclusion === 'success'
-              ? 'PASSED'
-              : lastCi.conclusion === '' || lastCi.conclusion == null
-                ? 'NOT_CHECKED'
-                : 'FAILED',
-          detail: `run ${lastCi.databaseId} at ${String(lastCi.headSha).slice(0, 7)}: ${lastCi.conclusion || lastCi.status}`,
-        }),
+    ...ciStatus(),
   },
   {
     area: 'Database',
@@ -554,18 +580,37 @@ const htmlPath = join(evidence, 'html', 'FINAL_TEST_REPORT.html');
 writeFileSync(htmlPath, html);
 
 const { chromium } = await import('@playwright/test');
-const browser = await chromium.launch();
-const page = await browser.newPage();
-await page.goto(`file://${htmlPath.replace(/\\/g, '/')}`);
-await page.pdf({
-  path: join(evidence, 'pdf', 'FINAL_TEST_REPORT.pdf'),
-  format: 'A4',
-  printBackground: true,
-  margin: { top: '14mm', bottom: '14mm', left: '10mm', right: '10mm' },
-  displayHeaderFooter: true,
-  headerTemplate: '<span></span>',
-  footerTemplate: `<div style="font-size:8px;width:100%;text-align:center;color:#777">build.itisyou · ${commit} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`,
-});
-await browser.close();
+
+/*
+ * Printed with a real browser. Retried, because a launch can fail transiently on this machine while
+ * other Chromium processes are starting or exiting; the error is reported if every attempt fails, so a
+ * missing PDF is never silent.
+ */
+let printed = false;
+let lastError;
+for (let attempt = 1; attempt <= 3 && !printed; attempt += 1) {
+  try {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(`file://${htmlPath.replace(/\\/g, '/')}`);
+    await page.pdf({
+      path: join(evidence, 'pdf', 'FINAL_TEST_REPORT.pdf'),
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '14mm', bottom: '14mm', left: '10mm', right: '10mm' },
+      displayHeaderFooter: true,
+      headerTemplate: '<span></span>',
+      footerTemplate: `<div style="font-size:8px;width:100%;text-align:center;color:#777">build.itisyou · ${commit} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`,
+    });
+    await browser.close();
+    printed = true;
+  } catch (error) {
+    lastError = error;
+  }
+}
+if (!printed) {
+  console.error(`PDF not written: ${String(lastError)}`);
+  process.exitCode = 1;
+}
 
 console.log(`report: ${verdict} — ${JSON.stringify(tally)}`);

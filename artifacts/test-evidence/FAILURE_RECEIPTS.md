@@ -22,6 +22,7 @@ fixed it without breaking anything next to it. Receipts are appended, never edit
 | FR-014 | Reading CI logs | CI (E2E sharding) | Fixed |
 | FR-015 | Local E2E under load | UI (pending submit buttons) | Reverted — the control was withdrawn, not the tests |
 | FR-016 | My own restore drill | Operations (staging database) | Recovered in 2.5 minutes, no data loss; procedure corrected |
+| FR-017 | Final staging E2E run | Operations (database storage cap) | Staging moved to a fresh database; staging guest TTL shortened |
 
 ---
 
@@ -107,9 +108,10 @@ in `pnpm-lock.yaml` → 0.
 not.** Its Hyperdrive configuration (`fa38480586e44cebab20fe15ac2121a0`) and R2 bucket
 (`govintel-evidence-staging`) still exist. The workers.dev URL answers with error 1042.
 
-**Root cause.** Not determinable from this repository: nothing in it deletes a Worker. The account is
-shared with at least a dozen other products whose sessions manage their own Workers. Recorded as
-observed rather than guessed at.
+**Root cause.** Confirmed by the owner on 2026-09-13: the Worker was deleted during a clean-up of the
+Cloudflare account, which hosts a dozen other products. Nothing in this repository deletes a Worker.
+The resources staging depends on are now listed in `docs/final-completion/OWNER_ACTIONS.md` so a future
+clean-up can leave them alone.
 
 **Consequence.** Staging had to be re-provisioned as well as redeployed: the old database is suspended
 until 2026-10-01 (FR-001), so a fresh Neon project is created for staging and the existing Hyperdrive
@@ -337,5 +339,52 @@ re-run rather than counted.
 **Change.** The drill procedure: restore with `finalize: false` (or restore onto a parked branch), never
 the default, on any project whose endpoint something is using. Recorded in the runbook.
 
+**What it cost the evidence.** The staging run at `949a76e` (`e2e/staging-949a76e.json`) recorded 39
+failures. 36 of them fall between 11:02:55Z and 11:05:31Z — the window — and are the release
+correctly refusing to serve a schema it does not recognise (`toHaveURL` failures on project creation).
+The other 3 are the new budget-currency test on each browser, run against a deployment that did not
+yet contain the change it tests. None is counted as a pass: the full staging suite is re-run on the
+next deployment, and the final report judges that run.
+
 **The drill itself** then passed: restored in 9 s, pre-003 fingerprint as expected for 09:59Z, the
 restricted role intact, pooled isolation 6/6 on the restored copy (`database/staging-restore-drill.json`).
+
+## FR-017 — Test traffic filled the staging database, and every write failed
+
+**Observed.** The final full staging run at `5093b06` recorded 367 failures, all but a handful after
+11:56Z, across every browser: project creation returned "Something went wrong starting your project"
+(`e2e/staging-5093b06.json`). The staging branch's logical size was **536,952,832 bytes** against Neon's
+free-plan branch cap of **536,870,912** (512 MiB); `pg_database_size` 489 MB; 1,505 guest projects and
+232,304 twin rows, all created by today's E2E runs.
+
+**Root cause.** Each full E2E run creates about 600 guest projects with their plans. Guest data is kept
+72 hours before the purge deletes it, so four runs in a day accumulate faster than retention reclaims.
+Past the cap Neon refuses writes, and the product reports the failure safely and generically — which is
+correct behaviour for the product and a wall for the test suite. The same family as FR-001: a free-plan
+hard limit met by our own traffic.
+
+**Change.** Staging moved to a fresh Neon project (`proud-truth-36178526`, `build-itisyou-staging-2`),
+migrated, isolation 6/6 as the restricted role; Hyperdrive's host repointed with the stored credential
+unchanged. Deleting the test data instead would have been destructive and was not done without the
+owner. Staging's `GUEST_PROJECT_TTL_HOURS` is now 6, so the three-hourly purge reclaims test data within
+nine hours; production keeps 72.
+
+**Proof.** Post-deploy checks 9/9 on the fresh database; the 367 failures re-run with `--last-failed`
+(`e2e/staging-5093b06-rerun.json`).
+
+## FR-018 — Evidence upload journeys skipped on staging, where the store is bound
+
+**Observed.** The staging re-run at `5093b06` passed with 8 skips. The skips were the evidence-upload
+journeys on every browser, reported as "no object store", but staging binds the R2 bucket `EVIDENCE`.
+Nothing failed, so nothing flagged it.
+
+**Root cause.** A race in the test, not in the product. `requireFileStorage` decides whether uploads
+are available by counting the "attach the artefact" field. `openEvidenceForm` clicks a link and returns
+at once, and Playwright's `count()` doesn't wait. Locally the form rendered before the count; over a
+real network it hadn't yet, so the count was 0 and the journey skipped itself.
+
+**Change.** `e2e/lifecycle.spec.ts` now waits for the evidence form's first field to be visible before
+counting. The skip stays for its real purpose, a deployment with no bucket bound.
+
+**Proof.** The evidence-and-approvals block on staging (Chromium, WebKit, iOS Safari): **27 passed,
+0 skipped, 0 failed** (`e2e/staging-5093b06-upload.json`). Before the fix the same journeys skipped.

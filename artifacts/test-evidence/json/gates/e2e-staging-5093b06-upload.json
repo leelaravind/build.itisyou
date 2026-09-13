@@ -1,0 +1,16 @@
+{
+  "id": "e2e-staging-5093b06-upload",
+  "category": "e2e",
+  "environment": "staging-cloudflare-neon",
+  "command": "npx playwright test e2e/lifecycle.spec.ts -g evidence and approvals --project=chromium --project=webkit --project=mobile-safari --workers=2 --reporter=line,json --output=test-results-staging",
+  "commit": "5093b0682869132f70a13a60fc74192e4f721199",
+  "dirty": true,
+  "startedAt": "2026-09-13T12:47:16.631Z",
+  "finishedAt": "2026-09-13T12:48:56.342Z",
+  "durationMs": 99711,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.21.0",
+  "log": "artifacts/test-evidence/logs/e2e-staging-5093b06-upload.log"
+}

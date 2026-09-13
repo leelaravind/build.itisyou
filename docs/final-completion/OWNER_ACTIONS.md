@@ -22,11 +22,20 @@ product has been done or is in `COMPLETION_REGISTER.md` with a next step.
 |---|---|
 | Why | Staging's Neon project (free plan) exhausted its 100 CU-hours in ten days and has been **suspended until 2026-10-01**; Neon does not bill past the free quota, it stops the database. The cause (a per-minute cron) is fixed and budgeted by a test, but production on the free plan still has a hard monthly ceiling and no spending alert. |
 | Where | Neon console → organisation `org-twilight-tree-13265312` → project `build.itisyou` (`fragrant-fog-40333847`) → Billing. |
-| Choice | Stay on Free (hard stop at 100 CU-hours/project/month) or move to Launch (pay per use, about $0.106 per CU-hour; a 0.25 CU compute awake 3 hours a day costs well under $3/month). |
+| Choice | Stay on Free (hard stop at 100 CU-hours/project/month **and 512 MiB per branch** — staging hit the storage cap too, FR-017) or move to Launch (pay per use, about $0.106 per CU-hour and $0.35/GB-month; a 0.25 CU compute awake 3 hours a day costs well under $3/month). |
 | Secret? | No. |
 | Verify | Neon console shows the plan; on Launch, set a spending notification. |
 
-## 3. Optional: delete the suspended staging project
+## 3. Restore GitHub Actions — CI cannot run
+
+| | |
+|---|---|
+| Why | From `5093b06` onwards GitHub refuses to start any job: *"The job was not started because recent account payments have failed or your spending limit needs to be increased."* The repository is private, and this workflow uses roughly 50 runner-minutes per push now that sharding works (it used about 150 before FR-014). The last CI verdict is **green at `949a76e`** (all 8 jobs); later commits were verified by the same gates run locally and on staging, which is evidence but not CI. |
+| Where | GitHub → Settings → Billing and plans (account `leelaravind`): fix the failed payment, or raise the Actions spending limit. |
+| Secret? | No. |
+| Verify | `gh run rerun <latest run id>` (or push any commit); every job starts and the run ends green. Save it with `gh run view <id> --json databaseId,headSha,status,conclusion,createdAt,jobs > artifacts/test-evidence/ci/run-<id>.json` and regenerate the report. |
+
+## 4. Optional: delete the suspended staging project
 
 | | |
 |---|---|
@@ -34,7 +43,15 @@ product has been done or is in `COMPLETION_REGISTER.md` with a next step.
 | Where | Neon console → project `project-staging` → Settings → Delete project. |
 | Verify | `Hyperdrive fa38480586e44cebab20fe15ac2121a0` still points at `ep-snowy-silence-zakx92wv` (it does), and staging `/api/health` still reports `NORMAL`. |
 
-## 4. Optional: delete the restore-drill branch
+## 5. Optional: delete the full staging project
+
+| | |
+|---|---|
+| Why | `build-itisyou-staging` (`silent-forest-67621251`) reached Neon's 512 MiB branch cap with test data (FR-017) and is no longer used — staging moved to `build-itisyou-staging-2`. It also holds the restore-drill branch below. Deleting it is destructive and was not done autonomously. |
+| Where | Neon console → `build-itisyou-staging` → Settings → Delete project (this also removes item 6's branch). |
+| Verify | Hyperdrive `fa38480586e44cebab20fe15ac2121a0` points at `ep-shiny-salad-zab8vdei` and staging `/api/health` reports `NORMAL`. |
+
+## 6. Optional: delete the restore-drill branch
 
 | | |
 |---|---|
@@ -42,10 +59,20 @@ product has been done or is in `COMPLETION_REGISTER.md` with a next step.
 | Where | Neon console → `build-itisyou-staging` → Branches → `restore-drill-20260913` → Delete. |
 | Verify | `staging` is still the default branch and staging `/api/health` reports `NORMAL`. |
 
+## Keep these out of account clean-ups
+
+The staging web Worker was deleted once during a clean-up of the shared Cloudflare account (FR-004).
+These are live and in use: Workers `govintel-web-staging`, `govintel-worker-staging`,
+`build-itisyou-web-production`; Hyperdrive `fa38480586e44cebab20fe15ac2121a0` (staging) and
+`c697deee65094523ac73e77dc94b9fd0` (production); R2 `govintel-evidence-staging`,
+`govintel-evidence-production`; Queues `govintel-outbox-staging`, `govintel-outbox-dlq-staging`; Neon
+projects `build-itisyou-staging-2` (`proud-truth-36178526`, the live staging database since 12:22Z) and `build.itisyou` (`fragrant-fog-40333847`).
+
 ## Not owner actions
 
 - **Production deployment** is approved by the contract once the release gates are genuinely green.
-  It is currently blocked by item 1 and by the open P1 items in `COMPLETION_REGISTER.md`, which are
-  engineering work, not owner work.
+  What still blocks it is items 1 and 3 above (a production login method, and a CI verdict on the final
+  commit), with item 2 as the capacity decision to make before real traffic. The engineering work to
+  deploy and verify is ready (`artifacts/test-evidence/deployment/production-readiness.json`).
 - **The custom domain** `build.itisyou.app` is already configured on the production Worker route
   (`custom_domain = true`) in a zone the account holds; deploying attaches it.

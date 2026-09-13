@@ -1,6 +1,6 @@
 # E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --config p/typescript --config p/javascript --config p/nodejs --metrics=off --jobs 2 --exclude node_modules --exclude dist --exclude .next --exclude test --exclude e2e --exclude artifacts --json --output artifacts/test-evidence/security/semgrep.json apps packages scripts
-# commit 949a76e29397096c29182e2a7f5b8abe81f21243 (dirty)
-# started 2026-09-13T11:14:45.262Z
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:01:14.311Z
 
                
                
@@ -23,7 +23,7 @@
  • Findings: 0 (0 blocking)
  • Rules run: 74
  • Targets scanned: 187
- • Parsed lines: ~99.9%
+ • Parsed lines: ~100.0%
  • Scan skipped: 
    ◦ Matching --exclude patterns: 69
  • Scan was limited to files tracked by git
@@ -34,4 +34,4 @@ Ran 74 rules on 187 files: 0 findings.
 If Semgrep missed a finding, please send us feedback to let us know!
 See https://semgrep.dev/docs/reporting-false-negatives/
 
-# exit 0 after 513418 ms
+# exit 0 after 486660 ms

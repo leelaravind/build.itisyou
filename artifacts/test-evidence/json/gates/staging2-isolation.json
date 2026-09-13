@@ -1,0 +1,16 @@
+{
+  "id": "staging2-isolation",
+  "category": "security",
+  "environment": "staging-neon",
+  "command": "pnpm verify:isolation",
+  "commit": "5093b0682869132f70a13a60fc74192e4f721199",
+  "dirty": true,
+  "startedAt": "2026-09-13T12:22:02.518Z",
+  "finishedAt": "2026-09-13T12:22:06.149Z",
+  "durationMs": 3631,
+  "exitCode": 0,
+  "signal": null,
+  "result": "PASSED",
+  "platform": "win32 x64 node v22.23.2",
+  "log": "artifacts/test-evidence/logs/staging2-isolation.log"
+}

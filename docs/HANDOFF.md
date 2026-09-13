@@ -46,8 +46,22 @@ node scripts/evidence/final-report.mjs       # FINAL_TEST_REPORT.{md,json,pdf} f
 
 A check with no record is reported NOT_CHECKED. Do not hand-edit the report.
 
+SAST is Semgrep, in CI's security job. Locally it lives in a venv on E: (not C:):
+`E:/Project/.claude-scratch/semgrep-venv/Scripts/semgrep.exe scan --metrics=off --config p/typescript --config p/javascript --config p/nodejs --exclude test --exclude e2e --exclude artifacts apps packages scripts`.
+
+**Restore drills:** `restore_snapshot` onto a new branch defaults to `finalize: true`, which moves the
+source branch's compute onto the restore — it took staging's database away for 2.5 minutes once
+(FR-016). Always pass `finalize: false` on a project something is connected to.
+
 Save CI runs for the report with
 `gh run view <id> --json databaseId,headSha,status,conclusion,createdAt,jobs > artifacts/test-evidence/ci/run-<id>.json`.
+
+## CI is blocked on billing
+
+From `5093b06` GitHub refuses to start Actions jobs for this private repository ("recent account
+payments have failed or your spending limit needs to be increased"). The last CI verdict is **green at
+`949a76e`**. Until the owner fixes it (`OWNER_ACTIONS.md` item 3), run every CI gate locally through
+`run-gate.mjs` and on staging, and say in anything you write that it is local evidence, not CI.
 
 ## Running things on this machine
 
@@ -141,8 +155,8 @@ against a schema it does not recognise (`docs/MIGRATION_POLICY.md`) — apply an
 | Staging web Worker | `govintel-web-staging` → https://govintel-web-staging.kpleelaaravind.workers.dev (re-created 2026-09-13; it had been deleted from the account) |
 | Staging cron Worker | `govintel-worker-staging`, `17 */3 * * *` (was every minute — FR-001) |
 | Staging Hyperdrive | `fa38480586e44cebab20fe15ac2121a0`, **caching disabled**, now pointing at the new staging database |
-| Staging database | Neon `silent-forest-67621251` (`build-itisyou-staging`), branch `br-mute-smoke-zaktflfl`, endpoint `ep-snowy-silence-zakx92wv` |
-| Old staging database | Neon `tiny-mode-81422275` — suspended for quota until 2026-10-01, unused; deletion is an owner action |
+| Staging database | Neon `proud-truth-36178526` (`build-itisyou-staging-2`), branch `br-round-thunder-zado8v3h`, endpoint `ep-shiny-salad-zab8vdei` — since 12:22Z on 2026-09-13 |
+| Previous staging databases | `silent-forest-67621251` — hit the 512 MiB branch cap with test data (FR-017), holds the restore-drill branch; `tiny-mode-81422275` — suspended for compute quota until 2026-10-01 (FR-001). Both unused; deletion is an owner action |
 | Production web Worker | `build-itisyou-web-production`, configured for `build.itisyou.app`, **not deployed** |
 | Production cron Worker | `govintel-worker-production`, configured (Hyperdrive + schedule, no queue), **not deployed** |
 | Production Hyperdrive | `c697deee65094523ac73e77dc94b9fd0`, **caching disabled** |
@@ -152,7 +166,9 @@ against a schema it does not recognise (`docs/MIGRATION_POLICY.md`) — apply an
 **Caching is disabled on both Hyperdrive configs as a security control, not a preference** — see
 SEC-003b and KI-050. Under RLS two tenants issue byte-identical queries.
 
-**Neon's free plan stops the database when its 100 CU-hours are spent, until month end** (KI-068).
+**Neon's free plan stops the database when its 100 CU-hours are spent, until month end** (KI-068), and
+**refuses writes once a branch reaches 512 MiB** (KI-070). Staging's guest TTL is 6 hours so the purge
+keeps test data under the cap.
 `apps/worker/test/schedule.test.ts` holds scheduled work to a fifth of that; do not add a frequent
 cron without changing the budget on purpose.
 

@@ -43,6 +43,13 @@ async function startProject(page: Page, idea: string): Promise<string> {
  * the feature is absent rather than when somebody remembered to set a flag.
  */
 async function requireFileStorage(page: Page): Promise<void> {
+  /*
+   * Wait for the form before deciding. `openEvidenceForm` clicks a link and returns at once, and
+   * `count()` does not wait — so over a real network the form had not rendered yet, the count was 0,
+   * and every upload journey skipped as "no object store" on staging, where the store is bound. The
+   * feature went unexercised there without a single failure to say so.
+   */
+  await expect(page.getByLabel(/what is it/i).first()).toBeVisible();
   const attach = page.getByLabel(/attach the artefact/i).first();
 
   if ((await attach.count()) === 0) {

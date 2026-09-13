@@ -5,9 +5,10 @@
 ## Verdict
 
 **V1 is not complete, and production is not deployed.** The guest-first product works end to end on
-real Cloudflare and Neon infrastructure and is verified there. What stops a V1 release is one owner
-action (an identity provider client — nobody can sign in for real) and the open items in
-`COMPLETION_REGISTER.md`, none of them P0.
+real Cloudflare and Neon infrastructure and is verified there. Nothing in `COMPLETION_REGISTER.md` is
+P0, and every open P1 is an owner action: an identity provider client (nobody can sign in for real, and
+gap-spec §6.2 requires a production login method), GitHub billing (CI cannot run), and the production
+database plan. The remaining engineering items are P2 and below, each with a next step.
 
 This pass started from a staging environment that no longer existed and a set of claims that were true
 only on the embedded database's superuser path. It ends with staging rebuilt and verified, four P0
@@ -20,8 +21,9 @@ below backed by a record under `artifacts/test-evidence/`.
 |---|---|
 | Staging | https://govintel-web-staging.kpleelaaravind.workers.dev — deployed, health `ok`, database `NORMAL`, TLS/HSTS/nonce-CSP verified, rollback drilled |
 | Production | `build.itisyou.app` — **not deployed**; blocked on the identity provider (owner) and the register's open items |
-| Unit and integration tests | see `FINAL_TEST_REPORT.md` for the final run |
+| Unit and integration tests | **2,450 / 2,450** passed (Vitest, final local run); packages, app server code, worker, components |
 | End-to-end | local Chromium; staging Chromium, WebKit and iOS Safari; CI five-browser matrix green at `949a76e` (4 shards × 340 tests, 0 failed) |
+| CI | **Blocked from `5093b06` by GitHub billing** — no job starts. Last verdict green at `949a76e`; later commits verified by the same gates locally and on staging |
 | Security | restricted role verified (no superuser/BYPASSRLS/owner), pooled isolation 6/6 on staging and on a restored copy, every tenant table under forced RLS, 404-not-403 enforced, secret and dependency scans clean, SAST (Semgrep, 74 rules) 0 findings |
 | Accessibility | axe WCAG 2.2 AA on every route, landmarks, keyboard reachability, reflow at 320 px, a keyboard-only journey from start to plan |
 | Migrations and recovery | migration 003 applied to staging with row counts sampled before and after (unchanged, 0 keyless rows); production's path 001→002→003 verified from its current fingerprint; rollback drilled in 9 s / 11 s; point-in-time restore drilled (ready in 9 s, restricted role intact, isolation 6/6 on the copy) |
@@ -29,7 +31,7 @@ below backed by a record under `artifacts/test-evidence/`.
 
 ## What was fixed in this pass
 
-See `artifacts/test-evidence/FAILURE_RECEIPTS.md` (FR-001 to FR-015) and `COMPLETION_REGISTER.md`
+See `artifacts/test-evidence/FAILURE_RECEIPTS.md` (FR-001 to FR-018) and `COMPLETION_REGISTER.md`
 "Closed in this pass". In one line each:
 
 - The cron that spent the database's whole monthly quota in ten days, now budgeted by a test.
@@ -45,12 +47,21 @@ See `artifacts/test-evidence/FAILURE_RECEIPTS.md` (FR-001 to FR-015) and `COMPLE
 - Release and closure pages that read recorded evidence instead of empty lists and zeros.
 - Recorded baselines.
 - WebKit and iOS Safari running the journeys over HTTPS for the first time.
+- CI's four E2E shards, which had each been running the whole suite, now split it (26 → 12 minutes),
+  and the E2E specs are type-checked.
+- SAST where there was none: Semgrep in CI, 0 findings.
+- Production verification recordable for all ten §15.9 checks; a methodology question that reaches the
+  rules; the budget page saying when its currency is assumed.
+- Two staging capacity failures found by running things — the compute quota (FR-001) and the storage
+  cap (FR-017) — with the causes fixed and budgeted, and a point-in-time restore drilled.
+- Evidence-upload journeys that had been skipping themselves on staging because a test counted a form
+  before it rendered (FR-018); now exercised against the real R2 bucket, 27/27.
 
 ## Blocked on the owner
 
 `OWNER_ACTIONS.md`: (1) an OIDC client for staging and production — four values, one of them secret;
-(2) a decision on the production database plan; (3) optionally, deleting the suspended old staging
-database.
+(2) a decision on the production database plan; (3) GitHub Actions billing, so CI runs again;
+(4–6) optionally, deleting two retired staging databases and the restore-drill branch.
 
 ## Deliberately not done
 

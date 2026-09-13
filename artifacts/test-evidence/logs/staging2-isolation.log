@@ -1,0 +1,15 @@
+# pnpm verify:isolation
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:22:02.518Z
+
+$ node --experimental-strip-types scripts/verify-pooled-isolation.mjs
+PASS  the connecting role cannot bypass, own or disable row-level security  — role=govintel_app superuser=false bypassrls=false ownsTables=0
+PASS  a tenant sees its own row
+PASS  40 interleaved scopes across a 4-connection pool stay isolated  — {"correct":40}
+PASS  an unscoped query on a reused pooled connection sees nothing  — 0 row(s) disclosed
+PASS  no pooled connection carries a tenant, or a role other than the one it connected as  — 0 dirty connection(s), baseline role govintel_app
+PASS  projects forces row-level security and the application role can neither bypass nor own it  — forced=true superuser=false bypassrls=false
+
+Pooled isolation verified.
+
+# exit 0 after 3631 ms

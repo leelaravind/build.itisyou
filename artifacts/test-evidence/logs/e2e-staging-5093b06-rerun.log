@@ -1,0 +1,407 @@
+# npx playwright test --last-failed --project=chromium --project=webkit --project=mobile-safari --workers=2 --reporter=line,json --output=test-results-staging
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:23:08.559Z
+
+
+Running 367 tests using 2 workers
+
+(node:25272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:24064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/367] [chromium] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[2/367] [chromium] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[3/367] [chromium] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[4/367] [chromium] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[5/367] [chromium] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[6/367] [chromium] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[7/367] [chromium] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[8/367] [chromium] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[9/367] [chromium] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[10/367] [chromium] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+[11/367] [chromium] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[12/367] [chromium] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[13/367] [chromium] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[14/367] [chromium] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[15/367] [chromium] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[16/367] [chromium] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[17/367] [chromium] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[18/367] [chromium] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[19/367] [chromium] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[20/367] [chromium] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[21/367] [chromium] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[22/367] [chromium] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[23/367] [chromium] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[24/367] [chromium] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+(node:4012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[25/367] [webkit] › e2e\ai-import.spec.ts:123:3 › the request the user takes to an AI › says what leaves the platform before offering the copy button
+(node:21944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[26/367] [webkit] › e2e\ai-import.spec.ts:161:3 › the request the user takes to an AI › the request text is present in the DOM without JavaScript
+[27/367] [webkit] › e2e\ai-import.spec.ts:202:3 › a well-formed response › records the decision and does not offer it twice
+[28/367] [webkit] › e2e\ai-import.spec.ts:212:3 › a well-formed response › applies the answers to the project, and says which
+[29/367] [webkit] › e2e\ai-import.spec.ts:237:3 › a well-formed response › can be discarded, keeping nothing
+[30/367] [webkit] › e2e\ai-import.spec.ts:247:3 › a well-formed response › survives being wrapped in the prose an AI usually adds
+[31/367] [webkit] › e2e\ai-import.spec.ts:299:3 › responses that must not be applied › instructions dressed as data
+[32/367] [webkit] › e2e\ai-import.spec.ts:366:3 › responses that must not be applied › an unknown top-level property
+[33/367] [webkit] › e2e\ai-import.spec.ts:409:3 › responses that must not be applied › a very large payload is refused rather than processed
+[34/367] [webkit] › e2e\ai-import.spec.ts:426:3 › an import belongs to one project and one guest › another guest cannot open it
+[35/367] [webkit] › e2e\ai-import.spec.ts:440:3 › an import belongs to one project and one guest › an unknown import id is indistinguishable from a forbidden one
+[36/367] [webkit] › e2e\ai-import.spec.ts:454:3 › accessibility of the interchange screens › the paste screen has no axe violations
+[37/367] [webkit] › e2e\ai-import.spec.ts:472:3 › accessibility of the interchange screens › the validation result has no axe violations
+[38/367] [webkit] › e2e\ai-import.spec.ts:491:3 › accessibility of the interchange screens › a rejected response explains itself rather than only failing
+[39/367] [webkit] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[40/367] [webkit] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[41/367] [webkit] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[42/367] [webkit] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[43/367] [webkit] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[44/367] [webkit] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[45/367] [webkit] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[46/367] [webkit] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[47/367] [webkit] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[48/367] [webkit] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[49/367] [webkit] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[50/367] [webkit] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[51/367] [webkit] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[52/367] [webkit] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[53/367] [webkit] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[54/367] [webkit] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[55/367] [webkit] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[56/367] [webkit] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[57/367] [webkit] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[58/367] [webkit] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[59/367] [webkit] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[60/367] [webkit] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[61/367] [webkit] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[62/367] [webkit] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[63/367] [webkit] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[64/367] [webkit] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[65/367] [webkit] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[66/367] [webkit] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[67/367] [webkit] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[68/367] [webkit] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[69/367] [webkit] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[70/367] [webkit] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[71/367] [webkit] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[72/367] [webkit] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[73/367] [webkit] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[74/367] [webkit] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[75/367] [webkit] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[76/367] [webkit] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[77/367] [webkit] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[78/367] [webkit] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[79/367] [webkit] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+[80/367] [webkit] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[81/367] [webkit] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[82/367] [webkit] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[83/367] [webkit] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+[84/367] [webkit] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[85/367] [webkit] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[86/367] [webkit] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[87/367] [webkit] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[88/367] [webkit] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[89/367] [webkit] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[90/367] [webkit] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[91/367] [webkit] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[92/367] [webkit] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[93/367] [webkit] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[94/367] [webkit] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[95/367] [webkit] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[96/367] [webkit] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[97/367] [webkit] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[98/367] [webkit] › e2e\isolation.spec.ts:93:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[99/367] [webkit] › e2e\isolation.spec.ts:121:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[100/367] [webkit] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[101/367] [webkit] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[102/367] [webkit] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[103/367] [webkit] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[104/367] [webkit] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[105/367] [webkit] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[106/367] [webkit] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[107/367] [webkit] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[108/367] [webkit] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[109/367] [webkit] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[110/367] [webkit] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[111/367] [webkit] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[112/367] [webkit] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[113/367] [webkit] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[114/367] [webkit] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[115/367] [webkit] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[116/367] [webkit] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[117/367] [webkit] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[118/367] [webkit] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[119/367] [webkit] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[120/367] [webkit] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[121/367] [webkit] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[122/367] [webkit] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[123/367] [webkit] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[124/367] [webkit] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[125/367] [webkit] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[126/367] [webkit] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[127/367] [webkit] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[128/367] [webkit] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[129/367] [webkit] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+[130/367] [webkit] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[131/367] [webkit] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[132/367] [webkit] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[133/367] [webkit] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[134/367] [webkit] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[135/367] [webkit] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[136/367] [webkit] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[137/367] [webkit] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[138/367] [webkit] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[139/367] [webkit] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[140/367] [webkit] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[141/367] [webkit] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[142/367] [webkit] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[143/367] [webkit] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[144/367] [webkit] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[145/367] [webkit] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+[146/367] [webkit] › e2e\rules.spec.ts:71:3 › the findings page › is reachable from the plan
+[147/367] [webkit] › e2e\rules.spec.ts:76:3 › the findings page › states that no model was involved
+[148/367] [webkit] › e2e\rules.spec.ts:83:3 › the findings page › names the ruleset version
+[149/367] [webkit] › e2e\rules.spec.ts:89:3 › the findings page › shows what cannot be decided separately from what does not apply
+[150/367] [webkit] › e2e\rules.spec.ts:105:3 › the findings page › names the questions that would settle the undecidable rules
+[151/367] [webkit] › e2e\rules.spec.ts:113:3 › the findings page › the answer link goes back to intake
+[152/367] [webkit] › e2e\rules.spec.ts:130:3 › the findings page › every finding names the rule that produced it
+[153/367] [webkit] › e2e\rules.spec.ts:143:3 › the findings page › says whether a finding blocks or advises
+[154/367] [webkit] › e2e\rules.spec.ts:150:3 › the findings page › explains each finding rather than only naming it
+[155/367] [webkit] › e2e\rules.spec.ts:163:3 › gates › shows the quality gates and their state
+[156/367] [webkit] › e2e\rules.spec.ts:168:3 › gates › distinguishes an undecidable gate from a failed one
+[157/367] [webkit] › e2e\rules.spec.ts:175:3 › gates › never conveys gate state by colour alone
+[158/367] [webkit] › e2e\rules.spec.ts:188:3 › gates › does not pass a gate on an empty project
+[159/367] [webkit] › e2e\rules.spec.ts:202:3 › a project belongs to one guest › another guest cannot read its findings
+[160/367] [webkit] › e2e\rules.spec.ts:225:3 › accessibility of the findings page › has no axe violations
+[161/367] [webkit] › e2e\rules.spec.ts:241:3 › accessibility of the findings page › works without client JavaScript
+[162/367] [webkit] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[163/367] [webkit] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[164/367] [webkit] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[165/367] [webkit] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[166/367] [webkit] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[167/367] [webkit] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[168/367] [webkit] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[169/367] [webkit] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[170/367] [webkit] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[171/367] [webkit] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[172/367] [webkit] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[173/367] [webkit] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[174/367] [webkit] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+[175/367] [webkit] › e2e\work.spec.ts:66:3 › before a plan exists › says there is nothing to break down yet
+[176/367] [webkit] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[177/367] [webkit] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[178/367] [webkit] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[179/367] [webkit] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[180/367] [webkit] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[181/367] [webkit] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[182/367] [webkit] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[183/367] [webkit] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[184/367] [webkit] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[185/367] [webkit] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[186/367] [webkit] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[187/367] [webkit] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[188/367] [webkit] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[189/367] [webkit] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+(node:4616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[190/367] [mobile-safari] › e2e\ai-import.spec.ts:123:3 › the request the user takes to an AI › says what leaves the platform before offering the copy button
+(node:25424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[191/367] [mobile-safari] › e2e\ai-import.spec.ts:153:3 › the request the user takes to an AI › never claims to send anything itself
+[192/367] [mobile-safari] › e2e\ai-import.spec.ts:161:3 › the request the user takes to an AI › the request text is present in the DOM without JavaScript
+[193/367] [mobile-safari] › e2e\ai-import.spec.ts:180:3 › a well-formed response › is validated, previewed and only then applied
+[194/367] [mobile-safari] › e2e\ai-import.spec.ts:192:3 › a well-formed response › states how much of it is cited rather than guessed
+[195/367] [mobile-safari] › e2e\ai-import.spec.ts:202:3 › a well-formed response › records the decision and does not offer it twice
+[196/367] [mobile-safari] › e2e\ai-import.spec.ts:212:3 › a well-formed response › applies the answers to the project, and says which
+[197/367] [mobile-safari] › e2e\ai-import.spec.ts:237:3 › a well-formed response › can be discarded, keeping nothing
+[198/367] [mobile-safari] › e2e\ai-import.spec.ts:247:3 › a well-formed response › survives being wrapped in the prose an AI usually adds
+[199/367] [mobile-safari] › e2e\ai-import.spec.ts:278:3 › responses that must not be applied › a claim that says it was confirmed by the user
+[200/367] [mobile-safari] › e2e\ai-import.spec.ts:299:3 › responses that must not be applied › instructions dressed as data
+[201/367] [mobile-safari] › e2e\ai-import.spec.ts:319:3 › responses that must not be applied › a response written against a version this platform does not accept
+[202/367] [mobile-safari] › e2e\ai-import.spec.ts:338:3 › responses that must not be applied › a dependency cycle between requirements
+[203/367] [mobile-safari] › e2e\ai-import.spec.ts:366:3 › responses that must not be applied › an unknown top-level property
+[204/367] [mobile-safari] › e2e\ai-import.spec.ts:380:3 › responses that must not be applied › text that is not JSON at all
+[205/367] [mobile-safari] › e2e\ai-import.spec.ts:385:3 › responses that must not be applied › markup in a value is rendered as text, never as HTML
+[206/367] [mobile-safari] › e2e\ai-import.spec.ts:409:3 › responses that must not be applied › a very large payload is refused rather than processed
+[207/367] [mobile-safari] › e2e\ai-import.spec.ts:426:3 › an import belongs to one project and one guest › another guest cannot open it
+[208/367] [mobile-safari] › e2e\ai-import.spec.ts:440:3 › an import belongs to one project and one guest › an unknown import id is indistinguishable from a forbidden one
+[209/367] [mobile-safari] › e2e\ai-import.spec.ts:454:3 › accessibility of the interchange screens › the paste screen has no axe violations
+[210/367] [mobile-safari] › e2e\ai-import.spec.ts:472:3 › accessibility of the interchange screens › the validation result has no axe violations
+[211/367] [mobile-safari] › e2e\ai-import.spec.ts:491:3 › accessibility of the interchange screens › a rejected response explains itself rather than only failing
+[212/367] [mobile-safari] › e2e\baseline.spec.ts:64:3 › the baseline surface › shows the verification result rather than only computing it
+[213/367] [mobile-safari] › e2e\baseline.spec.ts:77:3 › the baseline surface › shows the checksum itself, so it can be compared
+[214/367] [mobile-safari] › e2e\baseline.spec.ts:85:3 › the baseline surface › says what the baseline captured
+[215/367] [mobile-safari] › e2e\baseline.spec.ts:91:3 › the baseline surface › reports variance as named items, never as a percentage
+[216/367] [mobile-safari] › e2e\baseline.spec.ts:103:3 › the baseline surface › explains that a baseline is never edited
+[217/367] [mobile-safari] › e2e\baseline.spec.ts:114:3 › the baseline surface › says a release baseline needs an approval
+[218/367] [mobile-safari] › e2e\baseline.spec.ts:125:3 › the baseline surface › has no detectable accessibility violations
+[219/367] [mobile-safari] › e2e\baseline.spec.ts:141:3 › a project with nothing to baseline › refuses rather than showing an empty baseline that verifies
+[220/367] [mobile-safari] › e2e\baseline.spec.ts:160:3 › tenant isolation › a second guest cannot read the first guest’s baseline
+[221/367] [mobile-safari] › e2e\baseline.spec.ts:187:3 › recording a baseline › stores a baseline with its reason and shows it as recorded
+[222/367] [mobile-safari] › e2e\baseline.spec.ts:208:3 › recording a baseline › numbers the next baseline after the last one
+[223/367] [mobile-safari] › e2e\baseline.spec.ts:224:3 › recording a baseline › will not record a baseline without a reason
+[224/367] [mobile-safari] › e2e\budget.spec.ts:69:3 › before a plan exists › says there is nothing to cost yet rather than showing zero
+[225/367] [mobile-safari] › e2e\budget.spec.ts:86:3 › the money surface › presents effort as a range, never as one number
+[226/367] [mobile-safari] › e2e\budget.spec.ts:98:3 › the money surface › states its confidence and why the range is wide
+[227/367] [mobile-safari] › e2e\budget.spec.ts:109:3 › the money surface › shows what the estimate assumed
+[228/367] [mobile-safari] › e2e\budget.spec.ts:120:3 › the money surface › names every component of the contingency
+[229/367] [mobile-safari] › e2e\budget.spec.ts:131:3 › the money surface › says the currency is assumed when nobody stated one
+[230/367] [mobile-safari] › e2e\budget.spec.ts:140:3 › the money surface › says plainly that no budget was recorded rather than reporting healthy
+[231/367] [mobile-safari] › e2e\budget.spec.ts:150:3 › the money surface › reports feasibility as dimensions with causes, never as a score
+[232/367] [mobile-safari] › e2e\budget.spec.ts:164:3 › the money surface › reports health without an unexplained number out of a hundred
+[233/367] [mobile-safari] › e2e\budget.spec.ts:172:3 › the money surface › shows no score and no delivery date anywhere on the page
+[234/367] [mobile-safari] › e2e\budget.spec.ts:198:3 › the money surface › states each verdict in words, not by colour alone
+[235/367] [mobile-safari] › e2e\budget.spec.ts:211:3 › the money surface › has no detectable accessibility violations
+[236/367] [mobile-safari] › e2e\budget.spec.ts:227:3 › tenant isolation › a second guest cannot read the first guest’s money
+[237/367] [mobile-safari] › e2e\change.spec.ts:130:3 › the change-impact surface › offers something to change
+[238/367] [mobile-safari] › e2e\change.spec.ts:138:3 › the change-impact surface › reports impact that actually reached something
+[239/367] [mobile-safari] › e2e\change.spec.ts:156:3 › the change-impact surface › shows the path that reached each item, with its reasoning
+[240/367] [mobile-safari] › e2e\change.spec.ts:170:3 › the change-impact surface › states each verdict in words and explains what it means
+[241/367] [mobile-safari] › e2e\change.spec.ts:181:3 › the change-impact surface › shows no proportion of the project
+[242/367] [mobile-safari] › e2e\change.spec.ts:192:3 › the change-impact surface › says nothing is affected as a real answer when nothing is
+[243/367] [mobile-safari] › e2e\change.spec.ts:204:3 › the change-impact surface › has no detectable accessibility violations
+[244/367] [mobile-safari] › e2e\change.spec.ts:221:3 › tenant isolation › a second guest cannot read the first guest’s impact analysis
+[245/367] [mobile-safari] › e2e\change.spec.ts:281:3 › a change request, end to end › records the request against the version its impact was calculated on
+[246/367] [mobile-safari] › e2e\change.spec.ts:293:3 › a change request, end to end › refuses a request with no reason behind it
+[247/367] [mobile-safari] › e2e\change.spec.ts:307:3 › a change request, end to end › can be decided, and the decision is kept with its reason
+[248/367] [mobile-safari] › e2e\change.spec.ts:326:3 › a change request, end to end › applies an approved change and moves the project version on
+[249/367] [mobile-safari] › e2e\change.spec.ts:354:3 › a change request, end to end › says what happened after each step
+[250/367] [mobile-safari] › e2e\change.spec.ts:385:3 › a change request, end to end › never echoes an unrecognised outcome code from the address bar
+[251/367] [mobile-safari] › e2e\change.spec.ts:395:3 › a change request, end to end › a second guest cannot see the first guest’s change requests
+[252/367] [mobile-safari] › e2e\close.spec.ts:61:3 › the closure surface › lists every closure criterion
+[253/367] [mobile-safari] › e2e\close.spec.ts:69:3 › the closure surface › does not let a project close before anything has been done
+[254/367] [mobile-safari] › e2e\close.spec.ts:80:3 › the closure surface › states each criterion in words, not by colour
+[255/367] [mobile-safari] › e2e\close.spec.ts:87:3 › the closure surface › says what each criterion is asking about the day after everybody leaves
+[256/367] [mobile-safari] › e2e\close.spec.ts:99:3 › the closure surface › explains why an undecidable criterion cannot be excepted
+[257/367] [mobile-safari] › e2e\close.spec.ts:114:3 › the closure surface › shows no completion percentage
+[258/367] [mobile-safari] › e2e\close.spec.ts:124:3 › the closure surface › has no detectable accessibility violations
+[259/367] [mobile-safari] › e2e\close.spec.ts:140:3 › tenant isolation › a second guest cannot read the first guest’s closure position
+[260/367] [mobile-safari] › e2e\guest-intake.spec.ts:54:3 › starting a project without an account › creates a project and reaches intake
+[261/367] [mobile-safari] › e2e\guest-intake.spec.ts:86:3 › starting a project without an account › issues an HttpOnly session cookie once a project is started
+[262/367] [mobile-safari] › e2e\guest-intake.spec.ts:200:3 › intake accepts "I don't know" as an answer › offers all the alternative answer modes on a question
+[263/367] [mobile-safari] › e2e\guest-intake.spec.ts:209:3 › intake accepts "I don't know" as an answer › records "I don't know" and moves to the next question
+[264/367] [mobile-safari] › e2e\guest-intake.spec.ts:223:3 › intake accepts "I don't know" as an answer › shows the unknown in "what we know so far" rather than hiding it
+[265/367] [mobile-safari] › e2e\guest-intake.spec.ts:233:3 › intake accepts "I don't know" as an answer › lists what is still missing, with the reason
+[266/367] [mobile-safari] › e2e\guest-intake.spec.ts:241:3 › intake accepts "I don't know" as an answer › advances the progress bar when a question is resolved as unknown
+[267/367] [mobile-safari] › e2e\guest-intake.spec.ts:258:3 › intake accepts "I don't know" as an answer › records a typed answer
+[268/367] [mobile-safari] › e2e\guest-intake.spec.ts:270:3 › guest project isolation › a different session cannot open the project
+[269/367] [mobile-safari] › e2e\guest-intake.spec.ts:319:3 › accessibility of the guest journey › the intake wizard has no axe violations
+[270/367] [mobile-safari] › e2e\guest-intake.spec.ts:340:3 › accessibility of the guest journey › the whole flow works without client JavaScript
+[271/367] [mobile-safari] › e2e\isolation.spec.ts:93:3 › every project surface isolates by tenant › a second guest is refused on every discovered surface
+[272/367] [mobile-safari] › e2e\isolation.spec.ts:121:3 › every project surface isolates by tenant › an unknown project id is indistinguishable from a forbidden one
+[273/367] [mobile-safari] › e2e\lifecycle.spec.ts:78:3 › the lifecycle › a new project starts at the beginning and says so
+[274/367] [mobile-safari] › e2e\lifecycle.spec.ts:91:3 › the lifecycle › offers the next step and nothing further
+[275/367] [mobile-safari] › e2e\lifecycle.spec.ts:104:3 › the lifecycle › advances when nothing is required, and records where it got to
+[276/367] [mobile-safari] › e2e\lifecycle.spec.ts:115:3 › the lifecycle › names the gate that is blocking it rather than only refusing
+[277/367] [mobile-safari] › e2e\lifecycle.spec.ts:139:3 › evidence and approvals › lists every criterion a person has to confirm, with why it matters
+[278/367] [mobile-safari] › e2e\lifecycle.spec.ts:172:3 › evidence and approvals › records evidence and stops asking for it
+[279/367] [mobile-safari] › e2e\lifecycle.spec.ts:187:3 › evidence and approvals › refuses evidence that points at nothing
+[280/367] [mobile-safari] › e2e\lifecycle.spec.ts:208:3 › evidence and approvals › refuses an approval with no reason
+[281/367] [mobile-safari] › e2e\lifecycle.spec.ts:227:3 › evidence and approvals › stores an uploaded artefact and serves it back with its hash
+[282/367] [mobile-safari] › e2e\lifecycle.spec.ts:281:3 › evidence and approvals › refuses a file the allowlist does not accept
+[283/367] [mobile-safari] › e2e\lifecycle.spec.ts:303:3 › evidence and approvals › a second guest cannot download the first guest’s artefact
+[284/367] [mobile-safari] › e2e\lifecycle.spec.ts:336:3 › evidence and approvals › evidence survives regenerating the plan
+[285/367] [mobile-safari] › e2e\lifecycle.spec.ts:362:3 › evidence and approvals › a second guest cannot see the first guest’s evidence
+[286/367] [mobile-safari] › e2e\mobile.spec.ts:145:3 › no route scrolls sideways on a phone › every project surface fits the viewport
+[287/367] [mobile-safari] › e2e\mobile.spec.ts:219:3 › dense representations get a different shape, not a smaller one › the traceability chain is readable as text
+[288/367] [mobile-safari] › e2e\mobile.spec.ts:245:3 › dense representations get a different shape, not a smaller one › the work board becomes stacked lists with their status named
+[289/367] [mobile-safari] › e2e\mobile.spec.ts:256:3 › dense representations get a different shape, not a smaller one › budget figures carry their unit inline
+[290/367] [mobile-safari] › e2e\mobile.spec.ts:290:3 › mobile accessibility › the intake wizard has no violations at a phone size
+[291/367] [mobile-safari] › e2e\plan.spec.ts:63:3 › before a plan exists › offers to build one
+[292/367] [mobile-safari] › e2e\plan.spec.ts:71:3 › before a plan exists › states that no AI is involved
+[293/367] [mobile-safari] › e2e\plan.spec.ts:80:3 › before a plan exists › is reachable before the intake is finished
+[294/367] [mobile-safari] › e2e\plan.spec.ts:101:3 › a generated plan › contains phases
+[295/367] [mobile-safari] › e2e\plan.spec.ts:106:3 › a generated plan › gives every item its provenance, beside the item
+[296/367] [mobile-safari] › e2e\plan.spec.ts:121:3 › a generated plan › never presents an engine conclusion as something the user confirmed
+[297/367] [mobile-safari] › e2e\plan.spec.ts:131:3 › a generated plan › states what it had to assume
+[298/367] [mobile-safari] › e2e\plan.spec.ts:151:3 › a generated plan › says what the assumption costs, not only that one was made
+[299/367] [mobile-safari] › e2e\plan.spec.ts:160:3 › a generated plan › lists what it does not know rather than filling the gap
+[300/367] [mobile-safari] › e2e\plan.spec.ts:165:3 › a generated plan › reports the same plan when rebuilt from the same answers
+[301/367] [mobile-safari] › e2e\plan.spec.ts:185:3 › a generated plan › produces a different plan for a different project type
+[302/367] [mobile-safari] › e2e\plan.spec.ts:200:3 › a generated plan › works without client JavaScript
+[303/367] [mobile-safari] › e2e\plan.spec.ts:218:3 › a plan belongs to one project and one guest › another guest cannot open it
+[304/367] [mobile-safari] › e2e\plan.spec.ts:235:3 › a plan belongs to one project and one guest › another guest cannot trigger generation for a project they do not own
+[305/367] [mobile-safari] › e2e\plan.spec.ts:295:3 › a plan belongs to one project and one guest › the same request succeeds for the guest who does own the project
+[306/367] [mobile-safari] › e2e\plan.spec.ts:310:3 › accessibility of the plan › has no axe violations before generation
+[307/367] [mobile-safari] › e2e\plan.spec.ts:327:3 › accessibility of the plan › has no axe violations once generated
+[308/367] [mobile-safari] › e2e\portfolio.spec.ts:70:3 › the portfolio surface › lists the guest’s own project and links to its plan
+[309/367] [mobile-safari] › e2e\portfolio.spec.ts:80:3 › the portfolio surface › never lists another guest’s project
+[310/367] [mobile-safari] › e2e\project-home.spec.ts:46:3 › project home › answers the five questions for a project that has just started
+[311/367] [mobile-safari] › e2e\project-home.spec.ts:72:3 › project home › names the gates that block it once there is a plan
+[312/367] [mobile-safari] › e2e\project-home.spec.ts:85:3 › project home › links only to sections that exist
+[313/367] [mobile-safari] › e2e\project-home.spec.ts:101:3 › project home › is a 404 for another guest, never a 403
+[314/367] [mobile-safari] › e2e\project-home.spec.ts:115:3 › project home › has no detectable accessibility violations
+[315/367] [mobile-safari] › e2e\release.spec.ts:61:3 › the release surface › shows all six gates in order
+[316/367] [mobile-safari] › e2e\release.spec.ts:69:3 › the release surface › states each gate result in words, not by colour
+[317/367] [mobile-safari] › e2e\release.spec.ts:77:3 › the release surface › does not render an unevaluated gate as passing
+[318/367] [mobile-safari] › e2e\release.spec.ts:90:3 › the release surface › says which gate stopped the release and what to do about it
+[319/367] [mobile-safari] › e2e\release.spec.ts:98:3 › the release surface › argues each blocker rather than naming it
+[320/367] [mobile-safari] › e2e\release.spec.ts:127:3 › the release surface › never claims production was verified when nothing was checked
+[321/367] [mobile-safari] › e2e\release.spec.ts:140:3 › the release surface › shows no readiness percentage or score
+[322/367] [mobile-safari] › e2e\release.spec.ts:152:3 › the release surface › has no detectable accessibility violations
+[323/367] [mobile-safari] › e2e\release.spec.ts:168:3 › tenant isolation › a second guest cannot read the first guest’s release position
+[324/367] [mobile-safari] › e2e\rules.spec.ts:71:3 › the findings page › is reachable from the plan
+[325/367] [mobile-safari] › e2e\rules.spec.ts:76:3 › the findings page › states that no model was involved
+[326/367] [mobile-safari] › e2e\rules.spec.ts:83:3 › the findings page › names the ruleset version
+[327/367] [mobile-safari] › e2e\rules.spec.ts:89:3 › the findings page › shows what cannot be decided separately from what does not apply
+[328/367] [mobile-safari] › e2e\rules.spec.ts:105:3 › the findings page › names the questions that would settle the undecidable rules
+[329/367] [mobile-safari] › e2e\rules.spec.ts:113:3 › the findings page › the answer link goes back to intake
+[330/367] [mobile-safari] › e2e\rules.spec.ts:130:3 › the findings page › every finding names the rule that produced it
+[331/367] [mobile-safari] › e2e\rules.spec.ts:143:3 › the findings page › says whether a finding blocks or advises
+[332/367] [mobile-safari] › e2e\rules.spec.ts:150:3 › the findings page › explains each finding rather than only naming it
+[333/367] [mobile-safari] › e2e\rules.spec.ts:163:3 › gates › shows the quality gates and their state
+[334/367] [mobile-safari] › e2e\rules.spec.ts:168:3 › gates › distinguishes an undecidable gate from a failed one
+[335/367] [mobile-safari] › e2e\rules.spec.ts:175:3 › gates › never conveys gate state by colour alone
+[336/367] [mobile-safari] › e2e\rules.spec.ts:188:3 › gates › does not pass a gate on an empty project
+[337/367] [mobile-safari] › e2e\rules.spec.ts:202:3 › a project belongs to one guest › another guest cannot read its findings
+[338/367] [mobile-safari] › e2e\rules.spec.ts:225:3 › accessibility of the findings page › has no axe violations
+[339/367] [mobile-safari] › e2e\rules.spec.ts:241:3 › accessibility of the findings page › works without client JavaScript
+[340/367] [mobile-safari] › e2e\trace.spec.ts:147:3 › the traceability surface › reports requirements it actually found, not an empty chain
+[341/367] [mobile-safari] › e2e\trace.spec.ts:166:3 › the traceability surface › names every requirement and says where its chain stops
+[342/367] [mobile-safari] › e2e\trace.spec.ts:177:3 › the traceability surface › shows each chain hop by name with a status word, on the requirement’s own page
+[343/367] [mobile-safari] › e2e\trace.spec.ts:214:3 › the traceability surface › the requirement’s own page has no detectable accessibility violations
+[344/367] [mobile-safari] › e2e\trace.spec.ts:230:3 › the traceability surface › an id that names no requirement is a 404, not an empty chain
+[345/367] [mobile-safari] › e2e\trace.spec.ts:243:3 › the traceability surface › does not put every chain back on one page
+[346/367] [mobile-safari] › e2e\trace.spec.ts:273:3 › the traceability surface › gives every gap an id to go and look at
+[347/367] [mobile-safari] › e2e\trace.spec.ts:297:3 › the traceability surface › states why each gap matters, not only that it exists
+[348/367] [mobile-safari] › e2e\trace.spec.ts:309:3 › the traceability surface › shows no coverage percentage anywhere
+[349/367] [mobile-safari] › e2e\trace.spec.ts:326:3 › the traceability surface › explains what "not assessable" means when it reports any
+[350/367] [mobile-safari] › e2e\trace.spec.ts:346:3 › the traceability surface › has no detectable accessibility violations
+[351/367] [mobile-safari] › e2e\trace.spec.ts:362:3 › a project with no requirements › says there is nothing to trace rather than reporting a clean bill of health
+[352/367] [mobile-safari] › e2e\trace.spec.ts:382:3 › tenant isolation › a second guest cannot read the first guest’s traceability
+[353/367] [mobile-safari] › e2e\work.spec.ts:66:3 › before a plan exists › says there is nothing to break down yet
+[354/367] [mobile-safari] › e2e\work.spec.ts:80:3 › what to do next › comes before the board
+[355/367] [mobile-safari] › e2e\work.spec.ts:99:3 › what to do next › gives a reason for every item
+[356/367] [mobile-safari] › e2e\work.spec.ts:111:3 › what to do next › is capped rather than showing everything
+[357/367] [mobile-safari] › e2e\work.spec.ts:116:3 › what to do next › says it leaves out work that cannot be started
+[358/367] [mobile-safari] › e2e\work.spec.ts:129:3 › the board › shows review as its own column
+[359/367] [mobile-safari] › e2e\work.spec.ts:140:3 › the board › has a column for every status
+[360/367] [mobile-safari] › e2e\work.spec.ts:148:3 › the board › shows what each task exists for
+[361/367] [mobile-safari] › e2e\work.spec.ts:162:3 › progress reporting › states what the completion figure does not mean
+[362/367] [mobile-safari] › e2e\work.spec.ts:173:3 › progress reporting › surfaces work that is finished but not delivered
+[363/367] [mobile-safari] › e2e\work.spec.ts:178:3 › progress reporting › explains how the structure was chosen
+[364/367] [mobile-safari] › e2e\work.spec.ts:186:3 › progress reporting › names the hierarchy it actually used
+[365/367] [mobile-safari] › e2e\work.spec.ts:197:3 › a project belongs to one guest › another guest cannot see its work
+[366/367] [mobile-safari] › e2e\work.spec.ts:245:3 › accessibility of the work page › has no axe violations
+[367/367] [mobile-safari] › e2e\work.spec.ts:261:3 › accessibility of the work page › works without client JavaScript
+  8 skipped
+  359 passed (21.8m)
+npm notice
+npm notice New major version of npm available! 10.9.4 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+# exit 0 after 1311171 ms

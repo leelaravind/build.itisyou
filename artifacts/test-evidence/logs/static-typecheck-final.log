@@ -1,0 +1,8 @@
+# pnpm typecheck
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:57:33.369Z
+
+$ tsc --build && pnpm --filter=@govintel/web typecheck && tsc --noEmit -p e2e
+$ tsc --noEmit
+
+# exit 0 after 8006 ms

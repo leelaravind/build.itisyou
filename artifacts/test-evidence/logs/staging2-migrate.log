@@ -1,0 +1,13 @@
+# node --experimental-strip-types scripts/migrate.mjs
+# commit 5093b0682869132f70a13a60fc74192e4f721199 (dirty)
+# started 2026-09-13T12:22:00.872Z
+
+expected  6aa38daebd263bd6bf10f2f639a6682b
+found     nothing — the database has no schema_meta
+
+Empty database. Creating the schema.
+Applied. schema_meta now records 6aa38daebd263bd6bf10f2f639a6682b.
+govintel_app can log in. Verified from pg_roles: no superuser, bypassrls, createdb or createrole.
+Granted govintel_app to the connecting role; either arrangement will work.
+
+# exit 0 after 1422 ms

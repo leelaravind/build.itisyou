@@ -49,6 +49,14 @@ name = "govintel-web-staging"
 [env.staging.vars]
 APP_ENV = "staging"
 
+# Guest data on staging lives six hours, not the production default of 72.
+#
+# Every full E2E run creates about 600 guest projects with their plans, and Neon's free plan caps a
+# branch at 512 MiB. On 2026-09-13 four runs in one day filled it — 1,505 projects, 232,304 twin rows —
+# and from then on every write failed with a generic error (FR-017). With six hours, the purge that runs
+# every three hours reclaims test data within nine; production keeps the retention its policy states.
+GUEST_PROJECT_TTL_HOURS = "6"
+
 # Declares that the connection string arrives on a binding rather than as a variable.
 #
 # Without this, env validation rejects a deployment whose database is perfectly well configured:
